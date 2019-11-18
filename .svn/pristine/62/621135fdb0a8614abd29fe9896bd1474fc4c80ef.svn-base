@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Baldetail" table="T_BALDETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="baldetailId" column="BALDETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="takeStockId" type="java.lang.Long" column="TAKE_STOCK_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONIC_CODE" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="firstUnitConversion" type="java.lang.String" column="FIRST_UNIT_CONVERSION" />
+		<property name="bookInventory" type="java.lang.String" column="BOOK_INVENTORY" />
+		<property name="firmofferInventory" type="java.lang.String" column="FIRMOFFER_INVENTORY" />
+		<property name="amountProLoss" type="java.lang.String" column="AMOUNT_PRO_LOSS" />
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="locationName" type="java.lang.String" column="LOCATION_NAME" />
+		<property name="materialsStoreId" type="java.lang.Long" column="MATERIALS_STORE_ID"/>
+		<property name="secondConvertedQuantity" type="java.lang.String" column="SECOND_CONVERTED_QUANTITY" />
+		<property name="auxiliaryQuantity" type="java.lang.String" column="AUXILIARY_QUANTITY" />
+	</class>
+</hibernate-mapping>

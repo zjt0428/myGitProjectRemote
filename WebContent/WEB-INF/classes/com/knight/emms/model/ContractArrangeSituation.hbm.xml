@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractArrangeSituation" table="T_CONTRACT_ARRANGE_SITUATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="arrangeSituationId" column="ARRANGE_SITUATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="arrangeId" type="java.lang.Long" column="ARRANGE_ID" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="receiveEntName" type="java.lang.String" column="RECEIVE_ENT_NAME" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="demand" type="java.lang.String" column="DEMAND" />
+		<property name="installHeight" type="java.math.BigDecimal" column="INSTALL_HEIGHT" />
+		<property name="duration" type="java.math.BigDecimal" column="DURATION" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="baseDescribe" type="java.lang.String" column="BASE_DESCRIBE" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+		<property name="equipSource" type="java.lang.String" column="EQUIP_SOURCE" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="icSerial" type="java.lang.String" column="IC_SERIAL" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

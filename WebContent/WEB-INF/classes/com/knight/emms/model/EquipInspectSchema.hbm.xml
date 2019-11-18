@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInspectSchema" table="T_EQUIPMENT_INSPECT_SCHEMA" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inspectSchemaId" column="INSPECT_SCHEMA_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="applyDate" type="java.lang.String" column="APPLY_DATE" />
+		<property name="flowId" type="java.lang.Long" column="FLOW_ID" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="cycleActivateDate" type="java.util.Date" column="CYCLE_ACTIVATE_DATE" />
+		<property name="cycleDays" type="java.lang.Integer" column="CYCLE_DAYS" />
+		<property name="timesInCycle" type="java.lang.Integer" column="TIMES_IN_CYCLE" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="inspectTimes" type="java.lang.Integer" column="INSPECT_TIMES" />
+		<property name="createTimes" type="java.lang.Integer" formula="(SELECT COUNT(*) FROM T_EQUIPMENT_INSPECT S WHERE S.INSPECT_SCHEMA_ID = INSPECT_SCHEMA_ID)" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="cycleTimes" type="java.lang.Integer" column="CYCLE_TIMES" />
+		<property name="cycleDaysTimes" type="java.lang.Integer" column="CYCLE_DAYS_TIMES" />
+		<property name="thisStartCycleDate" type="java.util.Date" column="THIS_START_CYCLE_DATE" />
+		<property name="thisEndCycleDate" type="java.util.Date" column="THIS_END_CYCLE_DATE" />
+		<property name="nextFormTime" type="java.util.Date" column="NEXT_FORM_TIME" />
+		<property name="nextStartCycleDate" type="java.util.Date" column="NEXT_START_CYCLE_DATE" />
+		<property name="active" type="java.lang.String" column="ACTIVE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="generatedCycle" type="java.lang.String" column="GENERATED_CYCLE" />
+		<property name="generatedOpportunity" type="java.lang.String" column="GENERATED_OPPORTUNITY" />
+		<property name="activateTime" type="java.lang.String" column="ACTIVATE_TIME" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT CL.PERMISSION_FLAG FROM T_CONTRACT_LEASE CL LEFT JOIN T_EQUIPMENT_FLOW EF ON CL.CONTRACT_ID = EF.CONTRACT_ID WHERE EF.FLOW_ID = FLOW_ID)"  /> 
+		<!-- <many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join"  insert="false" update="false"  lazy="no-proxy"/> -->
+		<many-to-one name="equipDiary" column="EQUIP_DIARY_ID" class="com.knight.emms.model.EquipDiary" fetch="join" />
+	</class>
+</hibernate-mapping>

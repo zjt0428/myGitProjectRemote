@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BaseLocation" table="T_BASE_LOCATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="locationId" column="LOCATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="locationSerial" type="java.lang.String" column="LOCATION_SERIAL" />
+		<property name="locationName" type="java.lang.String" column="LOCATION_NAME" />
+		<property name="depotName" type="java.lang.String" column="DEPOT_NAME" />
+		<property name="linkman" type="java.lang.String" column="LINKMAN" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="baseDepot" column="DEPOT_ID" class="com.knight.emms.model.BaseDepot" fetch="join" />
+		<set name="baseLocationPermissionSet" lazy="true" cascade="all" inverse="false">
+			<key column="LOCATION_ID"></key>
+			<one-to-many class="com.knight.emms.model.BaseLocationPermission" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,56 @@
+var SupplierAccountGrid = function(a, b) {
+	Ext.apply(this, a || {});
+	Ext.apply(this, b || {});
+
+	var defaultFlagChecked = new Ext.grid.CheckColumn({
+		width : 40,
+		header : "默认",
+		dataIndex : "defaultFlag"
+	});
+	var columns = [ {
+		header : "开户行",
+		dataIndex : "bankDeposit",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, {
+		header : "账号",
+		dataIndex : "account",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, {
+		header : "开户行地址",
+		dataIndex : "address",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 64
+		})
+	}, defaultFlagChecked ];
+	SupplierAccountGrid.superclass.constructor.call(this, Ext.apply({
+		saveable : this.saveable,
+		selectable : this.selectable,
+		fields : SupplierAccountListViewField,
+		title : "供应商帐户信息",
+		option : "供应商帐户",
+		tbarItems : this.tbarItems,
+		height : this.height,
+		columns : columns,
+		grid_view : {
+			plugins : defaultFlagChecked
+		},
+		delurl : __ctxPath + "/archive/multiDelAccountSupplier.do"
+	}, this.grid_config || {}));
+};
+Ext.extend(SupplierAccountGrid, Knight.ux.SubModuleBaseGrid, {
+	createSubModule : function() {
+		return {
+			supplierId : this.supplierId,
+			bankDeposit : null,
+			account : null,
+			address : null
+		};
+	}
+});

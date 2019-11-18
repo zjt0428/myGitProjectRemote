@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InvoiceIssue" table="T_INVOICE_ISSUE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="invoiceIssueId" column="INVOICE_ISSUE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="invoiceSerial" type="java.lang.String" column="INVOICE_SERIAL" />
+		<property name="invoiceTheme" type="java.lang.String" column="INVOICE_THEME" />
+		<property name="invoiceItem" type="java.lang.String" column="INVOICE_ITEM" />
+		<property name="issueDate" type="java.lang.String" column="ISSUE_DATE" />
+		<property name="issueAmount" type="java.math.BigDecimal" column="ISSUE_AMOUNT" />
+		<property name="invoiceType" type="java.lang.String" column="INVOICE_TYPE" />
+		<property name="handleEntId" type="java.lang.Long" column="HANDLE_ENT_ID" />
+		<property name="handleEntName" type="java.lang.String" column="HANDLE_ENT_NAME" />
+		<property name="issuePractiId" type="java.lang.Long" column="ISSUE_PRACTI_ID" />
+		<property name="issuePractiName" type="java.lang.String" column="ISSUE_PRACTI_NAME" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="relateAmount" type="java.math.BigDecimal" column="RELATE_AMOUNT" />
+		<property name="hasIssueAmount" type="java.math.BigDecimal" column="HAS_ISSUE_AMOUNT" />
+		<property name="taxRate" type="java.lang.String" column="TAX_RATE" />
+		<property name="taxAmount" type="java.math.BigDecimal" column="TAX_AMOUNT" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="issueStatus" type="java.lang.String" column="ISSUE_STATUS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="invoiceContent" type="java.lang.String" column="INVOICE_CONTENT" />
+		<property name="invoiceStatus" type="java.lang.String" column="INVOICE_STATUS" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

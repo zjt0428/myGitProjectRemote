@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AmortizationInitialization" table="T_AMORTIZATION_INITIALIZATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="initializationId" column="INITIALIZATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="formationTime" type="java.lang.String" column="FORMATION_TIME" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="originalValue" type="java.lang.String" column="ORIGINAL_VALUE" />
+		<!-- <property name="totalAmortizationMonths" type="java.lang.String" column="TOTAL_AMORTIZATION_MONTHS" /> -->
+		<property name="amortizedMonths" type="java.lang.String" column="AMORTIZED_MONTHS" />
+		<property name="amortizedAmount" type="java.lang.String" column="AMORTIZED_AMOUNT" />
+		<property name="notyetAmortizedMonths" type="java.lang.String" column="NOTYET_AMORTIZED_MONTHS" />
+		<property name="notyetAmortizedAmount" type="java.lang.String" column="NOTYET_AMORTIZED_AMOUNT" />
+		<many-to-one name="materialsAmortization" column="AMORTIZATION_ID" class="com.knight.emms.model.MaterialsAmortization" fetch="join" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-9-6 14:06:03 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.SettleProject" table="T_SETTLE_PROJECT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+        <id name="settleId" type="java.lang.Long">
+            <column name="SETTLE_ID" />
+            <generator class="native" />
+        </id>
+        <property name="settleSerial" type="java.lang.String">
+            <column name="SETTLE_SERIAL" length="64" />
+        </property>
+        <property name="settleMan" type="java.lang.String">
+            <column name="SETTLE_MAN" length="64" not-null="true" />
+        </property>
+        <property name="settleDate" type="java.lang.String">
+            <column name="SETTLE_DATE" length="32" />
+        </property>
+        <property name="settleTitle" type="java.lang.String">
+            <column name="SETTLE_TITLE" length="64" />
+        </property>
+        <property name="startDate" type="java.lang.String">
+            <column name="START_DATE" length="32" />
+        </property>
+        <property name="endDate" type="java.lang.String">
+            <column name="END_DATE" length="32" />
+        </property>
+        <property name="contractSerial" type="java.lang.String">
+            <column name="CONTRACT_SERIAL" length="64" not-null="true" />
+        </property>
+        <property name="contractCategory" type="java.lang.String">
+            <column name="CONTRACT_CATEGORY" length="16" />
+        </property>
+        <property name="projectName" type="java.lang.String">
+            <column name="PROJECT_NAME" length="64" />
+        </property>
+        <property name="taxMode" type="java.lang.String">
+            <column name="TAX_MODE" length="16" />
+        </property>
+         <property name="taxModeName" type="java.lang.String">
+            <column name="TAX_MODE_NAME" length="16" />
+        </property>
+        <property name="taxRate" type="java.math.BigDecimal">
+            <column name="TAX_RATE" precision="12" />
+        </property>
+        <property name="rentalRate" type="java.math.BigDecimal">
+            <column name="RENTAL_RATE" precision="12" />
+        </property>
+        <property name="rentalPrice" type="java.math.BigDecimal">
+            <column name="RENTAL_PRICE" precision="12" />
+        </property>
+        <property name="depId" type="java.lang.Long">
+            <column name="DEP_ID"  />
+        </property>
+        <property name="depName" type="java.lang.String">
+            <column name="DEP_NAME"  length="32" />
+        </property>
+        <property name="initialSettleAmount" type="java.math.BigDecimal">
+            <column name="INITIAL_SETTLE_AMOUNT" precision="12" />
+        </property>
+        <property name="currentSettleAmount" type="java.math.BigDecimal">
+            <column name="CURRENT_SETTLE_AMOUNT" precision="12" />
+        </property>
+        <property name="totalSettleAmount" type="java.math.BigDecimal">
+            <column name="TOTAL_SETTLE_AMOUNT" precision="12" />
+        </property>
+        <property name="backOff" type="java.lang.String">
+            <column name="BACK_OFF" length="32" />
+        </property>
+        <property name="contractId" type="java.lang.Long">
+            <column name="CONTRACT_ID"  />
+        </property>       
+        <property name="settleProjectState" type="java.lang.String">
+            <column name="SETTLEPROJECT_STATE"  length="32"/>
+        </property>
+        <property name="detailCaculateTime" type="java.lang.String">
+            <column name="DETAIL_CACULATE_TIME" length="24" />
+        </property>
+        <set name="settleProjectDetailsSet" cascade="all" inverse="false" lazy="true">
+			<key column="RELATE_ID" />	
+			<one-to-many class="com.knight.emms.model.SettleFee" />
+		<filter name="nameEqualFilter" condition="RELATE_MODULE=:relateModule"></filter>
+		</set>
+	</class>
+	 <filter-def name="nameEqualFilter" >
+	  <filter-param name="relateModule" type="java.lang.String"/>
+	 </filter-def>
+</hibernate-mapping>

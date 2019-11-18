@@ -1,0 +1,3658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="4467" pageHeight="842" columnWidth="4427" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="0e0a4168-407e-47cf-9545-df17dc85b6c3">
+	<property name="ireport.zoom" value="1.3636363636363638"/>
+	<property name="ireport.x" value="986"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="before" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="paEntName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractNo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="depId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="month" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="free" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="year2" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @year VARCHAR(7)
+DECLARE @year2 VARCHAR(7)
+DECLARE @before VARCHAR(4)
+DECLARE @month  Integer
+DECLARE @free  Integer
+DECLARE @paEntName VARCHAR(64)
+DECLARE @contractNo VARCHAR(64)
+DECLARE @projectName VARCHAR(128)
+DECLARE @userName VARCHAR(64)
+DECLARE @depId BIGINT
+DECLARE @sortField VARCHAR(500)
+DECLARE @sortField2 VARCHAR(500)
+SET @year = $P{year}
+SET @year2 = $P{year2}
+SET @before = $P{before}
+SET @month = $P{month}
+SET @free = $P{free}
+SET @paEntName = $P{paEntName}
+SET @contractNo = $P{contractNo}
+SET @projectName = $P{projectName}
+SET @userName = $P{userName}
+SET @depId = $P{depId}
+set @sortField = '第一建筑,第二建筑,第三建筑,第四建筑,第五建筑,第一安装,第二安装,联合建设,建筑工程,基础建设,冶金建设'
+set @sortField2 = '第一,第二,第三,第四,第五,第六,第七,第八,第九,第十,第十一,第十二,第十三,第十四,第十五,第十六,第十七,第十八,第十九,第二十,第二十一,第二十二,第二十三,第二十四'
+;WITH QUERY AS (--已生效结算单的合同详情
+	SELECT
+		CL.CONTRACT_ID,
+		CL.PA_ENT,
+		CL.PA_ENT_NAME AS paEntName,
+		CL.CONSTRACT_NO,
+		CL.PROJECT_NAME,
+		P.MATERIAL_PRACTI_NAME AS USER_NAME,
+		CASE WHEN CHARINDEX('自营',BM.VALUE)>0  THEN '1自营'
+		WHEN CHARINDEX('联营',BM.VALUE)>0  THEN '2联营'
+			ELSE '3'+BM.VALUE END AS 'ZI_YING',
+		CASE WHEN PATINDEX('广西建工集团%',CL.PA_ENT_NAME)<>0 AND CHARINDEX(RIGHT(LEFT(CL.PA_ENT_NAME,10),4),@sortField)>0 THEN CHARINDEX(RIGHT(LEFT(CL.PA_ENT_NAME,10),4),@sortField)
+				WHEN PATINDEX('广西建工集团%',CL.PA_ENT_NAME)<>0 AND CHARINDEX(RIGHT(LEFT(CL.PA_ENT_NAME,10),4),@sortField)=0 THEN 99
+				ELSE 199 END 'SORT_FIELD',		--排序字段  【总公司排序】
+			CASE WHEN PATINDEX('广西建工集团%',CL.PA_ENT_NAME)<>0 AND CHARINDEX('公司第',CL.PA_ENT_NAME)>0 THEN CHARINDEX(REPLACE(RIGHT(CL.PA_ENT_NAME,LEN(CL.PA_ENT_NAME)-(charindex('公司',CL.PA_ENT_NAME)+1)),'分公司',''),@sortField2)
+				 WHEN PATINDEX('广西建工集团%',CL.PA_ENT_NAME)<>0 AND charindex('公司',CL.PA_ENT_NAME)+1 = LEN(CL.PA_ENT_NAME) THEN 0
+				 ELSE 199 END 'SORT_FIELD2',	--【分公司排序】
+			CL.PA_ENT_NAME,
+			SUBSTRING(CL.PA_ENT_NAME,0,charindex('公司',CL.PA_ENT_NAME)+2) AS 'PARENT_COMPANY',
+		(SELECT (CASE WHEN D.DEP_LEVEL=3 THEN D.DEP_NAME WHEN D.DEP_LEVEL=4 THEN PD.DEP_NAME END)
+			FROM DEPARTMENT D,DEPARTMENT PD WHERE D.PARENT_ID=PD.DEP_ID AND D.DEP_ID=CL.COMPETENT_DEPARTMET_ID) AS 'DEP_NAME',
+	CL.COMPETENT_DEPARTMET_ID AS DEP_ID
+	FROM T_CONTRACT_LEASE CL
+	LEFT JOIN T_PROJECT P ON CL.PROJECT_ID = P.PROJECT_ID
+	LEFT JOIN BM_CONTRACT_CATEGORY BM ON BM.CODE = CL.CONTRACT_CATEGORY
+	WHERE  CL.CONTRACT_ID IN ( SELECT
+	ISNULL(S.CONTRACT_ID,G.CONTRACT_ID) AS 'CONTRACT_ID'
+	FROM
+(SELECT SC.CONTRACT_ID FROM T_SETTLE_CONTRACT SC WHERE SC.DEL_FLAG='1' AND SC.EFFECTIVE='1' GROUP BY SC.CONTRACT_ID)S
+FULL JOIN(
+		SELECT T.CONTRACT_ID
+		FROM (
+			SELECT AR.CONTRACT_ID
+			FROM T_AMOUNT_RECEIVE AR
+			WHERE AR.DEL_FLAG='1' AND AR.APPLYFOR_STATE='3'
+				UNION ALL
+			SELECT AR.CONTRACT_ID
+			FROM T_ADVANCE_RECEIVE AR
+			WHERE AR.APPLYFOR_STATE='3' AND AR.DEL_FLAG='1')T GROUP BY T.CONTRACT_ID)G ON S.CONTRACT_ID = G.CONTRACT_ID  )
+	AND CL.DEL_FLAG = '1'
+),
+QUERY1 AS (--去年应收款、已收款、尚欠款
+	SELECT
+		ISNULL(SUM(T.SETTLE_AMOUNT),0) AS settleAmount,
+		ISNULL(SUM(T.RECEIVE_AMOUNT),0) AS receiveAmount,
+		ISNULL(SUM(T.SETTLE_AMOUNT) - SUM(T.RECEIVE_AMOUNT),0) AS oweAmount,
+		T.CONTRACT_ID
+	FROM (
+		SELECT
+			SETTLE_AMOUNT,
+			0 AS RECEIVE_AMOUNT,
+			START_SETTLE_DATE AS NEW_DATE,
+			CONTRACT_ID
+		FROM T_SETTLE_CONTRACT SC
+        WHERE DEL_FLAG=1 AND EFFECTIVE=1
+		UNION ALL
+		SELECT
+			0 AS SETTLE_AMOUNT,
+			AR.RECEIVE_AMOUNT,
+			AR.RECEIVE_DATE AS NEW_DATE,
+			AR.CONTRACT_ID
+		FROM T_AMOUNT_RECEIVE AR
+		WHERE (AR.RELATE_MODULE = 'SETTLE_CONTRACT' OR AR.RELATE_MODULE = 'CONTRACT_LEASE')
+		AND AR.DEL_FLAG=1 AND AR.APPLYFOR_STATE=3
+		UNION ALL
+		SELECT
+			0 AS SETTLE_AMOUNT,
+			ADVANCE_RECEIVE_AMOUNT AS RECEIVE_AMOUNT,
+			ADVANCE_DATE AS NEW_DATE,
+			CONTRACT_ID
+		FROM T_ADVANCE_RECEIVE AR WHERE AR.APPLYFOR_STATE='3' AND AR.DEL_FLAG='1') T
+	WHERE  LEFT(T.NEW_DATE,4) <= @before
+	GROUP BY T.CONTRACT_ID
+),
+QUERY2 AS (--今年应收款、已收款、尚欠款
+	SELECT
+		ISNULL(SUM(T.SETTLE_AMOUNT),0) AS settleAmountNew,
+		ISNULL(SUM(T.RECEIVE_AMOUNT),0) AS receiveAmountNew,
+		ISNULL(SUM(T.SETTLE_AMOUNT) - SUM(T.COST_TOTAL),0) AS settleAmountSecond,
+		ISNULL(SUM(T.SETTLE_AMOUNT) - SUM(T.RECEIVE_AMOUNT),0) AS oweAmountNew,
+		T.CONTRACT_ID
+	FROM (
+		SELECT
+			SETTLE_AMOUNT,
+			0 AS RECEIVE_AMOUNT,
+			0 AS COST_TOTAL,
+			START_SETTLE_DATE AS NEW_DATE,
+			CONTRACT_ID
+		FROM T_SETTLE_CONTRACT SC
+        WHERE DEL_FLAG=1 AND EFFECTIVE=1
+		UNION ALL
+		SELECT
+			0 AS SETTLE_AMOUNT,
+			0 AS RECEIVE_AMOUNT,
+			O.COST_TOTAL AS COST_TOTAL,
+			SC.START_SETTLE_DATE AS NEW_DATE,
+			SC.CONTRACT_ID
+		FROM T_SETTLE_CONTRACT SC
+		LEFT JOIN T_OPERATOR_SALARY_STATEMENT O ON SC.SETTLE_ID = O.SETTLE_ID
+		WHERE 1 = @free
+        AND SC.DEL_FLAG=1 AND SC.EFFECTIVE=1
+		UNION ALL
+		SELECT
+			0 AS SETTLE_AMOUNT,
+			AR.RECEIVE_AMOUNT,
+			0 AS COST_TOTAL,
+			RECEIVE_DATE AS NEW_DATE,
+			AR.CONTRACT_ID
+		FROM T_AMOUNT_RECEIVE AR
+        WHERE (AR.RELATE_MODULE = 'SETTLE_CONTRACT' OR AR.RELATE_MODULE = 'CONTRACT_LEASE')
+		AND AR.DEL_FLAG=1 AND AR.APPLYFOR_STATE=3
+		UNION ALL
+		SELECT
+			0 AS SETTLE_AMOUNT,
+			ADVANCE_RECEIVE_AMOUNT AS RECEIVE_AMOUNT,
+			0 AS COST_TOTAL,
+			ADVANCE_DATE AS NEW_DATE,
+			CONTRACT_ID
+		FROM T_ADVANCE_RECEIVE AR WHERE AR.APPLYFOR_STATE='3' AND AR.DEL_FLAG='1') T
+	WHERE LEFT(T.NEW_DATE,7) >= @year2 AND LEFT(T.NEW_DATE,7) <= @year
+	GROUP BY T.CONTRACT_ID
+),
+QUERY3 AS (--今年每月应收款、已收款详情
+	SELECT
+		G.[01],G.[02],G.[03],G.[04],G.[05],G.[06],G.[07],G.[08],G.[09],G.[10],G.[11],G.[12],
+		H.[01-],H.[02-],H.[03-],H.[04-],H.[05-],H.[06-],H.[07-],H.[08-],H.[09-],H.[10-],H.[11-],H.[12-],
+		ISNULL(G.CONTRACT_ID, H.contractId) as CONTRACT_ID
+	FROM(
+		SELECT
+			ISNULL(SC.SETTLE_AMOUNT,0) AS SETTLE_AMOUNT,
+			SUBSTRING(SC.START_SETTLE_DATE, 6, 2) AS NEW_DATE,
+			SC.CONTRACT_ID
+		FROM T_SETTLE_CONTRACT SC
+		WHERE LEFT(SC.START_SETTLE_DATE,7) >= @year2 AND LEFT(SC.START_SETTLE_DATE,7) <= @year
+        AND SC.DEL_FLAG=1 AND SC.EFFECTIVE=1
+		UNION ALL
+		SELECT
+			- O.COST_TOTAL AS SETTLE_AMOUNT,
+			SUBSTRING(SE.START_SETTLE_DATE, 6, 2) AS NEW_DATE,
+			SE.CONTRACT_ID
+		FROM T_SETTLE_CONTRACT SE
+		LEFT JOIN T_OPERATOR_SALARY_STATEMENT O ON SE.SETTLE_ID = O.SETTLE_ID
+		WHERE 1 = @free AND  LEFT(SE.START_SETTLE_DATE,7) >= @year2 AND LEFT(SE.START_SETTLE_DATE,7) <= @year
+        AND SE.DEL_FLAG=1 AND SE.EFFECTIVE=1
+		)G
+	PIVOT(
+		SUM(G.SETTLE_AMOUNT) FOR NEW_DATE IN ([01],[02],[03],[04],[05],[06],[07],[08],[09],[10],[11],[12])
+	) AS G
+	FULL JOIN
+	(SELECT
+		S.*
+	FROM(SELECT
+			ISNULL(AR.RECEIVE_AMOUNT,0) AS RECEIVE_AMOUNT,
+			SUBSTRING(AR.RECEIVE_DATE, 6, 3) AS NEW_DATE,
+			AR.CONTRACT_ID AS contractId
+		FROM T_AMOUNT_RECEIVE AR
+		WHERE (AR.RELATE_MODULE = 'SETTLE_CONTRACT' OR AR.RELATE_MODULE = 'CONTRACT_LEASE')
+        AND AR.DEL_FLAG=1 AND AR.APPLYFOR_STATE=3
+		AND LEFT(AR.RECEIVE_DATE,7) >= @year2 AND LEFT(AR.RECEIVE_DATE,7) <= @year
+		UNION ALL
+		SELECT
+			ISNULL(ADVANCE_RECEIVE_AMOUNT,0) AS RECEIVE_AMOUNT,
+			SUBSTRING(ADVANCE_DATE, 6, 3) AS NEW_DATE,
+			CONTRACT_ID AS contractId
+		FROM T_ADVANCE_RECEIVE AR
+		WHERE  LEFT(AR.ADVANCE_DATE,7) >= @year2 AND LEFT(AR.ADVANCE_DATE,7) <= @year
+        AND AR.DEL_FLAG=1 AND AR.APPLYFOR_STATE=3
+		)S
+		PIVOT(
+			SUM(S.RECEIVE_AMOUNT) FOR NEW_DATE IN ([01-],[02-],[03-],[04-],[05-],[06-],[07-],[08-],[09-],[10-],[11-],[12-])
+		) AS S)H ON H.contractId = G.CONTRACT_ID
+),
+QUERY4 AS (--今年前应收款、已收款、尚欠款
+	SELECT
+		ISNULL(SUM(T.SETTLE_AMOUNT),0) AS settleAmountAll,
+		ISNULL(SUM(T.RECEIVE_AMOUNT),0) AS receiveAmountAll,
+		ISNULL(SUM(T.SETTLE_AMOUNT) - SUM(T.RECEIVE_AMOUNT),0) AS oweAmountAll,
+		T.CONTRACT_ID
+	FROM (
+		SELECT
+			SETTLE_AMOUNT,
+			0 AS RECEIVE_AMOUNT,
+			START_SETTLE_DATE AS NEW_DATE,
+			CONTRACT_ID
+		FROM T_SETTLE_CONTRACT SC
+        WHERE SC.DEL_FLAG=1 AND SC.EFFECTIVE=1
+		UNION ALL
+		SELECT
+			0 AS SETTLE_AMOUNT,
+			AR.RECEIVE_AMOUNT,
+			AR.RECEIVE_DATE AS NEW_DATE,
+			AR.CONTRACT_ID
+		FROM T_AMOUNT_RECEIVE AR
+		WHERE (AR.RELATE_MODULE = 'SETTLE_CONTRACT' OR AR.RELATE_MODULE = 'CONTRACT_LEASE')
+        AND AR.DEL_FLAG=1 AND AR.APPLYFOR_STATE=3
+		UNION ALL
+		SELECT
+			0 AS SETTLE_AMOUNT,
+			ADVANCE_RECEIVE_AMOUNT AS RECEIVE_AMOUNT,
+			ADVANCE_DATE AS NEW_DATE,
+			CONTRACT_ID
+		FROM T_ADVANCE_RECEIVE AR WHERE AR.DEL_FLAG=1 AND AR.APPLYFOR_STATE=3) T
+	WHERE  LEFT(T.NEW_DATE,7) <= @year
+	GROUP BY T.CONTRACT_ID
+)
+SELECT
+        Q.PA_ENT,
+        Q.paEntName,
+        Q.PROJECT_NAME,
+        Q.CONSTRACT_NO,
+        Q.USER_NAME,
+        Q.DEP_ID,
+        Q.DEP_NAME,
+        Q.ZI_YING,
+        Q.PARENT_COMPANY,
+        ISNULL(SUM(Q1.settleAmount),0) AS settleAmount,
+        ISNULL(SUM(Q1.receiveAmount),0) AS receiveAmount,
+        ISNULL(SUM(Q1.oweAmount),0) AS oweAmount,
+        ISNULL(SUM(Q4.settleAmountAll),0) AS settleAmountAll,
+        ISNULL(SUM(Q4.receiveAmountAll),0) AS receiveAmountAll,
+        ISNULL(SUM(Q4.oweAmountAll),0) AS oweAmountAll,
+        ISNULL(SUM(Q2.settleAmountNew),0) AS settleAmountNew,
+        ISNULL(SUM(Q2.receiveAmountNew),0) AS receiveAmountNew,
+        ISNULL(SUM(Q2.settleAmountSecond),0) AS settleAmountSecond,
+        ISNULL(SUM(Q2.oweAmountNew),0) AS oweAmountNew,
+        ISNULL(SUM(Q3.[01]),0) AS [01],ISNULL(SUM(Q3.[02]),0) AS [02],ISNULL(SUM(Q3.[03]),0) AS [03],ISNULL(SUM(Q3.[04]),0) AS [04],ISNULL(SUM(Q3.[05]),0) AS [05],ISNULL(SUM(Q3.[06]),0) AS [06],
+        ISNULL(SUM(Q3.[07]),0) AS [07],ISNULL(SUM(Q3.[08]),0) AS [08],ISNULL(SUM(Q3.[09]),0) AS [09],ISNULL(SUM(Q3.[10]),0) AS [10],ISNULL(SUM(Q3.[11]),0) AS [11],ISNULL(SUM(Q3.[12]),0) AS [12],
+        ISNULL(SUM(Q3.[01-]),0) AS [01-],ISNULL(SUM(Q3.[02-]),0) AS [02-],ISNULL(SUM(Q3.[03-]),0) AS [03-],ISNULL(SUM(Q3.[04-]),0) AS [04-],ISNULL(SUM(Q3.[05-]),0) AS [05-],ISNULL(SUM(Q3.[06-]),0) AS [06-],
+        ISNULL(SUM(Q3.[07-]),0) AS [07-],ISNULL(SUM(Q3.[08-]),0) AS [08-],ISNULL(SUM(Q3.[09-]),0) AS [09-],ISNULL(SUM(Q3.[10-]),0) AS [10-],ISNULL(SUM(Q3.[11-]),0) AS [11-],ISNULL(SUM(Q3.[12-]),0) AS [12-]
+    FROM QUERY Q
+    LEFT JOIN QUERY1 Q1 ON Q.CONTRACT_ID = Q1.CONTRACT_ID
+    LEFT JOIN QUERY2 Q2 ON Q.CONTRACT_ID = Q2.CONTRACT_ID
+    LEFT JOIN QUERY3 Q3 ON Q.CONTRACT_ID = Q3.CONTRACT_ID
+    LEFT JOIN QUERY4 Q4 ON Q.CONTRACT_ID = Q4.CONTRACT_ID
+    WHERE (Q.PA_ENT_NAME LIKE '%'+@paEntName+'%' OR @paEntName IS NULL OR @paEntName = '')
+    AND (Q.CONSTRACT_NO LIKE '%'+@contractNo+'%' OR @contractNo IS NULL OR @contractNo = '')
+    AND (Q.PROJECT_NAME LIKE '%'+@projectName+'%' OR @projectName IS NULL OR @projectName = '')
+    AND (Q.USER_NAME LIKE '%'+@userName+'%' OR @userName IS NULL OR @userName = '')
+    AND (Q.DEP_ID = @depId OR @depId IS NULL OR @depId = '')
+    GROUP BY Q.SORT_FIELD,Q.SORT_FIELD2,Q.PA_ENT,Q.paEntName,Q.PROJECT_NAME,Q.CONSTRACT_NO,Q.USER_NAME,Q.DEP_ID,Q.DEP_NAME,Q.ZI_YING,Q.PARENT_COMPANY
+    ORDER BY Q.ZI_YING,Q.SORT_FIELD,Q.SORT_FIELD2,Q.paEntName,Q.PROJECT_NAME,Q.CONSTRACT_NO]]>
+	</queryString>
+	<field name="PA_ENT" class="java.lang.Long"/>
+	<field name="paEntName" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="CONSTRACT_NO" class="java.lang.String"/>
+	<field name="USER_NAME" class="java.lang.String"/>
+	<field name="DEP_ID" class="java.lang.Long"/>
+	<field name="DEP_NAME" class="java.lang.String"/>
+	<field name="ZI_YING" class="java.lang.String"/>
+	<field name="PARENT_COMPANY" class="java.lang.String"/>
+	<field name="settleAmount" class="java.math.BigDecimal"/>
+	<field name="receiveAmount" class="java.math.BigDecimal"/>
+	<field name="oweAmount" class="java.math.BigDecimal"/>
+	<field name="settleAmountAll" class="java.math.BigDecimal"/>
+	<field name="receiveAmountAll" class="java.math.BigDecimal"/>
+	<field name="oweAmountAll" class="java.math.BigDecimal"/>
+	<field name="settleAmountNew" class="java.math.BigDecimal"/>
+	<field name="receiveAmountNew" class="java.math.BigDecimal"/>
+	<field name="settleAmountSecond" class="java.math.BigDecimal"/>
+	<field name="oweAmountNew" class="java.math.BigDecimal"/>
+	<field name="01" class="java.math.BigDecimal"/>
+	<field name="02" class="java.math.BigDecimal"/>
+	<field name="03" class="java.math.BigDecimal"/>
+	<field name="04" class="java.math.BigDecimal"/>
+	<field name="05" class="java.math.BigDecimal"/>
+	<field name="06" class="java.math.BigDecimal"/>
+	<field name="07" class="java.math.BigDecimal"/>
+	<field name="08" class="java.math.BigDecimal"/>
+	<field name="09" class="java.math.BigDecimal"/>
+	<field name="10" class="java.math.BigDecimal"/>
+	<field name="11" class="java.math.BigDecimal"/>
+	<field name="12" class="java.math.BigDecimal"/>
+	<field name="01-" class="java.math.BigDecimal"/>
+	<field name="02-" class="java.math.BigDecimal"/>
+	<field name="03-" class="java.math.BigDecimal"/>
+	<field name="04-" class="java.math.BigDecimal"/>
+	<field name="05-" class="java.math.BigDecimal"/>
+	<field name="06-" class="java.math.BigDecimal"/>
+	<field name="07-" class="java.math.BigDecimal"/>
+	<field name="08-" class="java.math.BigDecimal"/>
+	<field name="09-" class="java.math.BigDecimal"/>
+	<field name="10-" class="java.math.BigDecimal"/>
+	<field name="11-" class="java.math.BigDecimal"/>
+	<field name="12-" class="java.math.BigDecimal"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<variable name="settleAmount1" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmount}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmount1" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmount}]]></variableExpression>
+	</variable>
+	<variable name="oweAmount1" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmount}]]></variableExpression>
+	</variable>
+	<variable name="settleAmountNew1" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmountNew1" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="oweAmountNew1" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="01" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{01}]]></variableExpression>
+	</variable>
+	<variable name="01-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{01-}]]></variableExpression>
+	</variable>
+	<variable name="02" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{02}]]></variableExpression>
+	</variable>
+	<variable name="02-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{02-}]]></variableExpression>
+	</variable>
+	<variable name="03" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{03}]]></variableExpression>
+	</variable>
+	<variable name="03-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{03-}]]></variableExpression>
+	</variable>
+	<variable name="04" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{04}]]></variableExpression>
+	</variable>
+	<variable name="04-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{04-}]]></variableExpression>
+	</variable>
+	<variable name="05" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{05}]]></variableExpression>
+	</variable>
+	<variable name="05-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{05-}]]></variableExpression>
+	</variable>
+	<variable name="06" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{06}]]></variableExpression>
+	</variable>
+	<variable name="06-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{06-}]]></variableExpression>
+	</variable>
+	<variable name="07" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{07}]]></variableExpression>
+	</variable>
+	<variable name="07-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{07-}]]></variableExpression>
+	</variable>
+	<variable name="08" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{08}]]></variableExpression>
+	</variable>
+	<variable name="08-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{08-}]]></variableExpression>
+	</variable>
+	<variable name="09" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{09}]]></variableExpression>
+	</variable>
+	<variable name="09-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{09-}]]></variableExpression>
+	</variable>
+	<variable name="10" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{10}]]></variableExpression>
+	</variable>
+	<variable name="10-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{10-}]]></variableExpression>
+	</variable>
+	<variable name="11" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{11}]]></variableExpression>
+	</variable>
+	<variable name="11-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{11-}]]></variableExpression>
+	</variable>
+	<variable name="12" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{12}]]></variableExpression>
+	</variable>
+	<variable name="12-" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{12-}]]></variableExpression>
+	</variable>
+	<variable name="settleAmount2" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmount2" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="oweAmount2" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="settleAmountSecond1" class="java.math.BigDecimal" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountSecond}]]></variableExpression>
+	</variable>
+	<variable name="settleAmount1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmount}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmount1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmount}]]></variableExpression>
+	</variable>
+	<variable name="oweAmount1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmount}]]></variableExpression>
+	</variable>
+	<variable name="settleAmountNew1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmountNew1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="oweAmountNew1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="01_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{01}]]></variableExpression>
+	</variable>
+	<variable name="01-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{01-}]]></variableExpression>
+	</variable>
+	<variable name="02_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{02}]]></variableExpression>
+	</variable>
+	<variable name="02-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{02-}]]></variableExpression>
+	</variable>
+	<variable name="03_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{03}]]></variableExpression>
+	</variable>
+	<variable name="03-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{03-}]]></variableExpression>
+	</variable>
+	<variable name="04_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{04}]]></variableExpression>
+	</variable>
+	<variable name="04-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{04-}]]></variableExpression>
+	</variable>
+	<variable name="05_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{05}]]></variableExpression>
+	</variable>
+	<variable name="05-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{05-}]]></variableExpression>
+	</variable>
+	<variable name="06_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{06}]]></variableExpression>
+	</variable>
+	<variable name="06-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{06-}]]></variableExpression>
+	</variable>
+	<variable name="07_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{07}]]></variableExpression>
+	</variable>
+	<variable name="07-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{07-}]]></variableExpression>
+	</variable>
+	<variable name="08_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{08}]]></variableExpression>
+	</variable>
+	<variable name="08-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{08-}]]></variableExpression>
+	</variable>
+	<variable name="09_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{09}]]></variableExpression>
+	</variable>
+	<variable name="09-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{09-}]]></variableExpression>
+	</variable>
+	<variable name="10_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{10}]]></variableExpression>
+	</variable>
+	<variable name="10-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{10-}]]></variableExpression>
+	</variable>
+	<variable name="11_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{11}]]></variableExpression>
+	</variable>
+	<variable name="11-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{11-}]]></variableExpression>
+	</variable>
+	<variable name="12_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{12}]]></variableExpression>
+	</variable>
+	<variable name="12-_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{12-}]]></variableExpression>
+	</variable>
+	<variable name="settleAmount2_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmount2_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="oweAmount2_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="settleAmountSecond1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="ZI_YING" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountSecond}]]></variableExpression>
+	</variable>
+	<variable name="settleAmount1_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmount}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmount1_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmount}]]></variableExpression>
+	</variable>
+	<variable name="oweAmount1_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmount}]]></variableExpression>
+	</variable>
+	<variable name="settleAmountNew1_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmountNew1_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="oweAmountNew1_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmountNew}]]></variableExpression>
+	</variable>
+	<variable name="01_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{01}]]></variableExpression>
+	</variable>
+	<variable name="01-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{01-}]]></variableExpression>
+	</variable>
+	<variable name="02_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{02}]]></variableExpression>
+	</variable>
+	<variable name="02-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{02-}]]></variableExpression>
+	</variable>
+	<variable name="03_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{03}]]></variableExpression>
+	</variable>
+	<variable name="03-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{03-}]]></variableExpression>
+	</variable>
+	<variable name="04_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{04}]]></variableExpression>
+	</variable>
+	<variable name="04-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{04-}]]></variableExpression>
+	</variable>
+	<variable name="05_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{05}]]></variableExpression>
+	</variable>
+	<variable name="05-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{05-}]]></variableExpression>
+	</variable>
+	<variable name="06_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{06}]]></variableExpression>
+	</variable>
+	<variable name="06-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{06-}]]></variableExpression>
+	</variable>
+	<variable name="07_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{07}]]></variableExpression>
+	</variable>
+	<variable name="07-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{07-}]]></variableExpression>
+	</variable>
+	<variable name="08_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{08}]]></variableExpression>
+	</variable>
+	<variable name="08-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{08-}]]></variableExpression>
+	</variable>
+	<variable name="09_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{09}]]></variableExpression>
+	</variable>
+	<variable name="09-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{09-}]]></variableExpression>
+	</variable>
+	<variable name="10_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{10}]]></variableExpression>
+	</variable>
+	<variable name="10-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{10-}]]></variableExpression>
+	</variable>
+	<variable name="11_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{11}]]></variableExpression>
+	</variable>
+	<variable name="11-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{11-}]]></variableExpression>
+	</variable>
+	<variable name="12_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{12}]]></variableExpression>
+	</variable>
+	<variable name="12-_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{12-}]]></variableExpression>
+	</variable>
+	<variable name="settleAmount2_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="receiveAmount2_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{receiveAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="oweAmount2_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{oweAmountAll}]]></variableExpression>
+	</variable>
+	<variable name="settleAmountSecond1_1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="PARENT_COMPANY" calculation="Sum">
+		<variableExpression><![CDATA[$F{settleAmountSecond}]]></variableExpression>
+	</variable>
+	<group name="PARENT_COMPANY">
+		<groupExpression><![CDATA[$F{PARENT_COMPANY}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="0" width="827" height="20" backcolor="#99FF00" uuid="81033c55-0670-4691-b3c5-e544701ed76b"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{PARENT_COMPANY}+"合计"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="827" y="0" width="100" height="20" backcolor="#99FF00" uuid="e037857f-632d-4ed4-907c-0ddf6ef15e9f"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmount1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="927" y="0" width="100" height="20" backcolor="#99FF00" uuid="103165a5-4be1-4562-9ed0-b327527a02a2"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmount1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1027" y="0" width="100" height="20" backcolor="#99FF00" uuid="d217ad63-1153-40c0-a14c-a0f5954ad676"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmount1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1127" y="0" width="100" height="20" backcolor="#99FF00" uuid="6a6c1af5-8fc2-4f8e-a40e-868043eef5af"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmountNew1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1227" y="0" width="100" height="20" backcolor="#99FF00" uuid="b533077a-ad23-436d-a72c-ca8b3a076ef1"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmountNew1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1327" y="0" width="100" height="20" backcolor="#99FF00" uuid="d2c4eddb-e3d9-40c1-a1e2-e64fd223e350"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmountNew1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1427" y="0" width="100" height="20" backcolor="#99FF00" uuid="e92b59b9-083d-4627-a4f6-3f1249b73fb5"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmount2_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1527" y="0" width="100" height="20" backcolor="#99FF00" uuid="8ca17dc3-34f8-44d0-a71e-ec52fe99d8d4"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmount2_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1627" y="0" width="100" height="20" backcolor="#99FF00" uuid="86644ec8-5d15-4809-8564-220750e8caa1"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmount2_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1727" y="0" width="150" height="20" backcolor="#99FF00" uuid="e0aa05be-7818-482b-8769-cfa24d9b4a70"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmountSecond1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1877" y="0" width="150" height="20" backcolor="#99FF00" uuid="5035e45e-ca08-44a5-b1cc-23881866678c"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmountNew1_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2027" y="0" width="100" height="20" backcolor="#99FF00" uuid="265fb4dd-f451-4ed4-bb20-9f76ce18c9d4">
+						<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{01_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2127" y="0" width="100" height="20" backcolor="#99FF00" uuid="13779c8b-f97d-46b2-a346-aeb224dc6a09">
+						<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{01-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2227" y="0" width="100" height="20" backcolor="#99FF00" uuid="9a264019-e77a-443a-8dc5-8412ad4434a3">
+						<printWhenExpression><![CDATA[$P{month}>=2]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{02_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2327" y="0" width="100" height="20" backcolor="#99FF00" uuid="e696c522-2b93-4c77-83a7-c8a9c09c898e">
+						<printWhenExpression><![CDATA[$P{month}>=2]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{02-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2427" y="0" width="100" height="20" backcolor="#99FF00" uuid="0f08ecbd-5fb7-4221-b3b7-f70c415e0920">
+						<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{03_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2527" y="0" width="100" height="20" backcolor="#99FF00" uuid="0170278a-4e81-41bf-ad08-2202595d5964">
+						<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{03-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2627" y="0" width="100" height="20" backcolor="#99FF00" uuid="d9a99560-d847-4c9e-b52a-5dd10a5245af">
+						<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{04_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2727" y="0" width="100" height="20" backcolor="#99FF00" uuid="c2470eca-f418-4b1d-be6b-42ead23d063c">
+						<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{04-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2827" y="0" width="100" height="20" backcolor="#99FF00" uuid="81c3ed48-9db3-47bb-a3d7-33c983d02e00">
+						<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{05_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2927" y="0" width="100" height="20" backcolor="#99FF00" uuid="eb57893a-4631-444c-936e-c111bc68dbe1">
+						<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{05-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3027" y="0" width="100" height="20" backcolor="#99FF00" uuid="a87b6b19-ebae-4237-be4a-0cd10c798074">
+						<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{06_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3127" y="0" width="100" height="20" backcolor="#99FF00" uuid="73be03c7-d5b4-4c4d-b950-0da6d4c709d8">
+						<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{06-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3227" y="0" width="100" height="20" backcolor="#99FF00" uuid="00dd12eb-1b04-4921-8121-452165fdc1c7">
+						<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{07_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3327" y="0" width="100" height="20" backcolor="#99FF00" uuid="743ff608-59ac-4652-acae-7dd80e29d8c6">
+						<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{07-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3427" y="0" width="100" height="20" backcolor="#99FF00" uuid="0194254e-bcf4-4a5f-9081-1ece97d9d2a7">
+						<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{08_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3527" y="0" width="100" height="20" backcolor="#99FF00" uuid="0b4c0443-56e0-4786-ace4-49ad54839b0a">
+						<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{08-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3627" y="0" width="100" height="20" backcolor="#99FF00" uuid="98dac1fa-95b4-4b8d-8686-b0e26abdb7c1">
+						<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{09_1_1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3727" y="0" width="100" height="20" backcolor="#99FF00" uuid="e8fec604-1bcb-4ef5-8ff2-24ac9cca0d8c">
+						<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{09-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3827" y="0" width="100" height="20" backcolor="#99FF00" uuid="4e08f447-a386-492b-8fc3-e250d2203500">
+						<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{10_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3927" y="0" width="100" height="20" backcolor="#99FF00" uuid="af51e507-7515-41bc-a41a-6468b29c7fcd">
+						<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{10-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4027" y="0" width="100" height="20" backcolor="#99FF00" uuid="ff34339d-0722-4139-b0d5-0bd4dc99b210">
+						<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{11_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4127" y="0" width="100" height="20" backcolor="#99FF00" uuid="35db3b93-ecef-4107-9879-4655c8da1fcb">
+						<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{11-_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4227" y="0" width="100" height="20" backcolor="#99FF00" uuid="38419b94-9d63-454e-a917-9ae052b8039d">
+						<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{12_1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4327" y="0" width="100" height="20" backcolor="#99FF00" uuid="e057de42-2043-4858-a0c1-f9e6e8103434">
+						<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{12-_1_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="ZI_YING">
+		<groupExpression><![CDATA[$F{ZI_YING}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<textField isStretchWithOverflow="true">
+					<reportElement mode="Opaque" x="0" y="0" width="827" height="20" backcolor="#00FFFF" uuid="46dd2030-bc19-417b-a400-5f48c51fcd78"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{PARENT_COMPANY}+"【"+$F{ZI_YING}.substring(1)+"】"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="827" y="0" width="100" height="20" backcolor="#00FFFF" uuid="0f1cb533-fcb0-4b36-981f-c0aff601b736"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmount1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="927" y="0" width="100" height="20" backcolor="#00FFFF" uuid="3d6d86fe-3cd9-4618-bd92-b57e4802a178"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmount1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1027" y="0" width="100" height="20" backcolor="#00FFFF" uuid="7d8db148-8595-4ff2-972c-eda8bc6ddb5d"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmount1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1127" y="0" width="100" height="20" backcolor="#00FFFF" uuid="d94d38b5-2376-466e-9a7c-f3b99322e4e0"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmountNew1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1227" y="0" width="100" height="20" backcolor="#00FFFF" uuid="7eb4868c-5bcd-47c0-9640-6dd3b2926a42"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmountNew1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1327" y="0" width="100" height="20" backcolor="#00FFFF" uuid="fff99954-058d-4a32-bacb-27bf7f5797df"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmountNew1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1427" y="0" width="100" height="20" backcolor="#00FFFF" uuid="13cb3e9b-ee50-4293-8b8e-1f06c12e0a95"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmount2_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1527" y="0" width="100" height="20" backcolor="#00FFFF" uuid="8e0ba193-b425-4146-951d-1425d9d6f580"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmount2_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1627" y="0" width="100" height="20" backcolor="#00FFFF" uuid="bcea4960-90c4-44c4-b354-aec4b9970766"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmount2_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1727" y="0" width="150" height="20" backcolor="#00FFFF" uuid="92d41358-66d6-4e1c-95ec-2cb52dce132a"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmountSecond1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1877" y="0" width="150" height="20" backcolor="#00FFFF" uuid="8fbf85b8-67ab-4999-a825-5f4e50db62e3"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmountNew1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2027" y="0" width="100" height="20" backcolor="#00FFFF" uuid="5f6d43f5-6e65-472d-a241-3339f0a3ad2f">
+						<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{01_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2127" y="0" width="100" height="20" backcolor="#00FFFF" uuid="cf516709-aea9-499f-b640-6b306e0c4c77">
+						<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{01-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2227" y="0" width="100" height="20" backcolor="#00FFFF" uuid="0201dcdf-9173-42b0-82e9-69163371b4d9">
+						<printWhenExpression><![CDATA[$P{month}>=2]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{02_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2327" y="0" width="100" height="20" backcolor="#00FFFF" uuid="5d97441c-abcb-4ba6-aaa0-bedd121363e7">
+						<printWhenExpression><![CDATA[$P{month}>=2]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{02-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2427" y="0" width="100" height="20" backcolor="#00FFFF" uuid="ed93b207-65e8-4ab5-958e-8f34920ce126">
+						<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{03_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2527" y="0" width="100" height="20" backcolor="#00FFFF" uuid="51d38369-afeb-4ee7-8716-f63dea84829d">
+						<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{03-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2627" y="0" width="100" height="20" backcolor="#00FFFF" uuid="793ee5b8-d863-4d98-9b3f-49a36558f695">
+						<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{04_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2727" y="0" width="100" height="20" backcolor="#00FFFF" uuid="587da550-fcfa-4532-adf1-88def16f3485">
+						<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{04-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2827" y="0" width="100" height="20" backcolor="#00FFFF" uuid="7e2ce5ff-e0e4-4581-ad8d-9b316e7c558a">
+						<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{05_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2927" y="0" width="100" height="20" backcolor="#00FFFF" uuid="5031c56a-98ce-48c1-bb2a-c41c5095b402">
+						<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{05-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3027" y="0" width="100" height="20" backcolor="#00FFFF" uuid="90439ba2-c50b-4695-9ba3-3a78b4778e07">
+						<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{06_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3127" y="0" width="100" height="20" backcolor="#00FFFF" uuid="73d2cc4a-0eb0-4ab5-85a2-99fbecd86a65">
+						<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{06-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3227" y="0" width="100" height="20" backcolor="#00FFFF" uuid="e35fd124-9941-4aab-b2df-d3a8bd238e20">
+						<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{07_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3327" y="0" width="100" height="20" backcolor="#00FFFF" uuid="b510c1bb-6ac0-4e75-b849-699b8c92d7f1">
+						<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{07-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3427" y="0" width="100" height="20" backcolor="#00FFFF" uuid="1be3a8a3-1999-46af-8c2b-c50986c8fbc2">
+						<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{08_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3527" y="0" width="100" height="20" backcolor="#00FFFF" uuid="35cb61a0-2266-4655-99e9-1109188bfab7">
+						<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{08-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3627" y="0" width="100" height="20" backcolor="#00FFFF" uuid="4eb0de2d-fa19-41bc-a555-e99ca3f4e9a9">
+						<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{09_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3727" y="0" width="100" height="20" backcolor="#00FFFF" uuid="4f519407-1b98-488b-8fe1-e105a01a777d">
+						<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{09-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3827" y="0" width="100" height="20" backcolor="#00FFFF" uuid="c2ed8a0e-46d3-49bd-bfc1-08861a8f193e">
+						<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{10_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3927" y="0" width="100" height="20" backcolor="#00FFFF" uuid="48da56f3-b505-4801-afcc-0791e96929d2">
+						<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{10-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4027" y="0" width="100" height="20" backcolor="#00FFFF" uuid="a733ee61-63cb-42b2-b958-31601504b365">
+						<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{11_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4127" y="0" width="100" height="20" backcolor="#00FFFF" uuid="7896da08-99b2-4133-8a59-21954a69d7e9">
+						<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{11-_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4227" y="0" width="100" height="20" backcolor="#00FFFF" uuid="a6048a98-9288-463f-ace9-92cc746b753d">
+						<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{12_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4327" y="0" width="100" height="20" backcolor="#00FFFF" uuid="b057d501-9492-4630-9e8a-bcb599d56a91">
+						<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{12-_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="PA_ENT_NAME">
+		<groupExpression><![CDATA[$F{paEntName}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="827" height="20" backcolor="#FF9933" uuid="bd8b20b3-885d-44d0-9eff-ba14413f5d4a"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfEncoding="Cp1252"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{paEntName}+"小计"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="827" y="0" width="100" height="20" backcolor="#FF9933" uuid="9c1404ad-aad9-490f-89fe-74626e904233"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmount1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="927" y="0" width="100" height="20" backcolor="#FF9933" uuid="f0379c80-15b4-4766-b666-eef591d9f93d"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmount1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1027" y="0" width="100" height="20" backcolor="#FF9933" uuid="0ff866be-5a5e-43fe-b39e-433edbd84723"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmount1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1127" y="0" width="100" height="20" backcolor="#FF9933" uuid="d84070b8-236d-47ea-9631-114d049dd594"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmountNew1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1227" y="0" width="100" height="20" backcolor="#FF9933" uuid="0c1cb939-f67e-4a8e-bd49-916dc53caaaf"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmountNew1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1327" y="0" width="100" height="20" backcolor="#FF9933" uuid="5655850d-b54a-4955-b7a5-757c52f19f3a"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmountNew1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1727" y="0" width="150" height="20" backcolor="#FF9933" uuid="80fd038c-2d03-4773-a3f5-a4e683a7fff7"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmountSecond1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1877" y="0" width="150" height="20" backcolor="#FF9933" uuid="eff73fcb-6b54-45da-b4fa-0607826dee87"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmountNew1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2027" y="0" width="100" height="20" backcolor="#FF9933" uuid="b2f78efd-e462-4c97-b31a-f19cbbf219ba">
+						<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{01}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2127" y="0" width="100" height="20" backcolor="#FF9933" uuid="f79a50c3-fe4a-4faf-a03f-72d227ec64bc">
+						<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{01-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2227" y="0" width="100" height="20" backcolor="#FF9933" uuid="9b6c0ba4-e9ba-4e8d-a6b0-ab8313478331">
+						<printWhenExpression><![CDATA[$P{month}>=2]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{02}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2327" y="0" width="100" height="20" backcolor="#FF9933" uuid="0251ce74-23da-45e5-a05d-9d0b87e19156">
+						<printWhenExpression><![CDATA[$P{month}>=2]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{02-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2427" y="0" width="100" height="20" backcolor="#FF9933" uuid="aeb91443-28fd-4a81-87b1-476040b8288c">
+						<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{03}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2527" y="0" width="100" height="20" backcolor="#FF9933" uuid="6dec1211-7c56-45d7-a16c-53d8a725de54">
+						<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{03-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2627" y="0" width="100" height="20" backcolor="#FF9933" uuid="ab8098ae-55cb-4793-acba-9509dacf2926">
+						<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{04}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2727" y="0" width="100" height="20" backcolor="#FF9933" uuid="3ea78de9-66c1-48bd-830a-5507f5980ad6">
+						<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{04-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2827" y="0" width="100" height="20" backcolor="#FF9933" uuid="a7fa7d64-1960-402a-a6ef-7a728a08db7c">
+						<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{05}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="2927" y="0" width="100" height="20" backcolor="#FF9933" uuid="57972a31-4cc0-441b-b83a-8572f61bf077">
+						<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{05-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3027" y="0" width="100" height="20" backcolor="#FF9933" uuid="03b5b98e-b973-44c5-9f8c-696e70eeac84">
+						<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{06}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3127" y="0" width="100" height="20" backcolor="#FF9933" uuid="cbde262c-d3fd-454d-81a7-10124671a8d3">
+						<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{06-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3227" y="0" width="100" height="20" backcolor="#FF9933" uuid="04badea9-4948-4a5d-b421-5c1b835780a6">
+						<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{07}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3327" y="0" width="100" height="20" backcolor="#FF9933" uuid="c2b24faa-a39e-4830-beaf-c06922dfc872">
+						<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{07-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3527" y="0" width="100" height="20" backcolor="#FF9933" uuid="932e4a61-ad85-4599-a61f-cb15328d62e2">
+						<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{08-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3427" y="0" width="100" height="20" backcolor="#FF9933" uuid="ab7d9fc7-92f6-4e2a-bcc8-6521a6a01e87">
+						<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{08}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3627" y="0" width="100" height="20" backcolor="#FF9933" uuid="95cef870-1638-4f88-950f-01cfffe7a0b1">
+						<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{09}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3727" y="0" width="100" height="20" backcolor="#FF9933" uuid="f7e30694-2d5a-4ff0-af57-7b12326569ec">
+						<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{09-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3827" y="0" width="100" height="20" backcolor="#FF9933" uuid="a0ad58cf-c2d1-4d64-9b55-ae869a698f20">
+						<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{10}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="3927" y="0" width="100" height="20" backcolor="#FF9933" uuid="eac804a6-c358-4b21-87b8-f6dff8e997c9">
+						<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{10-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4027" y="0" width="100" height="20" backcolor="#FF9933" uuid="3d7a9d10-844e-4226-ab3d-77c24ca510f8">
+						<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{11}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4127" y="0" width="100" height="20" backcolor="#FF9933" uuid="b7684acb-a004-4436-9984-e452dd0ce3db">
+						<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{11-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4227" y="0" width="100" height="20" backcolor="#FF9933" uuid="e0516fdc-5913-4bc9-9d19-094273824b25">
+						<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{12}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="4327" y="0" width="100" height="20" backcolor="#FF9933" uuid="26aa9bdd-6fe2-46f0-964d-613868a850fb">
+						<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{12-}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1427" y="0" width="100" height="20" backcolor="#FF9933" uuid="2a4863c6-1d1e-476c-9a91-5a7ddd434c58"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{settleAmount2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1527" y="0" width="100" height="20" backcolor="#FF9933" uuid="0f8c222c-aff2-4bb7-8410-d85530bc68d3"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{receiveAmount2}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1627" y="0" width="100" height="20" backcolor="#FF9933" uuid="ee031d32-5412-4096-9741-06bd7eed60ee"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{oweAmount2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="50" splitType="Immediate">
+			<textField>
+				<reportElement x="0" y="0" width="2027" height="50" uuid="bb4ea010-b87b-4ef7-869c-f29f6a1b89af"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="24" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["广西建工大都租赁有限公司"+$P{year}+"年应收账款明细表     "]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="53" height="40" isRemoveLineWhenBlank="true" backcolor="#99CCFF" uuid="462f295e-8690-4292-aaf0-2b610673568c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="53" y="0" width="219" height="40" backcolor="#99CCFF" uuid="aa646e82-ff0c-4cae-821a-2c19eb976645"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[承租单位名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="272" y="0" width="232" height="40" backcolor="#99CCFF" uuid="76758f42-0c5b-488b-9deb-76f0e3cd55c4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[所在工地名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="504" y="0" width="123" height="40" backcolor="#99CCFF" uuid="52f38f9d-4463-4ef1-b467-66f1061bb795"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[合同编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="627" y="0" width="100" height="40" backcolor="#99CCFF" uuid="4a417706-e529-478f-a80a-827530ad9299"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[业务员]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="727" y="0" width="100" height="40" backcolor="#99CCFF" uuid="37605ffa-0d0f-4c33-8051-8268ee8ff05b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[分公司/办事处]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="827" y="0" width="300" height="20" backcolor="#99CCFF" uuid="e09e3bbf-a007-42f0-9a85-0124d014732a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{before}+"年"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="827" y="20" width="100" height="20" backcolor="#99CCFF" uuid="01aca672-d0a9-47fa-a1c2-79596e90ed46"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[应收款总额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="927" y="20" width="100" height="20" backcolor="#99CCFF" uuid="054fb2b2-db60-4ad3-b347-8beff1125861"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[分公司/办事处]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="927" y="20" width="100" height="20" backcolor="#99CCFF" uuid="f80e65e2-db5a-431b-85b0-1bd339cc29f9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[已收款总额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1027" y="20" width="100" height="20" backcolor="#99CCFF" uuid="f45f95b1-0d25-47c7-9756-e37cf58e11ca"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[尚欠款总额]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="1127" y="0" width="300" height="20" backcolor="#99CCFF" uuid="f2d3cf64-3833-4c22-bab2-49eef18bf2e9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}+"年(1月-"+$P{month}+"月)"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="1127" y="20" width="100" height="20" backcolor="#99CCFF" uuid="536e4709-f2b5-4616-8c38-6b16d1524c27"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[应收款总额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1227" y="20" width="100" height="20" backcolor="#99CCFF" uuid="eed105fa-ca07-4f26-934b-d0695dfce749"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[已收款总额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1327" y="20" width="100" height="20" backcolor="#99CCFF" uuid="27daa350-507b-4fe3-bdfd-b01834ac12a3"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[尚欠款总额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1427" y="0" width="300" height="20" backcolor="#99CCFF" uuid="93349839-b952-4c07-a054-1f854441fec5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[总累计]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1427" y="20" width="100" height="20" backcolor="#99CCFF" uuid="8697de26-29ca-4682-977e-4f7aaa824db7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[应收款总额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1527" y="20" width="100" height="20" backcolor="#99CCFF" uuid="71a4aa22-0ce7-4988-bf7d-9d08f4102fff"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[已收款总额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1627" y="20" width="100" height="20" backcolor="#99CCFF" uuid="ff559b5f-693f-4677-b656-c1f0d750ebf4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[尚欠款总额]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="1727" y="0" width="150" height="20" backcolor="#99CCFF" uuid="bf0744b6-ef8b-4897-a676-d310a4fc2f7c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年累计应收款"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1727" y="20" width="150" height="20" backcolor="#99CCFF" uuid="82a1c32b-0bf9-459d-859a-2c85d9edbd62"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1-"+$P{month}+"月合计"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1877" y="0" width="150" height="20" backcolor="#99CCFF" uuid="5f2dd913-af03-4b16-baf2-da38649fe2a2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年累计收款"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1877" y="20" width="150" height="20" backcolor="#99CCFF" uuid="e69863d8-1cf1-4f22-b056-1c6316c2b8df"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1-"+$P{month}+"月合计"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="2027" y="0" width="200" height="20" backcolor="#99CCFF" uuid="e1634b6b-6a34-4535-a424-454cf4e9a3d3">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年1月"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="2027" y="20" width="100" height="20" backcolor="#99CCFF" uuid="cdf9878e-e24e-4d3e-a8e8-985b9235ff40">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[1月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2127" y="20" width="100" height="20" backcolor="#99CCFF" uuid="89cdd3a2-7d42-4f8c-a5e1-e9eab81552cc">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[1月已收款]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="2227" y="0" width="200" height="20" backcolor="#99CCFF" uuid="7ad49735-678c-4a2d-88dd-d18d7b6ab710">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年2月"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="2227" y="20" width="100" height="20" backcolor="#99CCFF" uuid="5cd3b47d-e4d6-43bb-9ade-377c06a5f1d1">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[2月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2327" y="20" width="100" height="20" backcolor="#99CCFF" uuid="2beff463-cb4f-4348-9a1a-a014fca6a39c">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[2月已收款]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="2427" y="0" width="200" height="20" backcolor="#99CCFF" uuid="02f9f568-d8a8-48cc-9e68-e20624510dc5">
+					<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年3月"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="2427" y="20" width="100" height="20" backcolor="#99CCFF" uuid="8f3f3e4d-d29c-477e-b5b4-248402eebf4f">
+					<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[3月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2527" y="20" width="100" height="20" backcolor="#99CCFF" uuid="d0e242b9-2a78-4161-8e58-ae541f1d0a4b">
+					<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[3月已收款]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="2627" y="0" width="200" height="20" backcolor="#99CCFF" uuid="f4d3b751-f6d3-4d5d-b5fd-52008ca1c9cd">
+					<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年4月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="2827" y="0" width="200" height="20" backcolor="#99CCFF" uuid="b9859d34-6160-4b8e-923c-b90bf3cc2cdd">
+					<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年5月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="3027" y="0" width="200" height="20" backcolor="#99CCFF" uuid="c78fd9a6-126a-46ae-bac9-e010f82648c4">
+					<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年6月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="3227" y="0" width="200" height="20" backcolor="#99CCFF" uuid="6ab3fdb5-b797-4bf1-8b59-2f7a11fe8c63">
+					<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年7月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="3427" y="0" width="200" height="20" backcolor="#99CCFF" uuid="b4db502a-e602-462e-ad99-c0cdcfb4a6b6">
+					<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年8月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="3627" y="0" width="200" height="20" backcolor="#99CCFF" uuid="b0123858-5663-45a9-a2da-8f497ff6c9e1">
+					<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年9月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="3827" y="0" width="200" height="20" backcolor="#99CCFF" uuid="97e5d4d6-6383-4d8a-9e3b-52155340dbc1">
+					<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年10月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="4027" y="0" width="200" height="20" backcolor="#99CCFF" uuid="fcfc9278-4aad-411f-b685-353896002aea">
+					<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年11月"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="4227" y="0" width="200" height="20" backcolor="#99CCFF" uuid="8ba839ab-e043-4327-bdc5-d444293ea8c2">
+					<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{year}.substring(0,4)+"年12月"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="2627" y="20" width="100" height="20" backcolor="#99CCFF" uuid="6089f194-77a6-4f83-8a75-c9c42ec77ece">
+					<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[4月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2727" y="20" width="100" height="20" backcolor="#99CCFF" uuid="b7a0d2a9-d3db-4006-8971-04d54b41db4a">
+					<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[4月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2827" y="20" width="100" height="20" backcolor="#99CCFF" uuid="412ea031-a0f5-48eb-be35-93c58c7d3d34">
+					<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[5月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2927" y="20" width="100" height="20" backcolor="#99CCFF" uuid="b38b414d-67e9-4ba7-8d65-c2658a3d3c16">
+					<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[5月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3027" y="20" width="100" height="20" backcolor="#99CCFF" uuid="98710686-5363-476d-89a2-900b54c0f3db">
+					<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[6月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3227" y="20" width="100" height="20" backcolor="#99CCFF" uuid="a997079c-b408-4be6-807e-16ecf599c818">
+					<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[7月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3427" y="20" width="100" height="20" backcolor="#99CCFF" uuid="f1ebe30e-5ed7-42ac-bc94-aba337411006">
+					<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[8月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3627" y="20" width="100" height="20" backcolor="#99CCFF" uuid="4ec63728-969e-4aa4-8445-4b740c632a50">
+					<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[9月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3827" y="20" width="100" height="20" backcolor="#99CCFF" uuid="2d7217c9-5cfa-433d-9f4a-439aae5f6d52">
+					<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[10月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="4027" y="20" width="100" height="20" backcolor="#99CCFF" uuid="a6601a63-2977-40a5-acbc-2904dbb718cf">
+					<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[11月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="4227" y="20" width="100" height="20" backcolor="#99CCFF" uuid="8434d6a8-1d66-4265-80fb-f4c243a79f15">
+					<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[12月应收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3127" y="20" width="100" height="20" backcolor="#99CCFF" uuid="88d8b1e6-2bb7-4b27-8a6f-8f7ab4662b25">
+					<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[6月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3327" y="20" width="100" height="20" backcolor="#99CCFF" uuid="d8e25f9c-6bac-49ab-9c40-9db42f47a4b7">
+					<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[7月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3527" y="20" width="100" height="20" backcolor="#99CCFF" uuid="795d09e9-22c7-44bb-af24-e0ded831ed28">
+					<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[8月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3727" y="20" width="100" height="20" backcolor="#99CCFF" uuid="a60d3bce-0274-40de-9846-73fd210dad47">
+					<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[9月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3927" y="20" width="100" height="20" backcolor="#99CCFF" uuid="1124ea90-f9ad-4261-85f5-48cb1cb402f1">
+					<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[10月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="4127" y="20" width="100" height="20" backcolor="#99CCFF" uuid="ffb12e69-959d-4d31-92fc-d48fb193a400">
+					<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[11月已收款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="4327" y="20" width="100" height="20" backcolor="#99CCFF" uuid="33e17198-d67b-42bf-9d2b-b337588e5889">
+					<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[12月已收款]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="53" y="0" width="219" height="20" uuid="77c92e02-20e1-4380-aaa3-72da345d3ab0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{paEntName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="53" height="20" uuid="4033b6df-f181-43a4-9f9a-16846cf34a79"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="272" y="0" width="232" height="20" uuid="9db87e8c-eb4b-4df9-ae42-ac6052ac603a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROJECT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="504" y="0" width="123" height="20" uuid="3061c8c9-c80e-4793-b5ac-6db3ac2ea634"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONSTRACT_NO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="627" y="0" width="100" height="20" uuid="70d38450-105a-4762-a421-eeaab6322250"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USER_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="727" y="0" width="100" height="20" uuid="64749365-b941-4e65-bde0-ab0f877908ca"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEP_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="827" y="0" width="100" height="20" uuid="b8ea8784-afaf-41f5-b0c0-c356faf41685"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{settleAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="927" y="0" width="100" height="20" uuid="128614d3-1cf0-4668-bb72-370b5c4895cd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2327" y="0" width="100" height="20" uuid="d419484c-1960-4574-9f08-d6154913cb9b">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{02-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2227" y="0" width="100" height="20" uuid="c0687696-b841-46f8-8855-592f48a49347">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{02}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2127" y="0" width="100" height="20" uuid="bf947537-77d7-470b-9787-1cd99c514282">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{01-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2027" y="0" width="100" height="20" uuid="b8240fef-d4e3-4b0d-8d35-c7108060f7c9">
+					<printWhenExpression><![CDATA[$P{month}>=1]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{01}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1877" y="0" width="150" height="20" uuid="0fbc9d86-0937-4d54-8f3f-bac5d1f8f2b4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveAmountNew}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1727" y="0" width="150" height="20" uuid="567a7527-8a0b-4930-8e17-2ce80f97bbdb"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{settleAmountSecond}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1627" y="0" width="100" height="20" uuid="4a051e92-43f0-4916-9406-a298b92db951"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{oweAmountAll}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1527" y="0" width="100" height="20" uuid="f4c177d7-b791-45e9-a537-d0b8c041ac91"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveAmountAll}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1427" y="0" width="100" height="20" uuid="4e2850f2-3449-4cbb-921b-d4dccb69d456"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{settleAmountAll}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1327" y="0" width="100" height="20" uuid="f248cb59-a5d5-43e5-a98b-0877f0707638"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{oweAmountNew}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1227" y="0" width="100" height="20" uuid="6e4a6858-18ff-41a3-97d9-367bed3c2c8b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveAmountNew}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1127" y="0" width="100" height="20" uuid="3ac2d3ab-1aac-43c8-9117-5d2ce4997d41"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{settleAmountNew}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="1027" y="0" width="100" height="20" uuid="23e5b9a6-0c58-4446-a8b4-da4e23217597"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{oweAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2427" y="0" width="100" height="20" uuid="e2ae02bf-c3a3-4f90-b2f1-a1fa2ec00380">
+					<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{03}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2527" y="0" width="100" height="20" uuid="3d2c6c38-9751-423c-a00b-b811f66e20a0">
+					<printWhenExpression><![CDATA[$P{month}>=3]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{03-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2727" y="0" width="100" height="20" uuid="8d3696a7-419f-4fb3-9c0f-10f61891c6a0">
+					<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{04-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2627" y="0" width="100" height="20" uuid="2d3f8f96-89db-4721-a392-e8795297d1bc">
+					<printWhenExpression><![CDATA[$P{month}>=4]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{04}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2827" y="0" width="100" height="20" uuid="0a041781-2727-4e03-ad60-1ad0c8f56407">
+					<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{05}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="2927" y="0" width="100" height="20" uuid="805d8af8-2ba0-41e7-a319-6d05a73f16b6">
+					<printWhenExpression><![CDATA[$P{month}>=5]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{05-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3027" y="0" width="100" height="20" uuid="29693f3a-3691-4b30-b881-e441dd0f338a">
+					<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{06}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3127" y="0" width="100" height="20" uuid="77ec2a0a-531f-4c86-be93-aab3ff826431">
+					<printWhenExpression><![CDATA[$P{month}>=6]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{06-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3227" y="0" width="100" height="20" uuid="438eed90-a03a-46b6-909e-ac03f82e4ae1">
+					<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{07}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3327" y="0" width="100" height="20" uuid="a8c62042-0ccd-4365-84a0-29df9c58ee73">
+					<printWhenExpression><![CDATA[$P{month}>=7]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{07-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3427" y="0" width="100" height="20" uuid="283bd881-8f21-434a-a799-0524dd444b6f">
+					<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{08}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3527" y="0" width="100" height="20" uuid="90709fba-ec60-4542-baf2-b2a41f95f9a1">
+					<printWhenExpression><![CDATA[$P{month}>=8]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{08-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3627" y="0" width="100" height="20" uuid="a1f5bce5-21b3-4edb-af0d-675e97eb6f89">
+					<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{09}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3727" y="0" width="100" height="20" uuid="7f0abb53-2568-41c8-818d-f068a988d532">
+					<printWhenExpression><![CDATA[$P{month}>=9]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{09-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3827" y="0" width="100" height="20" uuid="10af9e8b-5681-4270-9a2f-6f459363a9ee">
+					<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{10}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="3927" y="0" width="100" height="20" uuid="a13e6e75-e849-4dd1-9279-31bd80c5fb1b">
+					<printWhenExpression><![CDATA[$P{month}>=10]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{10-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="4027" y="0" width="100" height="20" uuid="7ed13845-bd22-4257-b0b1-08df6241d1d6">
+					<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{11}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="4127" y="0" width="100" height="20" uuid="7d1eb052-e82d-4f5b-83a1-790f0bd5cea5">
+					<printWhenExpression><![CDATA[$P{month}>=11]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{11-}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="4227" y="0" width="100" height="20" uuid="5766867a-3665-4e0c-8425-a4036196ed28">
+					<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{12}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="4327" y="0" width="100" height="20" uuid="87372d29-18d4-4222-a07a-137f7b30749d">
+					<printWhenExpression><![CDATA[$P{month}>=12]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{12-}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

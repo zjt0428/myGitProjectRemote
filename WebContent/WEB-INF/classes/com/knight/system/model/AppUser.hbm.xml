@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.AppUser" table="APP_USER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="userId" column="USERID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="username" type="java.lang.String" column="USERNAME" length="32" not-null="true" />
+		<property name="password" type="java.lang.String" column="PASSWORD" length="128" not-null="true" />
+		<property name="fullname" type="java.lang.String" column="FULLNAME" length="128" />
+		<property name="email" type="java.lang.String" column="EMAIL" length="128"  />
+		<property name="phone" type="java.lang.String" column="PHONE" length="32" />
+		<property name="mobile" type="java.lang.String" column="MOBILE" length="32" />
+		<property name="sex" type="java.lang.Short" column="SEX" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" length="16" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" length="16" />
+		<property name="deviceToken" type="java.lang.String" column="DEVICE_TOKEN" length="128" />
+		<property name="updateTime" type="java.util.Date" column="UPDATE_TIME" />
+		<property name="createTime" type="java.util.Date" column="CREATE_TIME" not-null="true" />
+		<property name="status" type="java.lang.Short" column="STATUS" />
+		<property name="delFlag" type="java.lang.Short" column="DELFLAG" />
+		<property name="keyFlag" type="java.lang.Short" column="KEYFLAG" />
+		<property name="userType" type="java.lang.String" column="USER_TYPE" not-null="true" />
+		<property name="userSerial" type="java.lang.String" column="USER_SERIAL" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="openId" type="java.lang.String" column="OPENID" />
+		<many-to-one name="corpInfo" column="CORP_ID" class="com.knight.emms.model.CorpInfo" lazy="false" fetch="join"/>
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" />
+		<set name="roles" table="USER_ROLE" cascade="save-update" inverse="false" lazy="extra">
+			<key column="USERID" />
+			<many-to-many fetch="join" class="com.knight.system.model.AppRole" column="ROLEID" />
+		</set>
+		<set name="appUserKeySet" inverse="false" cascade="all" lazy="extra">
+			<key column="USERID"></key>
+			<one-to-many class="com.knight.system.model.AppUserKey" />
+		</set>
+		<set name="appUserExtendSet" inverse="true" lazy="extra">
+			<key column="USERID"></key>
+			<one-to-many class="com.knight.system.model.AppUserExtend" />
+		</set>
+	</class>
+</hibernate-mapping>

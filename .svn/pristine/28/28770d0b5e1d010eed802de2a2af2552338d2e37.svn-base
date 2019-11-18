@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.IndisProtocolEquip" table="T_INDIS_PROTOCOL_EQUIP" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="protocolEquipId" column="PROTOCOL_EQUIP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="protocolId" type="java.lang.Long" column="PROTOCOL_ID" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="height" type="java.math.BigDecimal" column="HEIGHT" />
+		<property name="amount" type="java.math.BigDecimal" column="AMOUNT" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+	</class>
+</hibernate-mapping>

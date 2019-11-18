@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LogisticsTrandetail" table="T_LOGISTICS_TRANDETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="trandetailId" column="TRANDETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="transportId" type="java.lang.Long" column="TRANSPORT_ID" />
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<property name="dispatchSerial" type="java.lang.String" column="DISPATCH_SERIAL" />
+		<property name="dispatchTheme" type="java.lang.String" column="DISPATCH_THEME" />
+		<property name="carId" type="java.lang.Long" column="CAR_ID" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="driver" type="java.lang.String" column="DRIVER" />
+		<property name="driverPhone" type="java.lang.String" column="DRIVER_PHONE" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="signCounts" type="java.lang.Integer" column="SIGN_COUNTS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<many-to-one name="dispatchCompon" column="DISPATCH_COMPON_ID" class="com.knight.emms.model.DispatchCompon" fetch="join" />
+	</class>
+</hibernate-mapping>

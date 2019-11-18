@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-29 9:21:52 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TFlowCopyChkman" table="T_FLOW_COPY_CHKMAN">
+		<id name="copid" type="java.lang.Long">
+			<column name="COPID" />
+			<generator class="native" />
+		</id>
+		<property name="insid" type="java.lang.Long">
+			<column name="INSID" />
+		</property>
+		<property name="userId" type="java.lang.Long">
+			<column name="userId" />
+		</property>
+		<property name="hasView" type="string">
+			<column name="HAS_VIEW" />
+		</property>
+		<property name="userName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=userId)" />
+		<many-to-one name="instance" column="INSID"
+			class="com.knight.app.model.TFlowInstance" insert="false" update="false"
+			fetch="join" />
+	</class>
+</hibernate-mapping>

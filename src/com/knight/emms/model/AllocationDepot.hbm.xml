@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AllocationDepot" table="T_ALLOCATION_DEPOT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="allocationId" column="ALLOCATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="allocationSerial" type="java.lang.String" column="ALLOCATION_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="inputDate" type="java.lang.String" column="INPUT_DATE" />
+		<property name="allocationTheme" type="java.lang.String" column="ALLOCATION_THEME" />
+		<property name="allocationDate" type="java.lang.String" column="ALLOCATION_DATE" />
+		<property name="allocationType" type="java.lang.String" column="ALLOCATION_TYPE" />
+		<property name="outDepotId" type="java.lang.Long" column="OUT_DEPOT_ID" />
+		<property name="outDepotName" type="java.lang.String" column="OUT_DEPOT_NAME" />
+		<property name="inDepotId" type="java.lang.Long" column="IN_DEPOT_ID" />
+		<property name="inDepotName" type="java.lang.String" column="IN_DEPOT_NAME" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="applicantMan" type="java.lang.String" column="APPLICANT_MAN" />
+		<property name="chargeMan" type="java.lang.String" column="CHARGE_MAN" />
+		<property name="contactTel" type="java.lang.String" column="CONTAC_TEL" />
+		<property name="vehicleNum" type="java.lang.String" column="VEHICLE_NUM" />
+		<property name="vehiclePerson" type="java.lang.String" column="VEHICLE_PERSON" />
+		<property name="outDepotConsignor" type="java.lang.String" column="OUT_DEPOT_CONSIGNOR" />
+		<property name="inDepotConsignee" type="java.lang.String" column="IN_DEPOT_CONSIGNEE" />
+		<property name="attachSerial" type="java.lang.String" column="ATTACH_SERIAL" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="allocationDepotDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="ALLOCATION_ID" />
+			<one-to-many class="com.knight.emms.model.AllocationDepotDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

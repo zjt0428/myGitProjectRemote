@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="bmcode">
+	<!-- 表码设备类别查询 -->
+	<select id="bm_equip_load">
+	<![CDATA[
+		SELECT CODE code,VALUE value,DAY_RENT dayRent,COUNT_UNIT countUnit,EQUIP_TYPE equipType FROM BM_EQUIP_SPECIFIC WHERE 1=1
+	]]>
+	</select>
+
+    <!-- 表码设备类别查询 -->
+	<select id="bm_equip_load_bytype">
+	<![CDATA[
+		SELECT CODE code,VALUE value,NAME name FROM BM_EQUIP_SPECIFIC WHERE EQUIP_TYPE=?
+	]]>
+	</select>
+	
+</mapper>

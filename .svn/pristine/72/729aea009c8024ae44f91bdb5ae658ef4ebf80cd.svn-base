@@ -1,0 +1,424 @@
+/**
+ *====================================================
+ * 文件名称: SettleContractServiceImpl.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2013-9-24			chenxy(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.service.impl;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import com.knight.core.exception.BusinessException;
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.service.ExportService;
+import com.knight.emms.constant.Constant;
+import com.knight.emms.constant.Status;
+import com.knight.emms.constant.Type;
+import com.knight.emms.core.service.BaseBusinessModelServiceImpl;
+import com.knight.emms.dao.AmountReceiveDao;
+import com.knight.emms.dao.CombineSettleContractDao;
+import com.knight.emms.dao.ContractLeaseDao;
+import com.knight.emms.dao.EquipDiaryDao;
+import com.knight.emms.dao.OperatorSalaryStatementDao;
+import com.knight.emms.dao.OtherExpenseStatementDao;
+import com.knight.emms.dao.SafetyMonitorSettleStatementDao;
+import com.knight.emms.dao.SettleComponBriefDao;
+import com.knight.emms.dao.SettleContractDao;
+import com.knight.emms.dao.SettleEquipBriefDao;
+import com.knight.emms.dao.SettleItemBriefDao;
+import com.knight.emms.domain.FundPaymentVoucherService;
+import com.knight.emms.domain.FundReceiveVoucherService;
+import com.knight.emms.model.AmountPayment;
+import com.knight.emms.model.AmountReceive;
+import com.knight.emms.model.CombineSettleContract;
+import com.knight.emms.model.ContractCostitem;
+import com.knight.emms.model.ContractLease;
+import com.knight.emms.model.EquipDiary;
+import com.knight.emms.model.OperatorSalaryStatement;
+import com.knight.emms.model.OtherExpenseStatement;
+import com.knight.emms.model.SafetyMonitorSettleStatement;
+import com.knight.emms.model.SettleComponBrief;
+import com.knight.emms.model.SettleContract;
+import com.knight.emms.model.SettleEquipBrief;
+import com.knight.emms.model.SettleItemBrief;
+import com.knight.emms.service.InstalmentService;
+import com.knight.emms.service.ReceivementService;
+import com.knight.emms.service.SettleContractService;
+import com.knight.emms.service.SettleEquipBriefService;
+import com.knight.emms.support.FundPlanSupport;
+import com.knight.system.constant.SystemConstant;
+import com.knight.system.service.impl.CodeServiceImpl;
+
+/**
+ * @ClassName: SettleContractServiceImpl
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2013-9-24 下午5:10:23
+ */
+public class SettleContractServiceImpl extends BaseBusinessModelServiceImpl<SettleContract> implements SettleContractService, FundReceiveVoucherService, FundPaymentVoucherService, ExportService {
+
+	private SettleContractDao settleContractDao;
+
+	@Resource
+	private SettleEquipBriefDao settleEquipBriefDao;
+
+	@Resource
+	private SettleComponBriefDao settleComponBriefDao;
+
+	@Resource
+	private SettleItemBriefDao settleItemBriefDao;
+
+	@Resource
+	private EquipDiaryDao equipDiaryDao;
+
+	@Resource
+	private ContractLeaseDao contractLeaseDao;
+
+	@Resource
+	private InstalmentService instalmentService;
+
+	@Resource
+	private ReceivementService receivementService;
+	
+	@Resource
+	private AmountReceiveDao amountReceiveDao;
+	
+	@Resource
+	private OperatorSalaryStatementDao operatorSalaryStatementDao;
+	
+	@Resource
+	private SafetyMonitorSettleStatementDao safetyMonitorSettleStatementDao;
+	
+	@Resource
+	private OtherExpenseStatementDao otherExpenseStatementDao;
+	
+	@Resource
+	private CombineSettleContractDao combineSettleContractDao;
+	
+	public SettleContractServiceImpl(SettleContractDao dao) {
+		super(dao);
+		this.settleContractDao = dao;
+	}
+
+	public SettleContract getTranslateAll(Long settleId) {
+		SettleContract settle = settleContractDao.get(settleId);
+		CodeServiceImpl.translate(settle, settleContractDao.getPersistantStruct());
+		settle.getSettleComponBriefSet();
+		for(SettleEquipBrief se : settle.getSettleEquipBriefSet()){
+			CodeServiceImpl.translate(se.getEquipment());
+		}
+		for(SettleItemBrief si : settle.getSettleItemBriefSet()){
+			CodeServiceImpl.translate(si.getEquipment());
+		}
+		for(OperatorSalaryStatement os : settle.getOperatorSalaryStatementSet()){
+			CodeServiceImpl.translate(os.getEquipment());
+		}
+		for(OtherExpenseStatement os : settle.getOtherExpenseStatementSet()){
+			CodeServiceImpl.translate(os.getEquipment());
+		}
+		for(SafetyMonitorSettleStatement os : settle.getSafetyMonitorSettleStatementSet()){
+			CodeServiceImpl.translate(os.getEquipment());
+		}
+		CodeServiceImpl.translate(settle.getInstalmentSet(), instalmentService.getPersistantStruct());
+		CodeServiceImpl.translate(settle.getReceivementSet(), receivementService.getPersistantStruct());
+		return settle;
+	}
+
+	public void saveOrMergeEdit(SettleContract settleContract) {
+		if (settleContract.getSettleId() == null) {
+			settleContractDao.saveSerialModel(settleContract);
+		}
+		settleContract.setSubSettleContract();
+//		if (settleContract.getTaxRate() != null && settleContract.getSettleAmount() != null) {
+//			if(settleContract.getTaxRate().contains("%")) {
+//				BigDecimal bd = new BigDecimal(settleContract.getTaxRate().replace("%", ""));
+//				bd = bd.divide(new BigDecimal(100));
+//				settleContract.setTaxAmount(settleContract.getSettleAmount().multiply(bd));
+//			}
+//		}
+		settleContractDao.merge(settleContract);
+		if (Type.Fund.receive.equals(settleContract.getFundType())) { // 收款
+			settleContract.setReceivementSet(FundPlanSupport.createReceivement(settleContract));
+			receivementService.saveOrMeger(settleContract.getReceivementSet());
+		} else if (Type.Fund.payment.equals(settleContract.getFundType())) { // 付款
+			settleContract.setInstalmentSet(FundPlanSupport.createInstalment(settleContract));
+			instalmentService.saveOrMeger(settleContract.getInstalmentSet());
+		}
+	}
+
+	public void deleteEquipBrief(Long seBriefId) {
+		settleEquipBriefDao.remove(seBriefId);
+	}
+
+	public void deleteComponBrief(Long scBriefId) {
+		settleComponBriefDao.remove(scBriefId);
+	}
+
+	public void deleteItemBrief(Long siBriefId) {
+		settleItemBriefDao.remove(siBriefId);
+	}
+
+	//多个合同合并结算时，在计算合同金额时按各个合同分开计算
+	public Map<Long, BigDecimal> splitCalculate(SettleContract sc) {
+		Map<Long, BigDecimal> map = new HashMap<Long, BigDecimal>();
+		for(SettleEquipBrief seb : sc.getSettleEquipBriefSet()) {
+			if(map.containsKey(seb.getContractId())) {
+				BigDecimal bd = map.get(seb.getContractId());
+				map.put(seb.getContractId(), bd.add(seb.getSummary()));
+			} else {
+				map.put(seb.getContractId(), seb.getSummary());
+			}
+		}
+		for(SettleComponBrief scb : sc.getSettleComponBriefSet()) {
+			if(map.containsKey(scb.getContractId())) {
+				BigDecimal bd = map.get(scb.getContractId());
+				map.put(scb.getContractId(), bd.add(scb.getSummary()));
+			} else {
+				map.put(scb.getContractId(), scb.getSummary());
+			}
+		}
+		for(SettleItemBrief sib : sc.getSettleItemBriefSet()) {
+			if(map.containsKey(sib.getContractId())) {
+				BigDecimal bd = map.get(sib.getContractId());
+				map.put(sib.getContractId(), bd.add(sib.getSummary()));
+			} else {
+				map.put(sib.getContractId(), sib.getSummary());
+			}
+		}
+		for(OperatorSalaryStatement oss : sc.getOperatorSalaryStatementSet()) {
+			if(map.containsKey(oss.getContractId())) {
+				BigDecimal bd = map.get(oss.getContractId());
+				map.put(oss.getContractId(), bd.add(oss.getSummary()));
+			} else {
+				map.put(oss.getContractId(), oss.getSummary());
+			}
+		}
+		for(SafetyMonitorSettleStatement sms : sc.getSafetyMonitorSettleStatementSet()) {
+			if(map.containsKey(sms.getContractId())) {
+				BigDecimal bd = map.get(sms.getContractId());
+				map.put(sms.getContractId(), bd.add(sms.getSummary()));
+			} else {
+				map.put(sms.getContractId(), sms.getSummary());
+			}
+		}
+		for(OtherExpenseStatement oes : sc.getOtherExpenseStatementSet()) {
+			if(map.containsKey(oes.getContractId())) {
+				BigDecimal bd = map.get(oes.getContractId());
+				map.put(oes.getContractId(), bd.add(oes.getAmount()));
+			} else {
+				map.put(oes.getContractId(), oes.getAmount());
+			}
+		}
+		return map;
+	}
+	
+	public void effective(SettleContract settleContract) {
+		for (SettleEquipBrief settleEquip : settleContract.getSettleEquipBriefSet()) {
+			if (settleEquip.getEquipDiaryId() == null) {
+				continue;
+			}
+			EquipDiary ed = equipDiaryDao.get(settleEquip.getEquipDiaryId());
+			if (ed == null) {
+				continue;
+			}
+			ed.setLastSettleDate(settleEquip.getEndSettleDate());
+			equipDiaryDao.save(ed);
+		}
+		QueryFilter filter = new QueryFilter();
+		filter.addConjunctFilter("Q_settleContract.settleId_L_EQ", settleContract.getSettleId().toString());
+		List<CombineSettleContract> list = combineSettleContractDao.getAll(filter);
+		if(list != null && list.size()>0) {
+			Map<Long, BigDecimal> map= splitCalculate(settleContract);
+			for(CombineSettleContract csc : list) {
+				ContractLease cl = csc.getContractLease();
+				if(map.containsKey(cl.getContractId())) {
+					cl.setContractAmount(cl.getContractAmount().add(map.get(cl.getContractId())));
+					cl.setDebitReceivable(cl.getDebitReceivable().add(map.get(cl.getContractId())));
+					contractLeaseDao.save(cl);
+				}
+			}
+		}else {
+			// 合同金额累加
+			ContractLease cl = contractLeaseDao.get(settleContract.getContractId());
+			cl.setContractAmount(cl.getContractAmount().add(settleContract.getSettleAmount()));
+			cl.setDebitReceivable(cl.getDebitReceivable().add(settleContract.getSettleAmount()));
+			contractLeaseDao.save(cl);
+		}
+		settleContract.setEffective(Constant.ENABLED);
+		settleContractDao.save(settleContract);
+	}
+
+	public void loseEffective(SettleContract settleContract) {
+		QueryFilter filter = new QueryFilter();
+		filter.addConjunctFilter("Q_delFlag_S_EQ", Constant.ENABLED);
+		filter.addConjunctFilter("Q_relateId_L_EQ", settleContract.getSettleId()+"");
+		filter.addConjunctFilter("Q_relateModule_S_EQ", SystemConstant.MODULE_SETTLE_CONTRACT);
+		List<AmountReceive> list = amountReceiveDao.getAll(filter);
+		if(list.size()>0) {
+			throw new BusinessException("存在下游单据，无法失效！");
+		}
+		QueryFilter filter2 = new QueryFilter();
+		filter2.addConjunctFilter("Q_settleContract.settleId_L_EQ", settleContract.getSettleId().toString());
+		List<CombineSettleContract> list2 = combineSettleContractDao.getAll(filter2);
+		if(list2 != null && list2.size()>0) {
+			Map<Long, BigDecimal> map= splitCalculate(settleContract);
+			for(CombineSettleContract csc : list2) {
+				ContractLease cl = csc.getContractLease();
+				if(map.containsKey(cl.getContractId())) {
+					cl.setContractAmount(cl.getContractAmount().subtract(map.get(cl.getContractId())));
+					cl.setDebitReceivable(cl.getDebitReceivable().subtract(map.get(cl.getContractId())));
+					contractLeaseDao.save(cl);
+				}
+			}
+		}else {
+			// 合同金额累减
+			ContractLease cl = contractLeaseDao.get(settleContract.getContractId());
+			cl.setContractAmount(cl.getContractAmount().subtract(settleContract.getSettleAmount()));
+			cl.setDebitReceivable(cl.getDebitReceivable().subtract(settleContract.getSettleAmount()));
+			contractLeaseDao.save(cl);
+		}
+		settleContract.setEffective(Constant.DISENABLED);
+		settleContractDao.save(settleContract);
+	}
+
+	// ====================================================================================//
+	public BigDecimal getRelatePaymentAmount(Long settled) {
+		SettleContract settleContract = settleContractDao.get(settled);
+		return settleContract.getSettleAmount();
+	}
+
+	public void saveRelateAmountPaymentStatus(AmountPayment amountPayment, Long settled, String status) {
+		SettleContract b = settleContractDao.get(settled);
+		b.setFinishedAmount(amountPayment.getHasPaymentAmount());
+		b.setFundStatus(status);
+		settleContractDao.save(b);
+	}
+
+	public BigDecimal getRelateReceiveAmount(Long settled) {
+		SettleContract settleContract = settleContractDao.get(settled);
+		return settleContract.getSettleAmount();
+	}
+
+	//结算金额的冲减
+	public BigDecimal calculate(AmountReceive amountReceive,SettleContract sc, BigDecimal currentReceiveAmount) {
+		if(sc.getBalanceAmount().compareTo(currentReceiveAmount) == -1) {
+			BigDecimal tempAmount = currentReceiveAmount.subtract(sc.getBalanceAmount());
+			sc.setFinishedAmount(sc.getSettleAmount());
+			sc.setBalanceAmount(BigDecimal.ZERO);
+			sc.setFundStatus(Status.Fund.received);
+			BigDecimal summaryReceived = sc.getSummaryReceived();
+			sc.setSummaryReceived(summaryReceived.add(currentReceiveAmount));
+			sc.setArrears(sc.getSummaryReceivable().subtract(sc.getSummaryReceived()));
+			settleContractDao.save(sc);
+			return tempAmount;
+		}else {
+			sc.setFinishedAmount(sc.getFinishedAmount().add(currentReceiveAmount));
+			BigDecimal summaryReceived = BigDecimal.ZERO;
+			QueryFilter filter = new QueryFilter();
+			filter.addConjunctFilter("Q_projectId_L_EQ", sc.getProjectId()+"");
+			filter.addConjunctFilter("Q_relateModule_S_EQ", amountReceive.getRelateModule());
+			filter.addConjunctFilter("Q_delFlag_S_EQ", Constant.ENABLED);
+			filter.addConjunctFilter("Q_applyforState_S_EQ", "3");
+			List<AmountReceive> list = amountReceiveDao.getAll(filter);
+			for(AmountReceive ar : list){
+				summaryReceived = summaryReceived.add(ar.getReceiveAmount());
+			}
+			sc.setSummaryReceived(summaryReceived);
+			sc.setArrears(sc.getSummaryReceivable().subtract(sc.getSummaryReceived()));
+			sc.setBalanceAmount(sc.getBalanceAmount().subtract(currentReceiveAmount));
+			sc.setFundStatus(Status.Fund.receiving);
+			settleContractDao.save(sc);
+			return BigDecimal.ZERO;
+		}
+	}
+	
+	public void saveRelateAmountReceiveStatus(AmountReceive amountReceive, Long settled, String status) {
+		SettleContract b = settleContractDao.get(settled);
+		if(b.getBalanceAmount().compareTo(amountReceive.getReceiveAmount())==1) {
+			b.setFinishedAmount(b.getFinishedAmount().add(amountReceive.getReceiveAmount()));
+			b.setBalanceAmount(b.getBalanceAmount().subtract(amountReceive.getReceiveAmount()));
+			b.setFundStatus(Status.Fund.receiving);
+			settleContractDao.save(b);
+		}else if(b.getBalanceAmount().compareTo(amountReceive.getReceiveAmount())==0) {
+			b.setFinishedAmount(b.getSettleAmount());
+			b.setBalanceAmount(BigDecimal.ZERO);
+			b.setFundStatus(Status.Fund.received);
+			settleContractDao.save(b);
+//		if(Status.Fund.receiving.equals(status) || amountReceive.getRelateAmount().compareTo(amountReceive.getHasReceiveAmount()) == 0) {
+//			if(amountReceive.getRelateAmount().compareTo(amountReceive.getHasReceiveAmount())==-1){//业务应收金额    < 已收金额
+//				b.setFinishedAmount(amountReceive.getHasReceiveAmount().add(b.getFinishedAmount()));
+//			}else if(amountReceive.getRelateAmount().compareTo(amountReceive.getHasReceiveAmount()) == 0){
+//				b.setFinishedAmount(amountReceive.getHasReceiveAmount());
+//			}else if(amountReceive.getHasReceiveAmount().add(b.getFinishedAmount()).compareTo(amountReceive.getRelateAmount())==1){//（已收+本期结算已收）> 计划业务金额
+//				b.setFinishedAmount(amountReceive.getRelateAmount());
+//			}else if(amountReceive.getHasReceiveAmount().add(b.getFinishedAmount()).compareTo(amountReceive.getRelateAmount())==-1){
+//				b.setFinishedAmount(amountReceive.getHasReceiveAmount().add(b.getFinishedAmount()));
+//			}
+//			b.setFinishedAmount(amountReceive.getHasReceiveAmount());                                         //已收金额
+//			b.setBalanceAmount(amountReceive.getRelateAmount().subtract(amountReceive.getHasReceiveAmount()));//业务计划收款-已经收款
+//			b.setFundStatus(status);
+//			BigDecimal summaryReceived = b.getSummaryReceived()==null?BigDecimal.ZERO:b.getSummaryReceived();
+//			b.setSummaryReceived(summaryReceived.add(amountReceive.getReceiveAmount()));
+//			b.setArrears(b.getSummaryReceivable().subtract(b.getSummaryReceived()));
+//			settleContractDao.save(b);
+		}else {//已回款
+			QueryFilter filter = new QueryFilter();
+			filter.addConjunctFilter("Q_contractId_L_EQ", b.getContractId()+"");
+			filter.addConjunctFilter("Q_delFlag_S_EQ", Constant.ENABLED);
+			filter.addConjunctFilter("Q_effective_S_EQ", Constant.ENABLED);
+			filter.addConjunctFilter("Q_fundType_S_EQ", Constant.ENABLED);
+			filter.addConjunctFilter("Q_fundStatus_S_NEQ", Status.Fund.received);
+			filter.addSorted("settleId", QueryFilter.ORDER_ASC);
+			List<SettleContract> list = settleContractDao.getAll(filter);
+			BigDecimal currentReceiveAmount = amountReceive.getReceiveAmount();
+			for(SettleContract sc : list) {
+				if(currentReceiveAmount == BigDecimal.ZERO) {
+					break;
+				}
+				currentReceiveAmount = calculate(amountReceive,sc, currentReceiveAmount);
+			}
+		}
+	}
+	@Override
+	public Set<ContractCostitem> getContractCostitems(Long contractId) {
+		ContractLease c = contractLeaseDao.get(contractId);
+		return c.getContractCostitemSet();
+	}
+
+	@Override
+	public void deleteOperatorSalary(Long statementId) {
+		operatorSalaryStatementDao.remove(statementId);
+	}
+
+	@Override
+	public void deleteSafetyMonitor(Long statementId) {
+		safetyMonitorSettleStatementDao.remove(statementId);
+	}
+
+	@Override
+	public void deleteOtherExpense(Long statementId) {
+		otherExpenseStatementDao.remove(statementId);
+	}
+
+	@Override
+	public void saveCombine(SettleContract  sc, String contractIds) {
+		String[]  strs = contractIds.split(",");
+		for(String contractId : strs) {
+			CombineSettleContract csc  = new CombineSettleContract();
+			csc.setSettleContract(sc);
+			ContractLease cl  = new ContractLease();
+			cl.setContractId(new Long(contractId));
+			csc.setContractLease(cl);
+			combineSettleContractDao.save(csc);
+		}
+	}
+}

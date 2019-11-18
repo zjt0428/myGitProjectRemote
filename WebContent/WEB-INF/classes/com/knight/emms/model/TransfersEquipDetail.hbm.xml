@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TransfersEquipDetail" table="T_TRANSFERS_EQUIP_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="edetailId" column="EDETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="depottId" type="java.lang.Long" column="DEPOTT_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" insert="false" update="false" fetch="join"/>
+	</class>
+</hibernate-mapping>

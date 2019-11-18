@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.AppUserKeyLog" table="APP_USER_KEY_LOG" optimistic-lock="version">
+		<id name="logId" column="LOG_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="keyId" type="java.lang.Long" column="KEY_ID" />
+		<property name="userId" type="java.lang.Long" column="USERID" />
+		<property name="fullname" type="java.lang.String" column="FULLNAME" length="128" />
+		<property name="keySerial" type="java.lang.String" column="KEY_SERIAL" />
+		<property name="distributeTime" type="java.util.Date" column="DISTRIBUTE_TIME" not-null="true" />
+		<property name="validPeriodTime" type="java.lang.String" column="VALID_PERIOD_TIME" not-null="true" />
+		<property name="expirationTime" type="java.lang.String" column="EXPIRATION_TIME" not-null="true" />
+		<property name="updateTime" type="java.util.Date" column="UPDATE_TIME" not-null="true" />
+		<property name="updateUsername" type="java.lang.String" column="UPDATE_USERNAME" length="128" />
+	</class>
+</hibernate-mapping>

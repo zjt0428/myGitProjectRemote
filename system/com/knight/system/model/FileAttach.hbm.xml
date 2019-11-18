@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.FileAttach" table="FILE_ATTACH" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="fileId" column="fileId" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dependId" type="java.lang.Long" column="DEPEND_ID" length="128" />
+		<property name="dependName" type="java.lang.String" column="DEPEND_NAME" length="32" />
+		<property name="fileName" type="java.lang.String" column="FILENAME" length="128" not-null="true" />
+		<property name="filePath" type="java.lang.String" column="FILEPATH" length="128" not-null="true" />
+		<property name="createtime" type="java.util.Date" column="CREATETIME" length="19" not-null="true" />
+		<property name="ext" type="java.lang.String" column="EXT" length="32" not-null="false" />
+		<property name="fileType" type="java.lang.String" column="FILETYPE" length="32" not-null="false" />
+		<property name="note" type="java.lang.String" column="NOTE" length="1024" not-null="false" />
+		<property name="creator" type="java.lang.String" column="CREATOR" length="32" not-null="true" />
+		<property name="source" type="java.lang.String" column="SOURCE" length="2" not-null="false" />
+		
+	</class>
+</hibernate-mapping>

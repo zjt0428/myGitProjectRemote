@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SafeCheckContent" table="T_SAFE_CHECK_CONTENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="safeCheckContentId" column="SAFE_CHECK_CONTENT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+	<property name="safeCheckId" type="java.lang.Long" column="SAFE_CHECK_ID"></property>
+	<property name="checkContent" type="java.lang.String" column="CHECK_CONTENT"/>
+	<property name="rectificationStatus" type="java.lang.String" column="RECTIFICATION_STATUS"/>
+	<property name="inspectionResult" type="java.lang.String" column="INSPECTION_RESULT"/>
+	<property name="recordId" type="java.lang.String" column="RECORD_ID"/>
+	<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL"/>
+	<property name="enclosuerBeforRectification" type="java.lang.String" column="ENCLOSURE_BEFORE_RECTIFICATION"/>
+	<property name="enclosuerAfterRectification" type="java.lang.String" column="ENCLOSURE_AFTER_RECTIFICATION"/>
+	<property name="rectificationExplain" type="java.lang.String" column="RECTIFICATION_EXPLAIN"/>
+	</class>	
+</hibernate-mapping>

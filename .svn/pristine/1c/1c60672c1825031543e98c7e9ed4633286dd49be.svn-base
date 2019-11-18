@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipFlow" table="T_EQUIPMENT_FLOW" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="flowId" column="FLOW_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="flowSerial" type="java.lang.String" column="FLOW_SERIAL" />
+		<property name="equipDiaryId" type="java.lang.Long" column="EQUIP_DIARY_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="dispatchEquipId" type="java.lang.Long" column="DISPATCH_EQUIP_ID" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<property name="installId" type="java.lang.Long" column="INSTALL_ID" />
+		<property name="activateId" type="java.lang.Long" column="ACTIVATE_ID" />
+		<property name="employId" type="java.lang.Long" column="EMPLOY_ID" />
+		<property name="dismantleId" type="java.lang.Long" column="DISMANTLE_ID" />
+		<property name="verifyDate" type="java.lang.String" formula="(SELECT TOP 1 EV.VERIFY_DATE FROM T_EQUIPMENT_VERIFY EV WHERE EV.FLOW_ID=FLOW_ID)" />
+		<property name="flowState" type="java.lang.String" column="FLOW_STATE" />
+		<property name="employInspectSchemaId" type="java.lang.Long" column="EMPLOY_INSPECT_SCHEMA_ID" />
+		<property name="employMaintSchemaId" type="java.lang.Long" column="EMPLOY_MAINT_SCHEMA_ID" />
+		<many-to-one name="equipDiary" column="EQUIP_DIARY_ID" class="com.knight.emms.model.EquipDiary" insert="false" update="false" fetch="join" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" insert="false" update="false" fetch="join" />
+		<many-to-one name="contractLease" column="CONTRACT_ID" class="com.knight.emms.model.ContractLease" insert="false" update="false" fetch="join" />
+		<many-to-one name="dispatch" column="DISPATCH_ID" class="com.knight.emms.model.Dispatch" insert="false" update="false" fetch="join" />
+		<many-to-one name="equipInstall" column="INSTALL_ID" class="com.knight.emms.model.EquipInstall" insert="false" update="false" fetch="join" />
+		<many-to-one name="equipActivate" column="ACTIVATE_ID" class="com.knight.emms.model.EquipActivate" insert="false" update="false" fetch="join" />
+		<many-to-one name="equipEmploy" column="EMPLOY_ID" class="com.knight.emms.model.EquipEmploy" insert="false" update="false" fetch="join" />
+		<many-to-one name="equipDismantle" column="DISMANTLE_ID" class="com.knight.emms.model.EquipDismantle" insert="false" update="false" fetch="join" />
+		<set name="practiDiarySet" cascade="none" inverse="true" lazy="true">
+			<key column="FLOW_ID" />
+			<one-to-many class="com.knight.emms.model.PractiDiary" />
+		</set>
+		<set name="componDiarySet" cascade="none" inverse="true" lazy="true">
+			<key column="FLOW_ID" />
+			<one-to-many class="com.knight.emms.model.ComponDiary" />
+		</set>
+	</class>
+</hibernate-mapping>

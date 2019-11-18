@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractEquipOutlayVersion" table="T_CONTRACT_EQUIP_OUTLAY_VERSION" select-before-update="false" dynamic-update="false"
+		dynamic-insert="false" optimistic-lock="version">
+		<id name="outlayVersionId" column="OUTLAY_VERSION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="leaseVersionId" type="java.lang.Long" column="LEASE_VERSION_ID" />
+		<property name="contractEquipoutlayId" type="java.lang.Long" column="CONTRACT_EQUIPOUTLAY_ID" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="employOutlay" type="java.math.BigDecimal" column="EMPLOY_OUTLAY" />
+		<property name="installOutlay" type="java.math.BigDecimal" column="INSTALL_OUTLAY" />
+		<property name="dismantleOutlay" type="java.math.BigDecimal" column="DISMANTLE_OUTLAY" />
+		<property name="mantOutlay" type="java.math.BigDecimal" column="MANT_OUTLAY" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+	</class>
+</hibernate-mapping>

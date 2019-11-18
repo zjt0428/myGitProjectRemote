@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-29 9:21:52 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TAppDispatch" table="T_APP_DISPATCH">
+		<id name="disid" type="java.lang.Long">
+			<column name="DISID" />
+			<generator class="native" />
+		</id>
+		<property name="dispatchSerial" type="java.lang.String" column="DISPATCH_SERIAL" />
+		<property name="disDate" type="java.lang.String">
+			<column name="DIS_DATE" length="10" />
+		</property>
+		<property name="projId" type="java.lang.Long">
+			<column name="PROJ_ID" />
+		</property>
+		<property name="projName" type="string">
+			<column name="PROJ_NAME" length="200" />
+		</property>
+        <property name="contractId" type="java.lang.Long">
+            <column name="CONTRACT_ID"/>
+        </property>
+        <property name="sendId" type="java.lang.Long">
+            <column name="SEND_ID"/>
+        </property>
+        <property name="sendWarehouseName" type="java.lang.String">
+            <column name="SEND_WAREHOUSE_NAME"/>
+        </property>
+		<property name="sendWarehouseAddress" type="java.lang.String">
+			<column name="SEND_WAREHOUSE_ADDRESS"/>
+		</property>
+        <property name="sendWarehouseType" type="java.lang.String">
+            <column name="SEND_WAREHOUSE_TYPE"/>
+        </property>
+        <property name="receiveId" type="java.lang.Long">
+            <column name="RECEIVE_ID"/>
+        </property>
+        <property name="receiveWarehouseName" type="java.lang.String">
+            <column name="RECEIVE_WAREHOUSE_NAME"/>
+        </property>
+		<property name="receiveWarehouseAddress" type="java.lang.String">
+			<column name="RECE_WAREHOUSE_ADDRESS"/>
+		</property>
+        <property name="receWarehouseType" type="java.lang.String">
+            <column name="RECE_WAREHOUSE_TYPE"/>
+        </property>
+		<property name="disType" type="string">
+			<column name="DIS_TYPE" length="1" />
+		</property>
+		<property name="dispatcher" type="string">
+			<column name="DISPATCHER" length="50" />
+		</property>
+		<property name="remark" type="string">
+			<column name="REMARK" length="300" />
+		</property>
+		<property name="createDt" type="java.lang.String">
+			<column name="CREATE_DT" length="10" />
+		</property>
+		<property name="createBy" type="java.lang.Long">
+			<column name="CREATE_BY" />
+		</property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" length="1"/>
+        </property>
+        <property name="transportUnit" type="java.lang.String">
+            <column name="TRANSPORT_UNIT" length="128"/>
+        </property>
+		<property name="createByName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=CREATE_BY)"></property>
+		<property name="fileAttaches" type="java.lang.String">
+			<column name="FILE_ATTACHES" length="300" />
+		</property>
+		<property name="logisticsTimes" type="java.lang.Integer"
+			formula="(SELECT ISNULL((SELECT COUNT(*) AS 'COUNT' FROM T_APP_LOGISTICS  T WHERE  T.DISID=DISID GROUP BY T.DISID),1))">
+		</property>
+		<property name="permissionFlag" type="java.lang.String"
+			formula="(SELECT A.PERMISSION_FLAG FROM T_CONTRACT_LEASE A WHERE A.CONTRACT_ID = CONTRACT_ID)"></property>
+		<set name="dispComponDetailSet" cascade="none" inverse="true" lazy="true">
+			<key column="DISID" />
+			<one-to-many class="com.knight.app.model.TAppComponDispatchDetail" />
+		</set>
+		<set name="dispEquipDetailSet" cascade="none" inverse="true" lazy="true">
+			<key column="DISID"></key>
+			<one-to-many class="com.knight.app.model.TAppEquipDispatchDetail"/>
+		</set>
+	</class>
+</hibernate-mapping>

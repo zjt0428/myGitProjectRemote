@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.RentItemBrief" table="T_RENT_ITEM_BRIEF" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="rentItemBriefId" column="RENT_ITEM_BRIEF_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="rentId" type="java.lang.Long" column="RENT_ID" />
+		<property name="rentItemName" type="java.lang.String" column="RENT_ITEM_NAME" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="unitprice" type="java.math.BigDecimal" column="UNITPRICE" />
+		<property name="measurement" type="java.lang.String" column="MEASUREMENT" />
+		<property name="deductRent" type="java.math.BigDecimal" column="DEDUCT_RENT" />
+		<property name="itemCumulate" type="java.math.BigDecimal" column="ITEM_CUMULATE" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

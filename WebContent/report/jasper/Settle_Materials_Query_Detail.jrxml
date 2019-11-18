@@ -1,0 +1,1626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Settle_Materials_Query_Detail" language="groovy" pageWidth="12000" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="11960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="6ed93af7-ab13-4fed-bf4e-d3f67be502c6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="022eb70e-1833-48b1-8fef-0f1b7faffb08"/>
+	<parameter name="startDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractIds" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @startDate VARCHAR(10)
+DECLARE @endDate VARCHAR(10)
+DECLARE @asciiNum INT
+
+SET @startDate=$P{startDate}
+SET @endDate=$P{endDate}
+SET @asciiNum=65
+
+;WITH QUERY AS (
+SELECT
+CHAR(@asciiNum+ROW)+START_DATE AS 'NEW_START_DATE',
+START_DATE
+FROM(
+	SELECT
+	ROW_NUMBER() OVER (ORDER BY START_DATE) AS ROW,
+	START_DATE
+	FROM T_SETTLE_MATERIALS
+	WHERE STATUS=1
+	AND START_DATE>=@startDate
+	AND END_DATE<=@endDate
+	AND RIGHT(START_DATE,2)=RIGHT(@startDate,2)
+	AND RIGHT(END_DATE,2)=RIGHT(@endDate,2)
+	GROUP BY START_DATE
+	) T
+)
+SELECT
+*,
+CONVERT(DECIMAL(15,2),AMOUNT/(1+TAX_RATE)) AS 'AMOUT_WITHOUT_TAX',
+CONVERT(DECIMAL(15,2),AMOUNT-AMOUNT/(1+TAX_RATE)) AS 'TAX'
+FROM (
+			SELECT
+			SETTLE_ID,
+			CONTRACT_CATEGORY_NAME,
+			(CASE TSM.PA_ENT_NAME
+				WHEN '天元集团一公司' THEN 'A天元集团一公司'
+				WHEN '天元集团二公司' THEN 'B天元集团二公司'
+				WHEN '天元集团三公司' THEN 'C天元集团三公司'
+				WHEN '天元集团四公司' THEN 'D天元集团四公司'
+				WHEN '天元集团五公司' THEN 'E天元集团五公司'
+				WHEN '天元集团六公司' THEN 'F天元集团六公司'
+				WHEN '天元集团七公司' THEN 'G天元集团七公司'
+				WHEN '天元集团八公司' THEN 'H天元集团八公司'
+				WHEN '天元集团九公司' THEN 'I天元集团九公司'
+				WHEN '天元集团十公司' THEN 'J天元集团十公司'
+				WHEN '天元集团十一公司' THEN 'K天元集团十一公司'
+				WHEN '天元集团青二公司' THEN 'L天元集团青二公司'
+				WHEN '天元集团路桥公司' THEN 'M天元集团路桥公司'
+				WHEN '天元集团装饰公司' THEN 'N天元集团装饰公司'
+				WHEN '天元集团安装公司' THEN 'O天元集团安装公司'
+				WHEN '天元集团北京公司' THEN 'P天元集团北京公司'
+				WHEN '天元集团六公司济南办事处' THEN 'Q天元集团六公司济南办事处'
+				WHEN '外租经营客户' THEN 'R外租经营客户'
+				WHEN '天元集团临港公司' THEN 'S天元集团临港公司'
+				WHEN '集团内部其他单位' THEN 'T集团内部其他单位'
+				ELSE 'U'+TSM.PA_ENT_NAME
+				END) AS 'PA_ENT_NAME',
+			TSM.CONTRACT_SERIAL,
+			TSM.PROJECT_NAME,
+			SETTLE_DEP_NAME,
+			BP.VALUE+BC.VALUE AS 'ADDRESS',
+			TAX_CACULATE_TYPE_NAME,
+			TSM.TAX_RATE,
+			TSM.START_DATE,
+			END_DATE,
+			TCM.SIGNING_TIME,
+			Q.NEW_START_DATE+' 至 '+END_DATE AS 'CONCAT_DATE',
+			SUM(CASE TSF.ITEM WHEN '租赁费用（+）' THEN TSF.AMOUNT ELSE 0 END) AS [RENT],
+			SUM(CASE TSF.ITEM WHEN '丢失赔偿（+）' THEN TSF.AMOUNT ELSE 0 END) AS [LOST],
+			SUM(CASE TSF.ITEM WHEN '损坏赔偿（+）' THEN TSF.AMOUNT ELSE 0 END) AS [DAMAGE],
+			SUM(CASE TSF.ITEM WHEN '装卸费用（+）' THEN TSF.AMOUNT ELSE 0 END) AS [HANDLING],
+			SUM(CASE TSF.ITEM WHEN '包装费用（+）' THEN TSF.AMOUNT ELSE 0 END) AS [PACKAGE],
+			SUM(CASE TSF.ITEM WHEN '报停费用（-）' THEN TSF.AMOUNT ELSE 0 END) AS [BLOCK_UP],
+			SUM(CASE TSF.ITEM WHEN '优惠费用（-）' THEN TSF.AMOUNT ELSE 0 END) AS [DISCOUNTS],
+			SUM(CASE TSF.ITEM WHEN '其他费用（+）' THEN TSF.AMOUNT ELSE 0 END) AS [OTHER],
+			SUM(CASE TSF.ITEM WHEN '本期结算合计' THEN TSF.AMOUNT ELSE 0 END) AS [AMOUNT]
+			FROM T_SETTLE_MATERIALS TSM
+			LEFT JOIN T_SETTLE_FEE TSF ON TSF.RELATE_ID = TSM.SETTLE_ID AND TSF.RELATE_MODULE='SETTLE_MATERIALS'
+			LEFT JOIN T_CONTRACT_MATERIALS TCM ON TSM.CONTRACTMA_ID = TCM.CONTRACTMA_ID
+			LEFT JOIN T_PROJECT TP ON TCM.PROJECT_ID = TP.PROJECT_ID
+			LEFT JOIN BM_PROVINCE BP ON BP.CODE=TP.PROVINCE
+			LEFT JOIN BM_CITY BC ON BC.CODE=TP.CITY
+			LEFT JOIN QUERY Q ON Q.START_DATE = TSM.START_DATE
+			WHERE TSM.STATUS=1 AND TSM.START_DATE>=@startDate AND END_DATE<=@endDate
+			AND ($P{contractIds} IS NULL OR $P{contractIds}='' OR TSM.CONTRACTMA_ID IN (SELECT * FROM dbo.Split($P{contractIds},',')))
+			AND RIGHT(TSM.START_DATE,2)=RIGHT(@startDate,2)
+			AND RIGHT(END_DATE,2)=RIGHT(@endDate,2)
+			GROUP BY SETTLE_ID,
+			CONTRACT_CATEGORY_NAME,
+			TSM.PA_ENT_NAME,
+			TSM.CONTRACT_SERIAL,
+			TSM.PROJECT_NAME,
+			SETTLE_DEP_NAME,
+			BP.VALUE+BC.VALUE,
+			TAX_CACULATE_TYPE_NAME,
+			TSM.TAX_RATE,
+			TSM.START_DATE,
+			END_DATE,
+			TCM.SIGNING_TIME,
+			Q.NEW_START_DATE
+			) T
+ORDER BY CONTRACT_CATEGORY_NAME,SIGNING_TIME]]>
+	</queryString>
+	<field name="SETTLE_ID" class="java.lang.Long"/>
+	<field name="CONTRACT_CATEGORY_NAME" class="java.lang.String"/>
+	<field name="PA_ENT_NAME" class="java.lang.String"/>
+	<field name="CONTRACT_SERIAL" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="SETTLE_DEP_NAME" class="java.lang.String"/>
+	<field name="ADDRESS" class="java.lang.String"/>
+	<field name="TAX_CACULATE_TYPE_NAME" class="java.lang.String"/>
+	<field name="TAX_RATE" class="java.math.BigDecimal"/>
+	<field name="START_DATE" class="java.lang.String"/>
+	<field name="END_DATE" class="java.lang.String"/>
+	<field name="SIGNING_TIME" class="java.lang.String"/>
+	<field name="CONCAT_DATE" class="java.lang.String"/>
+	<field name="RENT" class="java.lang.Double"/>
+	<field name="LOST" class="java.lang.Double"/>
+	<field name="DAMAGE" class="java.lang.Double"/>
+	<field name="HANDLING" class="java.lang.Double"/>
+	<field name="PACKAGE" class="java.lang.Double"/>
+	<field name="BLOCK_UP" class="java.lang.Double"/>
+	<field name="DISCOUNTS" class="java.lang.Double"/>
+	<field name="OTHER" class="java.lang.Double"/>
+	<field name="AMOUNT" class="java.lang.Double"/>
+	<field name="AMOUT_WITHOUT_TAX" class="java.math.BigDecimal"/>
+	<field name="TAX" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="752" height="79" uuid="f1b30714-8628-48c2-82be-7a375d69d697"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="25" isBold="true"/>
+				</textElement>
+				<text><![CDATA[周材租赁费用结算统计报表(明细)]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="181" splitType="Stretch">
+			<crosstab>
+				<reportElement x="0" y="0" width="975" height="181" uuid="81dfedb7-bece-41d1-93b5-59bf736a505c"/>
+				<crosstabHeaderCell>
+					<cellContents backcolor="#99CCFF" mode="Opaque">
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="699" y="0" width="52" height="52" uuid="84f2f7d4-ae04-4aaf-ae85-624f3ee4599a"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[适用税率]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="635" y="0" width="64" height="52" uuid="aa46985a-844c-4a72-b582-b1a1d6ddc8c5"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[计税方式]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="551" y="0" width="84" height="52" uuid="86952f82-6ea9-4583-895c-02b6a27c76bb"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[项目地址]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="251" y="0" width="200" height="52" uuid="a0ddf6fb-d60f-4c3c-8b4a-7c4e945a549e"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[项目名称]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="451" y="0" width="100" height="52" uuid="b8b5da3b-bbd9-4aa1-ac6c-aeee4f9ad29e"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[项目主管部门]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="52" uuid="7918ce68-2562-4045-ab22-63e8fb069fc4"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[合同类型]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="70" y="0" width="70" height="52" uuid="006bf912-f3e8-4242-8450-9bf7ceac9cab"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[承租单位]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="140" y="0" width="111" height="52" uuid="738c6982-8c36-4a61-a614-4e681deb5e4d"/>
+							<box>
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement verticalAlignment="Middle"/>
+							<text><![CDATA[合同编号]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="CONTRACT_CATEGORY_NAME" width="70" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{CONTRACT_CATEGORY_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="86" uuid="4146af36-be6b-4a11-98c6-6f69a830ced8"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{CONTRACT_CATEGORY_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="25" forecolor="#FFFFFF" uuid="a761c1b6-d7dc-464f-b715-f413f9b1842f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total CONTRACT_CATEGORY_NAME]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="PA_ENT_NAME" width="70" totalPosition="End" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{PA_ENT_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="61" uuid="1a46ecf9-7e0d-4c9b-a35a-c68496df20c3"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{PA_ENT_NAME}.substring(1)]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#B9B4F8" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="681" height="25" uuid="9391ed6b-e890-4d53-837a-848ccfb6bb8c"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{CONTRACT_CATEGORY_NAME}+"  合计"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="CONTRACT_SERIAL" width="111" totalPosition="End" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{CONTRACT_SERIAL}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="111" height="36" uuid="83fc42f2-b643-4349-afee-1fa7e323dff5"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{CONTRACT_SERIAL}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#ADDDB7" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="611" height="25" uuid="36b7b941-fe0e-4b81-b019-e8881a829d05"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{PA_ENT_NAME}.substring(1)+"  合计"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="PROJECT_NAME" width="200" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{PROJECT_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="200" height="36" uuid="d30b016c-b984-46b5-9b7d-b2128e2bec66"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{PROJECT_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="SETTLE_DEP_NAME" width="100" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{SETTLE_DEP_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="36" uuid="3df566b0-cd0d-451e-b334-b0dbab6abb29"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{SETTLE_DEP_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="ADDRESS" width="84">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{ADDRESS}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="84" height="36" uuid="620a4ee9-9ff9-4344-9f64-e60f74b70507"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{ADDRESS}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="TAX_CACULATE_TYPE_NAME" width="64">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{TAX_CACULATE_TYPE_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="64" height="36" uuid="03559650-4c30-4231-8764-210fcc482ad9"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{TAX_CACULATE_TYPE_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="TAX_RATE" width="52">
+					<bucket class="java.math.BigDecimal">
+						<bucketExpression><![CDATA[$F{TAX_RATE}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="52" height="36" uuid="82516c47-863b-4682-ad31-00de3f51727f"/>
+								<box>
+									<pen lineWidth="0.0"/>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{TAX_RATE}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="CONCAT_DATE" height="52" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{CONCAT_DATE}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="752" height="16" uuid="890e4ac1-2372-41d0-9cb7-7a7c1d797ded"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{CONCAT_DATE}.substring(1)]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement x="682" y="32" width="70" height="20" uuid="244efb5e-5e4c-4bec-845d-e0c05eee199b"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[价税合计]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="520" y="32" width="92" height="20" uuid="736ddd16-eb05-4995-849d-537db8ccc2ff"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[不含价税合计]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="612" y="32" width="70" height="20" uuid="3d3b87a5-ae8f-4395-ac98-e40c6b81ecb6"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[税额]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="520" y="16" width="232" height="16" uuid="51bb26dd-00e8-48cb-a9de-11f2595a04a2"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.0"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[营业收入汇总]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="0" y="16" width="65" height="36" uuid="661c6454-678c-4d11-8aeb-2b1d2c2587a5"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[租赁
+费用]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="65" y="16" width="65" height="36" uuid="679928b1-1e7c-4908-bfdd-9a396bb0e868"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[丢失
+赔偿]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="130" y="16" width="65" height="36" uuid="00902fc8-b849-4419-94e2-527041683d00"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[损坏
+赔偿]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="195" y="16" width="65" height="36" uuid="9e4920ea-3eb4-44b6-8754-5a06d132841f"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[装卸
+费用]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="260" y="16" width="65" height="36" uuid="21d92205-606d-4baa-bb93-d7aed6cb65bf"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[包装
+费用]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="325" y="16" width="65" height="36" uuid="66ea71f7-6288-4ed7-ae8e-e67ec73e0836"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[报停
+费用]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="390" y="16" width="65" height="36" uuid="f0144604-880d-470b-9d96-cfed3e3617d9"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[优惠
+费用]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="455" y="16" width="65" height="36" uuid="9c2ac842-ca05-412c-983f-afef0b47255b"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[其他
+费用]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<staticText>
+								<reportElement x="92" y="22" width="70" height="30" uuid="51165955-de74-47cf-a725-8efd5cf903b2"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[税额]]></text>
+							</staticText>
+							<staticText>
+								<reportElement x="162" y="22" width="70" height="30" uuid="d59b997d-2e28-4317-ad5e-364126568d08"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[价税合计]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="0" y="22" width="92" height="30" uuid="599c2d22-7ceb-4734-a3c3-b26c360304a3"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.0"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[不含税合计]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="232" height="22" uuid="fbe2b2e5-6640-4d0e-9302-270b0d01d760"/>
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<text><![CDATA[营业收入汇总]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="不含税合计" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{AMOUT_WITHOUT_TAX}]]></measureExpression>
+				</measure>
+				<measure name="税额" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{TAX}]]></measureExpression>
+				</measure>
+				<measure name="价税合计" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{AMOUNT}]]></measureExpression>
+				</measure>
+				<measure name="RENT1" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{RENT}]]></measureExpression>
+				</measure>
+				<measure name="LOST" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{LOST}]]></measureExpression>
+				</measure>
+				<measure name="DAMAGE" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{DAMAGE}]]></measureExpression>
+				</measure>
+				<measure name="HANDLING" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{HANDLING}]]></measureExpression>
+				</measure>
+				<measure name="PACKAGE" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{PACKAGE}]]></measureExpression>
+				</measure>
+				<measure name="BLOCK_UP" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{BLOCK_UP}]]></measureExpression>
+				</measure>
+				<measure name="DISCOUNTS" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{DISCOUNTS}]]></measureExpression>
+				</measure>
+				<measure name="OTHER" class="java.lang.Double" calculation="Sum">
+					<measureExpression><![CDATA[$F{OTHER}]]></measureExpression>
+				</measure>
+				<crosstabCell width="752" height="36">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="682" y="0" width="70" height="36" uuid="9df780b5-bc64-4b1a-9b48-c48ab3c18ff6"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="520" y="0" width="92" height="36" uuid="9e85f4bb-9642-4d63-9373-7fdeef66404e"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="612" y="0" width="70" height="36" uuid="79070102-6e92-48b4-b89d-15622307f81d"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="65" height="36" uuid="a820ae6d-0c00-4e41-a050-f83e76a14e45"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{RENT1}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="65" y="0" width="65" height="36" uuid="c7475865-a200-462c-a1b8-f82cc115645c"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{LOST}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="130" y="0" width="65" height="36" uuid="4800b664-52bd-4e8b-8cfa-f8cdb0514f77"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{DAMAGE}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="195" y="0" width="65" height="36" uuid="1aefc84c-bb28-4512-a3c2-4c892a6ea059"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{HANDLING}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="260" y="0" width="65" height="36" uuid="7d755b6a-c863-4340-9e40-834873084b65"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{PACKAGE}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="325" y="0" width="65" height="36" uuid="76aa33b3-123f-4609-9cfc-6268d78cc944"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{BLOCK_UP}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="390" y="0" width="65" height="36" uuid="5fd644fa-4fa4-43bd-a613-36845fc794c0"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{DISCOUNTS}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="455" y="0" width="65" height="36" uuid="0bd8fc11-e72b-4184-84a8-2a4a007c9bc9"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{OTHER}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="150" height="25" rowTotalGroup="CONTRACT_CATEGORY_NAME">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="01495273-fbc9-4e7e-8e83-cafeef860100"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" uuid="13c24e1d-29ec-4366-bf09-0534ca1386f9"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+						<textField pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" x="100" y="0" width="50" height="25" uuid="621db2c7-12c9-4f6a-aabc-d0ab3f6cd997"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="232" height="36" columnTotalGroup="CONCAT_DATE">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="92" height="36" uuid="a003e828-ffb4-4d5a-9a8a-63401412bc9e"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="92" y="0" width="70" height="36" uuid="f2199b68-d57f-42ae-9728-1d6abd3948df"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="162" y="0" width="70" height="36" uuid="f9aeafd0-64a5-40df-a20b-80eb820576b6"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="150" height="25" rowTotalGroup="CONTRACT_CATEGORY_NAME" columnTotalGroup="CONCAT_DATE">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="c91984f3-0c25-4d03-bee7-0714fa5a8c1f"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" x="50" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="a0dbec4a-5dcd-4689-934c-864905539e1f"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+						<textField pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" x="100" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="1f5ba7b8-4813-425b-9db4-a3be4000d4a5"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="752" height="25" rowTotalGroup="PA_ENT_NAME">
+					<cellContents backcolor="#B9B4F8" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="520" y="0" width="92" height="25" uuid="ee34daac-2943-4e21-a69e-3a4c133b1ea7"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="612" y="0" width="70" height="25" uuid="b7417f74-1955-4fdd-8f77-fee3282f652e"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="682" y="0" width="70" height="25" uuid="88293687-d96f-4631-aa53-c9961359517c"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="65" height="25" uuid="0bb01d11-56fb-4320-a633-ac85e4f40ded"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{RENT1}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="65" y="0" width="65" height="25" uuid="490ec7d1-0b96-4480-aecf-d1ce1ae09b15"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{LOST}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="130" y="0" width="65" height="25" uuid="e6dd07e1-57d1-4f7b-9f18-34e24e824955"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{DAMAGE}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="195" y="0" width="65" height="25" uuid="3798cea3-5d7e-48c7-a7f1-a387ed3a9909"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{HANDLING}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="260" y="0" width="65" height="25" uuid="1e5f8358-1249-4672-9a3d-040111a6203b"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{PACKAGE}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="325" y="0" width="65" height="25" uuid="e4733fbf-f2eb-4857-987d-6af150ba160a"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{BLOCK_UP}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="390" y="0" width="65" height="25" uuid="c9668444-a036-4a96-b26e-d167d8c11738"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{DISCOUNTS}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="455" y="0" width="65" height="25" uuid="eb536f1a-5fcb-4801-a3c3-26f03adb290a"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{OTHER}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="232" height="25" rowTotalGroup="PA_ENT_NAME" columnTotalGroup="CONCAT_DATE">
+					<cellContents backcolor="#B9B4F8" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="92" height="25" uuid="f75b269a-47eb-4a6d-aa2a-1bf2316160e6"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="92" y="0" width="70" height="25" uuid="87702acb-a5b4-434e-be4d-f23bc109af62"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="162" y="0" width="70" height="25" uuid="f0f9e10c-e43f-49d6-b737-ed32745579aa"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="752" height="25" rowTotalGroup="CONTRACT_SERIAL">
+					<cellContents backcolor="#ADDDB7" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="682" y="0" width="70" height="25" uuid="82d31b02-d89f-46bf-a778-964551143031"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="520" y="0" width="92" height="25" uuid="6338b327-096b-4101-8d73-534f7db9cbf9"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="612" y="0" width="70" height="25" uuid="e111eeff-ffe0-43ca-9f67-ce5008de7110"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="65" height="25" uuid="dbc2f418-6113-45a7-be4e-c2ff083058d6"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{RENT1}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="65" y="0" width="65" height="25" uuid="cb0f316d-a5ce-403e-a8a9-9f78ff207068"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{LOST}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="130" y="0" width="65" height="25" uuid="e92a589b-32be-40c4-b1c4-6820753181c1"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{DAMAGE}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="195" y="0" width="65" height="25" uuid="a9271048-6a73-4683-96ad-3e1e38b4d9d5"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{HANDLING}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="260" y="0" width="65" height="25" uuid="e43f1a40-cad0-485d-9665-daaba1dbfbe8"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{PACKAGE}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="325" y="0" width="65" height="25" uuid="289c5f12-9d6e-48e5-a893-91f351eb8ffa"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{BLOCK_UP}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="390" y="0" width="65" height="25" uuid="e7988a61-fe5e-4c55-94e8-8d0549b335ff"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{DISCOUNTS}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="455" y="0" width="65" height="25" uuid="741c3008-0842-42a4-b7a2-94371dd4ff63"/>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{OTHER}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="232" height="25" rowTotalGroup="CONTRACT_SERIAL" columnTotalGroup="CONCAT_DATE">
+					<cellContents backcolor="#ADDDB7" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="162" y="0" width="70" height="25" uuid="bbf2a589-5e19-4fbb-ab3a-22b9602f53fd"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{价税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="92" height="25" uuid="0bf1a31a-9833-4496-b2aa-f9c5adfa9e5a"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{不含税合计}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="false">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="92" y="0" width="70" height="25" uuid="4990e59e-538f-4008-8c9c-072ddc186783"/>
+							<box>
+								<pen lineWidth="0.0"/>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{税额}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="PROJECT_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="PROJECT_NAME" columnTotalGroup="CONCAT_DATE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="SETTLE_DEP_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="SETTLE_DEP_NAME" columnTotalGroup="CONCAT_DATE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="ADDRESS">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="ADDRESS" columnTotalGroup="CONCAT_DATE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="TAX_CACULATE_TYPE_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="TAX_CACULATE_TYPE_NAME" columnTotalGroup="CONCAT_DATE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="TAX_RATE">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="TAX_RATE" columnTotalGroup="CONCAT_DATE">
+					<cellContents/>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

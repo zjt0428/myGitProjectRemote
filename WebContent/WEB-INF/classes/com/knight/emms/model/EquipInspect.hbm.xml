@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInspect" table="T_EQUIPMENT_INSPECT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inspectId" column="INSPECT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="inspectSerial" type="java.lang.String" column="INSPECT_SERIAL" />
+		<property name="cycleTimes" type="java.lang.Integer" column="CYCLE_TIMES" />
+		<property name="thisEndCycleDate" type="java.util.Date" column="THIS_END_CYCLE_DATE" />
+		<property name="inspectDate" type="java.util.Date" column="INSPECT_DATE" />
+		<property name="inspectPepoles" type="java.lang.String" column="INSPECT_PEPOLES" />
+		<property name="inspectResult" type="java.lang.String" column="INSPECT_RESULT" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="paEntName" type="java.lang.String" formula="(SELECT L.PA_ENT_NAME FROM T_CONTRACT_LEASE L LEFT JOIN T_EQUIPMENT_FLOW EF ON EF.CONTRACT_ID=L.CONTRACT_ID
+				LEFT JOIN T_EQUIPMENT_INSPECT_SCHEMA EIC ON EIC.FLOW_ID=EF.FLOW_ID LEFT JOIN T_EQUIPMENT_INSPECT EI ON EI.INSPECT_SCHEMA_ID=EIC.INSPECT_SCHEMA_ID
+				WHERE EI.INSPECT_ID=INSPECT_ID )" />
+		<property name="depName" type="java.lang.String" formula="(SELECT CASE WHEN D.DEP_LEVEL=3 THEN D.DEP_NAME
+				WHEN D.DEP_LEVEL=4 THEN D1.DEP_NAME+'/'+D.DEP_NAME ELSE '' END
+				FROM T_EQUIPMENT_INSPECT_SCHEMA EIS
+				LEFT JOIN T_EQUIPMENT_FLOW EF ON EIS.FLOW_ID = EF.FLOW_ID
+				LEFT JOIN T_EQUIPMENT E ON E.EQUIP_ID = EF.EQUIP_ID
+				LEFT JOIN DEPARTMENT D ON D.DEP_ID = E.DEP_ID
+				LEFT JOIN DEPARTMENT D1 ON D.PARENT_ID = D1.DEP_ID
+				WHERE EIS.INSPECT_SCHEMA_ID =INSPECT_SCHEMA_ID )" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="rectification" type="java.lang.String" column="RECTIFICATION" />
+		<property name="inspectRectifyId" type="java.lang.Long" column="INSPECT_RECTIFY_ID" />
+		<property name="repairStatus" type="java.lang.String" column="REPAIR_STATUS" />
+		<property name="rectifyResult" type="java.lang.String" formula="(SELECT R.RECTIFY_RESULT FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<property name="rectifyDate" type="java.util.Date" formula="(SELECT R.RECTIFY_DATE FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<property name="rectifyUsername" type="java.lang.String" formula="(SELECT R.RECTIFY_USERNAME FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<property name="rectifyIntroduce" type="java.lang.String" formula="(SELECT R.RECTIFY_INTRODUCE FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT E.PERMISSION_FLAG FROM T_EQUIPMENT_INSPECT_SCHEMA T,T_EQUIPMENT_DIARY ED, T_EQUIPMENT E WHERE T.EQUIP_DIARY_ID=ED.EQUIP_DIARY_ID AND E.EQUIP_ID=ED.EQUIP_ID AND T.INSPECT_SCHEMA_ID = INSPECT_SCHEMA_ID)" />
+		<property name="flowState" type="java.lang.String" formula="(SELECT EF.FLOW_STATE FROM T_EQUIPMENT_INSPECT_SCHEMA EIS,T_EQUIPMENT_DIARY ED,T_EQUIPMENT_FLOW EF WHERE INSPECT_SCHEMA_ID=EIS.INSPECT_SCHEMA_ID AND EIS.EQUIP_DIARY_ID=ED.EQUIP_DIARY_ID AND EF.FLOW_ID=ED.FLOW_ID)" />
+		<property name="sealStatus" type="java.lang.String" column="SEAL_STATUS"  />
+		<property name="materialPractiName" type="java.lang.String" formula="(SELECT P.MATERIAL_PRACTI_NAME FROM T_PROJECT P,
+						T_EQUIPMENT_INSPECT_SCHEMA EIS, T_EQUIPMENT_DIARY ED WHERE  EIS.INSPECT_SCHEMA_ID= INSPECT_SCHEMA_ID 
+							AND EIS.EQUIP_DIARY_ID = ED.EQUIP_DIARY_ID AND P.PROJECT_ID = ED.PROJECT_ID )" />
+		<many-to-one name="equipInspectSchema" column="INSPECT_SCHEMA_ID" class="com.knight.emms.model.EquipInspectSchema" fetch="join" />
+		<set name="equipInspectDetailSet" lazy="true" cascade="delete" inverse="true">
+			<key column="INSPECT_ID"></key>
+			<one-to-many class="com.knight.emms.model.EquipInspectDetail" />
+		</set>
+		<set name="costInspectSet" lazy="true" cascade="delete" inverse="true">
+			<key column="INSPECT_ID"></key>
+			<one-to-many class="com.knight.emms.model.CostInspect" />
+		</set>
+		<!-- <many-to-one name="inspectRectify" column="INSPECT_RECTIFY_ID" class="com.knight.app.model.InspectRectify" fetch="join" /> -->
+	</class>
+</hibernate-mapping>

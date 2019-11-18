@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.RiskReport" table="T_RISK_REPORT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="riskReportId" column="RISK_REPORT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="reportSerial" type="java.lang.String" column="REPORT_SERIAL" />
+		<property name="checkPosition" type="java.lang.String" column="CHECK_POSITION" />
+		<property name="improvePerson" type="java.lang.String" column="IMPROVE_PERSON" />
+		<property name="completeDate" type="java.lang.String" column="COMPLETE_DATE" />
+		<property name="improveDesc" type="java.lang.String" column="IMPROVE_DESC" />
+		<property name="improveResult" type="java.lang.String" column="IMPROVE_RESULT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<many-to-one name="risk" column="RISK_ID" class="com.knight.emms.model.Risk" fetch="join" />
+	</class>
+</hibernate-mapping>

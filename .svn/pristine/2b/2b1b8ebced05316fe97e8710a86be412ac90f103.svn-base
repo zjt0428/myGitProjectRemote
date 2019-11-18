@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AutocraneExpense" table="T_AUTOCRANE_EXPENSE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="autocraneExpenseId" column="AUTOCRANE_EXPENSE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="autocraneId" type="java.lang.Long" column="AUTOCRANE_ID" />
+		<property name="specificName" type="java.lang.String" column="SPECIFIC_NAME" />
+		<property name="accountPrice" type="java.math.BigDecimal" column="ACCOUNT_PRICE" />
+		<property name="quantity" type="java.math.BigDecimal" column="QUANTITY" />
+		<property name="machineTeam" type="java.math.BigDecimal" column="MACHINE_TEAM" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

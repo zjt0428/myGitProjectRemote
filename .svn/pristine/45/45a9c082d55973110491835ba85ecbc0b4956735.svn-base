@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipRepairVehicle" table="T_EQUIPMENT_REPAIR_VEHICLE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="repairVehicleId" column="REPAIR_VEHICLE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="repairId" type="java.lang.Long" column="REPAIR_ID" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="vehicleModel" type="java.lang.String" column="VEHICLE_MODEL" />
+		<property name="vehicleAmount" type="java.math.BigDecimal" column="VEHICLE_AMOUNT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

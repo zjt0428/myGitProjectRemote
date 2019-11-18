@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.VerifyStandard" table="T_VERIFY_STANDARD" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="standardId" column="STANDARD_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="itemName" type="java.lang.String" column="ITEM_NAME" />
+		<property name="parentName" type="java.lang.String" column="PARENT_NAME" />
+		<property name="level" type="java.lang.Integer" column="LEVEL" />
+		<property name="demandDes" type="java.lang.String" column="DEMAND_DES" />
+		<property name="standardResult" type="java.lang.String" column="STANDARD_RESULT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="summary" type="java.lang.String" column="SUMMARY" />
+	</class>
+</hibernate-mapping>

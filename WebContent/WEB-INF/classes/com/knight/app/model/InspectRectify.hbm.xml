@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.app.model.InspectRectify" table="T_INSPECT_RECTIFY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inspectRectifyId" column="INSPECT_RECTIFY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="inspectId" type="java.lang.Long" column="INSPECT_ID" />
+		<property name="rectifyDate" type="java.util.Date" column="RECTIFY_DATE" />
+		<property name="rectifyUserId" type="java.lang.Long" column="RECTIFY_USERID" />
+		<property name="rectifyUsername" type="java.lang.String" column="RECTIFY_USERNAME" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="rectifyResult" type="java.lang.String" column="RECTIFY_RESULT" />
+		<property name="rectifyIntroduce" type="java.lang.String" column="RECTIFY_INTRODUCE" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" />
+		<property name="remark" type="java.lang.String" column="REAMRK" />
+	</class>
+</hibernate-mapping>

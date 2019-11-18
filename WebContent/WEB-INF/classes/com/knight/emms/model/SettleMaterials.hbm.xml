@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-9-6 14:06:03 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SettleMaterials" table="T_SETTLE_MATERIALS"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="settleId" type="java.lang.Long">
+			<column name="SETTLE_ID" />
+			<generator class="native" />
+		</id>
+		<property name="settleSerial" type="java.lang.String">
+			<column name="SETTLE_SERIAL" length="64" />
+		</property>
+		<property name="settleMan" type="java.lang.String">
+			<column name="SETTLE_MAN" length="64" />
+		</property>
+		<property name="settleDate" type="java.lang.String">
+			<column name="SETTLE_DATE" length="32" />
+		</property>
+		<property name="settleTitle" type="java.lang.String">
+			<column name="SETTLE_TITLE" length="64" />
+		</property>
+		<property name="startDate" type="java.lang.String">
+			<column name="START_DATE" length="32" />
+		</property>
+		<property name="endDate" type="java.lang.String">
+			<column name="END_DATE" length="32" />
+		</property>
+		<property name="contractSerial" type="java.lang.String">
+			<column name="CONTRACT_SERIAL" length="64" not-null="true" />
+		</property>
+
+
+		<property name="contractCategory" type="java.lang.String">
+			<column name="CONTRACT_CATEGORY" length="16" />
+		</property>
+		<property name="contractCategoryName" type="java.lang.String">
+			<column name="CONTRACT_CATEGORY_NAME" length="32" />
+		</property>
+		<property name="tranportCaculateType" type="java.lang.String">
+			<column name="TRANPORT_CACULATE_TYPE" length="16" />
+		</property>
+		<property name="tranportCaculateTypeName" type="java.lang.String">
+			<column name="TRANPORT_CACULATE_TYPE_NAME" length="64" />
+		</property>
+		<property name="transFeeCaculateType" type="java.lang.String">
+			<column name="TRANS_FEE__CACULATE_TYPE" length="16" />
+		</property>
+		<property name="contractmaId" type="java.lang.Long">
+			<column name="CONTRACTMA_ID" />
+		</property>
+		<property name="contractTheme" type="java.lang.String">
+			<column name="CONTRACT_THEME" length="32" />
+		</property>
+		<property name="projectName" type="java.lang.String">
+			<column name="PROJECT_NAME" length="32" />
+		</property>
+		<property name="paEntName" type="java.lang.String">
+			<column name="PA_ENT_NAME" length="32" />
+		</property>
+		<property name="pbEntName" type="java.lang.String">
+			<column name="PB_ENT_NAME" length="32" />
+		</property>
+		<property name="taxRate" type="java.math.BigDecimal">
+			<column name="TAX_RATE" precision="12" />
+		</property>
+		<property name="rentalRate" type="java.math.BigDecimal">
+			<column name="RENTAL_RATE" precision="12" />
+		</property>
+		<property name="taxCaculateType" type="java.lang.String">
+			<column name="TAX_CACULATE_TYPE" length="32" />
+		</property>
+		<property name="taxCaculateTypeName" type="java.lang.String">
+			<column name="TAX_CACULATE_TYPE_NAME" length="32" />
+		</property>
+		<property name="contractAmount" type="java.math.BigDecimal">
+			<column name="CONTRACT_AMOUNT" precision="12" />
+		</property>
+		<property name="finSettingAmount" type="java.math.BigDecimal">
+			<column name="FIN_SETTING_AMOUNT" precision="12" />
+		</property>
+		<property name="settledAmount" type="java.math.BigDecimal">
+			<column name="SETTLE_AMOUNT" precision="12" />
+		</property>
+		<property name="handoverAmount" type="java.math.BigDecimal">
+			<column name="HANDOVER_AMOUNT" precision="12" />
+		</property>
+		<property name="writedownAmount" type="java.math.BigDecimal">
+			<column name="WRITEDOWN_AMOUNT" precision="12" />
+		</property>
+		<property name="financiaType" type="java.lang.String">
+			<column name="FINANCIA_TYPE" length="32" />
+		</property>
+		<property name="settleDepId" type="java.lang.Long">
+			<column name="SETTLE_DEP_ID" />
+		</property>
+		<property name="settleDepName" type="java.lang.String">
+			<column name="SETTLE_DEP_NAME" length="32" />
+		</property>
+		<property name="transFeeAmount" type="java.math.BigDecimal">
+			<column name="TRANS_FEE_AMOUNT" precision="12" />
+		</property>
+		<property name="otherFeeAmount" type="java.math.BigDecimal">
+			<column name="OTHER_FEE_AMOUNT" precision="12" />
+		</property>
+		<property name="status" type="java.lang.String">
+			<column name="STATUS" length="16" />
+		</property>
+		       <property name="backOff" type="java.lang.String">
+            <column name="BACK_OFF" length="8" />
+        </property>
+       <property name="effectiveTime" type="java.lang.String">
+            <column name="EFFECTIVE_TIME" length="24" />
+        </property>
+       <property name="loseEffectiveTime" type="java.lang.String">
+            <column name="LOSE_EFFECTIVE_TIME" length="24" />
+        </property>
+       <property name="detailCaculateTime" type="java.lang.String">
+            <column name="DETAIL_CACULATE_TIME" length="24" />
+        </property>
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="settleFeeDetailSet" cascade="all" inverse="false"
+			lazy="true">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.SettleFee" />
+			<filter name="nameEqualFilter" condition="RELATE_MODULE=:relateModule"></filter>
+		</set>
+	</class>
+	<filter-def name="nameEqualFilter">
+		<filter-param name="relateModule" type="java.lang.String" />
+	</filter-def>
+</hibernate-mapping>

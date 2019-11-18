@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipWarehouse" table="T_EQUIPMENT_WAREHOUSE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="warehouseId" column="WAREHOUSE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="warehouseSerial" type="java.lang.String" column="WAREHOUSE_SERIAL" />
+		<property name="warehouseDate" type="java.lang.String" column="WAREHOUSE_DATE" />
+		<property name="principal" type="java.lang.String" column="PRINCIPAL" />
+		<property name="principalTel" type="java.lang.String" column="PRINCIPAL_TEL" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="storeName" type="java.lang.String" formula="(SELECT SH.STORE_NAME FROM T_STORE_HOUSE SH WHERE SH.STORE_ID = STORE_ID)" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="corpId" type="java.lang.Long" column="CORP_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="vehicleNum" type="java.lang.String" column="VEHICLE_NUM" />
+		<property name="vehiclePerson" type="java.lang.String" column="VEHICLE_PERSON" />
+		<property name="receiveMan" type="java.lang.String" column="RECEIVE_MAN" />
+		<property name="isScraped" type="java.lang.String" column="IS_SCRAPED" />
+		<property name="receiveManId" type="java.lang.Long" column="RECEIVE_MAN_ID" />
+		<property name="attachSerial" type="java.lang.String" column="ATTACH_SERIAL" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<set name="equipWarehouseComponSet" cascade="all" inverse="false" lazy="true">
+			<key column="WAREHOUSE_ID" />
+			<one-to-many class="com.knight.emms.model.EquipWarehouseCompon" />
+		</set>
+	</class>
+</hibernate-mapping>

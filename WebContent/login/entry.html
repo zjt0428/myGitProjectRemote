@@ -1,0 +1,794 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统入口</title>
+    <link type="text/css" rel="stylesheet" href="../css/public.css">
+    <meta name="viewport" content="width=device-width" />
+	<script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
+	<link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.0/css/bootstrap.css" rel="stylesheet">
+	<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    	var isClick = function(c, view) {
+			window.name = c;
+			location.href= "../indexsrc.jsp";
+		}
+    </script>
+     <style>
+		* {
+				/*text-decoration: none;*/
+				margin:0;
+				padding:0;
+			}
+
+			body {
+				/*//全屏*/
+				height: 100%;
+				width: 100%;
+				min-width:1175px;
+				/*background: url('../images/beijing.png')no-repeat;*/
+				/* background: url('../images/beijing2.png') no-repeat center center fixed; */
+				/* background: url(../images/all_bd.png) no-repeat center center fixed; */
+				-webkit-background-size: cover;
+				-moz-background-size: cover;
+				-o-background-size: cover;
+				background-size: cover;
+				background-origin: content-box;
+			}
+
+			.FirstTitle {
+				position: absolute;
+				height: 60px;
+				line-height: 60px;
+				width: 100%;
+				align-items: center;
+				display: flex;
+				background: #123DAA;
+			}
+
+			h2,
+			h1,
+			h3 {
+				margin: 0;
+			}
+
+			.AllTitleChild {
+				width: 280px;
+				height: 44px;
+
+				margin-right: 20px;
+				margin-left: 20px;
+				background: url("../images/dadulogo.png") no-repeat center;
+				background-size: cover;
+			}
+
+			.FirstTitle>h3 {
+				/*letter-spacing: 10px!important;*/
+				color: white !important;
+			}
+
+			.navBody {
+				width: 100%;
+				height: 800px;
+				margin: 0 auto;
+				padding-top: 270px;
+				/* padding-left:1.5%; */
+				position: relative;
+			}
+			.navBody > img{
+				position: absolute;
+				top:10%;
+				left:0;
+				width:100%;
+				height:160px;
+				z-index: 9;
+				margin-top:100px;
+			}
+			.flex-box{
+				display: flex;
+				height:500px;
+				justify-content: center;
+				margin-top:30px;
+			}
+			.nav-box{
+				/* display: inline-block; */
+				width: 20%;
+				position: relative;
+				vertical-align: top;
+				margin:0 0.8%;
+			}
+	
+			.dot-line{
+				position: absolute;
+				top:-110px;
+				left:0;
+				right:0;
+				margin:auto;
+				display: inline-block;
+				width: 20px;
+				text-align: center;
+			}
+			.dot-line img:nth-child(2){
+				width:2px;
+			}
+			.nav-box:first-child .dot-line img:nth-child(2){
+				height:142px;
+			}
+			.nav-box:nth-child(2) .dot-line{
+				top:-60px;
+			}
+			.nav-box:nth-child(3) .dot-line{
+				top:-120px;
+			}
+			.nav-box:nth-child(4) .dot-line{
+				top:-44px;
+			}
+			.navOne{
+				text-align: center;
+			}
+			.navOneTop{
+				margin-bottom:6%;
+				margin-top:18%;
+			}
+			.navOne img{
+				width:20%;
+			}
+			.navOneBottom>ul {
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				padding: 0 20%;
+				z-index: 100;
+				position: relative;
+			}
+
+			.navOneBottom>ul>li {
+				list-style: none;
+				color: white;
+				width: 50%;
+				margin: 0 auto;
+				text-align: center;
+			}
+
+			.navOneBottom {
+				color: white !important;
+				/*display: flex;*/
+				/*justify-content: center;*/
+
+			}
+
+			.navOneBottom>div ,.navOneBottom>ul li{
+				text-align: center;
+				/* padding: 0.6% 0; */
+				font-size: 12px !important;
+				margin: 2px 0;
+			}
+			.navOneBottom>ul>li a:hover{
+				cursor:pointer;
+			}
+			.navOneBottom>.first {
+				color: white;
+				padding-bottom: 0%;
+				font-size: 22px !important;
+				/*font-size: 22%!important;*/
+			}
+
+			a {
+				color: white;
+				font-size: 16px;
+				font-family: 微软雅黑 !important;
+
+			}
+
+			a:link {
+				color: white;
+
+			}
+
+			a:visited {
+				color: white;
+
+			}
+
+			a:active {
+				color: white;
+
+			}
+
+			a:hover {
+				color: white;
+				text-decoration: underline;
+
+			}
+			canvas{
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				margin: auto;
+				padding:0;
+			}
+			.nav-box:nth-child(1) canvas{
+				margin-top:28px;
+			}
+			.nav-box:nth-child(1) .nb1{
+				margin-top:90px;
+			}
+			.nav-box:nth-child(2) canvas{
+				margin-top:102px;
+			}
+			.nav-box:nth-child(2) .nb2{
+				margin-top:160px;
+			}
+			.nav-box:nth-child(3) canvas{
+				margin-top:42px;
+			}
+			.nav-box:nth-child(3) .nb3{
+				margin-top:100px;
+			}
+			.nav-box:nth-child(4) canvas{
+				margin-top:120px;
+			}
+			.nav-box:nth-child(4) .nb4{
+				margin-top:170px;
+			}
+			@media screen and (max-width: 1900px) {
+				.nav-box:nth-child(1) canvas{
+					margin-top:30px;
+				}
+				.nav-box:nth-child(1) .nb1{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(2) canvas{
+					margin-top:104px;
+				}
+				.nav-box:nth-child(2) .nb2{
+					margin-top:140px;
+				}
+				.nav-box:nth-child(3) canvas{
+					margin-top:44px;
+				}
+				.nav-box:nth-child(3) .nb3{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(4) canvas{
+					margin-top:120px;
+				}
+				.nav-box:nth-child(4) .nb4{
+					margin-top:160px;
+				}
+				.navOneBottom>.first{
+					font-size: 18px !important;
+				}
+				a{
+					font-size: 14px;
+				}	
+				.navOneBottom>.first{
+					font-size: 22px !important;
+				}
+				a{
+					font-size: 16px;
+				}
+			
+			}
+			@media screen and (max-width: 1700px) {
+				
+				.nav-box:nth-child(1) canvas{
+					margin-top:36px;
+				}
+				.nav-box:nth-child(1) .nb1{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(2) canvas{
+					margin-top:108px;
+				}
+				.nav-box:nth-child(2) .nb2{
+					margin-top:140px;
+				}
+				.nav-box:nth-child(3) canvas{
+					margin-top:48px;
+				}
+				.nav-box:nth-child(3) .nb3{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(4) canvas{
+					margin-top:124px;
+				}
+				.nav-box:nth-child(4) .nb4{
+					margin-top:160px;
+				}
+				.navOneBottom>.first{
+					font-size: 18px !important;
+				}
+				a{
+					font-size: 14px;
+				}	
+			}
+		
+			@media screen and (max-width: 1440px) {
+				
+				.nav-box:nth-child(1) canvas{
+					margin-top:36px;
+				}
+				.nav-box:nth-child(1) .nb1{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(2) canvas{
+					margin-top:108px;
+				}
+				.nav-box:nth-child(2) .nb2{
+					margin-top:140px;
+				}
+				.nav-box:nth-child(3) canvas{
+					margin-top:48px;
+				}
+				.nav-box:nth-child(3) .nb3{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(4) canvas{
+					margin-top:124px;
+				}
+				.nav-box:nth-child(4) .nb4{
+					margin-top:160px;
+				}
+				.navOneBottom>.first{
+					font-size: 18px !important;
+				}
+				a{
+					font-size: 14px;
+				}	
+			}
+			@media screen and (max-width: 1300px) {
+				.navOneBottom>.first{
+					font-size: 16px !important;
+				}
+				a{
+					font-size: 12px;
+				}	
+			}
+			@media screen and (max-width: 1270px) {
+				.nav-box:nth-child(1) canvas{
+					margin-top:40px;
+				}
+				.nav-box:nth-child(1) .nb1{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(2) canvas{
+					margin-top:112px;
+				}
+				.nav-box:nth-child(2) .nb2{
+					margin-top:140px;
+				}
+				.nav-box:nth-child(3) canvas{
+					margin-top:52px;
+				}
+				.nav-box:nth-child(3) .nb3{
+					margin-top:80px;
+				}
+				.nav-box:nth-child(4) canvas{
+					margin-top:128px;
+				}
+				.nav-box:nth-child(4) .nb4{
+					margin-top:156px;
+				}
+				.navOneBottom>.first{
+					font-size: 16px !important;
+				}
+				a{
+					font-size: 12px;
+				}
+				.navOne img{
+					width:12%;
+				}
+			}
+</style>
+    
+</head>
+<body class="entry">
+	<div class="all">
+		<canvas id="star" width="" height="" style="position: absolute; top: 0px;"></canvas>
+		<div class="FirstTitle">
+			<div class="AllTitleChild"></div>
+			<h3>租赁管理服务平台</h3>
+		</div>
+		<div class="navBody">
+			<img src="../images/shan.png">
+			<div class="flex-box">
+				<div class="nav-box" style="">
+					<div class="dot-line">
+						<img src="../images/dot.png" /> 
+						<img src="../images/line.png" />
+					</div>
+					<canvas id="cva1"></canvas>
+					<div class="navOne nb1">
+						<div class="navOneTop">
+							<img src="../images/nav_icon1.png">
+						</div>
+						<div class="navOneBottom">
+							<div class="first">大数据分析</div>
+							<ul>
+								<li><a href="../bigData/chart.html?home_page_btn" >看板展示</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="nav-box">
+					<div class="dot-line">
+						<img src="../images/dot.png" /> 
+						<img src="../images/line.png" />
+					</div>
+					<canvas id="cva3"></canvas>
+					<div class="navOne nb2">
+						<div class="navOneTop">
+							<img src="../images/nav_icon2.png">
+						</div>
+						<div class="navOneBottom">
+							<div class="first">业务管理</div>
+							<ul>
+								<li><a onclick="isClick(2)">客户档案</a></li>
+								<li><a onclick="isClick(2)">企业档案</a></li>
+								<li><a onclick="isClick(2)">项目管理</a></li>
+								<li><a onclick="isClick(2)">合同管理</a></li>
+								<li><a onclick="isClick(2)">经营总览</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="nav-box">
+					<div class="dot-line">
+							<img src="../images/dot.png" />
+							<img src="../images/line.png" />
+					</div>
+					<canvas id="cva2" ></canvas>
+					<div class="navOne nb3">
+						<div class="navOneTop">
+							<img src="../images/nav_icon3.png">
+						</div>
+						<div class="navOneBottom">
+							<div class="first">设备管理</div>
+							<ul>
+								<li><a onclick="isClick(1)">设备档案</a></li>
+								<li><a onclick="isClick(1)">安全巡检</a></li>
+								<li><a onclick="isClick(1)">安装管理</a></li>
+								<li><a onclick="isClick(1)">拆卸管理</a></li>
+								<li><a onclick="isClick(1)">维修管理</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="nav-box">
+					<div class="dot-line">
+						<img src="../images/dot.png" /> 
+						<img src="../images/line.png" />
+					</div>
+					<canvas id="cva4"></canvas>
+					<div class="navOne nb4">
+						<div class="navOneTop">
+							<img src="../images/nav_icon4.png">
+						</div>
+						<div class="navOneBottom">
+							<div class="first">系统设置</div>
+							<ul>
+								<li><a onclick="isClick(3)">用户管理</a></li>
+								<li><a onclick="isClick(3)">角色管理</a></li>
+								<li><a onclick="isClick(3)">组织架构</a></li>
+								<li><a onclick="isClick(3)">操作日志</a></li>
+								<!-- <li><a onclick="isClick(3)">工作流设置</a></li> -->
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+		var scrollWith = ($(window).get(0).innerWidth);
+
+		hexagonEffect("#cva1");
+		hexagonEffect("#cva2");
+		hexagonEffect("#cva3");
+		hexagonEffect("#cva4");
+
+		function hexagonEffect(el) {
+			var canvas = document.querySelector(el),
+				context = canvas.getContext('2d');
+			var ANGLE = 90; //角高亮效果线长度只适合正6边形
+			var angle = 20; //初始高亮线长度
+			var transparent = false; //六边形背景透明度变化
+			// 定义边长、颜色、边数、canvas大小
+			var length = parseFloat(scrollWith) * 0.1979 * 0.4211,
+				fillColor = '#000',
+				vertices = 6,
+				// size = parseFloat(scrollWith) * 0.1979;
+				size = parseFloat(scrollWith) * 0.169;
+			canvas.width = size;
+			canvas.height = size;
+			console.log(size)
+			function originCanvas() {
+				var getDegree = function(vertices, index) {
+					return 360 / vertices * (i + 0.5) + 90;
+				}
+				var getRadian = function(degree) {
+					return degree * Math.PI / 180;
+				};
+				context.beginPath();
+				for (var i = 0; i < vertices; i++) {
+					// 计算偏转
+					var degree = getDegree(vertices, i),
+						radian = getRadian(degree);
+					// 增加1/3的canvas大小位移量以免被边缘挡住
+					var x = Math.cos(radian) * length + size / 2;
+					var y = Math.sin(radian) * length + size / 2;
+					context.strokeStyle = "#06EFFE";
+					context.lineWidth = 1;
+					context.lineTo(x, y);
+				}
+				context.fillStyle = 'rgba(6,239,254,.2)';
+				if (transparent) {
+					context.fill();
+				}
+				context.closePath();
+				context.stroke();
+			};
+			originCanvas()
+
+
+			effect(angle);
+
+			function effect(angle) {
+				var ang1 = ANGLE + (30 - angle);
+				var ang2 = ANGLE - (30 - angle);
+				length1 = (length / 2) / Math.tan(30 * (2 * Math.PI / 360)) / Math.cos(angle * (2 * Math.PI / 360));
+				var getDegree = function(vertices, index) {
+					return 360 / vertices * (i + 0.5) + ANGLE;
+				}
+				var getDegree1 = function(vertices, index) {
+					return 360 / vertices * (i + 0.5) + ang1;
+				}
+				var getDegree2 = function(vertices, index) {
+					return 360 / vertices * (i + 0.5) + ang2;
+				}
+				var getRadian = function(degree) {
+					return degree * Math.PI / 180;
+				};
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				originCanvas()
+				context.beginPath();
+				for (var i = 0; i < vertices; i++) {
+					// 计算偏转
+					var degree = getDegree(vertices, i),
+						radian = getRadian(degree),
+						degree1 = getDegree1(vertices, i),
+						radian1 = getRadian(degree1),
+						degree2 = getDegree2(vertices, i),
+						radian2 = getRadian(degree2);
+					// 增加1/3的canvas大小位移量以免被边缘挡住
+					var x = Math.cos(radian) * length + size / 2;
+					var y = Math.sin(radian) * length + size / 2;
+
+					var x1 = Math.cos(radian1) * length1 + size / 2;
+					var y1 = Math.sin(radian1) * length1 + size / 2;
+					var x2 = Math.cos(radian2) * length1 + size / 2;
+					var y2 = Math.sin(radian2) * length1 + size / 2;
+
+					context.moveTo(x, y);
+					context.lineTo(x1, y1);
+					context.moveTo(x, y)
+					context.lineTo(x2, y2);
+
+				}
+				context.strokeStyle = "#06EFFE";
+				context.lineWidth = 3;
+				context.closePath();
+				context.stroke();
+			}
+			var Interval = "";
+			var ti = 0.5;
+			$(el).on("mouseenter", function() {
+				transparent = true;
+				Interval = setInterval(function() {
+					angle -= ti;
+					if (angle >= 30) {
+						originCanvas()
+						ti = 0.5;
+					}
+					if (angle <= 0) {
+						originCanvas()
+						ti = -0.5;
+					}
+					effect(angle);
+				}, 20)
+			})
+			$(el).on("mouseleave", function() {
+				transparent = false;
+				clearInterval(Interval);
+				var once = setInterval(function() {
+					if (angle < 20) {
+						angle += 0.5;
+						effect(angle);
+					}
+					if (angle > 20) {
+						angle -= 0.5;
+						effect(angle);
+					}
+					if (angle == 20) {
+						clearInterval(once);
+					}
+				}, 20)
+			})
+		}
+
+
+
+
+		//背景动态效果
+		(function() {
+			//得到canvas，绘制上下文
+			var canvasEl = document.getElementById('star');
+			var ctx = canvasEl.getContext('2d');
+			var mousePos = [0, 0];
+
+			var easingFactor = 5.0; //缓动因子，实现缓动公式有用
+			var backgroundColor = '#1E66D2';
+			var nodeColor = 'rgba(6,239,254,.2)'; //节点颜色
+			var edgeColor = 'rgba(6,239,254,.2)'; //线的颜色
+			//定义星星和边
+			var nodes = [];
+			var edges = [];
+			//建立节点
+			function constructNodes() {
+				for (var i = 0; i < 100; i++) {
+					var node = {
+						drivenByMouse: i == 0, //第一个点，不会被绘制出来，实现鼠标跟随效果
+						x: Math.random() * canvasEl.width, //随机数额
+						y: Math.random() * canvasEl.height,
+						vx: Math.random() * 1 - 0.5, //数小了的话图形分布不一样了，线也密集了点
+						vy: Math.random() * 1 - 0.5,
+						radius: Math.random() > 0.9 ? 3 + Math.random() * 3 : 1 + Math.random() * 3
+					};
+
+					nodes.push(node);
+				}
+
+				nodes.forEach(function(e) {
+					nodes.forEach(function(e2) {
+						if (e == e2) {
+							return;
+						}
+
+						var edge = {
+							from: e,
+							to: e2
+						} //线
+
+						addEdge(edge);
+					});
+				});
+			}
+			//如果两条边不一样才绘制
+			function addEdge(edge) {
+				var ignore = false;
+
+				edges.forEach(function(e) {
+					if (e.from == edge.from && e.to == edge.to) {
+						ignore = true;
+					}
+
+					if (e.to == edge.from && e.from == edge.to) {
+						ignore = true;
+					}
+				});
+
+				if (!ignore) {
+					edges.push(edge);
+				}
+			}
+
+			function step() {
+				nodes.forEach(function(e) {
+					if (e.drivenByMouse) {
+						return;
+					}
+
+					e.x += e.vx;
+					e.y += e.vy; //点动了哦
+
+					function clamp(min, max, value) {
+						if (value > max) {
+							return max;
+						} else if (value < min) {
+							return min;
+						} else {
+							return value;
+						}
+					}
+
+					if (e.x <= 0 || e.x >= canvasEl.width) {
+						e.vx *= -1;
+						e.x = clamp(0, canvasEl.width, e.x)
+					}
+
+					if (e.y <= 0 || e.y >= canvasEl.height) {
+						e.vy *= -1;
+						e.y = clamp(0, canvasEl.height, e.y)
+					}
+				});
+
+				adjustNodeDrivenByMouse();
+				render();
+				window.requestAnimationFrame(step);
+			} //关于这个 大神是这样说的--十分不提倡大家使用 setInterval，而是尽可能使用 requestAnimationFrame，它能保证你的帧率锁定在 <= 60 fps ，不至于爆掉你的浏览器直接复制粘贴下来的， 其实不太懂是什么意思~~
+
+			function adjustNodeDrivenByMouse() {
+				nodes[0].x += (mousePos[0] - nodes[0].x) / easingFactor; //最终位置-当前位置/缓动因子
+				nodes[0].y += (mousePos[1] - nodes[0].y) / easingFactor;
+			} //设置的第一个点
+
+			function lengthOfEdge(edge) {
+				return Math.sqrt(Math.pow((edge.from.x - edge.to.x), 2) + Math.pow((edge.from.y - edge.to.y), 2));
+			} //底数                 几次方
+			var img = new Image();
+			img.src = "../images/all_bd1.png";
+
+			function render() {
+				// 						ctx.fillStyle = backgroundColor;
+				// 						ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+				ctx.drawImage(img, 0, 0, canvasEl.width, canvasEl.height);
+				edges.forEach(function(e) {
+					var l = lengthOfEdge(e);
+					var threshold = canvasEl.width / 8; //试了一下，数字可以改的，就是会变丑~
+
+					if (l > threshold) {
+						return;
+					}
+
+					ctx.strokeStyle = edgeColor;
+					ctx.lineWidth = (1.0 - l / threshold) * 2.5;
+					ctx.globalAlpha = 1.0 - l / threshold;
+					ctx.beginPath();
+					ctx.moveTo(e.from.x, e.from.y);
+					ctx.lineTo(e.to.x, e.to.y);
+					ctx.stroke();
+				});
+				ctx.globalAlpha = 1.0;
+
+				nodes.forEach(function(e) {
+					if (e.drivenByMouse) {
+						return;
+					}
+
+					ctx.fillStyle = nodeColor;
+					ctx.beginPath();
+					ctx.arc(e.x, e.y, e.radius, 0, 2 * Math.PI); //画圆的一个方法
+					ctx.fill();
+				});
+			}
+
+			window.onresize = function() {
+				canvasEl.width = document.body.clientWidth;
+				// canvasEl.height = canvasEl.clientHeight;
+				canvasEl.height = $(window).get(0).innerHeight;
+
+				if (nodes.length == 0) {
+					constructNodes();
+				}
+
+				render();
+			};
+
+			window.onmousemove = function(e) {
+				mousePos[0] = e.clientX;
+				mousePos[1] = e.clientY;
+			}
+
+			window.onresize(); // trigger the event manually.
+			window.requestAnimationFrame(step);
+		}).call(this);
+		$(window).resize(function(){
+			window.history.go(0);
+		})
+	</script>
+</html>

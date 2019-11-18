@@ -1,0 +1,194 @@
+<%@ page pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="kfn" uri="http://www.knight.com/jsp/jstl/functions"%>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>机械设备月租金结算单</title>
+<link rel="stylesheet" type="text/css" href="../pages/print/css/style_table.css" />
+<style media=print>
+.Noprint {
+	display: none;
+}
+</style>
+</head>
+<body>
+<center class="Noprint">
+	<p align="right">
+		<object id="WebBrowser" classid="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" id="btnPrint" style="font-size: 12px" value="直接打印" onclick="window.print()" />
+		<!-- <input type="button" style="font-size:12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+		<input type="button" style="font-size:12px" value="页面设置" onClick="document.all.WebBrowser.ExecWB(8,1)"> -->
+	</p>
+</center>
+<center>
+<div class="hzbmain_detail">
+<p style="text-align:center; "><span class="wrod_title">机  械  设  备  月  租  金  结  算  单</span></p>
+<p style="text-align:center; padding-bottom:10px;"><span><b>（${titleDate}）</b></span></p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td height="26" width="50%" style="padding-left:5px; text-align:left;">承租方：${settleContract.paEntName}</td>
+		<td height="26" style="padding-left:5px; text-align:left;">出租方：${settleContract.pbEntName}</td>
+	</tr>
+	<tr>
+		<td style="padding-right:5px;border-left-style:none;">工地名称：${settleContract.projectName}</td>
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="hzb_table">
+	<tr style="background-color:#E0E0E0;">
+		<td rowspan="2" width="3%">序号</td>
+		<td rowspan="2" width="5%">设备名称</td>
+		<td rowspan="2" width="5%">规格型号</td>
+		<td rowspan="2" width="5%">合同编号</td>
+		<td rowspan="2" width="8%">结算区间</td>
+		<td colspan="3" width="8%">月租金</td>
+		<td colspan="1" width="8%">进退场费用</td>
+		<td colspan="1" width="8%">操作人员工资</td>
+		<td colspan="1" width="8%">安全监控系统</td>
+		<c:if test="${totalSummaryCompon!='0'}">
+		<td colspan="1" width="8%">加节费用</td>
+		</c:if>
+		<c:if test="${totalSummaryOther!='0'}">
+		<td colspan="1" width="8%">其他费用</td>
+		</c:if>
+		<!-- <td width="5%">伙食补贴</td> -->
+		<td rowspan="2" width="5%">结算金额小计</td>
+	</tr>
+	<tr style="background-color:#E0E0E0;" >
+		<td >台数</td>
+		<td >单价</td>
+		<td >金额</td>
+		<!-- <td >台数</td>
+		<td >单价</td> -->
+		<td >金额</td>
+		<!-- <td >台数</td>
+		<td >单价</td> -->
+		<td >金额</td>
+		<!-- <td >台数</td>
+		<td >单价</td> -->
+		<td >金额</td>
+		<!-- <td >台数</td>
+		<td >单价</td> -->
+		<c:if test="${totalSummaryCompon!='0'}">
+		<td >金额</td>
+		</c:if>
+		<!-- <td >台数</td>
+		<td >单价</td> -->
+		<c:if test="${totalSummaryOther!='0'}">
+		<td >金额</td>
+		</c:if>
+		<!-- <td >金额</td> -->
+	</tr>
+	<c:forEach var="element" items="${settleEquipBrief}" varStatus="status">
+	<tr>
+		<%-- <td >${element.get("buildingNum")}</td> --%>
+		<td >${status.count}</td>
+		<td >${element["equipCategoryName"]}</td>
+		<td >${element["equipSpecificName"]}</td>
+		<td >${element["contractNo"]}</td>
+		<td >${element["interval"]}</td>
+		<td >${element["quantityEquip"]}</td>
+		<td >${element["rentStandard"]}</td>
+		<td >${element["summaryEquip"]}</td>
+		<%-- <td >${element["quantityItem"]}</td>
+		<td >${element["unitpriceItem"]}</td> --%>
+		<td >${element["summaryItem"]}</td>
+		<%-- <td >${element["quantityOperator"]}</td>
+		<td >${element["unitpriceOperator"]}</td> --%>
+		<td >${element["salary"]}</td>
+		<%-- <td >${element["quantitySafety"]}</td>
+		<td >${element["unitpriceSafety"]}</td> --%>
+		<td >${element["summarySafety"]}</td>
+		<%-- <td >${element["quantityCompon"]}</td>
+		<td >${element["unitpriceCompon"]}</td> --%>
+		<c:if test="${totalSummaryCompon!='0'}">
+		<td >${element["summaryCompon"]}</td>
+		</c:if>
+		<%-- <td >${element["quantityOther"]}</td>
+		<td >${element["unitpriceOther"]}</td> --%>
+		<c:if test="${totalSummaryOther!='0'}">
+		<td >${element["summaryOther"]}</td>
+		</c:if>
+		<%-- <td >${element["foodAllowance"]}</td> --%>
+		<td >${element["summaryEquip"]+element["summaryItem"]+element["salary"]+element["foodAllowance"]+element["summaryCompon"]+element["summarySafety"]+element["summaryOther"]}</td>
+	</tr>
+	</c:forEach>
+	<tr>
+		<td colspan="2">合计</td>
+		<td ></td>
+		<td ></td>
+		<td ></td>
+		<td ></td>
+		<td ></td>
+		<td >${totalSummaryEquip}</td>
+		<!-- <td ></td>
+		<td ></td> -->
+		<td >${totalSummaryItem}</td>
+		<!-- <td ></td>
+		<td ></td> -->
+		<td >${totalSalary}</td>
+		<!-- <td ></td>
+		<td ></td> -->
+		<td >${totalSummarySafety}</td>
+		<!-- <td ></td>
+		<td ></td> -->
+		<c:if test="${totalSummaryCompon!='0'}">
+		<td >${totalSummaryCompon}</td>
+		</c:if>
+		<!-- <td ></td>
+		<td ></td> -->
+		<c:if test="${totalSummaryOther!='0'}">
+		<td >${totalSummaryOther}</td>
+		</c:if>
+		<%-- <td >${totalFoodAllowance}</td> --%>
+		<td >${totalSummaryEquip+totalSummaryItem+totalSalary+totalFoodAllowance+totalSummarySafety+totalSummaryOther+totalSummaryCompon}</td>
+	</tr>
+</table>
+
+<table style="width: 100%" class="hzb_table">   
+	<tr style="background-color:#E0E0E0;">
+		<td width="8%" colspan="2">累计结算金额（元）</td>
+		<td width="8%" colspan="2">${settleContract.summaryReceivable}</td>
+		<td width="8%" colspan="2">累计付款金额（元）</td>
+		<td width="8%" colspan="2">${settleContract.receivedAmount}</td>
+		<td width="8%" colspan="2">累计欠款金额（元）</td>
+		<td width="8%" colspan="2">${settleContract.arrears}</td>
+		<td width="8%" colspan="4">&nbsp;</td>
+	</tr>
+</table>
+<table style="width: 100%" class="hzb_table">   
+	<tr style="background-color:#E0E0E0;">
+		<td width="8%" colspan="2">备注</td>
+		<td width="8%" colspan="2">${settleContract.remark}</td>
+	</tr>
+</table>
+
+<table style="width: 100%">   
+	<tr>
+		<td align="right"  colspan="3" style="font-size:12px; font-weight:bold;">注: 本表一式六份</td>
+	</tr>
+	<tr>
+		<td align="left" width="150px" colspan="2">承租方：${settleContract.paEntName}</td>
+		<td width="90px" >出租方：${settleContract.pbEntName}</td>
+	</tr>
+	<tr>
+		<td align="left" width="50px">核对：</td>
+		<td width="20px" style="margin-right: 20px;">项目经理：</td>
+		<td width="50px" >经办人：</td>
+	</tr>
+	<tr>
+		<td align="left" width="100px" colspan="2">日期:   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;  月  &nbsp;&nbsp;  日</td>
+		<td width="50px" >日期： &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 年&nbsp;&nbsp;  月  &nbsp;&nbsp;  日</td>
+	</tr>
+		<tr>
+		<td align="left" width="60px" >单位领导：</td>
+		<td width="10px" >材料设备科：</td>
+		<td  width="50px" >商务科：</td>
+	</tr>
+</table>
+</div>
+</center>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipBlockup" table="T_EQUIPMENT_BLOCKUP" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="blockupId" column="BLOCKUP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="blockupSerial" type="java.lang.String" column="BLOCKUP_SERIAL" />
+		<property name="blockupType" type="java.lang.String" column="BLOCKUP_TYPE" />
+		<property name="blockupDate" type="java.util.Date" column="BLOCKUP_DATE" />
+		<property name="reactivateDate" type="java.lang.String" column="REACTIVATE_DATE" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="corpId" type="java.lang.Long" column="CORP_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="effectiveDate" type="java.lang.String" column="EFFECTIVE_DATE" />
+		
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<!-- <set name="blockupSet" cascade="all" inverse="false" lazy="true">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.EquipFlowEmploy" />
+		</set> -->
+	</class>
+</hibernate-mapping>

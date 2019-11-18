@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>软件头部</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="top_boxbg">
+    <div class="top_title"><img src="images/top_title.jpg" width="530" height="79" /></div>	 
+	  <div class="top_right">
+		   <div class="top_right_word">
+			 <span class="top_span_icon"><img src="images/top_home.png" /></span><span class="top_span_word"><a href="#" target="_top">返回首页</a></span>
+			 <span class="top_span_icon"><img src="images/top_help.png" /></span><span class="top_span_word"><a href="#" target="_top">帮助中心</a></span>
+			 <span class="top_span_icon"><img src="images/top_close.png" /></span><span class="top_span_word"><a href="#" target="_top">安全退出</a></span>
+			</div>  
+	  </div>
+  </div>
+</body>
+</html>

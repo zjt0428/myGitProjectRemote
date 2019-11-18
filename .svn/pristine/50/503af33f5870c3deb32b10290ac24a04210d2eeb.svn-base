@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.knight.app.model.TAppLogisticsEquip" table="T_APP_LOGISTICS_EQUIP" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="logiEquipId" type="java.lang.Long">
+            <column name="LOGI_EQUIP_ID" />
+            <generator class="native" />
+        </id>
+        <property name="logiNum" column="LOGI_NUM"/>
+        <property name="logiId" column="LOGI_ID"/>
+        <property name="receNum" column="RECE_NUM"/>
+        <many-to-one name="TAppEquipDispatchDetail" column="EQUIP_DEID" class="com.knight.app.model.TAppEquipDispatchDetail" fetch="join"/>
+    </class>
+</hibernate-mapping>

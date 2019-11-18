@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BusinessMessage" table="T_BUSINESS_MESSAGE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="messageId" column="MESSAGE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="message" type="java.lang.String" column="MESSAGE" />
+		<property name="receiveTel" type="java.lang.String" column="RECEIVE_TEL" />
+		<property name="receiveName" type="java.lang.String" column="RECEIVE_NAME" />
+		<property name="senderId" type="java.lang.Long" column="SENDER_ID" />
+		<property name="senderName" type="java.lang.String" column="SENDER_NAME" />
+		<property name="sendFlag" type="java.lang.String" column="SEND_FLAG" />
+		<property name="sendTime" type="java.util.Date" column="SEND_TIME" />
+		<property name="replyCode" type="java.lang.String" column="REPLY_CODE" />
+		<property name="createTime" type="java.util.Date" column="CREATE_TIME" />
+		<property name="readFlag" type="java.lang.String" column="READ_FLAG" />
+		<property name="module" type="java.lang.String" column="MODULE" />
+		<property name="detail" type="java.lang.String" column="DETAIL" />
+		<property name="msgType" type="java.lang.String" column="MSG_TYPE" />
+	</class>
+</hibernate-mapping>

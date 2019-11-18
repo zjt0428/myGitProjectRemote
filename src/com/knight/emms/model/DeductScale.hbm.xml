@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DeductScale" table="T_DEDUCT_SCALE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="deductScaleId" column="DEDUCT_SCALE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="scaleStart" type="java.math.BigDecimal" column="SCALE_START" />
+		<property name="scaleEnd" type="java.math.BigDecimal" column="SCALE_END" />
+		<property name="scalePercent" type="java.math.BigDecimal" column="SCALE_PERCENT" />
+		<property name="scaleType" type="java.lang.String" column="SCALE_TYPE" />
+	</class>
+</hibernate-mapping>

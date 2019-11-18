@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EnterFactoryNotice" table="T_ENTER_FACTORY_NOTICE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="factoryNoticeId" column="FACTORY_NOTICE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="projectTel" type="java.lang.String" column="PROJECT_TEL" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="installDate" type="java.util.Date" column="INSTALL_DATE" />
+		<property name="conditions" type="java.lang.String" column="CONDITIONS" />
+		<property name="craneFee" type="java.lang.Long" column="CRANE_FEE" />
+		<property name="startLincense" type="java.lang.String" column="START_LINCENSE" />
+		<property name="regulators" type="java.lang.String" column="REGULATORS" />
+		<property name="lawContent" type="java.lang.String" column="LAW_CONTENT" />
+		<property name="commandContent" type="java.lang.String" column="COMMAND_CONTENT" />
+		<property name="otherContent" type="java.lang.String" column="OTHER_CONTENT" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+		<many-to-one name="practitioner" column="PRACTI_ID" class="com.knight.emms.model.Practitioner" fetch="join" />
+		<set name="enterFactoryEquipSet" cascade="none" inverse="true" lazy="true">
+			<key column="FACTORY_NOTICE_ID" />
+			<one-to-many class="com.knight.emms.model.EnterFactoryEquip" />
+		</set>
+	</class>
+</hibernate-mapping>

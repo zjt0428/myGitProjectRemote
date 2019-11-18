@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ConstructOperation" table="T_CONSTRUCT_OPERATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="constructId" column="CONSTRUCT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="constructSerial" type="java.lang.String" column="CONSTRUCT_SERIAL" />
+		<property name="constructTheme" type="java.lang.String" column="CONSTRUCT_THEME" />
+		<property name="closedUserId" type="java.lang.Long" column="CLOSED_USER_ID" />
+		<property name="closedUserName" type="java.lang.String" column="CLOSED_USER_NAME" />
+		<property name="constructDate" type="java.lang.String" column="CONSTRUCT_DATE" />
+		<property name="constructStartDate" type="java.lang.String" column="CONSTRUCT_START_DATE" />
+		<property name="enterPlanDate" type="java.lang.String" column="ENTER_PLAN_DATE" />
+		<property name="receiveDate" type="java.lang.String" column="RECEIVE_DATE" />
+		<property name="confimDate" type="java.lang.String" column="CONFIM_DATE" />
+		<property name="actualDate" type="java.lang.String" column="ACTUAL_DATE" />
+		<property name="closedDate" type="java.lang.String" column="CLOSED_DATE" />
+		<property name="actualPractiNames" type="java.lang.String" column="ACTUAL_PRACTI_NAMES" />
+        <property name="mileage" type="java.math.BigDecimal" column="MILEAGE" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="createBy" type="java.lang.String" column="CREATE_BY" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="certNum" type="java.lang.String" column="CERT_NUM" />
+		<property name="certLevel" type="java.lang.String" column="CERT_LEVEL" />
+		<property name="pbEntName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="practiNames" type="java.lang.String" column="PRACTI_NAMES" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="projectPrincipal" type="java.lang.String" column="PROJECT_PRINCIPAL" />
+		<property name="teams" type="java.lang.String" column="TEAMS" />
+		<property name="finishedAmount" type="java.math.BigDecimal" column="FINISHED_AMOUNT" />
+		<property name="remainderAmount" type="java.math.BigDecimal" column="REMAINDER_AMOUNT" />
+		<property name="planHeight" type="java.lang.String" column="PLAN_HEIGHT" />
+		<property name="realHeight" type="java.lang.String" column="REAL_HEIGHT" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<!--<property name="confimUserId" type="java.lang.Long" column="CONFIM_USER_ID" />-->
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<set name="constructOperationPlanTaskSet" lazy="true" cascade="all" inverse="false"  where=" TASK_TYPE = '0'">
+			<key column="CONSTRUCT_ID" />
+			<one-to-many class="com.knight.emms.model.ConstructOperationTask" />
+		</set>
+		<set name="constructOperationRealTaskSet" lazy="true" cascade="all" inverse="false"  where=" TASK_TYPE = '1'">
+			<key column="CONSTRUCT_ID" />
+			<one-to-many class="com.knight.emms.model.ConstructOperationTask" />
+		</set>
+		<set name="constructPlanPractiSet" lazy="true" cascade="all" inverse="false"
+			 where = "TYPE = '0' "  >
+			<key column="CONSTRUCT_ID" />
+			<one-to-many class="com.knight.emms.model.ConstructPracti" />
+		</set>
+        <set name="constructRealPractiSet" lazy="true" cascade="all" inverse="false"
+             where = "TYPE = '1' "  >
+            <key column="CONSTRUCT_ID" />
+            <one-to-many class="com.knight.emms.model.ConstructPracti" />
+        </set>
+		<set name="constructManagerSet" lazy="true" cascade="all" inverse="false"
+             where = "TYPE = '2' "  >
+            <key column="CONSTRUCT_ID" />
+            <one-to-many class="com.knight.emms.model.ConstructPracti" />
+        </set>
+	</class>
+</hibernate-mapping>

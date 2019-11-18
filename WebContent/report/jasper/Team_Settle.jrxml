@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Team_Settle" pageWidth="870" pageHeight="1190" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="810" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="83bf7fad-c335-4e5d-899b-484780229a46">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="DATE_BEG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_END" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TEAM_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @ym_beg CHAR(32)
+DECLARE @ym_end CHAR(32)
+DECLARE @ymds  CHAR(32)
+DECLARE @ymde  CHAR(32)
+
+SET @ym_beg = $P{DATE_BEG}
+SET @ym_end = $P{DATE_END}
+
+SET @ymds = CONVERT(varchar(32),@ym_beg,112)
+SET @ymde = CONVERT(varchar(32),@ym_end,112)+1
+
+SELECT
+	p.INS_DIS_TEAM AS '班组名称',
+	p.START_TIME AS '发生时间',
+	p.RELATE_SERIAL AS '单据号码',
+	'现场安装' AS '关联模块',
+	p.FEES_TYPE_NAME AS '收费类型',
+	p.EQUIP_SPECIFIC_NAME AS '设备型号',
+	p.TEAM_PRICE AS '单价',
+	p.NUMBER AS '数量',
+	p.CHARGES_SUBTOTAL AS '金额',
+	(SELECT SUM(CHARGES_SUBTOTAL) FROM T_INSTALL_DISMANTEL_TEAM WHERE RELATE_MODULE = 'EQUIP_INSTALL'
+AND START_TIME >=@ymds
+AND START_TIME <@ymde
+AND (INS_DIS_TEAM IN ($P{TEAM_NAME}) OR $P{TEAM_NAME} IS NULL OR $P{TEAM_NAME}='')) AS '班组小计'
+FROM
+T_INSTALL_DISMANTEL_TEAM p
+WHERE
+p.RELATE_MODULE = 'EQUIP_INSTALL'
+AND p.START_TIME >=@ymds
+AND p.START_TIME <@ymde
+AND (P.INS_DIS_TEAM IN ($P{TEAM_NAME}) OR $P{TEAM_NAME} IS NULL OR $P{TEAM_NAME}='')
+UNION ALL
+SELECT
+	p.INS_DIS_TEAM AS '班组名称',
+	p.START_TIME AS '发生时间',
+	p.RELATE_SERIAL AS '单据号码',
+	'现场拆卸' AS '关联模块',
+	p.FEES_TYPE_NAME AS '收费类型',
+	p.EQUIP_SPECIFIC_NAME AS '设备型号',
+	p.TEAM_PRICE AS '单价',
+	p.NUMBER AS '数量',
+	p.CHARGES_SUBTOTAL AS '金额',
+	(SELECT SUM(CHARGES_SUBTOTAL) FROM T_INSTALL_DISMANTEL_TEAM WHERE RELATE_MODULE = 'EQUIP_DISMANTLE'
+AND START_TIME >=@ymds
+AND START_TIME <@ymde
+AND (INS_DIS_TEAM IN ($P{TEAM_NAME}) OR $P{TEAM_NAME} IS NULL OR $P{TEAM_NAME}='')) AS '班组小计'
+FROM
+T_INSTALL_DISMANTEL_TEAM p
+WHERE
+p.RELATE_MODULE = 'EQUIP_DISMANTLE'
+AND p.START_TIME >=@ymds
+AND p.START_TIME <@ymde
+AND (P.INS_DIS_TEAM IN ($P{TEAM_NAME}) OR $P{TEAM_NAME} IS NULL OR $P{TEAM_NAME}='')
+UNION ALL
+SELECT
+	p.REPAIR_TEAM AS '班组名称',
+	p.SPEND_DATE AS '发生时间',
+	k.REPAIR_SERIAL AS '单据号码',
+	'仓库维修' AS '关联模块',
+	'' AS '收费类型',
+	B.VALUE AS '设备型号',
+	p.UNIT_PRICE AS '单价',
+	p.REPAIR_TIME AS '数量',
+	p.LABOUR_CHARGES AS '金额',
+ (
+		SELECT
+			SUM (LABOUR_CHARGES)
+		FROM
+			T_EQUIPMENT_REPAIR_LOCATION p,
+			T_EQUIPMENT_REPAIR k
+		WHERE
+			p.REPAIR_ID = k.REPAIR_ID
+		AND CONVERT(varchar(32),P.SPEND_DATE,112) >=@ymds
+		AND CONVERT(varchar(32),P.SPEND_DATE,112) <@ymde
+		AND (
+			P.REPAIR_TEAM IN ($P{TEAM_NAME})
+			OR $P{TEAM_NAME} IS NULL
+			OR $P{TEAM_NAME}= ''
+		)
+	) AS '班组小计'
+FROM
+	T_EQUIPMENT_REPAIR_LOCATION p,
+	T_EQUIPMENT_REPAIR k,
+	T_EQUIPMENT e,
+	BM_EQUIP_SPECIFIC B
+WHERE
+	p.REPAIR_ID = k.REPAIR_ID
+AND CONVERT(varchar(32),P.SPEND_DATE,112) >=@ymds
+AND CONVERT(varchar(32),P.SPEND_DATE,112) <@ymde
+AND (
+	P.REPAIR_TEAM IN ($P{TEAM_NAME})
+	OR $P{TEAM_NAME} IS NULL
+	OR $P{TEAM_NAME}= ''
+)
+AND E.EQUIP_ID = K.EQUIP_ID
+AND E.EQUIP_SPECIFIC = B.CODE
+UNION ALL
+SELECT
+	p.DEP_NAME AS '班组名称',
+	K.INSPECT_DATE AS '发生时间',
+	k.INSPECT_SERIAL AS '单据号码',
+	'巡检管理' AS '关联模块',
+	'' AS '收费类型',
+	B.VALUE AS '设备型号',
+	p.PRICE AS '单价',
+	p.HOURS_INSPECT AS '数量',
+	p.AMOUNT AS '金额',
+(SELECT SUM(CONVERT(INT,p.AMOUNT)) FROM T_COST_INSPECT P,T_EQUIPMENT_INSPECT K WHERE P.INSPECT_ID = K.INSPECT_ID
+AND CONVERT(varchar(32),K.INSPECT_DATE,112) >=@ymds
+AND CONVERT(varchar(32),K.INSPECT_DATE,112) <@ymde
+AND (P.DEP_NAME IN ($P{TEAM_NAME}) OR $P{TEAM_NAME} IS NULL OR $P{TEAM_NAME}='')) AS '班组小计'
+FROM
+	T_COST_INSPECT P,
+	T_EQUIPMENT_INSPECT K,
+	T_EQUIPMENT_INSPECT_SCHEMA S,
+	T_EQUIPMENT_DIARY D,
+	BM_EQUIP_SPECIFIC B
+WHERE
+	P.INSPECT_ID = K.INSPECT_ID
+AND CONVERT(varchar(32),K.INSPECT_DATE,112) >=@ymds
+AND CONVERT(varchar(32),K.INSPECT_DATE,112) <@ymde
+AND (P.DEP_NAME IN ($P{TEAM_NAME}) OR $P{TEAM_NAME} IS NULL OR $P{TEAM_NAME}='')
+AND K.INSPECT_SCHEMA_ID = S.INSPECT_SCHEMA_ID
+AND S.EQUIP_DIARY_ID = D.EQUIP_DIARY_ID
+AND D.EQUIP_SPECIFIC = B.CODE;]]>
+	</queryString>
+	<field name="班组名称" class="java.lang.String"/>
+	<field name="发生时间" class="java.sql.Timestamp"/>
+	<field name="单据号码" class="java.lang.String"/>
+	<field name="关联模块" class="java.lang.String"/>
+	<field name="收费类型" class="java.lang.String"/>
+	<field name="设备型号" class="java.lang.String"/>
+	<field name="单价" class="java.math.BigDecimal"/>
+	<field name="数量" class="java.lang.Short"/>
+	<field name="金额" class="java.math.BigDecimal"/>
+	<field name="班组小计" class="java.math.BigDecimal"/>
+	<variable name="index" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{index}.valueOf( 1 )]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<variable name="班组小计" class="java.lang.Double" resetType="Group" resetGroup="模块" calculation="Sum">
+		<variableExpression><![CDATA[($F{金额})]]></variableExpression>
+	</variable>
+	<variable name="费用合计" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[($F{金额})]]></variableExpression>
+	</variable>
+	<group name="模块">
+		<groupExpression><![CDATA[$F{关联模块}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="0" width="810" height="25" backcolor="#CCCCCC" uuid="77ef440b-ce88-470b-a938-81b3accda4bd"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="宋体" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{关联模块}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<staticText>
+					<reportElement key="staticText-2" mode="Opaque" x="0" y="0" width="126" height="26" backcolor="#99CCFF" uuid="4d14604c-3376-40ff-b31c-b715646a0ab3"/>
+					<box>
+						<pen lineWidth="0.5" lineStyle="Solid"/>
+						<topPen lineWidth="0.5" lineStyle="Solid"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="宋体" size="12"/>
+					</textElement>
+					<text><![CDATA[小计]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="526" y="0" width="284" height="26" backcolor="#FFFFFF" uuid="b6a92fea-87a9-48dd-846b-9477fbd8e2a1"/>
+					<box rightPadding="0">
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="宋体" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{班组小计}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" x="0" y="14" width="810" height="50" uuid="e6160d0b-c903-4792-aec4-7dc38b9662ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[班组结算明细表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="1" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-3" mode="Opaque" x="0" y="0" width="126" height="40" backcolor="#99CCFF" uuid="639edf8a-43ff-4a81-86a7-55003df93b5e"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[班组名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-5" mode="Opaque" x="226" y="0" width="113" height="40" backcolor="#99CCFF" uuid="b3aaebe6-baf1-4252-b00a-0e6553ed3b63"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[单据号码]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" mode="Opaque" x="126" y="0" width="100" height="40" backcolor="#99CCFF" uuid="ae36cd16-8413-4968-ad7e-c9f85c0f193f"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[发生时间]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" mode="Opaque" x="339" y="0" width="87" height="40" backcolor="#99CCFF" uuid="b7c07a4d-1d9a-430c-b760-b23132d73935"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[收费类型]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" mode="Opaque" x="626" y="0" width="83" height="40" backcolor="#99CCFF" uuid="b61af55c-ad6a-45d8-8e40-5709a4ad60ae"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" mode="Opaque" x="709" y="0" width="101" height="40" backcolor="#99CCFF" uuid="8ab0c9e2-ef18-4912-9f1e-8ca17243b92e"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-7" mode="Opaque" x="526" y="0" width="100" height="40" backcolor="#99CCFF" uuid="7a10237b-5224-4d32-bb4b-cc5757cbc42f"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[单价]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" mode="Opaque" x="426" y="0" width="100" height="40" backcolor="#99CCFF" uuid="b349184a-d650-4a6a-bd67-638391ea4306"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[设备型号]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="detail" mode="Transparent" x="0" y="0" width="126" height="27" uuid="723417a7-6e66-43d2-b48e-1b7a568e8016"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{班组名称}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="yyyy/MM/dd" isBlankWhenNull="true">
+				<reportElement style="detail" mode="Transparent" x="126" y="0" width="100" height="27" uuid="50bd3783-a102-4fd9-9bdc-d9596097b66f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{发生时间}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="detail" mode="Transparent" x="226" y="0" width="113" height="27" uuid="1b5cc088-1601-4677-85f2-380bf714a730"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{单据号码}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" x="339" y="0" width="87" height="27" uuid="505c745f-4da9-4225-adfe-97ef75d562c3"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{收费类型}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="detail" mode="Transparent" x="526" y="0" width="100" height="27" uuid="224acdcf-8bbf-41b9-9ce8-5c38e0c84eb3"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{单价}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="detail" mode="Transparent" x="626" y="0" width="84" height="27" uuid="ddb5e789-fa9a-4f3c-bcce-4880d62850fc"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{数量}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="detail" mode="Transparent" x="710" y="0" width="100" height="27" uuid="64bf40f1-575c-4075-9741-fac0db9f5d05"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{金额}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="detail" x="426" y="0" width="100" height="27" uuid="92eccbd4-91a3-4404-a62d-24800107ed56"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{设备型号}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="133" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-2" mode="Opaque" x="684" y="0" width="126" height="32" backcolor="#9999FF" uuid="c3e9f8c3-6701-4068-86c3-1f8662d88ddb"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16"/>
+				</textElement>
+				<text><![CDATA[费用合计]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="684" height="32" uuid="50986e7a-14f3-4de0-94e8-287b93a2869f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{费用合计}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,127 @@
+var AccountsReceivableQuery = function(a){
+	this.params = {};
+	Ext.apply(this.params, ( a && a.params )||{} );
+	Ext.apply(this, {
+		attenDepartmentId : Ext.id()
+	});
+	var generaltems =[ {
+			width : 90,
+			allowBlank : false,
+			lable : "年份",
+			name : "Q_year_S",
+			value : new Date().getFullYear(),
+			listeners:{
+				change : this.changeBefore.createDelegate(this)
+			} 
+		}, {
+			hidden : true,
+			value : Number(new Date().getFullYear())-1,
+			name : "Q_before_S",
+		}, {
+			hidden : true,
+			value : Number(new Date().getMonth())+1,
+			name : "Q_month_N",
+		}, {
+			width : 80,
+			allowBlank : true,
+			lable : "项目名称",
+			name : "Q_projectName_S",
+		}, {
+			lable : "合同编号",
+			width : 80,
+			name : "Q_contractNo_S"
+		}, {
+			xtype : "relationCompositeField",
+			readOnly : true,
+			lable : "承租单位",
+			allowBlank : true,
+			name : "Q_paEntName_S",
+			relateModule : RelationModule.customer.relateModule,
+			importhandler : this.importCustomerArchives.createDelegate(this)
+		}, {
+			id : Ext.id(),
+//			name : "Q_[DEP_NAME]_S",
+			valId : this.attenDepartmentId,
+			xtype : "treecombo",
+			width : 160,
+			editable : false,
+			lable : "分公司",
+			url : __ctxPath + "/system/listDepartment.do?opt=practitioner"
+		}, {
+			hidden : true,
+			id : this.attenDepartmentId,
+			name : "Q_depId_L"
+		}, {
+			width : 80,
+			xtype : "relationCompositeField",
+			readOnly : true,
+			lable : "项目经理",
+			allowBlank : true,
+			name : "Q_userName_S",
+			relateModule : RelationModule.practitioner.relateModule,
+			importhandler : this.importPractitioner.createDelegate(this)
+		}, {
+			xtype : "checkboxgroup",
+			width : 110,
+			items : [ {
+				boxLabel : "去除司机工资",
+				name : "Q_free_N",
+				inputValue : "1"
+			} ]
+		} ];
+	AccountsReceivableQuery.superclass.constructor.call(this,{
+		id : "AccountsReceivableQuery",
+		title : "应收款明细表",
+		iconCls : "menu-business-practivacancyrate",
+		jasperFile : "REPORT_ACCOUNTS_RECEIVABLE_QUERY",
+		search_config : {
+			generalItems : generaltems,
+		},
+		base_params : this.params
+	});
+};
+Ext.extend(AccountsReceivableQuery, Knight.ux.BaseReportView, {
+	importPractitioner : function(data) {
+		this.searchPanel.getForm().findField("Q_userName_S").setValue(data.practiName);
+	},
+	importCustomerArchives : function(data) {
+		this.searchPanel.getForm().findField("Q_paEntName_S").setValue(data.customerName);
+	},
+	changeBefore : function(data){
+		var years = data.getValue();
+        var re = /^[0-9]+[0-9]*[0-9]*$/ ;
+        if( years != ''){
+            if(!re.test(years) || years.length != 4 || Number(years) > new Date().getFullYear()){
+            	$toast("年份填写不正确");
+                return false;
+            }
+        }else{
+        	$toast("年份填写不能为空");
+            return false;
+        }
+		var befores = Number(years)-1;
+		var months = 0;
+		if(Number(years) < new Date().getFullYear()){
+			months = 12;
+		}else{
+			months = Number(new Date().getMonth())+1;
+		}
+		this.searchPanel.getForm().findField("Q_before_S").setValue(befores);
+		this.searchPanel.getForm().findField("Q_month_N").setValue(months);
+	},
+//	importContractId : function(data) {
+//		var contractIds = "";
+//		var projectNames = "";
+//		for(var i=0;i<data.length;i++) {
+//			contractIds = contractIds.concat(data[i].data.contractmaId);
+//			projectNames = projectNames.concat(data[i].data.projectName);
+//			if(i==data.length-1) {
+//				break;
+//			}
+//			contractIds = contractIds.concat(",");
+//			projectNames = projectNames.concat(",");
+//		}
+//		this.searchPanel.getForm().findField("Q_contractIds_S").setValue(contractIds);
+//		this.searchPanel.getForm().findField("Q_projectName_S").setValue(projectNames);
+//	},
+});

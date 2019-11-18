@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ProjectExpense" table="T_PROJECT_EXPENSE" select-before-update="false" dynamic-update="false"
+		dynamic-insert="false" optimistic-lock="version">
+		<id name="projectExpenseId" column="PROJECT_EXPENSE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="spendDate" type="java.lang.String" column="SPEND_DATE" />
+		<property name="discription" type="java.lang.String" column="DISCRIPTION" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="expenseAmount" type="java.math.BigDecimal" column="EXPENSE_AMOUNT" />
+		<property name="expenseDesc" type="java.lang.String" column="EXPENSE_DESC" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

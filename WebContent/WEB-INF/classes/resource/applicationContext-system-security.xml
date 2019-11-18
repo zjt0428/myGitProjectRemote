@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:b="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<http auto-config="true" access-denied-page="/403.jsp" lowercase-comparisons="true" access-decision-manager-ref="accessDecisionManager">
+		<intercept-url pattern="/images/**" filters="none" />
+		<intercept-url pattern="/css/**" filters="none" />
+		<intercept-url pattern="/js/**" filters="none" />
+		<intercept-url pattern="/403*" filters="none" />
+		<intercept-url pattern="/404*" filters="none" />
+		<intercept-url pattern="/500*" filters="none" />
+		<intercept-url pattern="/ext3.4/**" filters="none" />
+		<intercept-url pattern="/fckeditor/**" filters="none" />
+		<intercept-url pattern="/services/**" filters="none" />
+		<intercept-url pattern="/system/sql/**" filters="none" />
+		<intercept-url pattern="/login/**" filters="none" />
+		<intercept-url pattern="/login.jsp" filters="none" />
+		<intercept-url pattern="/archive/printMaterialGatherPrintData.do" filters="none" />
+		<intercept-url pattern="/terminal/passwordChangeUser.do" filters="none" />
+		<!-- default-target-url:指定了从登录页面登录后进行跳转的页面 login-page:默认指定的登录页面 always-use-default-target:true表示登录成功后强制跳转 authentication-failure-url:表示验证失败后进入的页面 login-processing-url:设置验证登录验证地址，如果不设置，默认是j_spring_security_check 
+			username-parameter,password-parameter:设置登录用户名和密码的请求name，默认：j_username,j_password -->
+		<form-login default-target-url="${default-target-url}" login-page="${login-page}" authentication-failure-url="${authentication-failure-url}" login-processing-url="/j_spring_security_check" />
+		<logout logout-url="/logout.do" logout-success-url="${logout-success-url}" />
+		<!-- error-if-maximum-exceeded 后登陆的账号会挤掉第一次登陆的账号 session-fixation-protection 防止伪造sessionid攻击,用户登录成功后会销毁用户当前的session。  -->
+		<!-- <session-management invalid-session-url="/indexsrc.jsp" session-fixation-protection="none"> 
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/> 
+		</session-management> -->
+		<custom-filter after="FILTER_SECURITY_INTERCEPTOR" ref="securityInterceptorFilter" />
+		<remember-me key="RememberAppUser" />
+	</http>
+
+	<b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		<b:property name="allowIfAllAbstainDecisions" value="false" />
+		<b:property name="decisionVoters">
+			<b:list>
+				<b:bean class="org.springframework.security.access.vote.RoleVoter">
+					<b:property name="rolePrefix" value="" />
+				</b:bean>
+				<b:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+			</b:list>
+		</b:property>
+	</b:bean>
+
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="appUserDao" />
+	</authentication-manager>
+
+	<b:bean id="securityInterceptorFilter" class="com.knight.system.web.filter.SecurityInterceptorFilter">
+		<b:property name="securityDataSource" ref="securityDataSource" />
+	</b:bean>
+
+	<b:bean id="securityDataSource" class="com.knight.system.security.SecurityDataSource">
+		<b:property name="appRoleService" ref="appRoleService" />
+		<b:property name="anonymousUrls">
+			<b:set>
+				<b:value>/terminal/getMessageWeChat.do</b:value>
+				<b:value>/loginMiniProgram.do</b:value>
+				<b:value>/login.do</b:value>
+				<b:value>/check.do</b:value>
+				<b:value>/file-upload</b:value>
+			</b:set>
+		</b:property>
+		<b:property name="matcherurls">
+			<b:set>
+				<b:value>/terminal/.*</b:value>
+			</b:set>
+		</b:property>
+		<b:property name="publicUrls">
+			<b:set>
+				<b:value>/panelTreeMenu.do</b:value>
+				<b:value>/file-upload</b:value>
+				<b:value>/image-widget</b:value>
+				<b:value>/index.jsp</b:value>
+				<b:value>/indexsrc.jsp</b:value>
+				<b:value>/logout.do</b:value>
+				<b:value>/fileDetail.do</b:value>
+				
+				<b:value>/info/sendShortMessage.do</b:value>
+				<b:value>/info/listShortMessage.do</b:value>
+				<b:value>/info/listInMessage.do</b:value>
+				<b:value>/info/replyInMessage.do</b:value>
+				<b:value>/info/knowInMessage.do</b:value>
+				<b:value>/info/multiRemoveInMessage.do</b:value>
+				<b:value>/info/readInMessage.do</b:value>
+				<b:value>/info/countInMessage.do</b:value>
+				<b:value>/info/searchNews.do</b:value>
+				<b:value>/info/listAppTips.do</b:value>
+				<b:value>/info/saveAppTips.do</b:value>
+				<b:value>/info/multiDelAppTips.do</b:value>
+				<b:value>/info/displayInMessage.do</b:value>
+				<b:value>/info/multiReadInMessage.do</b:value>
+				
+				<b:value>/system/listAllFileAttach.do</b:value>
+				<b:value>/system/deleteFileAttach.do</b:value>
+				<b:value>/system/treeAppRole.do</b:value>
+				<b:value>/system/listAppRole.do</b:value>
+				<b:value>/system/listDepartment.do</b:value>
+				<b:value>/system/selectDepartment.do</b:value>
+				<b:value>/system/getCurrentAppUser.do</b:value>
+				<b:value>/system/onlineAppUser.do</b:value>
+				<b:value>/system/selectAppUser.do</b:value>
+				<b:value>/system/resetPasswordAppUser.do</b:value>
+				<b:value>/system/saveAppUser.do</b:value>
+				<b:value>/system/getAppUser.do</b:value>
+				<b:value>/system/listCode.do</b:value>
+				<b:value>/system/queryCode.do</b:value>
+				<b:value>/system/getNameCode.do</b:value>
+				<b:value>/system/getNameArrayCode.do</b:value>
+				<b:value>/system/treeCode.do</b:value>
+				<b:value>/system/checkCode.do</b:value>
+				<b:value>/system/saveIndexDisplay.do</b:value>
+				<b:value>/system/findChildrenDepartment.do</b:value>
+				<b:value>/system/profileAppUser.do</b:value>
+
+				<b:value>/form/listAnnounceUser.do</b:value>
+				<b:value>/form/displayAnnounceUser.do</b:value>
+				<b:value>/form/loadAnnounce.do</b:value>
+				<b:value>/form/multiSetReadAnnounceUser.do</b:value>
+				<b:value>/form/saveMemo.do</b:value>
+				<b:value>/form/listMemo.do</b:value>
+				<b:value>/form/multiDelMemo.do</b:value>
+				<b:value>/form/filingMemo.do</b:value>
+				<b:value>/form/listFormAccept.do</b:value>
+				<b:value>/form/listFormApprove.do</b:value>
+
+				<b:value>/archive/listReceivement.do</b:value>
+				<b:value>/archive/listInstalment.do</b:value>
+				<b:value>/archive/arraylistStoreHouse.do</b:value>
+				<b:value>/archive/multiDelReceivement.do</b:value>
+				<b:value>/archive/multiDelInstalment.do</b:value>
+				<b:value>/archive/printMaterialGatherPrintData.do</b:value>
+				
+				<b:value>/equip/listEquipFlow.do</b:value>
+				<b:value>/equip/loadEquipFlow.do</b:value>
+				<b:value>/equip/multiDelComponDiary.do</b:value>
+				<b:value>/equip/multiDelEquipmentDiary.do</b:value>
+				<b:value>/equip/multiDelPractiDiary.do</b:value>
+				<b:value>/archive/equipDistributionEquipment.do</b:value>
+				
+				<b:value>/image/*</b:value>
+			</b:set>
+		</b:property>
+	</b:bean>
+</b:beans>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/emms_SDTY" docBase="emms_SDTY" debug="0" reloadable="true">  
+  <Listener className="org.apache.catalina.startup.TldConfig"/>  
+  <Listener className="org.apache.catalina.startup.TldConfig"/>  
+  <Listener className="org.apache.catalina.startup.TldConfig"/>  
+  <Listener className="org.apache.catalina.startup.TldConfig"/>  
+  <!--   <Resource  
+	    auth="Container"  
+	    description="dmst"  
+	    name="JDBC/EMMS"  
+	    username="sa" 
+	    password="risit654321!@#$" 
+	    type="javax.sql.DataSource"  
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"  
+	    url="jdbc:sqlserver://127.0.0.1:1433;databaseName=SDTY_jjaq" 
+    />  -->
+    
+<!--    <Resource
+	    auth="Container"  
+	    description="dmst"   
+	    name="JDBC/EMMS"  
+	    username="sa" 
+	    password="risit654321!@#$" 
+	    type="javax.sql.DataSource"  
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"  
+	    url="jdbc:sqlserver://jjaq.com.cn:1433;databaseName=SDTY"
+    />-->
+    
+   <!--   <Resource
+	    auth="Container"  
+	    description="dmst"   
+	    name="JDBC/EMMS"  
+	    username="sa" 
+	    password="123456" 
+	    type="javax.sql.DataSource"  
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"  
+	    url="jdbc:sqlserver://192.168.0.238;databaseName=DDZL_0325"
+    /> -->
+    
+<!--      <Resource
+	    auth="Container"  
+	    description="dmst"   
+	    name="JDBC/EMMS"  
+	    username="sa" 
+	    password="ZTRS5912858!@#$" 
+	    type="javax.sql.DataSource"  
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"  
+	    url="jdbc:sqlserver://120.27.23.228:1433;databaseName=SDTY"
+    />-->
+    
+<!--    <Resource  
+	    auth="Container"  
+	    description="dmst"   
+	    name="JDBC/EMMS"  
+	    username="Sa" 
+	    password="Risit654321" 
+	    type="javax.sql.DataSource"  
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"  
+	    url="jdbc:sqlserver://192.168.0.180;databaseName=SDTY"
+    />  -->
+    
+<!--     <Resource  
+	    auth="Container"  
+	    description="dmst"   
+	    name="JDBC/EMMS"  
+	    username="sa" 
+	    password="Risit654321" 
+	    type="javax.sql.DataSource"  
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"  
+	    url="jdbc:sqlserver://192.168.0.180:1433;databaseName=SDTYZS"
+    />  -->
+       <!--  <Resource
+	    auth="Container"
+	    description="dmst"
+	    name="JDBC/EMMS"
+	    username="sa"
+	    password="123456"
+	    type="javax.sql.DataSource"
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+	    url="jdbc:sqlserver://192.168.0.221;databaseName=DDZL_0730"
+    /> -->
+    <!--   <Resource
+	    auth="Container"
+	    description="dmst"
+	    name="JDBC/EMMS"
+	    username="sa"
+	    password="ZTRS5912858!@#$"
+	    type="javax.sql.DataSource"
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+	    url="jdbc:sqlserver://218.85.138.240:53981;databaseName=DDZLCS"
+    />  -->
+        <Resource
+	    auth="Container"
+	    description="dmst"
+	    name="JDBC/EMMS"
+	    username="sa"
+	    password="123456"
+	    type="javax.sql.DataSource"
+	    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+	    url="jdbc:sqlserver://192.168.0.221;databaseName=GXDD_0513"
+    />
+</Context> 

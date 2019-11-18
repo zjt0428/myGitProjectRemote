@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="borrow">
+	<!-- 借用零配件/设备非闲置状态情况;零配件/设备借用审批通过前:验证配件/设备是否闲置 -->
+	<select id="componequip_not_unused">
+	<![CDATA[
+		DECLARE @BORROW_ID BIGINT
+		SET @BORROW_ID = ?
+		SELECT E.RECORD_SERIAL PRODUCT_SERIAL
+		  FROM T_BORROW_EQUIP BE, T_EQUIPMENT E
+		 WHERE BE.BORROW_ID = @BORROW_ID
+		   AND BE.EQUIP_ID = E.EQUIP_ID
+		   AND E.STATUS <> '1'
+		UNION ALL
+		SELECT C.COMPON_SERIAL PRODUCT_SERIAL
+		  FROM T_BORROW_COMPONENT BC, T_COMPONENT C
+		 WHERE BC.BORROW_ID = @BORROW_ID
+		   AND BC.COMPON_ID = C.COMPON_ID
+		   AND C.STATUS <> '1'
+	]]>
+	</select>
+</mapper>

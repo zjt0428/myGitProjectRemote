@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.VerifyItemDemand" table="T_VERIFY_ITEM_DEMAND" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="demandId" column="DEMAND_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="itemId" type="java.lang.Long" column="ITEM_ID" />
+		<property name="demandDes" type="java.lang.String" column="DEMAND_DES" />
+	</class>
+</hibernate-mapping>

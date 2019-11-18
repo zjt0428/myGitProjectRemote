@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.CorpCert" table="T_CORP_CERT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="certId" column="CERT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="corpId" type="java.lang.Long" column="CORP_ID" />
+		<property name="corpName" type="java.lang.String" formula="(SELECT C.CORP_NAME FROM T_CORP_INFO C WHERE C.CORP_ID = CORP_ID)" />
+		<property name="certNum" type="java.lang.String" column="CERT_NUM" />
+		<property name="corpCode" type="java.lang.String" column="CORP_CODE" />
+		<property name="certType" type="java.lang.String" column="CERT_TYPE" />
+		<property name="tradeType" type="java.lang.String" column="TRADE_TYPE" />
+		<property name="tradeBound" type="java.lang.String" column="TRADE_BOUND" />
+		<property name="titleLevel" type="java.lang.String" column="TITLE_LEVEL" />
+		<property name="copyCertCount" type="java.lang.String" column="COPY_CERT_COUNT" />
+		<property name="noteNumber" type="java.lang.String" column="NOTE_NUMBER" />
+		<property name="noteDate" type="java.lang.String" column="NOTE_DATE" />
+		<property name="organName" type="java.lang.String" column="ORGAN_NAME" />
+		<property name="organDate" type="java.lang.String" column="ORGAN_DATE" />
+		<property name="endDate" type="java.lang.String" column="END_DATE" />
+		<property name="printNumber" type="java.lang.String" column="PRINT_NUMBER" />
+		<property name="mark" type="java.lang.String" column="MARK" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="isvalid" type="java.lang.String" column="ISVALID" />
+		<property name="defaultCert" type="java.lang.String" column="DEFAULT_CERT" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+	</class>
+</hibernate-mapping>

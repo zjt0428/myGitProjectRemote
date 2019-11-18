@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Component" table="T_COMPONENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="componId" column="COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="componSerial" type="java.lang.String" column="COMPON_SERIAL" />
+		<property name="componCategory" type="java.lang.String" column="COMPON_CATEGORY" />
+		<property name="componGeneric" type="java.lang.String" column="COMPON_GENERIC" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="componSpecificName" type="java.lang.String" column="COMPON_SPECIFIC_NAME" />
+		<property name="componCode" type="java.lang.String" column="COMPON_CODE" />
+		<property name="pickupDate" type="java.lang.String" column="PICKUP_DATE" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="purchaseDate" type="java.util.Date" column="PURCHASE_DATE" />
+		<property name="scrapDate" type="java.util.Date"  column="SCRAP_DATE" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="rfidCode" type="java.lang.String" column="RFID_CODE" />
+		<property name="supplierId" type="java.lang.Long" column="SUPPLIER_ID" />
+		<property name="supplierName" type="java.lang.String" column="SUPPLIER_NAME" />
+		<property name="supplierAdd" type="java.lang.String" column="SUPPLIER_ADD" />
+		<property name="supplierTel" type="java.lang.String" column="SUPPLIER_TEL" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="mobile" type="java.lang.String" column="MOBILE" />
+		<property name="assetValue" type="java.math.BigDecimal" column="ASSET_VALUE" />
+		<property name="unitprice" type="java.math.BigDecimal" column="UNITPRICE" />
+		<property name="depreciateRate" type="java.math.BigDecimal" column="DEPRECIATE_RATE" />
+		<property name="totalRate" type="java.math.BigDecimal" column="TOTAL_RATE" />
+		<property name="presentValue" type="java.math.BigDecimal" column="PRESENT_VALUE" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="statusDate" type="java.util.Date" column="STATUS_DATE" />
+		<property name="batchNumber" type="java.lang.String" column="BATCH_NUMBER" />
+		<property name="depreciateDate" type="java.lang.String" column="DEPRECIATE_DATE" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="compoVender" type="java.lang.String" column="COMPO_VENDER" />
+
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" formula="(SELECT E.EXW_SERIAL FROM T_EQUIPMENT E WHERE E.EQUIP_ID = EQUIP_ID)" />
+		<property name="propertyName" type="java.lang.String" formula="(SELECT E.PROPERTY_NAME FROM T_EQUIPMENT E WHERE E.EQUIP_ID = EQUIP_ID)" />
+		<property name="recordId" type="java.lang.String" formula="(SELECT E.RECORD_ID FROM T_EQUIPMENT E WHERE E.EQUIP_ID = EQUIP_ID)" />
+		<property name="consumeFlag" type="java.lang.String" column="CONSUME_FLAG" />
+		<property name="boltFlag" type="java.lang.String" column="BOLT_FLAG" />
+		<property name="parachuteFlag" type="java.lang.String" column="PARACHUTE_FLAG" />
+		<property name="knotFlag" type="java.lang.String" column="KNOT_FLAG" />
+		<property name="deliverFromGodown" type="java.lang.String" column="DELIVER_FROM_GODOWN" />
+		<property name="yesFlag" type="java.lang.String" column="YES_FLAG" />
+		<property name="noFlag" type="java.lang.String" column="NO_FLAG" />
+		<property name="wallAttacheFlag" type="java.lang.String" column="WALL_ATTACHE_FLAG" />
+		<property name="parachuteCheckDate" type="java.lang.String" column="PARACHUTE_CHECK_DATE" />
+		<property name="leftcageSerial" type="java.lang.String" column="LEFTCAGE_SERIAL" />
+		<property name="leftcageCheckDate" type="java.lang.String" column="LEFTCAGE_CHECK_DATE" />
+		<property name="rightcageSerial" type="java.lang.String" column="RIGHTCAGE_SERIAL" />
+		<property name="rightcageCheckDate" type="java.lang.String" column="RIGHTCAGE_CHECK_DATE" />
+		<property name="consumeCounts" type="java.lang.Integer" column="CONSUME_COUNTS" />
+		<property name="periodReserve" type="java.lang.Integer" column="PERIOD_RESERVE" />
+		<property name="brachium" type="java.math.BigDecimal" column="BRACHIUM" />
+		<property name="knotMetric" type="java.math.BigDecimal" column="KNOT_METRIC" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="isMachine" type="java.lang.String" column="IS_MACHINE" />
+		<property name="noMachine" type="java.lang.String" column="NO_MACHINE" />
+		<property name="storeCounts" type="java.lang.Integer" formula = "(SELECT isnull(SUM(SJC.COUNTS),0)  FROM T_STORE_JOIN_COMPONENT  SJC WHERE SJC.COMPON_ID =COMPON_ID)" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<!-- <set name="storeHouses" table="T_STORE_HOUSE_COMPONENT" cascade="save-update" inverse="false" lazy="false">
+			<key column="COMPON_ID" />
+			<many-to-many fetch="join" class="com.knight.emms.model.StoreHouse" column="STORE_ID" />
+		</set> -->
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

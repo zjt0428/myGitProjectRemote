@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InvoiceCollect" table="T_INVOICE_COLLECT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="invoiceCollectId" column="INVOICE_COLLECT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="invoiceSerial" type="java.lang.String" column="INVOICE_SERIAL" />
+		<property name="invoiceTheme" type="java.lang.String" column="INVOICE_THEME" />
+		<property name="invoiceItem" type="java.lang.String" column="INVOICE_ITEM" />
+		<property name="collectDate" type="java.lang.String" column="COLLECT_DATE" />
+		<property name="collectAmount" type="java.math.BigDecimal" column="COLLECT_AMOUNT" />
+		<property name="invoiceType" type="java.lang.String" column="INVOICE_TYPE" />
+		<property name="issueEnterprise" type="java.lang.String" column="ISSUE_ENTERPRISE" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="relateAmount" type="java.math.BigDecimal" column="RELATE_AMOUNT" />
+		<property name="hasCollectAmount" type="java.math.BigDecimal" column="HAS_COLLECT_AMOUNT" />
+		<property name="collectStatus" type="java.lang.String" column="COLLECT_STATUS" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

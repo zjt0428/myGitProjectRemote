@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.CorpInfo" table="T_CORP_INFO" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="corpId" column="CORP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="corpName" type="java.lang.String" column="CORP_NAME" />
+		<property name="corpCode" type="java.lang.String" column="CORP_CODE" />
+		<property name="corpType" type="java.lang.String" column="CORP_TYPE" />
+		<property name="license" type="java.lang.String" column="LICENSE" />
+		<property name="province" type="java.lang.String" column="PROVINCE" />
+		<property name="city" type="java.lang.String" column="CITY" />
+		<property name="county" type="java.lang.String" column="COUNTY" />
+		<property name="regAddress" type="java.lang.String" column="REG_ADDRESS" />
+		<property name="safetyProdCert" type="java.lang.String" column="SAFETY_PROD_CERT" />
+		<property name="economic" type="java.lang.String" column="ECONOMIC" />
+		<property name="regPrin" type="java.math.BigDecimal" column="REG_PRIN" />
+		<property name="birthDate" type="java.lang.String" column="BIRTH_DATE" />
+		<property name="legalMan" type="java.lang.String" column="LEGAL_MAN" />
+		<property name="legalMobile" type="java.lang.String" column="LEGAL_MOBILE" />
+		<property name="legalManIdcard" type="java.lang.String" column="LEGAL_MAN_IDCARD" />
+		<property name="legalManDuty" type="java.lang.String" column="LEGAL_MAN_DUTY" />
+		<property name="legalManProtitle" type="java.lang.String" column="LEGAL_MAN_PROTITLE" />
+		<property name="dutyman" type="java.lang.String" column="DUTYMAN" />
+		<property name="dutymanTel1" type="java.lang.String" column="DUTYMAN_TEL1" />
+		<property name="dutymanTel2" type="java.lang.String" column="DUTYMAN_TEL2" />
+		<property name="dutymanTel3" type="java.lang.String" column="DUTYMAN_TEL3" />
+		<property name="finance" type="java.lang.String" column="FINANCE" />
+		<property name="financeTel" type="java.lang.String" column="FINANCE_TEL" />
+		<property name="capital" type="java.lang.String" column="CAPITAL" />
+		<property name="capitalTel" type="java.lang.String" column="CAPITAL_TEL" />
+		<property name="market" type="java.lang.String" column="MARKET" />
+		<property name="marketTel" type="java.lang.String" column="MARKET_TEL" />
+		<property name="postalCode" type="java.lang.String" column="POSTAL_CODE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="fax" type="java.lang.String" column="FAX" />
+		<property name="officeTel" type="java.lang.String" column="OFFICE_TEL" />
+		<property name="linkEmail" type="java.lang.String" column="LINK_EMAIL" />
+		<property name="corpDesc" type="java.lang.String" column="CORP_DESC" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="photo" type="java.lang.Long" column="PHOTO" />
+		<property name="certId" type="java.lang.Long" column="CERT_ID" />
+		<property name="corpStatus" type="java.lang.String" column="CORP_STATUS" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="technologyTel" type="java.lang.String" column="TECHNOLOGY_TEL" />
+		<property name="maintenanceTel" type="java.lang.String" column="MAINTENANCE_TEL" />
+		<property name="engineeringTel" type="java.lang.String" column="ENGINEERING_TEL" />
+		<property name="technology" type="java.lang.String" column="TECHNOLOGY" />
+		<property name="maintenance" type="java.lang.String" column="MAINTENANCE" />
+		<property name="engineering" type="java.lang.String" column="ENGINEERING" />
+		<property name="security" type="java.lang.String" column="SECURITY" />
+		<property name="securityTel" type="java.lang.String" column="SECURITY_TEL" />
+		<property name="chiefEngineer" type="java.lang.String" column="CHIEF_ENGINEER" />
+		<property name="chiefEngineerTel" type="java.lang.String" column="CHIEF_ENGINEER_TEL" />
+		<property name="certNum" type="java.lang.String" column="CERT_NUM" />
+		<property name="certLevel" type="java.lang.String" column="CERT_LEVEL" />
+		<property name="maintenances" type="java.lang.String" column="MAINTENANCES"/>
+		<property name="maintenancesTel" type="java.lang.String" column="MAINTENANCES_TEL"/>
+		<property name="chiefEconomist" type="java.lang.String" column="CHIEF_ECONOMIST"/>
+		<property name="chiefEconomistTel" type="java.lang.String" column="CHIEF_ECONOMIST_TEL"/>
+		<property name="material" type="java.lang.String" column="MATERIAL"/>
+		<property name="materialTel" type="java.lang.String" column="MATERIAL_TEL"/>
+		<property name="safety" type="java.lang.String" column="SAFETY"/>
+		<property name="safetyTel" type="java.lang.String" column="SAFETY_TEL"/>
+		<many-to-one name="corpCert" column="CERT_ID" class="com.knight.emms.model.CorpCert" insert="false" update="false" fetch="join" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="practitionerSet" inverse="true" lazy="false">
+			<key column="CORP_ID" />
+			<one-to-many class="com.knight.emms.model.Practitioner" />
+		</set>
+		<set name="corpAccountSet" lazy="false" cascade="all" inverse="false">
+			<key column="CORP_ID"></key>
+			<one-to-many class="com.knight.emms.model.CorpAccount" />
+		</set>
+	</class>
+</hibernate-mapping>

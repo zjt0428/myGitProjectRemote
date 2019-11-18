@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ReturnTempStore" table="T_RETURN_TEMP_STORE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="tempId" column="TEMP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="depotId" type="java.lang.Long" column="DEPOT_ID" ></property>
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" ></property>
+		<property name="depotName" type="java.lang.String" column="DEPOT_NAME" ></property>
+		<many-to-one name="materialsSpecifications" column="SPECIFICATIONS_ID" class="com.knight.emms.model.MaterialsSpecifications" fetch="join" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" ></property>
+	</class>
+</hibernate-mapping>

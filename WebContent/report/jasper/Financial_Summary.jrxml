@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Financial_Summary" language="groovy" pageWidth="694" pageHeight="842" columnWidth="654" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a54ce66-91c2-4f3e-8de0-8dfc1616d7e9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CORP_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="START_DATE" class="java.lang.String"/>
+	<parameter name="END_DATE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @START_DATE CHAR(10)
+DECLARE @END_DATE CHAR(10)
+SET @START_DATE = $P{START_DATE}
+SET @END_DATE = $P{END_DATE}
+SELECT A.FINANCIAL,
+       SUM(A.CURRENT_AMOUNT) CURRENT_AMOUNT,
+       SUM(A.PRE_CURRENT_AMOUNT) PRE_CURRENT_AMOUNT,
+       SUM(A.LAST_CURRENT_AMOUNT) LAST_CURRENT_AMOUNT
+  FROM (SELECT '费用还款' FINANCIAL,
+               ISNULL(SUM(BACK_AMOUNT), 0) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_MONEY_BACK
+         WHERE PROVIDED_DATE >= @START_DATE
+           AND PROVIDED_DATE <= @END_DATE
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用还款' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               ISNULL(SUM(BACK_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_MONEY_BACK
+         WHERE PROVIDED_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND PROVIDED_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用还款' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(BACK_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_MONEY_BACK
+         WHERE PROVIDED_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND PROVIDED_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用借款' FINANCIAL,
+               ISNULL(SUM(LEND_AMOUNT), 0) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_MONEY_LEND
+         WHERE LEND_DATE >= @START_DATE
+           AND LEND_DATE <= @END_DATE
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用借款' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               ISNULL(SUM(LEND_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_MONEY_LEND
+         WHERE LEND_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND LEND_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用借款' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(LEND_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_MONEY_LEND
+         WHERE LEND_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND LEND_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用报销' FINANCIAL,
+               ISNULL(SUM(REIMBURSE_AMOUNT), 0) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_REIMBURSE
+         WHERE REIMBURSE_DATE >= @START_DATE
+           AND REIMBURSE_DATE <= @END_DATE
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用报销' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               ISNULL(SUM(REIMBURSE_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_REIMBURSE
+         WHERE REIMBURSE_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND REIMBURSE_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '费用报销' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(REIMBURSE_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_REIMBURSE
+         WHERE REIMBURSE_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND REIMBURSE_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '工资金额' FINANCIAL,
+               ISNULL(SUM(SALARY_AMOUNT), 0) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_SALARY
+         WHERE SALARY_DATE >= @START_DATE
+           AND SALARY_DATE <= @END_DATE
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '工资金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               ISNULL(SUM(SALARY_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_SALARY
+         WHERE SALARY_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND SALARY_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '工资金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(SALARY_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_SALARY
+         WHERE SALARY_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND SALARY_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '付款金额' FINANCIAL,
+               ISNULL(SUM(PAYMENT_AMOUNT), 0) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_AMOUNT_PAYMENT
+         WHERE PAYMENT_DATE >= @START_DATE
+           AND PAYMENT_DATE <= @END_DATE
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '付款金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               ISNULL(SUM(PAYMENT_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_AMOUNT_PAYMENT
+         WHERE PAYMENT_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND PAYMENT_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '付款金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(PAYMENT_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_AMOUNT_PAYMENT
+         WHERE PAYMENT_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND PAYMENT_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '回款金额' FINANCIAL,
+               ISNULL(SUM(RECEIVE_AMOUNT), 0) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_AMOUNT_RECEIVE
+         WHERE RECEIVE_DATE >= @START_DATE
+           AND RECEIVE_DATE <= @END_DATE
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '回款金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               ISNULL(SUM(RECEIVE_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_AMOUNT_RECEIVE
+         WHERE RECEIVE_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND RECEIVE_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+        UNION ALL
+        SELECT '回款金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(RECEIVE_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_AMOUNT_RECEIVE
+         WHERE RECEIVE_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND RECEIVE_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+		UNION ALL
+        SELECT '税金支出' FINANCIAL,
+               SUM(TAX_AMOUNT) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_INVOICE_ISSUE
+         WHERE ISSUE_DATE >= @START_DATE
+           AND ISSUE_DATE <= @END_DATE
+           AND APPLYFOR_STATE = '3'
+           UNION ALL
+        SELECT '税金支出' FINANCIAL,
+              0 CURRENT_AMOUNT,
+               ISNULL(SUM(TAX_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_INVOICE_ISSUE
+         WHERE ISSUE_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND ISSUE_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+		UNION ALL
+        SELECT '税金支出' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(TAX_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_INVOICE_ISSUE
+         WHERE ISSUE_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND ISSUE_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND APPLYFOR_STATE = '3'
+           UNION ALL
+        SELECT '应收款金额' FINANCIAL,
+               SUM(SETTLE_AMOUNT) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_SETTLE_CONTRACT
+         WHERE PROVIDED_DATE >= @START_DATE
+           AND PROVIDED_DATE <= @END_DATE
+           AND EFFECTIVE = '1'
+		   AND FUND_TYPE = '1'
+		UNION ALL
+        SELECT '应收款金额' FINANCIAL,
+              0 CURRENT_AMOUNT,
+               ISNULL(SUM(SETTLE_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_SETTLE_CONTRACT
+         WHERE PROVIDED_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND PROVIDED_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND EFFECTIVE = '1'
+		   AND FUND_TYPE = '1'
+		UNION ALL
+        SELECT '应收款金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(SETTLE_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_SETTLE_CONTRACT
+         WHERE PROVIDED_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND PROVIDED_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND EFFECTIVE = '1'
+		   AND FUND_TYPE = '1'
+
+		 UNION ALL
+        SELECT '应付款金额' FINANCIAL,
+               SUM(SETTLE_AMOUNT-FINISHED_AMOUNT) CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_SETTLE_CONTRACT
+         WHERE PROVIDED_DATE >= @START_DATE
+           AND PROVIDED_DATE <= @END_DATE
+           AND EFFECTIVE = '1'
+		   AND FUND_TYPE = '1'
+		UNION ALL
+        SELECT '应付款金额' FINANCIAL,
+              0 CURRENT_AMOUNT,
+               ISNULL(SUM(SETTLE_AMOUNT-FINISHED_AMOUNT), 0) PRE_CURRENT_AMOUNT,
+               0 LAST_CURRENT_AMOUNT
+          FROM T_SETTLE_CONTRACT
+         WHERE PROVIDED_DATE >= DATEADD(YEAR, -1, @START_DATE)
+           AND PROVIDED_DATE <= DATEADD(YEAR, -1, @END_DATE)
+           AND EFFECTIVE = '1'
+		   AND FUND_TYPE = '1'
+		UNION ALL
+        SELECT '应付款金额' FINANCIAL,
+               0 CURRENT_AMOUNT,
+               0 PRE_CURRENT_AMOUNT,
+               ISNULL(SUM(SETTLE_AMOUNT-FINISHED_AMOUNT), 0) LAST_CURRENT_AMOUNT
+          FROM T_SETTLE_CONTRACT
+         WHERE PROVIDED_DATE >= DATEADD(MONTH, -1, @START_DATE)
+           AND PROVIDED_DATE <= DATEADD(MONTH, -1, @END_DATE)
+           AND EFFECTIVE = '1'
+		   AND FUND_TYPE = '1') A
+ GROUP BY A.FINANCIAL]]>
+	</queryString>
+	<field name="FINANCIAL" class="java.lang.String"/>
+	<field name="CURRENT_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="PRE_CURRENT_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="LAST_CURRENT_AMOUNT" class="java.math.BigDecimal"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf( 1 )]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="50" width="653" height="31" uuid="fde48a58-967c-4f68-a8b7-c278b11237ff"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="24" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[财务情况总表]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement x="0" y="0" width="653" height="50" uuid="d623dc7e-8f10-4d65-af46-6e13c3c5ac2c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="24" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CORP_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="24" splitType="Stretch">
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="0" y="0" width="653" height="20" uuid="186bd212-3974-471b-8398-98ba11b42939"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["统计区间：" + $P{START_DATE} + " 至 " + $P{END_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="35" height="32" uuid="4fcec6e7-3914-4344-b80f-dda01053331b"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="35" y="0" width="110" height="32" uuid="72b8e67a-0425-4aee-afb5-fd72d485e7c9"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[类别]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="459" y="0" width="92" height="32" uuid="c3b06a7a-5c75-48bb-94be-64037cec6537"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[环比]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="551" y="0" width="102" height="32" uuid="7fb41b5c-decb-4809-9d73-5770bdd46a80"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[同比]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="145" y="0" width="109" height="32" uuid="684b316d-4701-4980-8143-d1e289410432"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[本期统计额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="254" y="0" width="100" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="7775b4f4-8d9b-4c49-8f15-658017d37663"/>
+				<box topPadding="0" leftPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="宋体" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[去年同期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="354" y="0" width="105" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="796e0df4-9608-47f1-8d77-432d0e310eb8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="宋体" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[上一周期]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement x="35" y="0" width="110" height="32" uuid="3e185da9-3be1-4a76-8f27-e7c954106514"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FINANCIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="35" height="32" uuid="f88ff2f2-26d8-40ea-8d17-0ea6cc8037ab"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="0" width="109" height="32" uuid="dd552e9d-4afe-4b57-8f68-be18f2f99c0b"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="宋体" size="16" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{CURRENT_AMOUNT}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="459" y="0" width="92" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="d313a52b-3d47-4c9e-9b24-4376b59a7312"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="宋体" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{PRE_CURRENT_AMOUNT} == BigDecimal.ZERO ? BigDecimal.ZERO : $F{CURRENT_AMOUNT}.divide($F{PRE_CURRENT_AMOUNT}, 4, BigDecimal.ROUND_HALF_EVEN) * 100).setScale(2) + "%"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="551" y="0" width="102" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="44c64bb4-231a-467e-a966-520444065bcc"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="宋体" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{LAST_CURRENT_AMOUNT} == BigDecimal.ZERO ? BigDecimal.ZERO : $F{CURRENT_AMOUNT}.divide($F{LAST_CURRENT_AMOUNT}, 4, BigDecimal.ROUND_HALF_EVEN) * 100).setScale(2) + "%"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="354" y="0" width="105" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="64cfe5e3-6551-4694-ab3a-80ca9e15d1e2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="宋体" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{LAST_CURRENT_AMOUNT}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="254" y="0" width="100" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="93dd1679-4254-49cc-8e7b-78108748593a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="宋体" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{PRE_CURRENT_AMOUNT}.doubleValue())]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

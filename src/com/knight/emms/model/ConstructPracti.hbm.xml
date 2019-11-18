@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.knight.emms.model.ConstructPracti" table="T_CONSTRUCT_PRACTI" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="constructPractiId" type="java.lang.Long" column="CONSTRUCT_PRACTI_ID">
+            <generator class="native" />
+        </id>
+        <property name="constructId" type="java.lang.Long" column="CONSTRUCT_ID"/>
+        <property name="userId" type="java.lang.Long" column="USER_ID"/>
+        <property name="type" type="java.lang.String" column="TYPE"/>
+        <property name="kindWorkName" type="java.lang.String" column="KIND_WORK_NAME"/>
+        <property name="practiName" type="java.lang.String" column="PRACTI_NAME"/>
+        <property name="idCard" type="java.lang.String" column="ID_CARD"/>
+        <property name="certNum" type="java.lang.String" column="CERT_NUM"/>
+        <property name="mobile" type="java.lang.String" column="MOBILE"/>
+        <many-to-one name="appUser" column="USER_ID" class="com.knight.system.model.AppUser" insert="false" update="false" fetch="join"/>
+        <many-to-one name="practiCert" column="CERT_ID" class="com.knight.emms.model.PractiCert" insert="false" update="false" fetch="join"/>
+    </class>
+</hibernate-mapping>

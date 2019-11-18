@@ -1,0 +1,322 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>塔式起重机安装（加节）验收单</title>
+<link href="css/style_table.css" rel="stylesheet" type="text/css" />
+<style media="print">
+.Noprint {
+	display: none;
+	
+}
+.PageNext {
+	page-break-after: always;
+}
+</style>
+
+<style type="text/css">
+.word_bottom{vertical-align:text-bottom;height:22px;}
+
+</style>
+</head>
+
+<body>
+<center class="Noprint">
+	<p align="right" class="mar_15">
+		<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+		<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+	</p>
+</center>
+
+<center>
+<div class="hzbmain_detail">
+  <div class="wrod_title">塔式起重机安装（加节）验收单</div>
+  <p>
+  <table width="94%" border="0" cellspacing="0" cellpadding="0" style="font-size:14px; margin-bottom:5px;">
+  <tr>
+    <td width="12%" height="32" align="right"><div style="margin-top:10px;">使用单位：</div></td>
+    <td width="38%" style="border-bottom:1px solid #000000;"><br></td>
+    <td width="12%" align="right" ><div style="margin-top:10px;">安装单位<span style="margin-top:10px;">：</span></div></td>
+    <td style="border-bottom:1px solid #000000;"><div style="margin-top:10px;">000</div></td>
+  </tr>
+   <tr>
+    <td height="32" align="right"><div style="margin-top:10px;">工程名称：</div></td>
+    <td style="border-bottom:1px solid #000000;"><div style="margin-top:10px;">&nbsp;&nbsp;</div></td>
+    <td align="right"><div style="margin-top:10px;">工程地址：</div></td>
+    <td style="border-bottom:1px solid #000000;">&nbsp;</td>
+  </tr>
+</table></p>
+  <p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="jjtable">
+  <tr>
+    <td width="100" rowspan="2" align="center">塔式<BR>
+      起重机</td>
+    <td width="80" align="center">型号</td>
+    <td align="center" width="140">&nbsp;</td>
+    <td align="center" width="80">设备编号</td>
+    <td align="center" width="140">&nbsp;</td>
+    <td align="center" width="80">起升高度</td>
+    <td align="center" width="140">&nbsp;</td>
+    <td align="center" width="150">与建筑物水平附着距离</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center">幅度</td>
+    <td align="center">M</td>
+    <td align="center">起重力矩</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">最大起重量</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">塔高</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">各道附着间距</td>
+    <td align="center">/ m</td>
+    <td align="center">附墙道数</td>
+    <td align="center">/ 道</td>
+    <td align="center">锚固负责人</td>
+    <td align="center">&nbsp;</td>
+    <td align="center">锚固后高</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tsjtable" style="border-top-style:none;">
+  <tr>
+    <td width="80" height="36" align="center"><strong>验收部位</strong></td>
+    <td width="388" align="center"><strong>验收要求</strong></td>
+    <td width="88" align="center"><strong>结果</strong></td>
+    <td align="center" width="80"><strong>验收部位</strong></td>
+    <td align="center" width="420"><strong>验收要求</strong></td>
+    <td align="center" width="85"><strong>结果</strong></td>
+  </tr>
+  <tr>
+    <td rowspan="4" align="center">塔吊<BR>
+      结构</td>
+    <td>部件、附件、连接件安装齐全，位置正确</td>
+    <td>&nbsp;</td>
+    <td rowspan="6" align="center">电气<BR>
+      系统</td>
+    <td>供电系统供电充分、正常工作、电压380<u>±</u>5%</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>螺栓拧紧力矩达到技术要求，开口销完全撬开</td>
+    <td>&nbsp;</td>
+    <td>炭刷、接触器、继电器触点良好</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>结构无变形、开焊、疲劳裂纹</td>
+    <td>&nbsp;</td>
+    <td>仪表、照明、报警系统完好、可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>压重、配重重量、位置达到说明书要求</td>
+    <td>&nbsp;</td>
+    <td rowspan="2">控制、操纵装置动作灵活、可靠，电气按要求设置短路和<BR>过电流、零位保护，切断电源的紧急开关符合要求</td>
+    <td rowspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan="5" align="center">绳轮钩<BR>系统</td>
+    <td>钢丝绳在卷筒上面缠绕整齐、润滑良好</td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <td>钢丝绳规格正确、断丝和磨损未达到报废标准</td>
+    <td>&nbsp;</td>
+    <td>电气系统对地的绝缘电阻不大于0.5MΩ</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>钢丝绳固定和偏差符合国家标准</td>
+    <td>&nbsp;</td>
+    <td rowspan="8" align="center">安全<BR>
+      限位<BR>和<BR>保险<BR>装置</td>
+    <td>力矩限制器灵敏、可靠，其综合误差不大于额定值的8%</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>各部位滑轮滚动灵活、可靠，无卡塞现象</td>
+    <td>&nbsp;</td>
+    <td>重量限制器灵敏、可靠，其误差不大于额定值的5%</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>吊钩磨损未达到报废标准、保险装置可靠</td>
+    <td>&nbsp;</td>
+    <td>回转限位器灵敏可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan="3" align="center">传动<BR>
+      系统</td>
+    <td>各机构转动平稳、无异常响声</td>
+    <td>&nbsp;</td>
+    <td>行走限位器灵敏可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>各润滑点润滑良好、润滑油牌号正确</td>
+    <td>&nbsp;</td>
+    <td>变幅限位器灵敏可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>制动器动作灵活可靠，联轴节连接良好，无异常</td>
+    <td>&nbsp;</td>
+    <td>超高限位器灵敏可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan="5" align="center">路基<BR>
+      复验</td>
+    <td>复查路基或基础隐蔽工程资料齐全、准确</td>
+    <td>&nbsp;</td>
+    <td>吊钩保险灵敏可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>钢轨顶面纵、横方向上的倾斜度不大于1/100</td>
+    <td>&nbsp;</td>
+    <td>卷筒保险灵敏可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>塔身对支承面垂直度≤4/1000</td>
+    <td>&nbsp;</td>
+    <td rowspan="7" align="center">附着<BR>
+      锚固<BR>之后<BR>检查<BR>项目</td>
+    <td>锚固框架安装位置符合规定要求</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>止挡装置距钢轨两端距离≥1m</td>
+    <td>&nbsp;</td>
+    <td>塔身与锚固框架固定牢靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>行走限位置距止挡装置距离≥3m</td>
+    <td>&nbsp;</td>
+    <td>框架、锚杆、墙板等各处螺栓、销轴齐全、正确可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan="4" align="center">附着锚固<BR>
+      之前检查</td>
+    <td>框架、锚杆、墙板等无开焊、变形和裂纹</td>
+    <td>&nbsp;</td>
+    <td>垫铁、楔块等零部件齐全可靠</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>锚杆长度和结构形式符合附着要求</td>
+    <td>&nbsp;</td>
+    <td>最高附着点以下塔身轴线对支承面垂直不得大于相应高度的2/1000</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>建筑物上附着点布置和强度符合要求</td>
+    <td>&nbsp;</td>
+    <td>最高附着点以上塔身轴线对支承面垂直度不大于4/1000</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>基础经过加固后强度满足承压要求</td>
+    <td>&nbsp;</td>
+    <td>锚固点以上塔机自由高度不得大于规定要求</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="listtable" style="border-top-style:none;">
+  <tr>
+    <td width="458" height="42" style="border-bottom-style:none;">安装班组自检情况：</td>
+    <td width="100">安装单位名称</td>
+    <td width="300">&nbsp;</td>
+    <td width="80">负责人</td>
+    <td width="168">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="42" style="border-bottom-style:none;">&nbsp;</td>
+    <td>产权单位名称</td>
+    <td>&nbsp;</td>
+    <td>负责人</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="42">负责人：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+    <td colspan="4">验收结论：</td>
+    </tr>
+  <tr>
+    <td height="42" style="border-bottom-style:none;">项目部验收情况：</td>
+    <td colspan="4" align="center">项目部验收人员签名</td>
+    </tr>
+  <tr>
+    <td height="42" style="border-bottom-style:none;">&nbsp;</td>
+    <td align="center">机管部门</td>
+    <td colspan="3">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="42" style="border-bottom-style:none;">&nbsp;</td>
+    <td align="center">安全部门</td>
+    <td colspan="3">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="42" align="right">日期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    <td align="center">技术负责人</td>
+    <td colspan="3">&nbsp;</td>
+    </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="listtable" style="border-top-style:none;">
+  <tr>
+    <td width="200" height="42" align="center">结论：同意检测</td>
+    <td width="257" align="center">暂不检测，整改后再次验收</td>
+    <td width="101" align="center">塔吊机组</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="42">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="center">监理</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="listtable" style="border-top-style:none;">
+  <tr>
+    <td colspan="2" rowspan="3">&nbsp;</td>
+    <td height="42" colspan="2" align="center">上级公司级验收人员签名</td>
+    </tr>
+  <tr>
+    <td width="300" height="36" align="center">机管部门</td>
+    <td width="368">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="42" align="center">安全部门</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="200" height="42" align="center">结论：同意检测</td>
+    <td width="257" align="center">暂不检测，整改后再次验收</td>
+    <td colspan="2" rowspan="2">注：验收栏目内有数据的，必须在验收栏目内填写实测的数据，无数据用文字说明</td>
+    </tr>
+  <tr>
+    <td height="42">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+</table>
+
+
+  
+  </p>
+  <br>
+  <br>
+</div>
+</center>
+</body>
+</html>

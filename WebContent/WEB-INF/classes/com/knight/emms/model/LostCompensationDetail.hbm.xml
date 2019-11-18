@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LostCompensationDetail" table="T_LOST_COMPENSATION_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="lostId" type="java.lang.Long" column="LOST_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="oweQuantity" type="java.lang.String" column="OWE_QUANTITY" />
+		<property name="lostQuantity" type="java.lang.String" column="LOST_QUANTITY" />
+		<property name="supplementUnit" type="java.lang.String" column="SUPPLEMENT_UNIT" />
+		<property name="supplementQuantity" type="java.lang.String" column="SUPPLEMENT_QUANTITY" />
+		<property name="compensationCosts" type="java.lang.String" column="COMPENSATION_COSTS" />
+		<property name="totalCosts" type="java.lang.String" column="TOTAL_COSTS" />
+		<property name="conversionNum" type="java.lang.String" column="CONVERSION_NUM" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+	</class>
+</hibernate-mapping>

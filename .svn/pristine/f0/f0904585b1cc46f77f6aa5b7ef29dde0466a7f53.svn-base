@@ -1,0 +1,62 @@
+
+package com.knight.emms.model;
+
+import lombok.Data;
+import lombok.ToString;
+
+import com.google.gson.annotations.Expose;
+import com.knight.core.model.BaseModel;
+import com.knight.core.table.CodeFieldDeclare;
+import com.knight.core.table.PersistantDeclare;
+
+/**
+ * @ClassName: AttachmentStorage
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2014-5-5 下午9:53:21
+ */
+@Data
+@ToString(callSuper = false, doNotUseGetters = true)
+@PersistantDeclare
+public class AttachmentStorage extends BaseModel {
+
+	private static final long serialVersionUID = 1L;
+
+	@Expose
+	private Long attachmentId;
+
+	@Expose
+	private Long rowId;
+
+	@Expose
+	private String componGeneric;
+
+	@Expose
+	private String componSpecific;
+	
+	@Expose
+	private String componVender;
+
+	@Expose
+	private String componCategory;
+
+	@Expose
+	private String dimensions;
+
+	@Expose
+	private String measurementUnit;
+
+	@Expose
+	private String projectCounts;
+	
+	@Expose
+	private String counts;
+	
+	@Expose
+	private Long disAllInitId;
+	
+	/**备注*/
+	@Expose
+	private String remark;
+
+}

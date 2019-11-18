@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-25 10:42:47 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.TruckCranePrice" table="T_TRUCK_CRANE_PRICE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="priceId" type="java.lang.Long">
+            <column name="PRICE_ID" />
+            <generator class="native" />
+        </id>
+        <property name="belongToArea" type="java.lang.String">
+            <column name="BELONG_TO_AREA" length="16" />
+        </property>
+        <property name="truckCraneSpecific" type="java.lang.String">
+            <column name="TRUCK_CRANE_SPECIFIC" length="6" not-null="true" />
+        </property>
+        <property name="projectPrice" type="java.lang.Long">
+            <column name="PROJECT_PRICE" />
+        </property>
+        <property name="teamPrice" type="java.lang.Long">
+            <column name="TEAM_PRICE" />
+        </property>
+        <property name="delFlag" type="java.lang.String">
+            <column name="DEL_FLAG" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

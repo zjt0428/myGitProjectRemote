@@ -1,0 +1,230 @@
+package com.knight.emms.terminal.action;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import com.knight.core.util.DateUtil;
+import com.knight.core.util.GsonUtil;
+import com.knight.emms.model.Practitioner;
+import com.knight.emms.service.CorpInfoService;
+import com.knight.emms.service.InspectSelfChooseDetailService;
+import com.knight.emms.service.InspectSelfChooseService;
+import com.knight.emms.service.PractiDispatchService;
+import com.knight.emms.service.PractiInsuranceClaimRecordService;
+import com.knight.emms.service.PractiInsuranceService;
+import com.knight.emms.service.PractitionerService;
+import com.knight.emms.service.SafeClarificationService;
+import com.knight.emms.service.SafetyEducationService;
+import com.knight.emms.terminal.Query;
+import com.knight.emms.terminal.TerminalBaseAction;
+import com.knight.system.service.FileAttachService;
+
+public class PractitionerAction extends TerminalBaseAction{
+	private static final long serialVersionUID = 1L;
+
+	@Resource
+	private PractitionerService practitionerService;
+	
+	@Resource
+	private FileAttachService fileAttachService;
+	
+	@Resource
+	private PractiInsuranceService practiInsuranceService;
+	
+	@Resource
+	private PractiInsuranceClaimRecordService practiInsuranceClaimService;
+
+	@Resource
+	private SafetyEducationService safetyEducationService;
+
+	@Resource
+	private SafeClarificationService safeClarificationService;
+	
+	@Resource
+	private CorpInfoService corpInfoService;
+	
+	@Resource
+	private PractiDispatchService practiDispatchService;
+	
+	@Resource
+	private InspectSelfChooseService chooseService;
+	
+	@Resource
+	private InspectSelfChooseDetailService chooseDetailService;
+	
+	
+	
+	/*
+	 * 人员列表
+	 * 
+	 * SET @START = ?
+ 	    SET @PAGE_SIZE = ?
+ 	    SET @PRACTI_NAME = ?
+ 	    SET @CORP_NAME = ?
+ 	    SET @DEP_NAME = ?
+ 	    SET @PROJECT_NAME = ?
+ 	    SET @INCUMBENT = ?
+ 	    SET @CERT_STATUS = ?
+ 	    SET @INSURE_STATUS = ?
+ 	    SET @CLARIFICA_STATUS = ?
+ 	    SET @BLACKLIST = ?
+	 */
+	public String list() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String keyword = query.getKeyword();
+//		String incumbent = query.getIncumbent();
+//		String certStatus = query.getCertStatus();
+//		String insureStatus = query.getInsureStatus();
+//		String clarificaStatus = query.getClarificaStatus();
+		String blacklist = query.getBlacklist();
+		
+		List<Map<String,Object>> list = practitionerService.queryByScript("terminal.practi_list_practi",start,pageSize,
+				keyword==null?"":keyword,/*incumbent,certStatus,insureStatus,clarificaStatus,*/blacklist);
+		successResponse(GsonUtil.toJson(list, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	public String save() {
+		
+		return SUCCESS;
+	}
+	
+	public String update() {
+		Query query = getTerminalMessage().getQuery();
+		String practiName = query.getPractiName();
+		String sex = query.getSex();
+		String kindWork = query.getKindWork();
+		String isAffiliate = query.getIsAffiliate();
+		String idCard = query.getIdCard();
+		String birthDate = query.getBirthDate();
+		String nation = query.getNation();
+		String birthplace = query.getBirthplace();
+		String mobile = query.getMobile();
+		String address = query.getAddress();
+		String bankDeposit = query.getBankDeposit();
+		String account = query.getAccount();
+		Long practiId = query.getPractiId();
+		practitionerService.updateScirpt("terminal.practi_update_practi",
+				practiName,sex,kindWork,isAffiliate,idCard,birthDate,nation,birthplace,mobile,
+				address,bankDeposit,account,practiId);
+//		Practitioner p = practitionerService.get(practiId);
+//		if(p.getPractiName().endsWith(practiName) && p.getSex().endsWith(sex) && p.getKindWork().equals(kindWork)
+//				&& p.getIsAffiliate().equals(isAffiliate) && p.getIdCard().equals(idCard) && p.getBirthDate().endsWith(birthDate)
+//				&& p.getNation().equals(nation) && p.getBirthplace().equals(birthplace) && p.getMobile().equals(address)
+//				&& p.getBankDeposit().equals(bankDeposit) && p.getAccount().equals(account)) {
+//			return JSON_SUCCESS;
+//		}else {
+//			return JSON_FAIL;
+//		}
+		return SUCCESS;
+	}
+	
+	public String updateCert() {
+		HttpServletRequest req = getRequest();
+		Long certId = Long.parseLong(req.getParameter("certId"));
+		String certNum = req.getParameter("certNum");
+		String specialtyType = req.getParameter("specialtyType");
+		String contractDate = req.getParameter("contractDate");
+		String awardDepart = req.getParameter("awardDepart");
+		String awardDate = req.getParameter("awardDate");
+		String effectDate = req.getParameter("effectDate");
+		String registrantOrganization = req.getParameter("registrantOrganization");
+		String practiKindwork = req.getParameter("practiKindwork");
+		String stampNum = req.getParameter("stampNum");
+		String mark = req.getParameter("mark");
+		String remark = req.getParameter("remark");
+		practitionerService.updateScirpt("terminal.practi_update_cert",
+				certNum,specialtyType,contractDate,awardDepart,awardDate,effectDate,registrantOrganization,practiKindwork,
+				stampNum,mark,remark,certId);
+		return SUCCESS;
+	}
+	
+	public String listCorpFor() {
+		Query query = getTerminalMessage().getQuery();
+		Long depId = query.getDepId();
+		List<Map<String,Object>> list = corpInfoService.queryByScript("terminal.get_AppCorpByDepId", depId);
+		successResponse(GsonUtil.toJson(list, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	public String listDispatch() {
+		HttpServletRequest req = getRequest();
+		Integer start = Integer.parseInt(req.getParameter("start"));
+		Integer pageSize = Integer.parseInt(req.getParameter("pageSize"));
+		String keyword = req.getParameter("keyword");
+		String startDate = req.getParameter("startDate");
+		String endDate = req.getParameter("endDate");
+		List<Map<String,Object>> list = corpInfoService.queryByScript("terminal.practi_dispatch_list", start, pageSize, 
+				keyword, startDate, endDate);
+		successResponse(GsonUtil.toJson(list, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String updateDispatch(){
+		HttpServletRequest req = getRequest();
+		Long dispatchId = Long.parseLong(req.getParameter("dispatchId"));
+		Long projectId = Long.parseLong(req.getParameter("projectId"));
+		String projectName = req.getParameter("projectName");
+		String kindWork = req.getParameter("kindWork");
+		String teams = req.getParameter("teams");
+		String remark = req.getParameter("remark");
+		practiDispatchService.updateScirpt("terminal.practi_dispatch_update",
+				dispatchId, projectId, projectName, kindWork, teams, remark);
+		setFileAttach(dispatchId);
+		return SUCCESS;
+	}
+	
+	public String moveList() {
+		HttpServletRequest req = getRequest();
+		Long practiId = Long.parseLong(req.getParameter("practiId"));
+		String target = req.getParameter("target");
+		Practitioner p = practitionerService.get(practiId);
+		p.setBlacklist(target);
+		practitionerService.merge(p);
+		return SUCCESS;
+	}
+	
+	public String listChoose() {
+		HttpServletRequest req = getRequest();
+		String kindWork = req.getParameter("kindWork");
+		String inspectType = null;
+		if(kindWork.length()>0 && kindWork.equals("8")) {
+			inspectType = "1";
+		}else if(kindWork.length()>0 && kindWork.equals("4")) {
+			inspectType = "2";
+		}
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> detailList = new ArrayList<Map<String,Object>>();
+		if(inspectType != null) {
+			list = chooseService.queryByScript("terminal.practi_choose_list",inspectType);
+			if(list.size()>0) {
+				for(Map<String,Object> m : list) {
+					Long chooseId = Long.parseLong(m.get("chooseId").toString());
+					detailList = chooseDetailService.queryByScript("terminal.practi_chooseDetails_list",chooseId);
+					m.put("content", detailList);
+				}
+			}
+		}
+		successResponse(GsonUtil.toJson(list, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	public String listUser() {
+		HttpServletRequest req = getRequest();
+		Integer start = Integer.parseInt(req.getParameter("start"));
+		Integer pageSize = Integer.parseInt(req.getParameter("pageSize"));
+		String fullname = req.getParameter("fullname");
+		Long corpId = Long.parseLong(req.getParameter("corpId"));
+		Long depId = Long.parseLong(req.getParameter("depId"));
+		List<Map<String,Object>> list = corpInfoService.queryByScript("terminal.practi_appUser_list",start,pageSize,
+				corpId, depId,fullname);
+		successResponse(GsonUtil.toJson(list, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+}

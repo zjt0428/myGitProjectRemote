@@ -1,0 +1,53 @@
+package com.knight.system.model;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import com.google.gson.annotations.Expose;
+import com.knight.core.Constants;
+import com.knight.core.model.BaseModel;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = false)
+public class Department extends BaseModel {
+
+	private static final long serialVersionUID = 1L;
+
+	public static final Long TOP_DEPID = 0L;
+
+	@Expose
+	private Long depId;
+
+	@Expose
+	private String depSerial;
+
+	@Expose
+	private String depName;
+
+	@Expose
+	private String depDesc;
+
+	@Expose
+	private String depType = Constants.DEP_CORPORATION;
+
+	@Expose
+	private Integer depLevel;
+
+	@Expose
+	private Long parentId;
+
+	@Expose
+	private String path;
+
+	private Short delFlag = Constants.ENABLED;
+
+	public Department() {
+	}
+
+	public Department(Long depId) {
+		this.depId = depId;
+	}
+
+}

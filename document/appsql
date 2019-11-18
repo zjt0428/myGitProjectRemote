@@ -1,0 +1,269 @@
+CREATE TABLE [dbo].[BM_FLOW_TYPE](
+	[CODE] [varchar](32) NOT NULL,
+	[VALUE] [varchar](32) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[CODE] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+INSERT INTO DBO.BM_FLOW_TYPE VALUES('日常','日常');
+INSERT INTO DBO.BM_FLOW_TYPE VALUES('休假','休假');
+
+INSERT INTO INIT_LOAD_TABLE(TABLE_ALIAS,TABLE_NAME,TABLE_TYPE,REFRESH,LAZY_INIT,BH_FIELD_NAME,MC_FIELD_NAME
+,BH_FIELD_TYPE,PARENT_FIELD_NAME,ALIAS_FIELD_NAME,ALIAS_FIELD_LABLE,REMARK) 
+VALUES('flowType','BM_FLOW_TYPE',1,1,1,'CODE','VALUE',0,NULL,NULL,NULL,'事务审批类别')
+
+CREATE TABLE [dbo].[T_FLOW_NODE](
+	[NID] [bigint] IDENTITY(1,1) NOT NULL,
+	[FLOWID] [bigint] NULL,
+	[SEQ] [bigint] NULL,
+	[NODE_NAME] [varchar](100) NULL,
+	[CHK_ROLEID] [bigint] NULL,
+	[CHK_USERID] [bigint] NULL,
+	[CHK_NAME] [varchar](100) NULL,
+ CONSTRAINT [PK_T_FLOW_NODE] PRIMARY KEY CLUSTERED 
+(
+	[NID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+/****** Object:  Table [dbo].[T_FLOW_INSTANCE_PROCESS]    Script Date: 06/15/2015 17:53:06 ******/
+
+CREATE TABLE [dbo].[T_FLOW_INSTANCE_PROCESS](
+	[PID] [bigint] IDENTITY(1,1) NOT NULL,
+	[INSID] [bigint] NULL,
+	[NODEID] [bigint] NULL,
+	[CHK_USERID] [bigint] NULL,
+	[CHK_DATE] [date] NULL,
+	[CHK_RESULT] [varchar](100) NULL,
+	[CHK_OPINION] [varchar](200) NULL,
+ CONSTRAINT [PK_T_FLOW_INSTANCE_PROCESS] PRIMARY KEY CLUSTERED 
+(
+	[PID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_FLOW_INSTANCE](
+	[INSID] [bigint] IDENTITY(1,1) NOT NULL,
+	[USERID] [bigint] NULL,
+	[APPLY_DT] [date] NULL,
+	[DEPID] [bigint] NULL,
+	[CONTENT] [varchar](300) NULL,
+	[FLOW_TYPE] [varchar](1) NULL,
+	[FLOW_NAME] [varchar](200) NULL,
+	[FLOW_ID] [bigint] NULL,
+	[CHK_USERID] [bigint] NULL,
+	[STATE] [varchar](1) NULL,
+ CONSTRAINT [PK_T_FLOW_INSTANCE] PRIMARY KEY CLUSTERED 
+(
+	[INSID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_FLOW_DEFINE](
+	[FLOWID] [bigint] IDENTITY(1,1) NOT NULL,
+	[FLOWNAME] [varchar](100) NULL,
+	[CREATE_DT] [date] NULL,
+	[CREATE_BY] [bigint] NULL,
+ CONSTRAINT [PK_T_FLOW_DEFINE] PRIMARY KEY CLUSTERED 
+(
+	[FLOWID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_FLOW_COPY_CHKMAN](
+	[COPID] [bigint] IDENTITY(1,1) NOT NULL,
+	[INSID] [bigint] NULL,
+	[userId] [bigint] NULL,
+ CONSTRAINT [PK_T_FLOW_COPY_CHKMAN] PRIMARY KEY CLUSTERED 
+(
+	[COPID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_ATTENDAMCE_SET](
+	[SID] [bigint] IDENTITY(1,1) NOT NULL,
+	[WORK_DAYS] [varchar](100) NULL,
+	[WORK_ST] [varchar](5) NULL,
+	[WORK_ED] [varchar](5) NULL,
+	[EXEC_DT] [date] NULL,
+	[STATE] [varchar](1) NULL,
+	[CREATE_DT] [date] NULL,
+ CONSTRAINT [PK_T_ATTENDAMCE_SET] PRIMARY KEY CLUSTERED 
+(
+	[SID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_ATTENDAMCE_LOCATION](
+	[LID] [bigint] IDENTITY(1,1) NOT NULL,
+	[AID] [bigint] NULL,
+	[UPTIME] [varchar](8) NULL,
+	[LOCATION] [varchar](300) NULL,
+ CONSTRAINT [PK_T_ATTENDAMCE_LOCATION] PRIMARY KEY CLUSTERED 
+(
+	[LID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_ATTENDAMCE](
+	[AID] [bigint] IDENTITY(1,1) NOT NULL,
+	[USERID] [bigint] NULL,
+	[SG_DATE] [date] NULL,
+	[SGIN_TIME] [varchar](8) NULL,
+	[SGIN_LOCATION] [varchar](300) NULL,
+	[SGOU_TIME] [varchar](8) NULL,
+	[SGOU_LOCATION] [varchar](300) NULL,
+	[REMARK] [varchar](300) NULL,
+	[CREATE_DT] [date] NULL,
+	[SG_WEEKDAY] [varchar](5) NULL,
+	[SG_SUM] [bigint] NOT NULL,
+ CONSTRAINT [PK_T_ATTENDAMCE] PRIMARY KEY CLUSTERED 
+(
+	[AID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+ALTER TABLE [dbo].[T_ATTENDAMCE] ADD  CONSTRAINT [DF_T_ATTENDAMCE_SG_SUM]  DEFAULT ((0)) FOR [SG_SUM]
+GO
+
+CREATE TABLE [dbo].[T_APP_REPAIR_COMPON](
+	[RCID] [bigint] IDENTITY(1,1) NOT NULL,
+	[REPID] [bigint] NULL,
+	[COMP_NAME] [varchar](200) NULL,
+	[COMP_SPEC] [varchar](200) NULL,
+	[COMP_NUM] [bigint] NULL,
+ CONSTRAINT [PK_T_APP_REPAIR_COMPON] PRIMARY KEY CLUSTERED 
+(
+	[RCID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_APP_REPAIR](
+	[REPID] [bigint] IDENTITY(1,1) NOT NULL,
+	[EQUIP_ID] [bigint] NULL,
+	[RECORD_SERIAL] [varchar](64) NULL,
+	[EXW_SERIAL] [varchar](64) NULL,
+	[PROJ_NAME] [varchar](200) NULL,
+	[REPORT_DT] [date] NULL,
+	[FAULT_LEVEL] [varchar](20) NULL,
+	[FAULT_DESC] [varchar](200) NULL,
+	[PROC_MAN] [varchar](200) NULL,
+	[LOCATION] [varchar](200) NULL,
+	[DIS_MAN] [bigint] NULL,
+	[REPAIR_DT] [date] NULL,
+	[REP_SCHEME] [varchar](300) NULL,
+	[PROC_RESULT] [varchar](64) NULL,
+	[REP_MAN] [varchar](64) NULL,
+	[REP_TIMES] [varchar](32) NULL,
+	[REP_FEE] [numeric](12, 2) NULL,
+	[STATE] [varchar](1) NULL,
+	[CREATE_DT] [date] NULL,
+	[CREATE_BY] [bigint] NULL,
+	[FILEATTACHES] [varchar](200) NULL,
+	[HASVIEW] [varchar](1) NULL,
+	[EQUIPSPEC] [varchar](50) NULL,
+ CONSTRAINT [PK_T_APP_REPAIR] PRIMARY KEY CLUSTERED 
+(
+	[REPID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_APP_DISPATCH_DETAIL](
+	[DEID] [bigint] IDENTITY(1,1) NOT NULL,
+	[DISID] [bigint] NULL,
+	[COMP_ID] [bigint] NULL,
+	[COMP_NAME] [varchar](50) NULL,
+	[COMP_SPEC] [varchar](50) NULL,
+	[STOCK_NUM] [bigint] NULL,
+	[DIS_NUM] [bigint] NULL,
+ CONSTRAINT [PK_T_APP_DISPATCH_DETAIL] PRIMARY KEY CLUSTERED 
+(
+	[DEID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[T_APP_DISPATCH](
+	[DISID] [bigint] IDENTITY(1,1) NOT NULL,
+	[DIS_DATE] [date] NULL,
+	[PROJ_ID] [bigint] NULL,
+	[PROJ_NAME] [varchar](200) NULL,
+	[DIS_MODE] [varchar](1) NULL,
+	[DIS_TYPE] [varchar](1) NULL,
+	[DISPATCHER] [varchar](50) NULL,
+	[REMARK] [varchar](300) NULL,
+	[CREATE_DT] [date] NULL,
+	[CREATE_BY] [bigint] NULL,
+	[FILE_ATTACHES] [varchar](300) NULL,
+ CONSTRAINT [PK_T_APP_DISPATCH] PRIMARY KEY CLUSTERED 
+(
+	[DISID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+CREATE FUNCTION [dbo].[F_GETNOSGMAN](@yearmth varchar(6),@bgDATE varchar(10),@edDate varchar(10)) 
+returns int
+AS 
+	BEGIN 
+	declare @userId int,@times int;
+	declare @workdays int,@rtnValue int;
+	set @workdays = dbo.F_GETWORKDAYS(@yearmth)*2;
+	set @rtnValue = 0;
+	declare curr1 cursor
+	for select a.USERID from dbo.APP_USER a where a.DELFLAG=0 and USERNAME not in('system','admin') 
+	open curr1;
+	fetch curr1 into @userId;
+	while (@@fetch_status=0)
+	begin
+		set @times = (select SUM(t.sg_sum) from dbo.T_ATTENDAMCE t where t.SG_DATE>=@bgDATE and t.SG_DATE<=@edDate and t.USERID=@userId);
+		if @workdays>@times or @times is null
+		begin
+			set @rtnValue = @rtnValue +1;
+		end
+		fetch next from curr1 into @userId;
+	end
+	close curr1;
+	deallocate curr1;
+	
+return @rtnValue
+END 
+
+
+/****** Object:  UserDefinedFunction [dbo].[F_GETWORKDAYS]    Script Date: 06/19/2015 09:30:00 ******/
+
+CREATE FUNCTION [dbo].[F_GETWORKDAYS](@yearmth varchar(6)) 
+returns int
+AS 
+	BEGIN 
+	DECLARE @s datetime,
+			@weekdaycount int,
+			@flg int,
+			@yn int,
+			@wk varchar(5) 
+			
+	set @s=@yearmth+'01'
+	set @weekdaycount = 0
+	while @s<dateadd(month,1,@yearmth+'01')
+    begin
+		set @flg = datepart(weekday,@s)
+		if @flg=1 begin set @wk = 'mon' end
+		else if @flg=2 begin set @wk = 'tue' end
+		else if @flg=3 begin set @wk = 'web' end
+		else if @flg=4 begin set @wk = 'thu' end
+		else if @flg=5 begin set @wk = 'fri' end
+		else if @flg=6 begin set @wk = 'sat' end
+		else if @flg=7 begin set @wk = 'sun' end		
+		
+		set @yn = (select count(*) from dbo.T_ATTENDAMCE_SET where WORK_DAYS like '%'+@wk+'%' AND STATE=1)
+        if @yn = 1
+        begin
+			set @weekdaycount = @weekdaycount+1
+		end	
+        set @s=dateadd(day,1,@s)
+    end	
+return @weekdaycount  
+END 
+

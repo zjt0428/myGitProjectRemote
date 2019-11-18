@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInsuranceDetail" table="T_EQUIP_INSURANCE_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="insureId" type="java.lang.Long" column="INSURE_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="equipWorth" type="java.lang.String" column="EQUIP_WORTH" />
+		<property name="insuranceCategory" type="java.lang.String" column="INSURANCE_CATEGORY" />
+		<property name="premium" type="java.math.BigDecimal" column="PREMIUM" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="startInsureDate" type="java.lang.String" column="START_INSURE_DATE" />
+		<property name="defaultFlag" type="java.lang.String" column="DEFAULT_FLAG" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" insert="false" update="false"/>
+	<!-- 	<many-to-one name="equipInsurance" column="INSURE_ID" class="com.knight.emms.model.EquipInsurance" fetch="join" insert="false" update="false"/> -->
+	</class>
+</hibernate-mapping>

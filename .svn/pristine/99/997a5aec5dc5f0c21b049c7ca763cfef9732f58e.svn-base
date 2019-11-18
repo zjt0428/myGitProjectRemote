@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInspectSchema" table="T_EQUIPMENT_INSPECT_SCHEMA" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inspectSchemaId" column="INSPECT_SCHEMA_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="flowId" type="java.lang.Long" column="FLOW_ID" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="cycleActivateDate" type="java.util.Date" column="CYCLE_ACTIVATE_DATE" />
+		<property name="cycleDays" type="java.lang.Integer" column="CYCLE_DAYS" />
+		<property name="timesInCycle" type="java.lang.Integer" column="TIMES_IN_CYCLE" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="inspectTimes" type="java.lang.Integer" column="INSPECT_TIMES" />
+		<property name="createTimes" type="java.lang.Integer" formula="(SELECT COUNT(*) FROM T_EQUIPMENT_INSPECT S WHERE S.INSPECT_SCHEMA_ID = INSPECT_SCHEMA_ID)" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="cycleTimes" type="java.lang.Integer" column="CYCLE_TIMES" />
+		<property name="cycleDaysTimes" type="java.lang.Integer" column="CYCLE_DAYS_TIMES" />
+		<property name="thisStartCycleDate" type="java.util.Date" column="THIS_START_CYCLE_DATE" />
+		<property name="thisEndCycleDate" type="java.util.Date" column="THIS_END_CYCLE_DATE" />
+		<property name="nextFormTime" type="java.util.Date" column="NEXT_FORM_TIME" />
+		<property name="nextStartCycleDate" type="java.util.Date" column="NEXT_START_CYCLE_DATE" />
+		<property name="active" type="java.lang.String" column="ACTIVE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="equipDiary" column="EQUIP_DIARY_ID" class="com.knight.emms.model.EquipDiary" fetch="join" />
+	</class>
+</hibernate-mapping>

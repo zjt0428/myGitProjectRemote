@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.SysConfig" table="SYS_CONFIG" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="configId" column="configId" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="configKey" type="java.lang.String" column="CONFIGKEY" />
+		<property name="fieldset" type="java.lang.String" column="FIELDSET" />
+		<property name="configName" type="java.lang.String" column="CONFIGNAME" />
+		<property name="configDesc" type="java.lang.String" column="CONFIGDESC" not-null="false" />
+		<property name="typeName" type="java.lang.String" column="TYPENAME" />
+		<property name="datastore" type="java.lang.String" column="DATASTORE" />
+		<property name="dataType" type="java.lang.Short" column="DATATYPE" />
+		<property name="dataValue" type="java.lang.String" column="DATAVALUE" not-null="false" />
+		<property name="delFlag" type="java.lang.Short" column="DELFLAG" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Purchase" table="T_PURCHASE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="purchaseId" column="PURCHASE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="purchaseSerial" type="java.lang.String" column="PURCHASE_SERIAL" />
+		<property name="purchaseTheme" type="java.lang.String" column="PURCHASE_THEME" />
+		<property name="category" type="java.lang.String" column="CATEGORY" />
+		<property name="supplierId" type="java.lang.Long" column="SUPPLIER_ID" />
+		<property name="supplierName" type="java.lang.String" column="SUPPLIER_NAME" />
+		<property name="supplierTel" type="java.lang.String" column="SUPPLIER_TEL" />
+		<property name="linker" type="java.lang.String" column="LINKER" />
+		<property name="linkerTel" type="java.lang.String" column="LINKER_TEL" />
+		<property name="purchaserId" type="java.lang.Long" column="PURCHASER_ID" />
+		<property name="purchaserName" type="java.lang.String" column="PURCHASER_NAME" />
+		<property name="purchaserMobile" type="java.lang.String" column="PURCHASER_MOBILE" />
+		<property name="purchaserDepId" type="java.lang.Long" column="PURCHASER_DEP_ID" />
+		<property name="purchaserDepName" type="java.lang.String" column="PURCHASER_DEP_NAME" />
+		<property name="purCorpId" type="java.lang.Long" column="PUR_CORP_ID" />
+		<property name="purCorpName" type="java.lang.String" column="PUR_CORP_NAME" />
+		<property name="purchaseDate" type="java.lang.String" column="PURCHASE_DATE" />
+		<property name="arrivalDate" type="java.lang.String" column="ARRIVAL_DATE" />
+		<property name="instruction" type="java.lang.String" column="INSTRUCTION" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="recordSerial" type="java.lang.String" column="RECORD_SERIAL" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="purchaseAmount" type="java.math.BigDecimal" column="PURCHASE_AMOUNT" />
+		<property name="paymentAmount" type="java.math.BigDecimal" column="PAYMENT_AMOUNT" />
+		<property name="accDate" type="java.lang.String" column="ACC_DATE" />
+		<property name="squareUpDate" type="java.lang.String" column="SQUARE_UP_DATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="applicant" type="java.lang.String" column="APPLICANT" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="squareAccDate" type="java.lang.String" column="SQUARE_ACC_DATE" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="fundAccStatus" type="java.lang.String" column="FUND_ACC_STATUS" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="purchaseBriefSet" cascade="all" inverse="false" lazy="true">
+			<key column="PURCHASE_ID" />
+			<one-to-many class="com.knight.emms.model.PurchaseBrief" />
+		</set>
+		<set name="purchaseAcceptanceSet" cascade="all" inverse="false" lazy="true">
+			<key column="PURCHASE_ID" />
+			<one-to-many class="com.knight.emms.model.PurchaseAcceptance" />
+		</set>
+		<set name="instalmentSet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'PURCHASE'" order-by="PERIODS">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.Instalment" />
+		</set>
+		<set name="receivementSet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'PURCHASE'" order-by="PERIODS">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.Receivement" />
+		</set>
+	</class>
+</hibernate-mapping>

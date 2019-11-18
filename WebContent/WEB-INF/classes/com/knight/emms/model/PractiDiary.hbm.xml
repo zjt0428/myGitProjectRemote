@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PractiDiary" table="T_PRACTI_DIARY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="practiDiaryId" column="PRACTI_DIARY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="kindWork" type="java.lang.String" column="KIND_WORK" />
+		<property name="mobile" type="java.lang.String" column="MOBILE" />
+		<property name="station" type="java.lang.String" column="STATION" />
+		<property name="corpId" type="java.lang.Long" column="CORP_ID" />
+		<property name="corpName" type="java.lang.String" column="CORP_NAME" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" />
+		<property name="depName" type="java.lang.String" column="DEP_NAME" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="endDate" type="java.util.Date" column="END_DATE" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="flowId" type="java.lang.Long" column="FLOW_ID" />
+		<property name="businessId" type="java.lang.Long" column="BUSINESS_ID" />
+		<property name="businessSerial" type="java.lang.String" column="BUSINESS_SERIAL" />
+		<property name="businessTheme" type="java.lang.String" column="BUSINESS_THEME" />
+		<property name="businessModule" type="java.lang.String" column="BUSINESS_MODULE" />
+		<property name="businessPractiId" type="java.lang.Long" column="BUSINESS_PRACTI_ID" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="active" type="java.lang.String" column="ACTIVE" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.PRACTI_ID = PRACTI_ID)" />
+	</class>
+</hibernate-mapping>

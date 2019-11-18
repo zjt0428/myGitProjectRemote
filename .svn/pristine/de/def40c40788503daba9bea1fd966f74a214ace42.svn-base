@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TakeStock" table="T_TAKE_STOCK" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="takeStockId" column="TAKE_STOCK_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="invoicesSerial" type="java.lang.String" column="INVOICES_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="takeStockDate" type="java.lang.String" column="TAKE_STOCK_DATE" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="locationName" type="java.lang.String" column="LOCATION_NAME" />
+		<set name="baldetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="TAKE_STOCK_ID" />
+			<one-to-many class="com.knight.emms.model.Baldetail" />
+		</set>
+	</class>
+</hibernate-mapping>

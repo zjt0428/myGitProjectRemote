@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>软件头部</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="right_title_box">
+  <div class="fl"><img src="images/right_icon.jpg" /></div>
+  <div class="right_title_wrod">当前位置 >> <strong>系统首页</strong></div>
+</div>
+<div class="right_box">
+  <div class="home_icon_box">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><img src="images/icon_01.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_02.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_03.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_04.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_05.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_06.jpg" width="78" height="62" /></td>
+  </tr>
+  <tr>
+    <td class="pad_bottom_25"><a href="#" target="_top">商务合同</a></td>
+    <td class="pad_bottom_25"><a href="#" target="_top">行政综合</a></td>
+    <td class="pad_bottom_25"><a href="#" target="_top">资产与调度</a></td>
+    <td class="pad_bottom_25"><a href="#" target="_top">EMA设备管理</a></td>
+    <td class="pad_bottom_25"><a href="#" target="_top">技术安全管理</a></td>
+    <td class="pad_bottom_25"><a href="#" target="_top">财务管理</a></td>
+  </tr>
+  <tr>
+    <td><img src="images/icon_07.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_08.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_09.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_10.jpg" width="78" height="62" /></td>
+    <td><img src="images/icon_11.jpg" width="78" height="62" /></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><a href="#" target="_top">OA日常办公</a></td>
+    <td><a href="#" target="_top">客服监督预警</a></td>
+    <td><a href="#" target="_top">经营风险预警</a></td>
+    <td><a href="#" target="_top">邻导决策分析</a></td>
+    <td><a href="#" target="_top">系统管理</a></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+  
+  </div>
+
+
+
+</div>
+</body>
+</html>

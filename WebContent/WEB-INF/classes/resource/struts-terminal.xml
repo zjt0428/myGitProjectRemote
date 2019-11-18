@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="terminal" extends="knight-default" namespace="/terminal">
+		<action name="*AnnounceMessage" class="APIAnnounceMessageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*User" class="APIUserAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Equipment" class="APIEquipmentAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*FileAttach" class="APIFileAttachAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Praise" class="APIPraiseAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Review" class="APIReviewAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Attendamce" class="APIAttendamce" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Dispatch" class="APIDispatch" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Flow" class="APIFlow" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Repair" class="APIRepair" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Logistics" class="APILogistics" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Remind" class="APIRemindAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Construct" class="APIConstructAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*DicCode" class="APIDicCodeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Confim" class="APIConfimAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AppProject" class="AppProjectAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Practitioner" class="AppPractitionerAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*WeChat" class="WeChatMessageAction" method="{1}">
+		</action>
+	</package>
+</struts>
+
+
+		

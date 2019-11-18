@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Borrow" table="T_BORROW" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="borrowId" column="BORROW_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="borrowSerial" type="java.lang.String" column="BORROW_SERIAL" />
+		<property name="borrowTheme" type="java.lang.String" column="BORROW_THEME" />
+		<property name="borrowType" type="java.lang.String" column="BORROW_TYPE" />
+		<property name="inrelateId" type="java.lang.Long" column="INRELATE_ID" />
+		<property name="inrelateModule" type="java.lang.String" column="INRELATE_MODULE" />
+		<property name="inrelateName" type="java.lang.String" column="INRELATE_NAME" />
+		<property name="inOfficeTel" type="java.lang.String" column="IN_OFFICE_TEL" />
+		<property name="inHandler" type="java.lang.String" column="IN_HANDLER" />
+		<property name="inPhone" type="java.lang.String" column="IN_PHONE" />
+		<property name="outrelateId" type="java.lang.Long" column="OUTRELATE_ID" />
+		<property name="outrelateModule" type="java.lang.String" column="OUTRELATE_MODULE" />
+		<property name="outrelateName" type="java.lang.String" column="OUTRELATE_NAME" />
+		<property name="outOfficeTel" type="java.lang.String" column="OUT_OFFICE_TEL" />
+		<property name="outHandler" type="java.lang.String" column="OUT_HANDLER" />
+		<property name="outPhone" type="java.lang.String" column="OUT_PHONE" />
+		<property name="borrowDate" type="java.lang.String" column="BORROW_DATE" />
+		<property name="returnDate" type="java.lang.String" column="RETURN_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="instruction" type="java.lang.String" column="INSTRUCTION" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="squareAccDate" type="java.lang.String" column="SQUARE_ACC_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="renewDate" type="java.lang.String" column="RENEW_DATE" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="instalmentSet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'BORROW'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.Instalment" />
+		</set>
+		<set name="receivementSet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'BORROW'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.Receivement" />
+		</set>
+		<set name="borrowComponentSet" cascade="all" inverse="false" lazy="true">
+			<key column="BORROW_ID" />
+			<one-to-many class="com.knight.emms.model.BorrowComponent" />
+		</set>
+		<set name="borrowEquipSet" cascade="all" inverse="false" lazy="true">
+			<key column="BORROW_ID" />
+			<one-to-many class="com.knight.emms.model.BorrowEquip" />
+		</set>
+		<set name="borrowAcceptanceSet" cascade="all" inverse="false" lazy="true">
+			<key column="BORROW_ID" />
+			<one-to-many class="com.knight.emms.model.BorrowAcceptance" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipWarehouseCompon" table="T_EQUIPMENT_WAREHOUSE_COMPON" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="warehouseComponId" column="WAREHOUSE_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="warehouseId" type="java.lang.Long" column="WAREHOUSE_ID" />
+		<property name="warehouseWaitCounts" type="java.lang.Integer" column="WAREHOUSE_WAIT_COUNTS" />
+		<property name="warehouseCounts" type="java.lang.Integer" column="WAREHOUSE_COUNTS" />
+		<property name="warehouseResult" type="java.lang.String" column="WAREHOUSE_RESULT" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="maintContent" type="java.lang.String" column="MAINT_CONTENT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="componSpecificName" type="java.lang.String" column="COMPON_SPECIFIC_NAME" />
+		<property name="equipVenderName" type="java.lang.String" column="EQUIP_VENDER_NAME" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="counts" type="java.lang.String" column="COUNTS" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<many-to-one name="componDiary" column="COMPON_DIARY_ID" class="com.knight.emms.model.ComponDiary" fetch="join" />
+	</class>
+</hibernate-mapping>

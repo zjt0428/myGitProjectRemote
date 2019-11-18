@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LaborPayDetail" table="T_LABOR_PAY_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="laborPayId" type="java.lang.Long" column="LABOR_PAY_ID" />
+		<property name="detailSerial" type="java.lang.String" column="DETAIL_SERIAL" />
+		<property name="payDate" type="java.lang.String" column="PAY_DATE" />
+		<property name="receivableAmount" type="java.math.BigDecimal" column="RECEIVABLE_AMOUNT" />
+		<property name="copeAmount" type="java.math.BigDecimal" column="COPE_AMOUNT" />
+		<property name="paidAmount" type="java.math.BigDecimal" column="PAID_AMOUNT" />
+		<property name="issueAmount" type="java.math.BigDecimal" column="ISSUE_AMOUNT" />
+		<property name="pendingAmount" type="java.math.BigDecimal" column="PENDING_AMOUNT" />
+		<property name="balanceAmount" type="java.math.BigDecimal" column="BALANCE_AMOUNT" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+	</class>
+</hibernate-mapping>

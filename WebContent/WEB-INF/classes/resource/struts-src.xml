@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="form" extends="knight-default" namespace="/form">
+		<action name="*FormAccept" class="FormAcceptAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*FormApprove" class="FormApproveAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*FormReview" class="FormReviewAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*FormOpinion" class="FormOpinionAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*BusinessMessage" class="BusinessMessageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Announce" class="AnnounceAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AnnounceUser" class="AnnounceUserAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="display">/pages/indexpages/announceUserListPage.jsp</result>
+		</action>
+		<action name="*Inventory" class="InventoryAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*IncomeExpense" class="IncomeExpenseAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Memo" class="MemoAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="display">/pages/indexpages/memoListPage.jsp</result>
+		</action>
+		<action name="*DispatchAllocateInit" class="DispatchAllocateInitAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*IndexWarn" class="IndexWarnAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<package name="archive" extends="knight-default" namespace="/archive">
+	     <action name="*EquipAddReduceDetail" class="EquipAddReduceDetailAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*CorpInfo" class="CorpInfoAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*CorpCert" class="CorpCertAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="display">/pages/indexpages/corpCertListPage.jsp</result>
+		</action>
+		<action name="*Practitioner" class="PractitionerAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PractiDispatch" class="PractiDispatchAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PractiCert" class="PractiCertAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="display">/pages/indexpages/practiCertListPage.jsp</result>
+			<result name="displayContract">/pages/indexpages/practiCertContractListPage.jsp</result>
+		</action>
+		<action name="*Supplier" class="SupplierAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Customer" class="CustomerAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Project" class="ProjectAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="ProjectGather">/pages/print/dispatch/ProjectGather.jsp</result>
+			<result name="ProjectEquipmentPreview">/pages/print/dispatch/ProjectEquipmentPreview.jsp</result>
+		</action>
+		<action name="*Component" class="ComponentAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="displayParachute">/pages/indexpages/parachuteListPage.jsp</result>
+		</action>
+		<action name="*Equipment" class="EquipmentAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Instalment" class="InstalmentAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InstallFee" class="InstallFeeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InstallDismantelTeam" class="InstallDismantelTeamAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Receivement" class="ReceivementAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PractiCredit" class="PractiCreditAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PractiResume" class="PractiResumeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*StoreHouse" class="StoreHouseAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Car" class="CarAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EnterFactoryNotice" class="EnterFactoryNoticeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ExitFactoryNotice" class="ExitFactoryNoticeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*BasicPreEmbeddingNotice" class="BasicPreEmbeddingNoticeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PrintData" class="PrintDataAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="PrintData">/pages/print/data/DataPrint.jsp</result>
+		</action>
+		<action name="*PractiInsurance" class="PractiInsuranceAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SafetyEducation" class="SafetyEducationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SafeClarification" class="SafeClarificationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PractiEvaluation" class="PractiEvaluationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PractiLeave" class="PractiLeaveAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InspectProjectRecord" class="InspectProjectRecordAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		
+	</package>
+	<package name="dispatch" extends="knight-default" namespace="/dispatch">
+		<action name="*Autocrane" class="AutocraneAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AutocraneFee" class="AutocraneFeeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AutocraneUnit" class="AutocraneUnitAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*RentContract" class="RentContractAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="RentContract">/pages/print/dispatch/RentContract.jsp</result>
+		</action>
+		<action name="*ConstructOperation" class="ConstructOperationAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="ConstructOperation">/pages/print/dispatch/ConstructOperation.jsp</result>
+		</action>
+		<action name="*OverduePayment" class="OverduePaymentAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="OverduePayment">/pages/overdue/OverduePayment.jsp</result>
+		</action>
+		<action name="*ContractLease" class="ContractLeaseAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="display">/pages/indexpages/contractLeaseListPage.jsp</result>
+			<result name="ContractLease">/pages/contract/ContractLease.jsp</result>
+			<result name="ContractSubcontract">/pages/contract/ContractSubcontract.jsp</result>
+		</action>
+		<action name="*ContractLeaseVersion" class="ContractLeaseVersionAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ContractMaterials" class="ContractMaterialsAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="ContractMaterials">/pages/print/dispatch/ContractMaterials.jsp</result>
+		</action>
+		<action name="*ContractArrange" class="ContractArrangeAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="ContractArrange">/pages/print/dispatch/ContractArrange.jsp</result>
+		</action>
+		<action name="*MaterialsPlan" class="MaterialsPlanAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="MaterialsPlan">/pages/print/dispatch/MaterialsPlan.jsp</result>
+		</action>
+		<action name="*TruckPlan" class="TruckPlanAction" method="{1}">
+			<result>${successResultValue}</result>
+			<!-- <result name="TruckPlan">/pages/print/dispatch/TruckPlan.jsp</result> -->
+		</action>
+		<action name="*ExeuntPlan" class="ExeuntPlanAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ContractArrangeSituation" class="ContractArrangeSituationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SettleContract" class="SettleContractAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="SettleContractPageOne">/pages/print/dispatch/SettleContractPageOne.jsp</result>
+			<result name="SettleContractPageTwo">/pages/print/dispatch/SettleContractPageTwo.jsp</result>
+			<result name="SettleContractPageThree">/pages/print/dispatch/SettleContractPageThree.jsp</result>
+			<result name="SettleContractPageFour">/pages/print/dispatch/SettleContractPageFour.jsp</result>
+			<result name="SettleContractPageFive">/pages/print/dispatch/SettleContractPageFive.jsp</result>
+			<result name="SettleContractPageSix">/pages/print/dispatch/SettleContractPageSix.jsp</result>
+			<result name="SettleContractPageSeven">/pages/print/dispatch/SettleContractPageSeven.jsp</result>
+			<result name="statementForm">/pages/print/dispatch/SettleContractStatement.jsp</result>
+			<result name="display">/pages/indexpages/settleContractListPage.jsp</result>
+		</action>
+		<action name="*ClosedSettleInfo" class="ClosedSettleInfoAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*TeamsAccount" class="TeamsAccountAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="TeamsAccount">/pages/print/dispatch/TeamsAccount.jsp</result>
+		</action>
+		<action name="*Dispatch" class="DispatchAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/dispatch/DispatchForm.jsp</result>
+			<result name="DispatchAllocateTowerCrane">/pages/print/dispatch/DispatchAllocateTowerCrane.jsp</result>
+			<result name="DispatchAllocateLift">/pages/print/dispatch/DispatchAllocateLift.jsp</result>
+			<result name="DispatchPreInstall">/pages/print/dispatch/DispatchPreInstall.jsp</result>
+		</action>
+		<action name="*LogisticsTransport" class="LogisticsTransportAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="LogisticsTransport">/pages/print/dispatch/LogisticsTransport.jsp</result>
+			<result name="printsForm">/pages/print/dispatch/LogisticsTransportForm.jsp</result>
+		</action>
+		<action name="*LogisticsBacksport" class="LogisticsBacksportAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="LogisticsBacksport">/pages/print/dispatch/LogisticsBacksport.jsp</result>
+		</action>
+		<action name="*Pickup" class="PickupAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/dispatch/PickupForm.jsp</result>
+		</action>
+		<action name="*Purchase" class="PurchaseAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/dispatch/PurchaseForm.jsp</result>
+			<result name="printReceiveForm">/pages/print/dispatch/PurchaseReceiveForm.jsp</result>
+			<result name="printApplyForm">/pages/print/dispatch/PurchaseApplyForm.jsp</result>
+		</action>
+		<action name="*PurchasePlan" class="PurchasePlanAction" method="{1}">
+			<result name="print">/pages/print/dispatch/PurchasePlanForm.jsp</result>
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Borrow" class="BorrowAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/dispatch/BorrowForm.jsp</result>
+		</action>
+		<action name="*LaborSettle" class="LaborSettleAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*LaborPay" class="LaborPayAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<package name="verify" extends="knight-default" namespace="/verify">
+		<action name="*VerifyItem" class="VerifyItemAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*VerifyItemDemand" class="VerifyItemDemandAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*VerifyStandard" class="VerifyStandardAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*VerifySelf" class="VerifySelfAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="VerifySelfInstallLift">/pages/print/verify/VerifySelfInstallLift.jsp</result>
+			<result name="VerifySelfInstallTowerCrane">/pages/print/verify/VerifySelfInstallTowerCrane.jsp</result>
+			<result name="VerifySelfInstallAcceptanceLift">/pages/print/verify/VerifySelfInstallAcceptanceLift.jsp</result>
+			<result name="VerifySelfInstallAcceptanceTowerCrane">/pages/print/verify/VerifySelfInstallAcceptanceTowerCrane.jsp</result>
+			<result name="VerifySelfInstallAcceptLift">/pages/print/verify/VerifySelfInstallAcceptLift.jsp</result>
+			<result name="VerifySelfInstallAcceptTowerCrane">/pages/print/verify/VerifySelfInstallAcceptTowerCrane.jsp</result>
+		</action>
+	</package>
+	<package name="equip" extends="knight-default" namespace="/equip">
+		<action name="*EquipHitch" class="EquipHitchAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipInspectSchema" class="EquipInspectSchemaAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipInspect" class="EquipInspectAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipInspect">/pages/print/equip/EquipInspect.jsp</result>
+			<result name="EquipInspectLift">/pages/print/equip/EquipInspectLift.jsp</result>
+			<result name="EquipInspectTowerCrane">/pages/print/equip/EquipInspectTowerCrane.jsp</result>
+		</action>
+		<action name="*EquipMaintSchema" class="EquipMaintSchemaAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipMaint" class="EquipMaintAction" method="{1}">
+			<result>${successResultValue}</result>
+				<result name="printEquipMaint">/pages/print/equip/EquipMaintPrint.jsp</result>
+				<result name="comPrintEquipMaint">/pages/print/equip/ComEquipMaintPrint.jsp</result>
+		</action>
+		<action name="*EquipRepair" class="EquipRepairAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipRepairOne">/pages/print/equip/EquipRepairOne.jsp</result>
+			<result name="EquipRepairTwo">/pages/print/equip/EquipRepairTwo.jsp</result>
+		</action>
+		<action name="*EquipDetect" class="EquipDetectAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipDetectTowerCrane">/pages/print/equip/EquipDetectTowerCrane.jsp</result>
+			<result name="EquipDetectLift">/pages/print/equip/EquipDetectLift.jsp</result>
+			<result name="EquipDetectMiddleTowerCrane">/pages/print/equip/EquipDetectMiddleTowerCrane.jsp</result>
+			<result name="EquipDetectMiddleLift">/pages/print/equip/EquipDetectMiddleLift.jsp</result>
+		</action>
+		<action name="*AntiFallDetection" class="AntiFallDetectionAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipDismantle" class="EquipDismantleAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipDismantle">/pages/print/equip/EquipDismantle.jsp</result>
+		</action>
+		<action name="*EquipEmploy" class="EquipEmployAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipEmploy">/pages/print/equip/EquipEmploy.jsp</result>
+		</action>
+		<action name="*EquipInstall" class="EquipInstallAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipInstall">/pages/print/equip/EquipInstall.jsp</result>
+		</action>
+		<action name="*EquipFlow" class="EquipFlowAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipWarehouse" class="EquipWarehouseAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipWarehouseAbnormal" class="EquipWarehouseAbnormalAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipmentDiary" class="EquipmentDiaryAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="MaterialGather">/pages/print/data/${jsonString}.jsp</result>
+		</action>
+		<action name="*EquipVerify" class="EquipVerifyAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipVerify">/pages/print/equip/EquipVerify.jsp</result>
+		</action>
+		<action name="*InsureEquip" class="InsureEquipAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*PractiDiary" class="PractiDiaryAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ComponDiary" class="ComponDiaryAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipActivate" class="EquipActivateAction" method="{1}">
+			<result>${successResultValue}</result>
+			<!-- <result name="EquipActivate">/pages/print/equip/EquipActivateReport.jsp</result> -->
+			<result name="EquipActivate">/pages/print/equip/EquipActivateInform.jsp</result>
+		</action>
+		<action name="*ProductPlan" class="ProductPlanAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipBlockup" class="EquipBlockupAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipBlockup">/pages/print/equip/EquipBlockup.jsp</result>
+			<!-- <result name="EquipBlockup">/pages/print/equip/EquipBlockupInform.jsp</result> -->
+		</action>
+		<action name="*DismantleManage" class="DismantleManageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InstallManage" class="InstallManageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InspectManage" class="InspectManageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ComponIntoStore" class="ComponIntoStoreAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/equip/ComponIntoStore.jsp</result>
+		</action>
+		<action name="*LostHandle" class="LostHandleAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InstallDismantlePrice" class="InstallDismantlePriceAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*TruckCranePrice" class="TruckCranePriceAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InstallPriceSet" class="InstallPriceSetAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*TruckCranePriceSet" class="TruckCranePriceSetAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SettleProject" class="SettleProjectAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*EquipInsurance" class="EquipInsuranceAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipInsurance">/pages/print/equip/EquipInsurance.jsp</result>
+			<result name="EquipInsuranceChange">/pages/print/equip/EquipInsuranceChange.jsp</result>
+		</action>
+		<action name="*EquipInsuranceClaim" class="EquipInsuranceClaimAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipInsuranceClaim">/pages/print/equip/EquipInsurance.jsp</result>
+			<result name="EquipInsuranceChange">/pages/print/equip/EquipInsuranceChange.jsp</result>
+		</action>
+		<action name="*EquipInsuranceDetail" class="EquipInsuranceDetailAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InspectSelfInit" class="InspectSelfInitAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InspectSelfChoose" class="InspectSelfChooseAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<package name="fund" extends="knight-default" namespace="/fund">
+		<action name="*MoneyBack" class="MoneyBackAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MoneyLend" class="MoneyLendAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AmountPayment" class="AmountPaymentAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="AmountPayment">/pages/print/fund/AmountPayment.jsp</result>
+		</action>
+		<action name="*AmountReceive" class="AmountReceiveAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AmountEquipShare" class="AmountEquipShareAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*DeductScale" class="DeductScaleAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Deduct" class="DeductAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InvoiceCollect" class="InvoiceCollectAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*InvoiceIssue" class="InvoiceIssueAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Reimburse" class="ReimburseAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="Reimburse">/pages/print/fund/Reimburse.jsp</result>
+		</action>
+		<action name="*Salary" class="SalaryAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="allpractimonthsalary">/pages/print/fund/PractiMonthSalary.jsp</result>
+		</action>
+		<action name="*AdvanceReceive" class="AdvanceReceiveAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<package name="safety" extends="knight-default" namespace="/safety">
+		<action name="*Risk" class="RiskAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="RiskNotice">/pages/print/safety/RiskNotice.jsp</result>
+			<result name="RiskRectify">/pages/print/safety/RiskRectify.jsp</result>
+		</action>
+		<action name="*RiskReport" class="RiskReportAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="RiskReport">/pages/print/safety/RiskReport.jsp</result>
+		</action>
+		<action name="*Accident" class="AccidentAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="Accident">/pages/print/safety/Accident.jsp</result>
+		</action>
+		<action name="*AccidentReport" class="AccidentReportAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="AccidentReport">/pages/print/safety/AccidentReport.jsp</result>
+		</action>
+		<action name="*SecureProtocol" class="SecureProtocolAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="SecureProtocolInstall">/pages/print/safety/SecureProtocolInstall.jsp</result>
+			<result name="SecureProtocolInstallManage">/pages/print/safety/SecureProtocolInstallManage.jsp</result>
+			<result name="SecureProtocolDismantle">/pages/print/safety/SecureProtocolDismantle.jsp</result>
+		</action>
+		<action name="*IndisProtocol" class="IndisProtocolAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="IndisProtocolInstall">/pages/print/safety/IndisProtocolInstall.jsp</result>
+			<result name="IndisProtocolInstallContract">/pages/print/safety/IndisProtocolInstallContract.jsp</result>
+			<result name="IndisProtocolDismantle">/pages/print/safety/IndisProtocolDismantle.jsp</result>
+		</action>
+		<action name="*IndisSchema" class="IndisSchemaAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="IndisSchemaInstallApprove">/pages/print/safety/IndisSchemaInstallApprove.jsp</result>
+			<result name="IndisSchemaInstallSpecial">/pages/print/safety/IndisSchemaInstallSpecial.jsp</result>
+			<result name="IndisSchemaInstallLiftSchema">/pages/print/safety/IndisSchemaInstallLiftSchema.jsp</result>
+			<result name="IndisSchemaInstallTowerCraneSchema">/pages/print/safety/IndisSchemaInstallTowerCraneSchema.jsp</result>
+			<result name="IndisSchemaDismantleApprove">/pages/print/safety/IndisSchemaDismantleApprove.jsp</result>
+			<result name="IndisSchemaDismantleSpecial">/pages/print/safety/IndisSchemaDismantleSpecial.jsp</result>
+			<result name="IndisSchemaDismantleLiftSchema">/pages/print/safety/IndisSchemaDismantleLiftSchema.jsp</result>
+			<result name="IndisSchemaDismantleTowerCraneSchema">/pages/print/safety/IndisSchemaDismantleTowerCraneSchema.jsp</result>
+		</action>
+		<action name="*IndisNotice" class="IndisNoticeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ContingencyPlan" class="ContingencyPlanAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="ContingencyPlanInstallApprove">/pages/print/safety/ContingencyPlanInstallApprove.jsp</result>
+			<result name="ContingencyPlanInstallSchema">/pages/print/safety/ContingencyPlanInstallSchema.jsp</result>
+			<result name="ContingencyPlanDismantleApprove">/pages/print/safety/ContingencyPlanDismantleApprove.jsp</result>
+			<result name="ContingencyPlanDismantleSchema">/pages/print/safety/ContingencyPlanDismantleSchema.jsp</result>
+		</action>
+		<action name="*IndisPrecheck" class="IndisPrecheckAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="IndisPrecheckInstall">/pages/print/safety/IndisPrecheckInstall.jsp</result>
+			<result name="IndisPrecheckDismantle">/pages/print/safety/IndisPrecheckDismantle.jsp</result>
+		</action>
+		<action name="*IndisBasecheck" class="IndisBasecheckAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="IndisBasecheckInstall">/pages/print/safety/IndisBasecheckInstall.jsp</result>
+			<result name="IndisBasecheckDismantle">/pages/print/safety/IndisBasecheckDismantle.jsp</result>
+		</action>
+		<action name="*TechnicalDisclosure" class="TechnicalDisclosureAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="TechnicalDisclosureInstall">/pages/print/safety/TechnicalDisclosureInstall.jsp</result>
+			<result name="TechnicalDisclosureEmploy">/pages/print/safety/TechnicalDisclosureEmploy.jsp</result>
+			<result name="TechnicalDisclosureDismantle">/pages/print/safety/TechnicalDisclosureDismantle.jsp</result>
+		</action>
+		<action name="*EquipInstallReview" class="EquipInstallReviewAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="EquipInstallReview">/pages/print/safety/TechnicalDisclosureInstall.jsp</result>
+			<result name="TechnicalDisclosureEmploy">/pages/print/safety/TechnicalDisclosureEmploy.jsp</result>
+			<result name="TechnicalDisclosureDismantle">/pages/print/safety/TechnicalDisclosureDismantle.jsp</result>
+		</action>
+		<action name="*SafeCheck" class="SafeCheckAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SideStation" class="SideStationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<package name="materials" extends="knight-default" namespace="/materials">
+		<action name="*MaterialsCommodity" class="MaterialsCommodityAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsSpecifications" class="MaterialsSpecificationsAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsDamage" class="MaterialsDamageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsScrap" class="MaterialsScrapAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AssembleAndDisassembleFee" class="AssembleAndDisassembleFeeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsAmortization" class="MaterialsAmortizationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AmortizationInitialization" class="AmortizationInitializationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsInfo" class="MaterialsInfoAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsDispatch" class="MaterialsDispatchAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/MaterialsDispatchForm.jsp</result>
+		</action>
+		<action name="*MaterialsPackage" class="MaterialsPackageAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/MaterialsPackageForm.jsp</result>
+			<result name="confirmForm">/pages/print/materials/MaterialsRepairConfirmForm.jsp</result>
+		</action>
+		<action name="*BaseDepot" class="BaseDepotAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*BaseDepotPermission" class="BaseDepotPermissionAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*BaseLocation" class="BaseLocationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*BaseDepotInit" class="BaseDepotInitAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ProjectDepotInit" class="ProjectDepotInitAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ReceiveManage" class="ReceiveManageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*LeasedLostCompensation" class="LeasedLostCompensationAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*LostCompensation" class="LostCompensationAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/LostCompensationForm.jsp</result>
+		</action>
+		<action name="*RecycleManage" class="RecycleManageAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/RecycleManageForm.jsp</result>
+		</action>
+		<action name="*OtherBusiness" class="OtherBusinessAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*OtherBets" class="OtherBetsAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AllocationProject" class="AllocationProjectAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/AllocationProjectForm.jsp</result>
+		</action>
+		<action name="*AllocationDepot" class="AllocationDepotAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/AllocationDepotForm.jsp</result>
+		</action>
+		<action name="*CeaseReport" class="CeaseReportAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AnnexDetails" class="AnnexDetailsAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*BasedepotJoinMaterials" class="BasedepotJoinMaterialsAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ProjectMaterialsStore" class="ProjectMaterialsStoreAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsStore" class="MaterialsStoreAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SettleMaterials" class="SettleMaterialsAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*OtherMaterialStock" class="OtherMaterialStockAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*HandleMake" class="HandleMakeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*MaterialsRemodel" class="MaterialsRemodelAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*TemporaryReturn" class="TemporaryReturnAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/TemporaryReturnForm.jsp</result>
+		</action>
+		<action name="*ReturnTempStore" class="ReturnTempStoreAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ContractJoinUser" class="ContractJoinUserAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*LeaseBlockUp" class="LeaseBlockUpAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*OtherLeaseBusiness" class="OtherLeaseBusinessAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*DepotTransfers" class="DepotTransfersAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/materials/DepotTransfersForm.jsp</result>
+		</action>
+	</package>
+	<!-- 日常管理 -->
+	<package name="daily" extends="knight-default" namespace="/daily">
+		<action name="*MaterialsRepair" class="MaterialsRepairAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/daily/FormMaterialsRepair.jsp</result>
+		</action>
+		<action name="*ApplyMake" class="ApplyMakeAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/daily/FormApplyMake.jsp</result>
+		</action>
+	</package>
+	<!-- 报废管理 -->
+	<package name="stock" extends="knight-default" namespace="/stock">
+		<action name="*ScrapApply" class="ScrapApplyAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForm">/pages/print/stock/FormScrapApply.jsp</result>
+		</action>
+		<action name="*ScrapContract" class="ScrapContractAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printForms">/pages/print/stock/FormScrapContract.jsp</result>
+		</action>
+		<action name="*ScrapHandle" class="ScrapHandleAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="printFormss">/pages/print/stock/FormScrapHandle.jsp</result>
+		</action>
+	</package>
+	<package name="takestock" extends="knight-default" namespace="/takestock">
+		<action name="*TakeStock" class="TakeStockAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*ComponentStore" class="ComponentStoreAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<!-- 泵车系统 -->
+	<package name="pump" extends="knight-default" namespace="/pump">
+		<action name="*PumpTruck" class="PumpTruckAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+</struts>

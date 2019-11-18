@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Equip_Vacancy_Rate" language="groovy" pageWidth="667" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="627" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="b90768d0-fd9d-4eea-8bdc-384d679c2bde">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="columnHead" forecolor="#333333" backcolor="#AAD7FE" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontName="宋体" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5"/>
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<style name="pageHeader" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Left" vAlign="Middle" fontSize="13" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<style name="title" hAlign="Center" vAlign="Middle" fontName="宋体" fontSize="18" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+	<style name="pageFooterLable" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="12" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<parameter name="START_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="END_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PROJECT_NAME" class="java.lang.String"/>
+	<parameter name="EXW_SERIAL" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @START_DATE varchar(12)
+DECLARE @END_DATE varchar(12)
+DECLARE @PROJECT_NAME VARCHAR(64)
+DECLARE @EXW_SERIAL VARCHAR(64)
+
+SET @START_DATE = CONVERT(CHAR(12),$P{START_DATE})
+SET @END_DATE = CONVERT(CHAR(12),$P{END_DATE})
+SET @PROJECT_NAME = $P{PROJECT_NAME}
+SET @EXW_SERIAL = $P{EXW_SERIAL}
+
+SELECT EXW_SERIAL,
+	   PHENOMENON,
+	   DAMAGE_DATE,
+	   REPAIR_DATE,
+	   REPAIR_MAN,
+	   PROJECT_NAME,
+	   COMPON_GENERIC_NAME,
+	   COUNTS
+  FROM (SELECT  VALUE COMPON_GENERIC_NAME,
+				COUNTS,
+				AA.EXW_SERIAL,
+				AA.PHENOMENON,
+				AA.DAMAGE_DATE,
+				AA.REPAIR_DATE,
+				AA.REPAIR_MAN,
+				AA.PROJECT_NAME
+		  FROM (SELECT * FROM T_EQUIPMENT_REPAIR_COMPON WHERE TYPE=1) TERC
+		  LEFT JOIN T_COMPONENT TC ON  TERC.COMPON_ID = TC.COMPON_ID
+		  LEFT JOIN BM_COMPONENT_GENERIC BC ON TC.COMPON_GENERIC = BC.CODE
+		  LEFT JOIN (SELECT TER.REPAIR_ID, TE.EXW_SERIAL, TER.PHENOMENON, TER.DAMAGE_DATE, TER.REPAIR_DATE, TER.REPAIR_MAN, TP.PROJECT_NAME
+						FROM T_EQUIPMENT_REPAIR TER
+						LEFT JOIN T_EQUIPMENT TE ON TER.EQUIP_ID = TE.EQUIP_ID
+						LEFT JOIN T_PROJECT TP ON TER.PROJECT_ID = TP.PROJECT_ID
+						 ) AA ON TERC.REPAIR_ID= AA.REPAIR_ID
+		  WHERE AA.REPAIR_DATE >= @START_DATE
+          AND AA.REPAIR_DATE <= @END_DATE
+          AND(AA.PROJECT_NAME LIKE '%' + @PROJECT_NAME + '%' OR @PROJECT_NAME IS NULL OR @PROJECT_NAME  = '')
+        AND (AA.EXW_SERIAL LIKE '%' + @EXW_SERIAL + '%' OR @EXW_SERIAL IS NULL OR @EXW_SERIAL  = '')
+
+          ) BB]]>
+	</queryString>
+	<field name="EXW_SERIAL" class="java.lang.String"/>
+	<field name="PHENOMENON" class="java.lang.String"/>
+	<field name="DAMAGE_DATE" class="java.lang.String"/>
+	<field name="REPAIR_DATE" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="COMPON_GENERIC_NAME" class="java.lang.String"/>
+	<field name="COUNTS" class="java.lang.String"/>
+	<field name="REPAIR_MAN" class="java.lang.String"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="73" splitType="Stretch">
+			<staticText>
+				<reportElement style="title" x="0" y="0" width="654" height="59" uuid="bb8c31da-2408-4cc5-992f-fadf74ca191b"/>
+				<textElement>
+					<font fontName="宋体" size="36" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[设备维修统计表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="0" y="0" width="64" height="40" uuid="157b72a3-3132-4db2-935d-212658e3f1a3"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[出厂编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="64" y="0" width="64" height="40" uuid="249d30b4-b76d-419c-ae66-5b509065b60f"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[故障描述]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="218" y="0" width="86" height="40" uuid="6487a720-97fa-4a1b-a7e2-aa46d67e9e63"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[维修时间]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="304" y="0" width="64" height="40" uuid="f9a7cc2e-5d71-4895-a380-11d6675809bc"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[维修人员]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="368" y="0" width="64" height="40" uuid="4c0ba98f-64d4-4400-8730-d66eac083b32"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[项目名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="432" y="0" width="116" height="40" uuid="94341d7f-5e36-4586-9471-237ec89e6617"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[更换配件名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="128" y="0" width="90" height="40" uuid="127aeb7c-e838-41fe-9a2a-42c94c7c4143"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[故障时间]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="548" y="0" width="106" height="40" uuid="d76e1589-c602-4c74-82ed-4e22acbb371c"/>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[更换配件数量]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="64" height="20" uuid="11ae695a-437c-4c20-bd0b-a732838075b6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXW_SERIAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="64" y="0" width="64" height="20" uuid="a95a0fc7-b4b0-44ba-afa0-b93b045a0b26"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PHENOMENON}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="218" y="0" width="86" height="20" uuid="ffeedd7b-0ef0-4740-ba86-582ca451d931"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPAIR_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="128" y="0" width="90" height="20" uuid="9dc77c2b-5a91-4550-b92e-069373ed025c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DAMAGE_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="548" y="0" width="106" height="20" uuid="1c4bb34f-5880-4fa5-afac-cf691685de2e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNTS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="368" y="0" width="64" height="20" uuid="33079418-825e-4e67-8234-fd6a03a2de5d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROJECT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="432" y="0" width="116" height="20" uuid="117a17e5-bdb1-4749-b2d3-e3a31adf7758"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_GENERIC_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="304" y="0" width="64" height="20" uuid="0962c8d4-9efb-4992-a332-be04ef7944ad"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="14" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPAIR_MAN}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

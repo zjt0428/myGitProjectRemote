@@ -1,0 +1,213 @@
+/**
+ *====================================================
+ * 文件名称: UserAction.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2014年10月24日			chenxy(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.terminal.action;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.apache.struts2.ServletActionContext;
+
+import com.knight.core.support.StringSupport;
+import com.knight.core.util.DateUtil;
+import com.knight.core.util.GsonUtil;
+import com.knight.emms.terminal.Tequest;
+import com.knight.emms.terminal.TerminalBaseAction;
+import com.knight.emms.terminal.support.utils.SyncBase;
+import com.knight.emms.terminal.support.utils.UcAccountUtil;
+import com.knight.system.application.ApplicationContainer;
+import com.knight.system.model.AppUser;
+import com.knight.system.service.AppUserService;
+import com.knight.system.service.DepartmentService;
+import com.knight.system.support.AppsUserClient;
+
+import flexjson.JSONSerializer;
+
+/**
+ * @ClassName: UserAction
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2014年10月24日 下午9:37:49
+ */
+public class UserAction extends TerminalBaseAction {
+
+	private static final long serialVersionUID = 1L;
+
+	@Resource
+	private AppUserService appUserService;
+	
+	@Resource
+	private DepartmentService departmentService;
+
+	private  Map<String, String> secParam = new HashMap<String, String>();
+	 
+	 
+	public String list() {
+		List<Map<String, Object>> result = appUserService.queryByScript("terminal.list_user_lbs");
+		JSONSerializer serializer = new JSONSerializer();
+		successResponse(serializer.serialize(result));
+		return SUCCESS;
+	}
+
+	public String update() {
+		Tequest tequest = getTerminalMessage();
+		AppUser appUser = appUserService.get(ApplicationContainer.getCurrentUserId());
+		if (StringUtils.isNotBlank(tequest.getFullname())) {
+			appUser.setFullname(tequest.getFullname());
+		}
+		if (StringUtils.isNotBlank(tequest.getMobile())) {
+			appUser.setMobile(tequest.getMobile());
+		}
+		if (StringUtils.isNotBlank(tequest.getLongitude()) && StringUtils.isNotBlank(tequest.getLatitude())) {
+			appUser.setLongitude(tequest.getLongitude());
+			appUser.setLatitude(tequest.getLatitude());
+			appUser.setUpdateTime(new Date());
+		}
+		appUserService.save(appUser);
+		return SUCCESS;
+	}
+
+	public String updatePassword() {
+		Tequest tequest = getTerminalMessage();
+		AppUser appUser = appUserService.get(ApplicationContainer.getCurrentUserId());
+		if(tequest.getType()!=null && tequest.getType().equals("IOS")){
+			if (!StringSupport.encryptMD5(tequest.getOldpassword()).equals(appUser.getPassword())) {
+				setJsonString("{\"success\":false, \"msg\":\"原密码不正确。\"}");
+				return SUCCESS;
+			}
+			appUser.setPassword(StringSupport.encryptMD5(tequest.getNewpassword()));
+		}else{
+			if (!appUser.getPassword().equals(tequest.getOldpassword())) {
+				setJsonString("{\"success\":false, \"msg\":\"原密码不正确。\"}");
+				return SUCCESS;
+			}
+			appUser.setPassword(tequest.getNewpassword());
+		}
+		if (!appUser.getUsername().equals(tequest.getUsername())) {
+			setJsonString("{\"success\":false, \"msg\":\"用户名不匹配。\"}");
+			return SUCCESS;
+		}
+		
+		appUserService.save(appUser);
+		if(syncAccount(appUser.getMobile())){
+			setJsonString("{\"success\":true, \"msg\":\"修改成功。\"}");
+		}else{
+			if(tequest.getType()!=null && tequest.getType().equals("IOS")){
+				appUser.setPassword(StringSupport.encryptMD5(tequest.getOldpassword()));
+			}else{
+				appUser.setPassword(tequest.getOldpassword());
+			}
+			appUserService.save(appUser);
+			setJsonString("{\"success\":false, \"msg\":\"修改失败。\"}");
+		}
+		
+		return SUCCESS;
+	}
+
+//	public String getMyPassword() {
+//		Tequest tequest = getTerminalMessage();
+//		AppUser appUser = appUserService.findByUserName(tequest.getUsername());
+//		if (appUser == null) {
+//			setJsonString("{\"success\":false, \"msg\":\"该用户名不存在。\"}");
+//			return SUCCESS;
+//		}
+//		String oldPass = appUser.getPassword();
+//		appUser.setPassword(StringSupport.encryptMD5(tequest.getNewpassword()));
+//		appUserService.save(appUser);
+//		
+//		if(syncAccount(appUser.getMobile())){
+//			setJsonString("{\"success\":true, \"msg\":\"修改成功。\"}");
+//		}else{
+//			appUser.setPassword(oldPass);
+//			appUserService.save(appUser);
+//			setJsonString("{\"success\":false, \"msg\":\"修改失败。\"}");
+//		}
+//		return SUCCESS;
+//	}
+	
+	public String passwordChange() {
+		HttpServletRequest  request = ServletActionContext.getRequest();
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		AppUser appUser = appUserService.findByUserName(username);
+		if (appUser == null) {
+			setJsonString("{\"success\":false");
+			return SUCCESS;
+		}
+		appUser.setPassword(password);
+		appUserService.save(appUser);
+		return SUCCESS;
+	}
+
+	//去掉返回数据的role对象
+
+	public String getCurrent(){
+        AppUser appUser = ApplicationContainer.getCurrentUser();
+        appUser.setRoles(null);
+        successResponse(GsonUtil.toJson(appUser));
+		return SUCCESS;
+	}
+	 
+	public String appListDep() {
+		List<Map<String, Object>> result = departmentService.queryByScript("terminal.list_department");
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	
+	public  boolean syncAccount(String mobile) {
+		SyncBase syncBase = new SyncBase();
+		syncBase.connectMysqlDb(); // 连接A9数据库
+		
+		UcAccountUtil ucAccountImpl = new UcAccountUtil();
+		List<Map<String, Object>>  ucAccountList = appUserService.queryByScript("terminal.list_app_user", mobile);
+		
+		if (ucAccountList != null && ucAccountList.size() > 0) {
+				ucAccountImpl.insertToMySql(ucAccountList);//更新 USER数据到A9
+		} else {
+			syncBase.closeA9Conn(); 
+			return false;
+		}
+		syncBase.closeA9Conn(); 
+		return true;
+	}
+	
+//	public void syncAccount2A9(){
+//		  CloseableHttpClient httpClient = HttpClients.custom().build();
+//		  String url = "http://121.42.34.181:8082/emms/public/external/account/update.do";
+//		  secParam.put("externalId","357");
+//		  secParam.put("externalName","5923883009");
+//		  secParam.put("externalAddress","http://www.jjaq.com.cn:8936/emms");
+//		  secParam.put("mobile","5923883009");
+//		  secParam.put("password","1234567");
+//		 String responseText = AppsUserClient.post(httpClient, url, secParam);
+//		System.out.println(responseText);
+//	}
+	
+	
+
+}

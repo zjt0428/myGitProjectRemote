@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipmentAffiliated" table="T_EQUIPMENT_AFFILIATED" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="equipAffiliatedId" column="EQUIP_AFFILIATED_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="quantity" type="java.math.BigDecimal" column="QUANTITY" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

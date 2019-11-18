@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Deduct" table="T_DEDUCT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="deductId" column="DEDUCT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="deductSerial" type="java.lang.String" column="DEDUCT_SERIAL" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="contractTheme" type="java.lang.String" column="CONTRACT_THEME" />
+		<property name="contractAmount" type="java.math.BigDecimal" column="CONTRACT_AMOUNT" />
+		<property name="disbursement" type="java.math.BigDecimal" column="DISBURSEMENT" />
+		<property name="proportion" type="java.math.BigDecimal" column="PROPORTION" />
+		<property name="cardinal" type="java.lang.String" column="CARDINAL" />
+		<property name="proportionType" type="java.lang.String" column="PROPORTION_TYPE" />
+		<property name="deductTotalAmount" type="java.math.BigDecimal" column="DEDUCT_TOTAL_AMOUNT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforPassDate" type="java.util.Date" column="APPLYFOR_PASS_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="deductPractiSet" cascade="all" inverse="false" lazy="true">
+			<key column="DEDUCT_ID" />
+			<one-to-many class="com.knight.emms.model.DeductPracti" />
+		</set>
+	</class>
+</hibernate-mapping>

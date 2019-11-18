@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractInoutFreeVersion" table="T_CONTRACT_INOUT_FREE_VERSION" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="inoutVersionId" column="INOUT_VERSION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="leaseVersionId" type="java.lang.Long" column="LEASE_VERSION_ID" />
+		<property name="inoutId" type="java.lang.Long" column="INOUT_ID" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="rent" type="java.math.BigDecimal" column="RENT" />
+		<property name="rentUnit" type="java.lang.String" column="RENT_UNIT" />
+		<property name="equipGenericName" type="java.lang.String" column="EQUIP_GENERIC_NAME" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipContractLease" table="T_EQUIPMENT_CONTRACT_LEASE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="activateId" column="ACTIVATE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="activateSerial" type="java.lang.String" column="ACTIVATE_SERIAL" />
+		<property name="activateDate" type="java.lang.String" column="ACTIVATE_DATE" />
+		<property name="emEnt" type="java.lang.Long" column="EM_ENT" />
+		<property name="emEntName" type="java.lang.String" column="EM_ENT_NAME" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="appointmentDate" type="java.lang.String" column="APPOINTMENT_DATE" />
+		<property name="acceptanceDate" type="java.lang.String" column="ACCEPTANCE_DATE" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		
+		<property name="installSerial" type="java.lang.String" column="INSTALL_SERIAL" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+		<property name="installTheme" type="java.lang.String" column="INSTALL_THEME" />
+		<property name="installHeight" type="java.lang.String" column="INSTALL_HEIGHT" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="startinDate" type="java.lang.String" column="STARTIN_DATE" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		
+		<property name="recordSerial" type="java.lang.String" column="RECORD_SERIAL" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="equipCategoryName" type="java.lang.String" column="EQUIP_CATEGORY_NAME" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="equipGenericName" type="java.lang.String" column="EQUIP_GENERIC_NAME" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

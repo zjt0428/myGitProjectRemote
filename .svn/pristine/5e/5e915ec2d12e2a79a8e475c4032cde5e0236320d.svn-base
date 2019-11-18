@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractJoinUser" table="T_CONTRACT_JOIN_USER" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="joinId" column="JOIN_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+	</class>
+</hibernate-mapping>

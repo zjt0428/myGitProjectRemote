@@ -1,0 +1,127 @@
+
+package com.knight.emms.service.impl;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.knight.core.dao.GenericDao;
+import com.knight.core.exception.BusinessException;
+import com.knight.core.filter.QueryFilter;
+import com.knight.emms.constant.Status;
+import com.knight.emms.core.service.BusinessFlowServiceImpl;
+import com.knight.emms.dao.EquipInsuranceDao;
+import com.knight.emms.model.EquipInsurance;
+import com.knight.emms.model.EquipInsuranceDetail;
+import com.knight.emms.model.EquipMaintDetail;
+import com.knight.emms.service.EquipInsuranceService;
+import com.knight.system.service.impl.BusinessLongPKServiceImpl;
+import com.knight.system.service.impl.CodeServiceImpl;
+
+
+/**
+ * @ClassName: EquipInsuranceServiceImpl
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author
+ * @date
+ */
+@Transactional(rollbackFor = { Exception.class, RuntimeException.class })
+public class EquipInsuranceServiceImpl extends BusinessFlowServiceImpl<EquipInsurance> implements EquipInsuranceService {
+
+	
+
+
+	@Resource
+	private EquipInsuranceDao equipInsuranceDao;
+
+	public EquipInsuranceServiceImpl(EquipInsuranceDao dao) {
+		super(dao);
+		this.equipInsuranceDao = dao;
+	}
+
+
+	@Override
+	public EquipInsurance getTranslateFull(Long insureId) {
+		// TODO Auto-generated method stub
+		EquipInsurance ei = equipInsuranceDao.get(insureId);
+		CodeServiceImpl.translate(ei, getPersistantStruct());
+		for (EquipInsuranceDetail d : ei.getEquipInsuranceDetailSet()) {
+			CodeServiceImpl.translate(d.getEquipment());
+		}
+		return ei;
+	}
+
+	@Override
+	public void deletedDetail(Long tdetailId) {
+		EquipInsurance p = equipInsuranceDao.get(tdetailId);
+		if (!Status.Applyfor.waitSubmit.equals(p.getApplyforState())) {
+		}
+		p.setApplyforState(Status.Applyfor.waitApprove);
+		equipInsuranceDao.save(p);
+	}
+
+	@Override
+	public void submitDepot(Long depottId) {
+		EquipInsurance p = equipInsuranceDao.get(depottId);
+		if (!Status.Applyfor.waitSubmit.equals(p.getApplyforState())) {
+			throw new BusinessException("状态不合法,无法提交!");
+		}
+		p.setApplyforState(Status.Applyfor.waitApprove);
+		equipInsuranceDao.save(p);
+	}
+
+	@Override
+	public void saveCreate(EquipInsurance equipInsurance) {
+//		equipInsurance.setApplyforState(Status.Applyfor.waitSubmit);
+//		super.saveSerialModel(equipInsurance);
+//		equipInsurance.setSubEquipInsurance();
+//		equipInsuranceDao.save(equipInsurance);
+	}
+	@Override
+	public void saveOrMergeForEdit(EquipInsurance t) {
+		// TODO Auto-generated method stub
+		t.setSubInsureClaim();
+		equipInsuranceDao.merge(t);
+	}
+
+
+	
+//	public DepotTransfersServiceImpl(DepotTransfersDao dao) {
+//		super(dao);
+//		this.depotTransfersDao = dao;
+//	}
+//
+//	@Override
+//	public void saveCreate(DepotTransfers depotTransfers) {
+////		depotTransfers.setDelFlag(Constant.ENABLED);
+//		depotTransfers.setApplyforState(Status.Applyfor.waitSubmit);
+//		depotTransfersDao.saveSerialModel(depotTransfers);
+//		depotTransfers.setSubAllocation();
+//		depotTransfersDao.save(depotTransfers);
+//	}
+//	
+//	@Override
+//	public DepotTransfers getTranslateFull(Long depottId) {
+//		DepotTransfers d = depotTransfersDao.get(depottId);
+//		CodeServiceImpl.translate(d, getPersistantStruct());
+//		return d;
+//	}
+//
+//	@Override
+//	public void deletedDetail(Long tdetailId) {
+//		transfersDetailDao.remove(tdetailId);
+//	}
+//
+//	@Override
+//	public void submitDepot(Long depottId) {
+//		DepotTransfers p = depotTransfersDao.get(depottId);
+//		if (!Status.Applyfor.waitSubmit.equals(p.getApplyforState())) {
+//			throw new BusinessException("项目调拨方案[" + p.getTransfersNum() + "]状态不合法,无法提交!");
+//		}
+//		p.setApplyforState(Status.Applyfor.waitApprove);
+//		depotTransfersDao.save(p);
+//	}
+}

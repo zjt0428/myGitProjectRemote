@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MemoDetail" table="T_MEMO_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="memoDetailId" column="MEMO_DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="memoId" type="java.lang.Long" column="MEMO_ID" />
+		<property name="dealwithDate" type="java.lang.String" column="DEALWITH_DATE" />
+		<property name="planFinishedDate" type="java.lang.String" column="PLAN_FINISHED_DATE" />
+		<property name="contents" type="java.lang.String" column="CONTENTS" />
+		<property name="finished" type="java.lang.String" column="FINISHED" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

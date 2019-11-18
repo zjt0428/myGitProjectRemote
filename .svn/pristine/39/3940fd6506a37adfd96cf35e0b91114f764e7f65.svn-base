@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LogisticsBacksport" table="T_LOGISTICS_BACKSPORT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="backsportId" column="BACKSPORT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="backsportSerial" type="java.lang.String" column="BACKSPORT_SERIAL" />
+		<property name="backsportTheme" type="java.lang.String" column="BACKSPORT_THEME" />
+		<property name="batchNumber" type="java.lang.String" column="BATCH_NUMBER" />
+		<property name="deliveryDate" type="java.lang.String" column="DELIVERY_DATE" />
+		<property name="expectedArriveDate" type="java.lang.String" column="EXPECTED_ARRIVE_DATE" />
+		<property name="deliveryMan" type="java.lang.String" column="DELIVERY_MAN" />
+		<property name="deliveryPhone" type="java.lang.String" column="DELIVERY_PHONE" />
+		<property name="receiveMan" type="java.lang.String" column="RECEIVE_MAN" />
+		<property name="receivePhone" type="java.lang.String" column="RECEIVE_PHONE" />
+		<property name="materialPark" type="java.lang.String" column="MATERIAL_PARK" />
+		<property name="knotCounts" type="java.lang.Integer" column="KNOT_COUNTS" />
+		<property name="strengthenCounts" type="java.lang.Integer" column="STRENGTHEN_COUNTS" />
+		<property name="knotBoltCounts" type="java.lang.Integer" column="KNOT_BOLT_COUNTS" />
+		<property name="wallAttacheQty" type="java.lang.Integer" column="WALL_ATTACHE_QTY" />
+		<property name="projectPrincipal" type="java.lang.String" column="PROJECT_PRINCIPAL" />
+		<property name="finishedAmount" type="java.math.BigDecimal" column="FINISHED_AMOUNT" />
+		<property name="remainderAmount" type="java.math.BigDecimal" column="REMAINDER_AMOUNT" />
+		<property name="backsportAmount" type="java.math.BigDecimal" column="BACKSPORT_AMOUNT" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="signMan" type="java.lang.String" column="SIGN_MAN" />
+		<property name="signDate" type="java.lang.String" column="SIGN_DATE" />
+		<property name="signResult" type="java.lang.String" column="SIGN_RESULT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="autocraneDepend" type="java.lang.String" column="AUTOCRANE_DEPEND" />
+		<property name="kilometers" type="java.lang.String" column="KILOMETERS" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="backsportEntName" type="java.lang.String" column="BACKSPORT_ENT_NAME" />
+		<property name="backsportContactTel" type="java.lang.String" column="BACKSPORT_CONTACT_TEL" />
+		<property name="backsportBankDeposit" type="java.lang.String" column="BACKSPORT_BANK_DEPOSIT" />
+		<property name="backsportBankAccount" type="java.lang.String" column="BACKSPORT_BANK_ACCOUNT" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="isCompon" type="java.lang.String" column="IS_COMPON"/>
+		<property name="rowId" type="java.lang.Long" column="ROW_ID"/>
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<set name="logisticsBackdetailSet" lazy="true" cascade="all" inverse="false">
+			<key column="BACKSPORT_ID"></key>
+			<one-to-many class="com.knight.emms.model.LogisticsBackdetail" />
+		</set>
+		<set name="logisticsBackdetail2Set" lazy="true" cascade="all" inverse="false">
+			<key column="BACKSPORT_ID"></key>
+			<one-to-many class="com.knight.emms.model.LogisticsBackdetail2" />
+		</set>
+		<set name="logisticsBackcarfeeSet" lazy="true" cascade="all" inverse="false">
+			<key column="BACKSPORT_ID"></key>
+			<one-to-many class="com.knight.emms.model.LogisticsBackcarfee" />
+		</set>
+	</class>
+</hibernate-mapping>

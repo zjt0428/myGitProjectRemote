@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MaterialsStore" table="T_MATERIALS_STORE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="storeId" column="STORE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<many-to-one name="baseDepot" column="DEPOT_ID" class="com.knight.emms.model.BaseDepot" fetch="join" />
+		<many-to-one name="baseLocation" column="LOCATION_ID" class="com.knight.emms.model.BaseLocation" fetch="join" />
+		<many-to-one name="materialsSpecifications" column="SPECIFICATIONS_ID" class="com.knight.emms.model.MaterialsSpecifications" fetch="join" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" ></property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipRepairCompon" table="T_EQUIPMENT_REPAIR_COMPON" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="repairComponId" column="REPAIR_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="repairId" type="java.lang.Long" column="REPAIR_ID" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="type" type="java.lang.String" column="TYPE" />
+		<property name="unitPrice" type="java.math.BigDecimal" column="UNIT_PRICE" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="faultLocation" type="java.lang.String" column="FAULT_LOCATION" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="componSpecificName" type="java.lang.String" column="COMPON_SPECIFIC_NAME" />
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" fetch="join" />
+	</class>
+</hibernate-mapping>

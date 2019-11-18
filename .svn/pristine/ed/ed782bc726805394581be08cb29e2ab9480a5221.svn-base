@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Inventory" table="T_INVENTORY" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="inventoryId" column="INVENTORY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="inventorySerial" type="java.lang.String" column="INVENTORY_SERIAL" />
+		<property name="inventoryTheme" type="java.lang.String" column="INVENTORY_THEME" />
+		<property name="repertoryCategory" type="java.lang.String" column="REPERTORY_CATEGORY" />
+		<property name="startTime" type="java.util.Date" column="START_TIME" />
+		<property name="endTime" type="java.util.Date" column="END_TIME" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="inventoryCategorySet" cascade="all" inverse="false" lazy="true">
+			<key column="INVENTORY_ID" />
+			<one-to-many class="com.knight.emms.model.InventoryCategory" />
+		</set>
+	</class>
+</hibernate-mapping>

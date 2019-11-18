@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="corp">
+	<!-- 重置企业资质的默认属性 -->
+	<select id="reset_defautl_cert">
+	<![CDATA[
+		UPDATE T_CORP_CERT SET DEFAULT_CERT = '0' WHERE CORP_ID = ? AND CERT_ID <> ?
+	]]>
+	</select>
+		<!--查部门编号 -->
+	<select id="dep_serial">
+	<![CDATA[
+		SELECT MAX(DEP_SERIAL) as depSerial FROM DEPARTMENT WHERE PARENT_ID = ? AND DEP_SERIAL LIKE ?
+	]]>
+	</select>
+		<!--查询部门id以及子id -->
+	<select id="child_depId">
+	<![CDATA[
+		DECLARE @DEP_ID INT
+		SET @DEP_ID = ?
+		;WITH CTE AS (
+			--父项
+			SELECT DEP_ID,PARENT_ID 
+			FROM DEPARTMENT WHERE DEP_ID=@DEP_ID
+			UNION ALL 
+			--递归结果集中的下级 
+			SELECT a.DEP_ID,a.PARENT_ID 
+			FROM DEPARTMENT a
+			INNER JOIN CTE b ON b.DEP_ID=a.PARENT_ID
+		)
+		SELECT DEP_ID AS depId FROM CTE
+	]]>
+	</select>
+</mapper>

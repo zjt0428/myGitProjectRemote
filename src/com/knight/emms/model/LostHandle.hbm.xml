@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LostHandle" table="T_LOST_HANDLE" 
+	select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="lostId" column="LOST_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="lostSerial" type="java.lang.String" column="LOST_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="lostDate" type="java.lang.String" column="LOST_DATE" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="pbEntName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />		
+		<property name="projectAddress" type="java.lang.String" column="PROJECT_ADDRESS" />
+		<property name="costTotal" type="java.lang.String" column="COST_TOTAL" />
+		<property name="equipSerial" type="java.lang.String" column="EQUIP_SERIAL" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+				
+		<property name="subsidiarySerial" type="java.lang.String" column="SUBSIDIARY_SERIAL" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="lostDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="LOST_ID" />
+			<one-to-many class="com.knight.emms.model.LostDetail" />
+		</set> 
+	</class>
+</hibernate-mapping>

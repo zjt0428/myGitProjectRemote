@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BaseDepotInitDetail" table="T_BASE_DEPOT_INIT_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="depotInitId" type="java.lang.Long" column="DEPOT_INIT_ID" />
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="locationName" type="java.lang.String" column="LOCATION_NAME" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="supplementQuantity" type="java.lang.String" column="SUPPLEMENT_QUANTITY" />
+		<property name="supplementUnit" type="java.lang.String" column="SUPPLEMENT_UNIT" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="conversion" type="java.lang.String" column="CONVERSION" />
+	</class>
+</hibernate-mapping>

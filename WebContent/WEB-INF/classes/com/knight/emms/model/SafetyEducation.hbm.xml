@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SafetyEducation" table="T_SAFETY_EDUCATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="safetyId" column="SAFETY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="safetySerial" type="java.lang.String" column="SAFETY_SERIAL" />
+		<property name="safetyDetail" type="java.lang.String" column="SAFETY_DETAIL" />
+		<property name="teachManId" type="java.lang.Long" column="TEACH_MAN_ID" />
+		<property name="teachMan" type="java.lang.String" column="TEACH_MAN" />
+		<property name="educaManId" type="java.lang.String" column="EDUCA_MAN_ID" />
+		<property name="educaMan" type="java.lang.String" column="EDUCA_MAN" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="edcationImage" type="java.lang.String" column="EDUCATION_IMAGE" />
+		<property name="edcationTime" type="java.lang.String" column="EDUCATION_TIME" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.PRACTI_ID = TEACH_MAN_ID)" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AntiFallDetection" table="T_ANTI_FALL_DETECTION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="antiFallId" column="ANTI_FALL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="USERID" />
+		<property name="antiFallNum" type="java.lang.String" column="ANTI_FALL_NUM" />
+		<property name="detectNum" type="java.lang.String" column="DETECT_NUM" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="endDate" type="java.util.Date" column="END_DATE" />
+		<property name="antiFallFee" type="java.lang.String" column="ANTI_FALL_FEE" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+	</class>
+</hibernate-mapping>

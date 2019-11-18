@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SafeClarification" table="T_SAFE_CLARIFICATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="clarificaId" column="CLARIFICA_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="clarificaSerial" type="java.lang.String" column="CLARIFICA_SERIAL" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="copeId" type="java.lang.Long" column="COPE_ID" />
+		<property name="copeName" type="java.lang.String" column="COPE_NAME" />
+		<property name="clarificaManId" type="java.lang.String" column="CLARIFICA_MAN_ID" />
+		<property name="clarificaMan" type="java.lang.String" column="CLARIFICA_MAN" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="clarificaImage" type="java.lang.String" column="CLARIFICA_IMAGE" />
+		<property name="clarificaTime" type="java.lang.String" column="CLARIFICA_TIME" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="clarificaHeadId" type="java.lang.Long" column="CLARIFICA_HEAD_ID" />
+		<property name="clarificaHead" type="java.lang.String" column="CLARIFICA_HEAD" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.PRACTI_ID = CLARIFICA_HEAD_ID)" />
+	</class>
+</hibernate-mapping>

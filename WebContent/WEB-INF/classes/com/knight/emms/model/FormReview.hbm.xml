@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-28 9:54:00 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.FormReview" table="T_FORM_REVIEW" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+        <id name="reviewId" type="java.lang.Long">
+            <column name="REVIEW_ID" />
+            <generator class="native" />
+        </id>
+        <property name="relateId" type="java.lang.Long">
+            <column name="RELATE_ID" not-null="true" />
+        </property>
+        <property name="relateModule" type="java.lang.String">
+            <column name="RELATE_MODULE" length="32" not-null="true" />
+        </property>
+        <property name="reviewUserid" type="java.lang.Long">
+            <column name="REVIEW_USERID" not-null="true" />
+        </property>
+        <property name="reviewUsername" type="java.lang.String">
+            <column name="REVIEW_USERNAME" length="32" not-null="true" />
+        </property>
+        <property name="reviewDep" type="java.lang.String">
+            <column name="REVIEW_DEP" length="128" not-null="true" />
+        </property>
+        <property name="reviewTime" type="java.util.Date">
+            <column name="REVIEW_TIME" length="16" not-null="true" />
+        </property>
+        <property name="reviewOpinion" type="java.lang.String">
+            <column name="REVIEW_OPINION" length="1" not-null="true" />
+        </property>
+        <property name="reviewRemark" type="java.lang.String">
+            <column name="REVIEW_REMARK" length="512" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PermissionManager" table="T_PERMISSION_MANAGER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="permissionId" column="PERMISSION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="permissionFlag" type="java.lang.String" column="PERMISSION_FLAG" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+	</class>
+</hibernate-mapping>

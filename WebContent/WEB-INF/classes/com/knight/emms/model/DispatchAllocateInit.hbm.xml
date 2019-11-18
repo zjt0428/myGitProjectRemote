@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DispatchAllocateInit" table="T_DISPATCH_ALLOCATE_INIT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="disAllInitId" column="DISPATCH_ALLOCATE_INIT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+	
+		<property name="initStatus" type="java.lang.String" column="INIT_STATUS" />
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="equipVender" type="java.lang.String" column="EQUIPVENDER" />
+		<property name="componCateGoryName" type="java.lang.String" column="COMPONCATEGORYNAME" />
+	</class>
+</hibernate-mapping>

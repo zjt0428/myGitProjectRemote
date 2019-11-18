@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-28 17:11:39 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TFlowInstance" table="T_FLOW_INSTANCE"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="insid" type="java.lang.Long">
+			<column name="INSID" />
+			<generator class="native" />
+		</id>
+		<property name="userid" type="java.lang.Long">
+			<column name="USERID" />
+		</property>
+		<property name="userName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=userid)" />
+		<property name="applyDt" type="string">
+			<column name="APPLY_DT" length="10" />
+		</property>
+		<property name="depid" type="java.lang.Long">
+			<column name="DEPID" />
+		</property>
+		<property name="depname" type="java.lang.String"
+			formula="(SELECT DEP.DEP_NAME FROM DEPARTMENT DEP WHERE DEP.DEP_ID =(SELECT A.DEP_ID FROM APP_USER A WHERE A.USERID=USERID))" />
+		<property name="content" type="string">
+			<column name="CONTENT" length="300" />
+		</property>
+		<property name="flowType" type="string">
+			<column name="FLOW_TYPE" />
+		</property>
+		<property name="flowName" type="string">
+			<column name="FLOW_NAME" length="200" />
+		</property>
+		<property name="flowId" type="java.lang.Long">
+			<column name="FLOW_ID" />
+		</property>
+		<property name="chkUserid" type="java.lang.Long">
+			<column name="CHK_USERID" />
+		</property>
+		<property name="seq" type="java.lang.Long">
+			<column name="CHK_SEQ" />
+		</property>
+		<property name="hasView" type="string">
+			<column name="HAS_VIEW" />
+		</property>
+		<property name="chkUserName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=CHK_USERID)" />
+		<property name="state" type="string">
+			<column name="STATE" length="1" />
+		</property>
+		<property name="arcUserId" type="java.lang.Long">
+			<column name="ARC_USERID" />
+		</property>
+		<property name="arcUserName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=ARC_USERID)" />
+		<property name="arcDate" type="java.util.Date">
+			<column name="ARC_DATE" />
+		</property>
+		<property name="arcRemark" type="java.lang.String">
+			<column name="ARC_REMARK" />
+		</property>
+		<property name="days" type="java.lang.String">
+			<column name="DAYS" />
+		</property>
+		<property name="fileAttaches" type="string">
+			<column name="FILE_ATTACHES" length="200" />
+		</property>
+		<property name="startinDate" type="java.util.Date">
+			<column name="START_IN_DATE" length="200" />
+		</property>
+		<property name="endinDate" type="java.util.Date">
+			<column name="END_IN_DATE" length="200" />
+		</property>
+	</class>
+</hibernate-mapping>

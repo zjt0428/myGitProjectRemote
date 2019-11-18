@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipDetect" table="T_EQUIPMENT_DETECT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="detectId" column="DETECT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="detectSerial" type="java.lang.String" column="DETECT_SERIAL" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="detectEnt" type="java.lang.Long" column="DETECT_ENT" />
+		<property name="detectEntName" type="java.lang.String" column="DETECT_ENT_NAME" />
+		<property name="detectAmount" type="java.math.BigDecimal" column="DETECT_AMOUNT" />
+		<property name="paymentAmount" type="java.math.BigDecimal" column="PAYMENT_AMOUNT" />
+		<property name="balanceAmount" type="java.math.BigDecimal" column="BALANCE_AMOUNT" />
+		<property name="emEntName" type="java.lang.String" column="EM_ENT_NAME" />
+		<property name="supEntName" type="java.lang.String" column="SUP_ENT_NAME" />
+		<property name="licenseNumber" type="java.lang.String" column="LICENSE_NUMBER" />
+		<property name="installPrincipal" type="java.lang.String" column="INSTALL_PRINCIPAL" />
+		<property name="installCertNum" type="java.lang.String" column="INSTALL_CERT_NUM" />
+		<property name="detectDate" type="java.lang.String" column="DETECT_DATE" />
+		<property name="redetectDate" type="java.lang.String" column="REDETECT_DATE" />
+		<property name="projectPrincipal" type="java.lang.String" column="PROJECT_PRINCIPAL" />
+		<property name="projectCertNum" type="java.lang.String" column="PROJECT_CERT_NUM" />
+		<property name="safetyPrincipal" type="java.lang.String" column="SAFETY_PRINCIPAL" />
+		<property name="safetyCertNum" type="java.lang.String" column="SAFETY_CERT_NUM" />
+		<property name="reportDate" type="java.lang.String" column="REPORT_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<set name="equipDetectStatementSet" cascade="all" lazy="true">
+			<key column="DETECT_ID" />
+			<one-to-many class="com.knight.emms.model.EquipDetectStatement" />
+		</set>
+	</class>
+</hibernate-mapping>

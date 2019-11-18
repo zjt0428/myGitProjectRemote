@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="indexWarn">
+
+	<!-- 闲置：设备档案，业务状态为“待用”的设备数量-->
+	<select id="leaveEquip">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT WHERE DEL_FLAG='1' AND STATUS='1'
+	</select>
+	
+	<!-- 借用：借用管理-借用登记设备-状态为未还的设备数量 -->	
+	<select id="borrowEquip">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT WHERE DEL_FLAG='1' AND STATUS='2'
+	</select>
+	
+	<!-- 注销：设备档案，状态为“注销”的设备数量-->
+	<select id="cancelEquip">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT WHERE DEL_FLAG='1' AND STATUS='9'
+	</select>
+	
+	<!-- 报废：设备档案，状态为“报废”的设备数量-->
+	<select id="uselessEquip">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT WHERE DEL_FLAG='1' AND STATUS='6'
+	</select>
+	
+	<!-- 合同下单：显示“租赁合同”中审批通过的合同数量（被查看后的数量不再显示）-->
+	<select id="contract">
+		SELECT COUNT(*) AS num FROM T_CONTRACT_LEASE WHERE DEL_FLAG='1' AND APPLYFOR_STATE='3'
+	</select>
+	
+	<!-- 已出库：设备档案，业务状态为“调度”的设备数量-->
+	<select id="stockOut">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT WHERE DEL_FLAG='1' AND BUSINESS_STATUS='2'
+	</select>
+	
+	<!--在途中：物流管理，物流状态为“已出货”的设备数量 -->
+	<select id="logisOut">
+		SELECT
+			COUNT (*) AS num
+		FROM
+			T_LOGISTICS_TRANSPORT tl 
+		WHERE
+		 tl.STATUS = '0'
+		AND tl.DEL_FLAG = '1'
+	</select>
+	
+	<!-- 已签收：物流管理，物流状态为“已签收”的设备数量-->
+	<select id="logisSign">
+		SELECT
+			COUNT (*) AS num
+		FROM
+			T_LOGISTICS_TRANSPORT tl 
+		WHERE
+		 tl.STATUS = '1'
+		AND tl.DEL_FLAG = '1'
+	</select>
+	
+	<!--安装：“现场安装”未审批的状态 -->
+	<select id="installForCheck">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_INSTALL WHERE DEL_FLAG='1' AND APPLYFOR_STATE='2'
+	</select>
+	
+	<!-- 待启用：“现场安装”审批通过的状态-->
+	<select id="installForChecked">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_INSTALL WHERE DEL_FLAG='1' AND APPLYFOR_STATE='3'
+	</select>
+	
+	<!--检测：设备做了“检测管理”的状态 -->
+	<select id="equipForDetect">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_DETECT t
+		LEFT JOIN T_EQUIPMENT_FLOW tf ON t.FLOW_ID=tf.FLOW_ID
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID=tf.EQUIP_ID
+		WHERE t.DEL_FLAG='1' AND te.DEL_FLAG='1'
+	</select>
+	
+	<!-- 验收：设备做了“验收管理”的状态-->
+	<select id="equipForAccept">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_VERIFY t
+		LEFT JOIN T_EQUIPMENT_FLOW tf ON t.FLOW_ID=tf.FLOW_ID
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID=tf.EQUIP_ID
+		WHERE t.DEL_FLAG='1' AND te.DEL_FLAG='1'
+	</select>
+	
+	<!-- 使用中：“启用管理”生效后的状态、做了“停用管理”的“恢复”的状态-->
+	<select id="equipForUse">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT t
+		LEFT JOIN T_EQUIPMENT_FLOW tf 
+		ON tf.EQUIP_ID=t.EQUIP_ID
+		LEFT JOIN T_EQUIPMENT_ACTIVATE ta 
+		ON ta.FLOW_ID=tf.FLOW_ID
+		LEFT JOIN T_EQUIPMENT_BLOCKUP tb
+		ON tb.FLOW_ID=tf.FLOW_ID
+		WHERE t.DEL_FLAG='1' 
+		AND ((ta.DEL_FLAG='1' AND ta.EFFECTIVE='1') OR tb.EFFECTIVE='0' )
+	</select>
+	
+	<!-- 待维修：“维修管理”模块，状态为“待处理”的设备-->
+	<select id="equipForRepair">
+		SELECT COUNT(*) AS num  FROM T_EQUIPMENT_REPAIR WHERE STATUS='0'
+	</select>
+	
+	<!-- 待巡检：“巡检管理”模块，状态为“未完成”的设备-->
+	<select id="equipForPoll">
+		SELECT COUNT(*) AS num  FROM T_EQUIPMENT_INSPECT WHERE STATUS='0'
+	</select>
+	
+	<!--待保养：“保养管理”模块，状态为“未完成”的设备 -->
+	<select id="equipForKeep">
+		SELECT COUNT(*) AS num  FROM T_EQUIPMENT_MAINT WHERE STATUS='0'
+	</select>
+	
+	<!-- 待整改：“巡检管理”模块，整机巡检结果为“计划修理”的设备-->
+	<select id="reform">
+		SELECT COUNT(*) AS num  FROM T_EQUIPMENT_INSPECT WHERE INSPECT_RESULT=1
+	</select>
+	
+	<!-- 报停：设备做了“停用管理”状态（字体为红色）-->
+	<select id="equipForQuip">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_BLOCKUP  t
+		LEFT JOIN T_EQUIPMENT_FLOW tf ON tf.FLOW_ID=t.FLOW_ID
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID=tf.EQUIP_ID
+		WHERE t.EFFECTIVE='1' AND te.DEL_FLAG='1'
+	</select>
+	
+	<!--拆卸：审批通过的“现场拆卸”状态 -->
+	<select id="demount">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_DISMANTLE  t
+		LEFT JOIN T_EQUIPMENT_FLOW tf ON tf.FLOW_ID=t.FLOW_ID
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID=tf.EQUIP_ID
+		WHERE t.DEL_FLAG='1' AND t.APPLYFOR_STATE='3' AND te.DEL_FLAG='1'
+	</select>
+	
+	<!-- 转场维保：已提交且未审批通过的“转场维保”状态-->
+	<select id="cutTo">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_WAREHOUSE  t
+		LEFT JOIN T_EQUIPMENT_FLOW tf ON tf.FLOW_ID=t.FLOW_ID
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID=tf.EQUIP_ID
+		WHERE t.DEL_FLAG='1' AND t.APPLYFOR_STATE='2' AND te.DEL_FLAG='1'
+	</select>
+	
+	<!-- 入库异常：“转场维保”自动生成“入库异常”时，该设备的状态-->
+	<select id="putExcep">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_WAREHOUSE_ABNORMAL v
+		LEFT JOIN  T_EQUIPMENT_WAREHOUSE  t ON v.WAREHOUSE_ID=t.WAREHOUSE_ID
+		LEFT JOIN T_EQUIPMENT_FLOW tf ON tf.FLOW_ID=t.FLOW_ID
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID=tf.EQUIP_ID
+		
+	</select>
+	
+	<!-- 在用设备分布：“设备档案”中所有在用设备（状态为“在用”）数量-->
+	<select id="useedEquip">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT WHERE STATUS='0';
+	</select>
+	
+	<!--待维修超期 -->
+	<select id="repairOut">
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_REPAIR WHERE  STATUS='0' 
+	</select>
+	
+	<!-- 待巡检超期-->
+	<select id="pollOut">
+	<![CDATA[
+		SELECT COUNT(*) AS num FROM T_EQUIPMENT_INSPECT WHERE  STATUS='0' AND getdate()< THIS_END_CYCLE_DATE
+		]]>
+	</select>
+	
+	<!--总资产及库存 -->
+	<select id="stocks">
+	</select>
+	
+	<!-- 加节/降节动态-->
+	<select id="addDrop">
+	</select>
+	
+	<!-- 远程安全预警-->
+	<select id="remote">
+	</select>
+	
+	<!--待审业务 -->
+	<select id="businessForChek">
+				SELECT SUM(v.num) as num FROM (
+		--租赁合同
+		SELECT count(*) as num  FROM T_CONTRACT_LEASE WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL
+		--调度管理
+		SELECT count(*) as num FROM T_DISPATCH WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL
+		--物流管理 
+		SELECT count(*) as num  FROM T_LOGISTICS_TRANSPORT WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') UNION ALL
+		
+		--现场安装
+		SELECT count(*) as num  FROM T_EQUIPMENT_INSTALL WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL
+		--启用管理
+		--SELECT * FROM T_EQUIPMENT_ACTIVATE WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1';
+		--使用管理 
+		SELECT count(*) as num  FROM T_EQUIPMENT_EMPLOY WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL
+		--巡检管理 T_EQUIPMENT_INSPECT
+		--保养管理 T_EQUIPMENT_MAINT
+		--维修管理
+		SELECT count(*) as num  FROM T_EQUIPMENT_REPAIR WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2')  UNION ALL
+		--现场拆卸   
+		SELECT count(*) as num  FROM T_EQUIPMENT_DISMANTLE WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL 
+		--回场物流
+		--转厂维保
+		SELECT count(*) as num  FROM T_EQUIPMENT_WAREHOUSE WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL
+		--配件领用
+		SELECT count(*) as num  FROM T_PICKUP WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL
+		--采购管理
+		SELECT count(*) as num  FROM T_PURCHASE WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' UNION ALL
+		--借用管理 
+		SELECT count(*) as num  FROM T_BORROW WHERE (APPLYFOR_STATE='1' OR APPLYFOR_STATE='2') AND DEL_FLAG='1' 
+		) v
+
+		
+	</select>
+	<!-- 个人业务提醒 
+	<select id="personBusiness">
+		SELECT *   FROM T_BUSINESS_MESSAGE  
+	</select>-->
+	<!-- 当前总在用设备 -->
+		<select id="useTotal">
+		SELECT count(*) as num   FROM T_EQUIPMENT  WHERE DEL_FLAG='1' AND STATUS='0'
+	</select>
+	<!-- 本月新增在用设备 -->
+		<select id="useMonthAdd">
+		SELECT count(*) as num   FROM T_EQUIPMENT  WHERE DEL_FLAG='1' AND STATUS='0' AND MONTH(STATUS_DATE)=MONTH(GETDATE())
+	</select>
+	<!-- 当前总闲置设备  -->
+		<select id="freeTotal">
+		SELECT count(*) as num   FROM T_EQUIPMENT  WHERE DEL_FLAG='1' AND STATUS='1' 
+	</select>
+	<!-- 本月新增闲置设备  -->
+		<select id="freeMonthAdd">
+		SELECT count(*) as num   FROM T_EQUIPMENT  WHERE DEL_FLAG='1' AND STATUS='1' AND MONTH(STATUS_DATE)=MONTH(GETDATE())
+	</select>
+	<!-- 带维保-->
+		<select id="maiteQulListCount">
+				SELECT
+			count(*) as num
+		FROM
+			T_EQUIPMENT_REPAIR t
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID = t.EQUIP_ID
+		LEFT JOIN T_PROJECT tp ON tp.PROJECT_ID = t.PROJECT_ID
+		LEFT JOIN BM_EQUIP_SPECIFIC tes ON tes.code = te.EQUIP_SPECIFIC
+		WHERE
+			t.STATUS = '0' AND (GETDATE()+60)>=	convert(date,t.DAMAGE_DATE) and convert(date,t.DAMAGE_DATE)>GETDATE()--距离60天
+	</select>
+
+	<!-- 周期件提醒 -->
+		<select id="perReminListCount">
+		SELECT
+			count(*) as num
+		FROM
+			T_COMPONENT t
+		LEFT JOIN BM_COMPONENT_GENERIC tb1 ON tb1.CODE = t.COMPON_GENERIC
+		LEFT JOIN BM_COMPONENT_SPECIFIC tb2 ON tb2.CODE = t.COMPON_SPECIFIC
+		WHERE
+			t.PARACHUTE_FLAG = 1
+		AND (GETDATE()+60)>=	convert(date,t.PARACHUTE_CHECK_DATE) and convert(date,t.PARACHUTE_CHECK_DATE)>GETDATE()--距离60天
+	</select>
+	<!-- 将到期资质-->
+		<select id="enterQulListCount">
+		SELECT
+			count(*) as num
+
+			FROM
+				T_CORP_CERT t
+			LEFT JOIN T_CORP_INFO tci ON tci.CORP_ID=t.CORP_ID
+			WHERE
+				t.DEL_FLAG = '1'
+			AND t.ISVALID = '1'
+			AND (GETDATE() + 60) >= t.END_DATE
+			AND t.END_DATE > GETDATE()
+	</select>
+	<!-- 将到期岗位证 -->
+		<select id="postQulListCount">
+		SELECT
+		count(*) as num
+		FROM
+			T_PRACTI_CERT t
+		LEFT JOIN T_PRACTITIONER tp ON tp.PRACTI_ID = t.PRACTI_ID
+		LEFT JOIN BM_KIND_WORK tbw ON tbw.CODE=t.PRACTI_KINDWORK
+		WHERE
+			t.DEL_FLAG = '1'
+		AND (GETDATE()+60)>=	convert(date,t.EFFECT_DATE) and convert(date,t.EFFECT_DATE)>GETDATE()--距离60天
+	</select>
+	<!-- 将到期保单-->
+		<select id="policyQulListCount">
+		SELECT
+			count(*) as num
+		FROM
+			T_INSURE_EQUIPMENT t
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID = t.EQUIP_ID
+		LEFT JOIN T_PROJECT tp ON tp.PRACTI_ID = t.PROJECT_ID
+		where t.DEL_FLAG='1' 
+		AND (GETDATE()+60)>=	convert(date,t.STOP_INSURE_DATE) and convert(date,t.STOP_INSURE_DATE)>GETDATE()--距离60天
+	</select>
+</mapper>

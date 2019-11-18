@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ApplyMake" table="T_APPLY_MAKE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="applyMakeId" column="APPLY_MAKE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="makeSerial" type="java.lang.String" column="MAKE_SERIAL" />
+		<property name="makeMan" type="java.lang.String" column="MAKE_MAN" />
+		<property name="makeDate" type="java.lang.String" column="MAKE_DATE" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="storeId" type="java.lang.Long" column="STORE_Id" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="makeTheme" type="java.lang.String" column="MAKE_THEME" />
+		<property name="approveMan" type="java.lang.String" formula="(SELECT TOP 1 T.APPROVE_USERNAME FROM T_FORM_APPROVE T WHERE T.RELATE_ID = APPLY_MAKE_ID AND T.RELATE_MODULE='APPLY_MAKE' ORDER BY T.APPROVE_USERNAME DESC)" />
+		<property name="approveDate" type="java.util.Date" formula="(SELECT TOP 1 T.APPROVE_TIME FROM T_FORM_APPROVE T WHERE T.RELATE_ID = APPLY_MAKE_ID AND T.RELATE_MODULE='APPLY_MAKE' ORDER BY T.APPROVE_TIME DESC)" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="completeDate" type="java.lang.String" column="COMPLETE_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="productMakeSet" cascade="all" inverse="false" lazy="true">
+			<key column="APPLY_MAKE_ID" />
+			<one-to-many class="com.knight.emms.model.ProductMake" />
+		</set>
+	</class>
+</hibernate-mapping>

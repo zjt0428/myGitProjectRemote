@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Materials_In_Rent_Distribution" language="groovy" pageWidth="1200" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1160" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="ce35f8f4-1fd6-4f20-8103-fe8fd0131c2e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="queryDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="specifications" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="commodity" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractSerial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractId" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @contractSerial VARCHAR(64)
+DECLARE @specifications VARCHAR(64)
+DECLARE @commodity VARCHAR(64)
+DECLARE @queryDate VARCHAR(14)
+DECLARE @contractId VARCHAR(14)
+
+SET @specifications = $P{specifications}
+SET @commodity = $P{commodity}
+SET @contractSerial = $P{contractSerial}
+SET @queryDate = $P{queryDate}
+SET @contractId = $P{contractId}
+
+SELECT
+TPD.SPECIFICATIONS_ID,
+tpd.CONTRACT_ID,
+MS.SPECIFICATIONS,
+MC.COMMODITY_ID,
+MC.COMMODITY,
+TPD.QUANTITY,
+MS.FIRST_UNIT_CONVERSION AS 'UNIT',
+CONVERT(DECIMAL(20,2),TPD.QUANTITY)*MS.SECOND_CONVERTED_QUANTITY AS 'SUPPLEMENT_QUANTITY',
+MS.SECOND_UNIT_CONVERSION AS 'SUPPLEMENT_UNIT',
+TCM.CONTRACT_SERIAL,
+TP.PROJECT_NAME,
+TCM.COMPETENT_DEPARTMET,
+BP.VALUE+BC.VALUE AS ADDRESS
+FROM
+	(SELECT
+	SPECIFICATIONS_ID,
+	CONTRACT_ID,
+	SUM(CASE
+		WHEN OPERATION_WAY='初始化' THEN CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='正常出租' THEN CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='项目间调拨入库' THEN CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='租借出租' THEN CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='项目维修入库' THEN CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='租借维修入库' THEN CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='项目维修出库' THEN -CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='租借维修出库' THEN -CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='正常回收' THEN -CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='丢失赔偿出库' THEN -CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='项目间调拨出库' THEN -CONVERT(INT,QUANTITY)
+		WHEN OPERATION_WAY='退货管理' THEN -CONVERT(INT,QUANTITY)
+		ELSE 0 END
+	) AS 'QUANTITY'
+	FROM T_PROJECT_DEPOT_IN_OUT
+	WHERE OPERATION_DATE<=@queryDate
+	GROUP BY SPECIFICATIONS_ID,CONTRACT_ID) TPD
+LEFT JOIN T_MATERIALS_SPECIFICATIONS MS ON TPD.SPECIFICATIONS_ID = MS.SPECIFICATIONS_ID
+LEFT JOIN T_MATERIALS_COMMODITY MC ON MC.COMMODITY_ID = MS.COMMODITY_ID
+LEFT JOIN T_CONTRACT_MATERIALS TCM ON TCM.CONTRACTMA_ID = TPD.CONTRACT_ID
+LEFT JOIN T_PROJECT TP ON TCM.PROJECT_ID = TP.PROJECT_ID
+LEFT JOIN BM_PROVINCE BP ON BP.CODE=TP.PROVINCE
+LEFT JOIN BM_CITY BC ON BC.CODE=TP.CITY
+WHERE (TPD.CONTRACT_ID = @contractId OR @contractId='' OR @contractId IS NULL)
+AND (MS.SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications='' OR @specifications IS NULL)
+AND (MC.COMMODITY LIKE '%'+@commodity+'%' OR @commodity='' OR @commodity IS NULL)
+AND (TCM.CONTRACT_SERIAL LIKE '%'+@contractSerial+'%' OR @contractSerial='' OR @contractSerial IS NULL)
+ORDER BY SPECIFICATIONS_ID]]>
+	</queryString>
+	<field name="SPECIFICATIONS_ID" class="java.lang.Long"/>
+	<field name="CONTRACT_ID" class="java.lang.Long"/>
+	<field name="SPECIFICATIONS" class="java.lang.String"/>
+	<field name="COMMODITY_ID" class="java.lang.Long"/>
+	<field name="COMMODITY" class="java.lang.String"/>
+	<field name="QUANTITY" class="java.lang.Integer"/>
+	<field name="UNIT" class="java.lang.String"/>
+	<field name="SUPPLEMENT_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="SUPPLEMENT_UNIT" class="java.lang.String"/>
+	<field name="CONTRACT_SERIAL" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="COMPETENT_DEPARTMET" class="java.lang.String"/>
+	<field name="ADDRESS" class="java.lang.String"/>
+	<variable name="index" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{index}.valueOf( 1 )]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="1100" height="51" uuid="e3fcff09-2a35-4967-ab5f-f576188a0b09"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="28" isBold="true"/>
+				</textElement>
+				<text><![CDATA[租赁物资在租分布表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="44" height="45" backcolor="#99CCFF" uuid="165e730d-e296-4cea-a2b0-0fde86e7179c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="144" y="0" width="100" height="45" backcolor="#99CCFF" uuid="d0a8a164-19ea-493b-b484-56a2466c9873"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[规格]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="244" y="0" width="100" height="45" backcolor="#99CCFF" uuid="044f7cf9-17cf-40bf-b787-0cf7c0e075c7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="344" y="0" width="100" height="45" backcolor="#99CCFF" uuid="745544e7-b91d-408a-b3f1-5107bc3499a4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="44" y="0" width="100" height="45" backcolor="#99CCFF" uuid="2b72ed12-493d-42f7-bc6e-d41fffaee0e4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[品名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="444" y="0" width="100" height="45" backcolor="#99CCFF" uuid="65049c1f-8d9a-42c2-bc07-dd46dc6f6672"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[辅助单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="644" y="0" width="100" height="45" backcolor="#99CCFF" uuid="a829dcc8-6979-4aca-96c5-55c9a5c58073"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[合同编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="744" y="0" width="250" height="45" backcolor="#99CCFF" uuid="f9279d40-b16e-452c-b09f-44640fa9efbc"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[项目名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="994" y="0" width="100" height="45" backcolor="#99CCFF" uuid="301ed42f-c90c-49c4-8f17-0e5052d3c88d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[项目主管部门]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1094" y="0" width="100" height="45" backcolor="#99CCFF" uuid="09c1b632-d62e-48d5-b318-738c2169e8d9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[项目地址]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="544" y="0" width="100" height="45" backcolor="#99CCFF" uuid="a2af3f4d-6456-406b-bfff-3ee3a1e8770f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Serif" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[辅助数量]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="144" y="0" width="100" height="30" uuid="c42dbb0c-1748-4d1c-b260-816a15a3fb3c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SPECIFICATIONS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="44" y="0" width="100" height="30" uuid="961ae96f-54bd-4873-9112-f77e83f5ccb0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{COMMODITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="0" width="100" height="30" uuid="5d9f70f5-eb54-4e79-8abe-b072f25ca1e2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="544" y="0" width="100" height="30" uuid="bd99aa0f-d7fe-444a-afa6-c226e0298206"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SUPPLEMENT_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="0" width="100" height="30" uuid="a9f203a7-174d-4fc6-a65e-7e0787df3637"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{SUPPLEMENT_UNIT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="644" y="0" width="100" height="30" uuid="ee7fa423-f675-42a7-a0e5-bb96e77b58b4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CONTRACT_SERIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="744" y="0" width="250" height="30" uuid="0f6c70d6-fe1c-4d97-82d9-2f55c983d5cf"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PROJECT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="994" y="0" width="100" height="30" uuid="b9fa6fdc-fba4-4f2b-9995-2ace7d508e4d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{COMPETENT_DEPARTMET}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1094" y="0" width="100" height="30" uuid="12faaf60-64b1-4a3e-b7d6-1fb59fe8e9a3"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="244" y="0" width="100" height="30" uuid="87ba6ca4-055b-41bc-8e5e-1d95abc32fb4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{UNIT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="44" height="30" uuid="5c3aa72e-55f1-47e0-b831-3ab0cc2979c8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{index}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractMaterials" table="T_CONTRACT_MATERIALS" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="contractmaId" column="CONTRACTMA_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractNumber" type="java.lang.String" column="CONTRACT_NUMBER" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="contractTheme" type="java.lang.String" column="CONTRACT_THEME" />
+		<property name="contractCategory" type="java.lang.String" column="CONTRACT_CATEGORY" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="paEnt" type="java.lang.Long" column="PA_ENT" />
+		<property name="paModule" type="java.lang.String" column="PA_MODULE" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="paEntLinkMan" type="java.lang.String" column="PA_ENT_LINK_MAN" />
+		<property name="pbEnt" type="java.lang.Long" column="PB_ENT" />
+		<property name="pbModule" type="java.lang.String" column="PB_MODULE" />
+		<property name="pbEntName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="pbEntLinkMan" type="java.lang.String" column="PB_ENT_LINK_MAN" />
+		<property name="sigingTime" type="java.lang.String" column="SIGNING_TIME" />
+		<property name="tranportCaculateType" type="java.lang.String" column="TRANPORT_CACULATE_TYPE" />
+		<property name="taxCaculateType" type="java.lang.String" column="TAX_CACULATE_TYPE" />
+		
+		<property name="projectType" type="java.lang.String" column="PROJECT_TYPE" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="buildingArea" type="java.lang.String" column="BUILDING_AREA" />
+		<property name="province" type="java.lang.String" column="PROVINCE" />
+		<property name="city" type="java.lang.String" column="CITY" />
+		<property name="county" type="java.lang.String" column="COUNTY" />
+		<property name="street" type="java.lang.String" column="STREET" />
+		<property name="taxRate" type="java.math.BigDecimal" column="TAX_RATE" />
+		<property name="rentalRate" type="java.math.BigDecimal" column="RENTAL_RATE" />
+		<property name="freight" type="java.math.BigDecimal" column="FREIGHT" />
+		<property name="contractAmount" type="java.math.BigDecimal" column="CONTRACT_AMOUNT" />
+		<property name="preReceivable" type="java.math.BigDecimal" column="PRE_RECEIVABLE" />
+		<property name="finSettingAmount" type="java.math.BigDecimal" column="FIN_SETTLE_AMOUNT" />
+		<property name="finReceivableAmount" type="java.math.BigDecimal" column="FIN_RECEIVABLE_AMOUNT" />
+		<property name="validationAmount" type="java.math.BigDecimal" column="VALIDATION_AMOUNT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="competentDepartment" type="java.lang.String" column="COMPETENT_DEPARTMET" />
+		<property name="grantedUserId" type="java.lang.Long" column="USER_ID" />
+		<set name="materialsDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="CONTRACTMA_ID" />
+			<one-to-many class="com.knight.emms.model.MaterialsDetail" />
+		</set>
+		<set name="priceSettingSet" cascade="all" inverse="false" lazy="true">
+			<key column="CONTRACTMA_ID" />
+			<one-to-many class="com.knight.emms.model.PriceSetting" />
+		</set>
+		<set name="matDamageSet" lazy="true" cascade="all" inverse="false">
+			<key column="CONTRACTMA_ID"></key>
+			<one-to-many class="com.knight.emms.model.MatDamage" />
+		</set>
+		<set name="costHandleSet" lazy="true" cascade="all" inverse="false">
+			<key column="CONTRACTMA_ID"></key>
+			<one-to-many class="com.knight.emms.model.CostHandle" />
+		</set>
+		<set name="compensationScrapSet" lazy="true" cascade="all" inverse="false">
+			<key column="CONTRACTMA_ID"></key>
+			<one-to-many class="com.knight.emms.model.CompensationScrap" />
+		</set>
+	</class>
+</hibernate-mapping>

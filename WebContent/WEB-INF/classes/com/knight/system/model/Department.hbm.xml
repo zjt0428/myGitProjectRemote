@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.Department" table="DEPARTMENT">
+		<id name="depId" column="DEP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="depSerial" column="DEP_SERIAL" type="java.lang.String" not-null="true" />
+		<property name="depName" column="DEP_NAME" type="java.lang.String" not-null="true" />
+		<property name="depDesc" column="DEP_DESC" type="java.lang.String" />
+		<property name="depLevel" column="DEP_LEVEL" type="java.lang.Integer" />
+		<property name="depType" column="DEP_TYPE" type="java.lang.String" />
+		<property name="parentId" column="PARENT_ID" type="java.lang.Long" />
+		<property name="path" column="PATH" type="java.lang.String" />
+		<property name="delFlag" type="java.lang.Short" column="DELFLAG" />
+		<property name="sortField" type="java.lang.Integer" column="SORT_FIELD" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ComponDiary" table="T_COMPONENT_DIARY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="componDiaryId" column="COMPON_DIARY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />
+		<property name="projectComponId" type="java.lang.Long" column="PROJECT_COMPON_ID" />
+		<property name="componSerial" type="java.lang.String" column="COMPON_SERIAL" />
+		<property name="componCategory" type="java.lang.String" column="COMPON_CATEGORY" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="componGeneric" type="java.lang.String" column="COMPON_GENERIC" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="rfidCode" type="java.lang.String" column="RFID_CODE" />
+		<property name="consumeFlag" type="java.lang.String" column="CONSUME_FLAG" />
+		<property name="parachuteFlag" type="java.lang.String" column="PARACHUTE_FLAG" />
+		<property name="knotFlag" type="java.lang.String" column="KNOT_FLAG" />
+		<property name="wallAttacheFlag" type="java.lang.String" column="WALL_ATTACHE_FLAG" />
+		<property name="brachium" type="java.math.BigDecimal" column="BRACHIUM" />
+		<property name="knotMetric" type="java.math.BigDecimal" column="KNOT_METRIC" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" formula="(SELECT E.EXW_SERIAL FROM T_EQUIPMENT E WHERE E.EQUIP_ID = (SELECT C.EQUIP_ID FROM T_COMPONENT C WHERE C.COMPON_ID = COMPON_ID))" />
+		<property name="storeName" type="java.lang.String" formula="(SELECT SH.STORE_NAME FROM T_STORE_HOUSE SH WHERE SH.STORE_ID = STORE_ID)" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="endDate" type="java.util.Date" column="END_DATE" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="dispatchUserName" type="java.lang.String" column="DISPATCH_USER_NAME" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="flowId" type="java.lang.Long" column="FLOW_ID" />
+		<property name="businessId" type="java.lang.Long" column="BUSINESS_ID" />
+		<property name="businessSerial" type="java.lang.String" column="BUSINESS_SERIAL" />
+		<property name="businessTheme" type="java.lang.String" column="BUSINESS_THEME" />
+		<property name="businessModule" type="java.lang.String" column="BUSINESS_MODULE" />
+		<property name="businessComponId" type="java.lang.Long" column="BUSINESS_COMPON_ID" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="warehouseCounts" type="java.lang.Integer" column="WAREHOUSE_COUNTS" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="backsportCounts" type="java.lang.Integer" column="BACKSPORT_COUNTS" />
+		<property name="backsportStatus" type="java.lang.String" column="BACKSPORT_STATUS" />
+		<property name="active" type="java.lang.String" column="ACTIVE" />
+		<property name="jackingTeams" type="java.lang.String" column="JACKING_TEAMS" />
+		<property name="jackingPractiId" type="java.lang.Long" column="JACKING_PRACTI_ID" />
+		<property name="jackingPractiName" type="java.lang.String" column="JACKING_PRACTI_NAME" />
+		<property name="jackingDate" type="java.util.Date" column="JACKING_DATE" />
+		<property name="jackingStauts" type="java.lang.String" column="JACKING_STAUTS" />
+		<property name="jackingCounts" type="java.lang.Integer" column="JACKING_COUNTS" />
+		<property name="jackingAccountId" type="java.lang.Long" column="JACKING_ACCOUNT_ID" />
+		<property name="dismantleTeams" type="java.lang.String" column="DISMANTLE_TEAMS" />
+		<property name="dismantlePractiId" type="java.lang.Long" column="DISMANTLE_PRACTI_ID" />
+		<property name="dismantlePractiName" type="java.lang.String" column="DISMANTLE_PRACTI_NAME" />
+		<property name="dismantleDate" type="java.util.Date" column="DISMANTLE_DATE" />
+		<property name="dismantleCounts" type="java.lang.Integer" column="DISMANTLE_COUNTS" />
+		<property name="dismantleStauts" type="java.lang.String" column="DISMANTLE_STAUTS" />
+		<property name="dismantleAccountId" type="java.lang.Long" column="DISMANTLE_ACCOUNT_ID" />
+		<property name="jjStauts" type="java.lang.String" column="JJSTAUTS" /> 
+		<property name="jjUserName" type="java.lang.String" column="JJUSERNAME" />
+	</class>
+</hibernate-mapping>

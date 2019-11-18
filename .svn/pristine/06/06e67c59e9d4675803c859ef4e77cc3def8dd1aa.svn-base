@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+	<tlib-version>1.0</tlib-version>
+	<short-name>appsecurity</short-name>
+	<uri>http://www.knight.com/taglib/security</uri>
+	<description>Spring Security Authorization Tag Library</description>
+	<tag>
+		<name>appauthentication</name>
+		<tag-class>com.knight.core.taglibs.AppAuthenticationTag</tag-class>
+		<description>
+			A tag which outputs the body of the tag if the configured access expression
+			evaluates to true for the currently authenticated principal.
+		</description>
+		<attribute>
+			<name>property</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description>
+                Property of the Authentication object which should be output. Supports nested
+                properties. For example if the principal object is an instance of UserDetails,
+                the property "principal.username" will return the username. Alternatively, using
+                "name" will call getName method on the Authentication object directly.
+            </description>
+		</attribute>
+		<attribute>
+			<name>lable</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description></description>
+		</attribute>
+	</tag>
+</taglib>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DispatchEquip" table="T_DISPATCH_EQUIP" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="dispatchEquipId" column="DISPATCH_EQUIP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="endDate" type="java.util.Date" column="END_DATE" />
+		<property name="installHeight" type="java.math.BigDecimal" column="INSTALL_HEIGHT" />
+		<property name="workStatus" type="java.lang.String" column="WORK_STATUS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

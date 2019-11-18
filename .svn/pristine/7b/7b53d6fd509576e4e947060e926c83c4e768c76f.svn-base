@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Accident" table="T_ACCIDENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="accidentId" column="ACCIDENT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="accidentSerial" type="java.lang.String" column="ACCIDENT_SERIAL" />
+		<property name="accidentDate" type="java.lang.String" column="ACCIDENT_DATE" />
+		<property name="responsibleUnit" type="java.lang.String" column="RESPONSIBLE_UNIT" />
+		<property name="accidentCategory" type="java.lang.String" column="ACCIDENT_CATEGORY" />
+		<property name="accidentLevel" type="java.lang.String" column="ACCIDENT_LEVEL" />
+		<property name="injuries" type="java.lang.Integer" column="INJURIES" />
+		<property name="deaths" type="java.lang.Integer" column="DEATHS" />
+		<property name="responsible" type="java.lang.String" column="RESPONSIBLE" />
+		<property name="economicLosses" type="java.lang.String" column="ECONOMIC_LOSSES" />
+		<property name="accidentDesc" type="java.lang.String" column="ACCIDENT_DESC" />
+		<property name="accidentReason" type="java.lang.String" column="ACCIDENT_REASON" />
+		<property name="accidentResult" type="java.lang.String" column="ACCIDENT_RESULT" />
+		<property name="equipRepairDesc" type="java.lang.String" column="EQUIP_REPAIR_DESC" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="accidentReportId" type="java.lang.Long" column="ACCIDENT_REPORT_ID" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+	</class>
+</hibernate-mapping>

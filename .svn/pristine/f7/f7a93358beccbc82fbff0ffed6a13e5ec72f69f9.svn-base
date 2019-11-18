@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>结算单</title>
+
+
+<style media="print">
+.Noprint {
+	display: none;
+	
+}
+.PageNext {
+	page-break-after: always;
+}
+</style>
+
+
+<style type="text/css">
+<!--
+body,td,th {
+	font-size: 16px;
+}
+
+.main_detail_0523{width:900px; margin:0 auto; height:1050px; font-size:16px;}
+.mar_15{margin-top:15px; margin-right:20px; margin-bottom:5px; width:660px;text-align:right;}
+
+/*列表页表格0523*/
+.listtable0523{
+	width:100%;	
+	font-size:16px;	
+	border: 1px solid #000000; 
+	border-collapse: collapse;}
+
+	
+.listtable0523 td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	line-height:24px;
+	text-align:center;
+	}	
+
+
+-->
+</style>
+
+
+</head>
+
+<body>
+<center class="Noprint">
+	<p align="right" class="mar_15">
+		<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+		<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+	</p>
+</center>
+<center>
+<div class="main_detail_0523">
+<p style="text-align:center;"><span style="font-size:20px; font-weight:bold;">XXXXX有限责任公司 租金结算清单</span></p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="40" align="left"><strong>工程名称：</strong></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="listtable0523">
+  <tr>
+    <td rowspan="2" bgcolor="#CCCCCC" width="50">楼号</td>
+    <td rowspan="2" bgcolor="#CCCCCC" width="130">品名</td>
+    <td rowspan="2" bgcolor="#CCCCCC" width="100">规格</td>
+    <td colspan="2" bgcolor="#CCCCCC">本次计费时间</td>
+    <td rowspan="2" bgcolor="#CCCCCC" width="60">计费<br />天数</td>
+    <td rowspan="2" bgcolor="#CCCCCC" width="60">租用<br />数量</td>
+    <td rowspan="2" bgcolor="#CCCCCC" width="60">单价 <br />（元）</td>
+    <td rowspan="2" bgcolor="#CCCCCC" width="80">扣除租金</td>
+    <td rowspan="2" bgcolor="#CCCCCC" width="100">租金累计<br />（元）</td>
+    <td rowspan="2" bgcolor="#CCCCCC">备注</td>
+  </tr>
+  <tr>
+    <td bgcolor="#CCCCCC" width="80">开始日</td>
+    <td bgcolor="#CCCCCC" width="80">截止日</td>
+    </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp; </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="36" colspan="8" style="text-align:right;">小计：</td>
+    <td>&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+   <td height="36" colspan="8" style="text-align:right;">小计：</td>
+    <td>&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+   <td height="36" colspan="8" style="text-align:right;">小计：</td>
+    <td>&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="36" colspan="8" style="text-align:right;"><strong>本次应收总计：</strong></td>
+    <td>&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="36" colspan="11" style="text-align:left;">&nbsp;租费金额（大写）</td>
+    </tr>
+  <tr>
+    <td height="36">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="80" colspan="2">承租单位</td>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">承租单位<br /> 签字</td>
+    <td colspan="3">&nbsp;</td>
+    </tr>
+</table>
+
+
+
+
+
+
+</div>
+</center>
+</body>
+</html>

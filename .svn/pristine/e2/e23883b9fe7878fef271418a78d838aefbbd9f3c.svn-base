@@ -1,0 +1,257 @@
+@charset "UTF-8";
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    font-family: 'Microsoft YaHei',Arial,sans-serif;
+}
+
+.zicon-sprite, .zicon-contact, .zicon-help, .zicon-home, .zicon-memo, .zicon-online, .zicon-quit, .zicon-set {
+    background: url('../img/index/zicon.png') no-repeat;
+}
+
+.zicon-contact {
+    background-position: 0 0;
+    height: 24px;
+    width: 24px;
+}
+
+.zicon-help {
+    background-position: 0 -24px;
+    height: 22px;
+    width: 22px;
+}
+
+.zicon-home {
+    background-position: 0 -46px;
+    height: 20px;
+    width: 22px;
+}
+
+.zicon-memo {
+    background-position: 0 -66px;
+    height: 20px;
+    width: 20px;
+}
+
+.zicon-online {
+    background-position: 0 -86px;
+    height: 20px;
+    width: 19px;
+}
+
+.zicon-quit {
+    background-position: 0 -106px;
+    height: 21px;
+    width: 20px;
+}
+
+.zicon-set {
+    background-position: 0 -127px;
+    height: 20px;
+    width: 22px;
+}
+
+.header{
+    height: 76px;
+    background: #0174e6;
+    color: #fff;
+    line-height: 76px;
+}
+
+.header .name{
+    float: left;
+    margin-left: 10px;
+    font-size: 24px;
+    height: 80px;
+}
+
+.header .userMsg{
+    float: right;
+    margin-right: 20px;
+    padding: 13px 20px;
+    width: 140px;
+    height: 50px;
+    line-height: 50px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.header .userMsg:hover{
+    background: #2b7ff0;
+}
+
+.header .imgBox{
+    float: left;
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border: solid 2px #fff;
+    width: 46px;
+    height: 46px;
+    overflow: hidden;
+}
+
+.header .imgBox img{
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.header .userName{
+    float: left;
+    margin-left: 8px;
+    width: 82px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.header .nav{
+    float: right;
+}
+
+.header .twig{
+    float: left;
+    padding: 0 20px;
+    height: 76px;
+    line-height: 76px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.header .twig:hover{
+    background: #2b7ff0;
+}
+
+.header .icon{
+    float: left;
+    position: relative;
+    top: 28px;
+}
+
+.header .zicon-home{
+    top: 27px;
+}
+
+.header .zicon-help{
+    top: 27px;
+}
+
+.header .zicon-contact{
+    top: 25px;
+}
+
+.header .text{
+    margin-left: 9px;
+    float: left;
+}
+
+.footer{
+    height: 58px;
+    background: #56c0ff;
+    line-height: 58px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.footer .nav{
+    float: left;
+}
+
+.footer .twig{
+    float: left;
+    padding: 0 40px;
+    color: #fff;
+}
+
+.footer .twig:hover{
+    background: #2b7ff0;
+}
+
+.footer .icon{
+    position: relative;
+    top: 20px;
+    float: left;
+}
+
+.footer .text{
+    margin-left: 8px;
+    float: left;
+}
+
+.footer .msg{
+    float: right;
+    margin-right: 20px;
+}
+
+.footer .link{
+    color: #fffc00;
+}
+
+.footer .link:hover{
+    text-decoration: underline;
+}
+.bureau{
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+.mapCue{
+    width: 120px;
+    height: 130px;
+   	display : none;
+   	background : white;
+   	border-radius: 4px;
+	right : 0;
+	top : 70px;
+	z-index :99999999;
+    -moz-box-shadow:1px 1px 8px  #333333; 
+    -webkit-box-shadow:1px 1px 8px #333333; 
+    box-shadow:1px 1px 8px #333333;
+    position: absolute;
+ }
+.myMap{
+      width: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+ }
+ .myMap{
+     width: 100%;
+ }
+ .myMap>div{
+     width: 100%;
+     font-size: 15px;
+     text-align: left;
+     font-family: "微软雅黑";
+     text-indent:10px;
+     padding: 7px 0;
+     color:#666;
+     /*padding: 10px 0;*/
+    border-bottom: 1px solid #A8A8A8
+}
+.cue:hover{
+    background: #eee;
+}
+.cue{
+    
+}
+.myMap>div>div:hover{
+    background: #eee;
+}
+.myMap>div>div{
+	width:100%;
+    font-size: 14px;
+    font-size: 15px;
+    text-align: left;
+    text-indent:10px;
+   
+    color:#666;
+}
+.myMap a{
+	width:100%;
+	display:block;
+	padding:7px 0;
+	
+/* 	background:red; */
+	color:#666! important;
+}

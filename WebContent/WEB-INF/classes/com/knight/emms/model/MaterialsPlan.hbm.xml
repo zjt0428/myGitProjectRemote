@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MaterialsPlan" table="T_MATERIALS_PLAN" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="materialsPlanId" column="MATERIALSPLAN_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="documentSerial" type="java.lang.String" column="DOCUMENT_SERIAL" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="reportingTime" type="java.lang.String" column="REPORTING_TIME" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="projectType" type="java.lang.String" column="PROJECT_TYPE" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="planType" type="java.lang.String" column="PLAN_TYPE" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="workFlow" type="java.lang.String" column="WORK_FLOW" />
+		<property name="title" type="java.lang.String" column="TITLE" />
+		<property name="approver" type="java.lang.String" column="APPROVER" />
+		<property name="approvalDate" type="java.lang.String" column="APPROVAL_DATE" />
+		<property name="confirmingPerson" type="java.lang.String" column="CONFIRMING_PERSON" />
+		<property name="confirmationDate" type="java.lang.String" column="CONFIRMATION_DATE" />
+		<property name="engineeringSchedule" type="java.lang.String" column="ENGINEERING_SCHEDULE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<set name="demandDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="MATERIALSPLAN_ID" />
+			<one-to-many class="com.knight.emms.model.DemandDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

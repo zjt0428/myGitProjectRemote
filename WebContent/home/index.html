@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主界面</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/emms/js/jquery/jquery.min.js"></script>
+<style type="text/css"> 
+li{cursor:pointer;}
+a {
+  cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+ 
+<div class="zt_main_box">
+  <div class="zt_main">
+  <!--左边开始-->
+<div class="zt_main_left">
+  <div class="zt_zl_box">
+
+	  <div class="zt_zl_title">
+	   <div class="zt_zl_title_word">经营总览</div>
+	  </div>
+  <!--上面六个开始-->  
+  <div class="zt_six_box">
+   <ul style="float:left; width:100%;">
+   	  <li onclick="getTab('businessForChek')"style="margin-right:0px;"><div class="zt_pto"><img src="images/a07.png" /></div><div id="indexWarn_businessForChek" class="zt_numberBox_red"></div></li>
+	  <li onclick="getTab('useedEquip')" ><div class="zt_pto"><img src="images/a01.png" /></div><div id="indexWarn_useedEquip" class="zt_numberBox_red"></div></li>
+	  <li onclick="getTab('repairOut')" ><div class="zt_pto"><img src="images/a02.png" /></div><div id="indexWarn_repairOut" class="zt_numberBox_red"></div></li>
+	  <li onclick="getTab('pollOut')" ><div class="zt_pto"><img src="images/a03.png" /></div><div id="indexWarn_pollOut" class="zt_numberBox_red"></div></li>
+	  <li onclick="getTab('stocks')" ><div class="zt_pto"><img src="images/a04.png" /></div><div id="indexWarn_stocks" class="zt_numberBox_red"></div></li>
+	  <li onclick="getTab('addDrop')" ><div class="zt_pto"><img src="images/a05.png" /></div><div id="indexWarn_addDrop" class="zt_numberBox_red"></div></li>
+	  <li onclick="getTab('remote')"><div class="zt_pto"><img src="images/a06.png" /></div><div id="indexWarn_remote" class="zt_numberBox_red"></div></li>
+   </ul>  
+  </div> 
+  <!--上面六个结束-->
+   <!--总菜单开始--> 
+  <div class="zt_nav_box">
+ <ul style="float:left; width:100%;">
+    <li onclick="getTab('leaveEquip')" style="margin-right:40px;"><div class="zt_pto"><img src="images/nav01.png" /></div><div class="zt_numberBox_red" id="indexWarn_leaveEquip"></div></li>
+		<li onclick="getTab('borrowEquip')" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav01_a.png" /></div><div id="indexWarn_borrowEquip" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('cancelEquip')" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav01_b.png" /></div><div id="indexWarn_cancelEquip" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('uselessEquip')" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav01_c.png" /></div><div id="indexWarn_uselessEquip" class="zt_numberBox_red_small"></div></li>
+	<li onclick="getTab('contract')" style="margin-right:40px;"><div class="zt_pto"><img src="images/nav02.png" /></div><div id="indexWarn_contract" class="zt_numberBox_red"></div></li>
+		<li onclick="getTab('stockOut')" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav02_a.png" /></div><div id="indexWarn_stockOut" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('logisOut')" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav02_b.png" /></div><div id="indexWarn_logisOut" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('logisSign')" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav02_c.png" /></div><div id="indexWarn_logisSign" class="zt_numberBox_red_small"></div></li>		 
+	<li onclick="getTab('installForCheck')" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav03.png" /></div><div id="indexWarn_installForCheck" class="zt_numberBox_red"></div></li>
+ 	<li onclick="getTab('cutTo')" class="zt_mar_top28" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav06.png" /></div><div id="indexWarn_cutTo" class="zt_numberBox_red"></div></li>
+	    <li onclick="getTab('putExcep')" class="zt_mar_top28"><div class="zt_pto"><img src="images/nav06_a.png" /></div><div id="indexWarn_putExcep" class="zt_numberBox_red_small"></div></li>
+		<li class="zt_mar_top28">&nbsp;</li>
+		<li class="zt_mar_top28">&nbsp;</li>
+		<li class="zt_mar_top28">&nbsp;</li>
+		<li class="zt_mar_top28">&nbsp;</li>
+		<li class="zt_mar_top28">&nbsp;</li>
+		<li class="zt_mar_top28">&nbsp;</li>
+		<li class="zt_mar_top28">&nbsp;</li>
+		<li class="zt_mar_top28">&nbsp;</li>
+	<li onclick="getTab('demount')" class="zt_mar_top26" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav05.png" /></div><div id="indexWarn_demount" class="zt_numberBox_red"></div></li>
+	    <li onclick="getTab('equipForQuip')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav04_e.png" /></div><div id="indexWarn_equipForQuip" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('reform')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav04_d.png" /></div><div id="indexWarn_reform" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('equipForKeep')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav04_c.png" /></div><div id="indexWarn_equipForKeep" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('equipForPoll')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav04_b.png" /></div><div id="indexWarn_equipForPoll" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('equipForRepair')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav04_a.png" /></div><div id="indexWarn_equipForRepair" class="zt_numberBox_red_small"></div></li>
+	<li onclick="getTab('equipForUse')" class="zt_mar_top26" style="margin-right:30px;"><div class="zt_pto"><img src="images/nav04.png" /></div><div id="indexWarn_equipForUse" class="zt_numberBox_red"></div></li>
+	    <li onclick="getTab('equipForAccept')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav03_c.png" /></div><div id="indexWarn_equipForAccept" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('equipForDetect')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav03_b.png" /></div><div id="indexWarn_equipForDetect" class="zt_numberBox_red_small"></div></li>
+		<li onclick="getTab('installForChecked')" class="zt_mar_top26"><div class="zt_pto"><img src="images/nav03_a.png" /></div><div id="indexWarn_installForChecked" class="zt_numberBox_red_small"></div></li>
+ </ul> 
+  </div>
+  <!--总菜单结束-->
+  </div>
+  
+  
+ <!--个人业务提醒开始-->
+  <div class="zt_tix_box">
+     <div class="zt_zl_title">
+	   <div class="zt_tix_title_word">个人业务提醒</div><div id="indexWarn_personTotal" class="zt_tix_numberBox_red">0</div>
+	   <div class="zt_tix_title_right"></div>
+	  </div>
+	  
+	  <div class="zt_tix_deitail" style="overflow-y:auto">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" id="indexWarn_personList">
+
+      </table>
+	  </div>
+	  
+  </div>
+ <!--个人业务提醒结束-->
+  
+  
+</div>
+  <!--左边结束-->
+  
+  <!--右边开始-->
+  <div class="zt_main_right">
+  <div class="zt_message_box">
+   <div class="zt_message_detail">
+    当前总在用设备&nbsp;<font id="indexWarn_useTotal" class="zt_word_red"></font>&nbsp;台<br />
+	本月新增在用设备&nbsp;<font id="indexWarn_useMonthAdd" class="zt_word_red"></font>&nbsp; 台<br />
+	当前总闲置设备&nbsp;<font  id="indexWarn_freeTotal" class="zt_word_red"></font>&nbsp;台<br />
+	本月新增闲置设备&nbsp;<font id="indexWarn_freeMonthAdd" class="zt_word_red"></font>&nbsp;台<br />
+   </div> 
+  </div>
+  
+  <div class="zt_daiban_box">
+    <div class="zt_zl_title">
+	   <div class="zt_tix_title_word">待办事项</div>
+	   <div class="zt_tix_title_right"><a onclick="show()" target="_top" class="zt_gray">更多></a></div>
+	</div>
+	<div class="zt_daiban_detail">
+    <ul>
+	 <li>
+	   <div class="zt_pto"><a onclick="show()" target="_top"><img src="images/db01.png" border="0" /></a></div>
+	   <div id="maiteQulListCount" class="zt_daiban_numberBox_red">0</div>
+	 </li>
+	 <li style="margin-right:0px;">
+	   <div class="zt_pto"><a onclick="show()" target="_top"><img src="images/db02.png" border="0" /></a></div>
+	   <div id="noticeCount"  class="zt_daiban_numberBox_red">0</div>
+	 </li>
+	 <li>
+	   <div class="zt_pto"><a onclick="show()" target="_top"><img src="images/db03.png" /></a></div>
+	   <div id="perReminListCount"  class="zt_daiban_numberBox_red">0</div>
+	 </li>
+	 <li style="margin-right:0px;">
+	   <div class="zt_pto"><a onclick="show()" target="_top"><img src="images/db04.png" /></a></div>
+	   <div id="enterQulListCount"  class="zt_daiban_numberBox_red">0</div>
+	 </li>
+	 <li>
+	   <div class="zt_pto"><a onclick="show()" target="_top"><img src="images/db05.png" /></a></div>
+	   <div id="postQulListCount"  class="zt_daiban_numberBox_red">0</div>
+	 </li>
+	 <li style="margin-right:0px;">
+	  <div class="zt_pto"><a onclick="show()" target="_top"><img src="images/db06.png" /></a></div>
+      <div id="policyQulListCount"  class="zt_daiban_numberBox_red">0</div>
+	 </li>
+	 
+
+	</ul>
+    </div>
+  </div>
+ 
+  </div>
+  <!--右边结束-->
+  </div>
+</div>
+<script type="text/javascript">
+	$(function () {
+		//首页提醒
+        $.post("/emms/form/getIndexWarn.do", {}, function(res){
+        	var obj =JSON.parse(res); 
+        	if(obj.success){
+        		var cur=obj.info.result;
+        		$("#indexWarn_leaveEquip").empty().append(cur.leaveEquip);
+        		$("#indexWarn_borrowEquip").empty().append(cur.borrowEquip);
+        		$("#indexWarn_cancelEquip").empty().append(cur.cancelEquip);
+        		$("#indexWarn_uselessEquip").empty().append(cur.uselessEquip);
+        		$("#indexWarn_contract").empty().append(cur.contract);
+        		$("#indexWarn_stockOut").empty().append(cur.stockOut);
+        		$("#indexWarn_logisOut").empty().append(cur.logisOut);
+        		$("#indexWarn_logisSign").empty().append(cur.logisSign);
+        		$("#indexWarn_installForCheck").empty().append(cur.installForCheck);
+        		$("#indexWarn_installForChecked").empty().append(cur.installForChecked);
+        		$("#indexWarn_equipForDetect").empty().append(cur.equipForDetect);
+        		$("#indexWarn_equipForAccept").empty().append(cur.equipForAccept);
+        		$("#indexWarn_equipForUse").empty().append(cur.equipForUse);
+        		$("#indexWarn_equipForRepair").empty().append(cur.equipForRepair);
+        		$("#indexWarn_equipForPoll").empty().append(cur.equipForPoll);
+        		$("#indexWarn_equipForKeep").empty().append(cur.equipForKeep);
+        		$("#indexWarn_reform").empty().append(cur.reform);
+        		$("#indexWarn_equipForQuip").empty().append(cur.equipForQuip);
+        		$("#indexWarn_demount").empty().append(cur.demount);
+        		$("#indexWarn_cutTo").empty().append(cur.cutTo);
+        		$("#indexWarn_putExcep").empty().append(cur.putExcep);
+        		$("#indexWarn_useedEquip").empty().append(cur.useedEquip);
+        		$("#indexWarn_repairOut").empty().append(cur.repairOut);
+        		$("#indexWarn_pollOut").empty().append(cur.pollOut);
+        		$("#indexWarn_stocks").empty().append(cur.stocks);
+        		$("#indexWarn_addDrop").empty().append(cur.addDrop);
+        		$("#indexWarn_remote").empty().append(cur.remote);
+        		$("#indexWarn_businessForChek").empty().append(cur.businessForChek);
+        		$("#indexWarn_useTotal").empty().append(cur.useTotal);
+        		$("#indexWarn_useMonthAdd").empty().append(cur.useMonthAdd);
+        		$("#indexWarn_freeTotal").empty().append(cur.freeTotal);
+        		$("#indexWarn_freeMonthAdd").empty().append(cur.freeMonthAdd);
+        		
+        		$("#maiteQulListCount").empty().append(cur.maiteQulListCount);
+        		$("#perReminListCount").empty().append(cur.perReminListCount);
+        		$("#enterQulListCount").empty().append(cur.enterQulListCount);
+        		$("#postQulListCount").empty().append(cur.postQulListCount);
+        		$("#policyQulListCount").empty().append(cur.policyQulListCount);
+
+
+        	}           
+        })
+        //个人消息
+        $.post("/emms/form/listBusinessMessage.do",{Q_receiveName_S_LK:parent.curUserInfo.fullname,limit:200,sort:"messageId",dir:"DESC"},function(res){
+			var obj =eval('(' + res + ')');
+			var html="";
+			if(obj.success){
+			$("#indexWarn_personTotal").empty().append(obj.totalCounts);
+			for(var i=0;i<obj.totalCounts;i++){
+				var cur=obj.result[i];
+				var sor=i+1;
+				var v1="<tr><td>"+sor+"、"+cur.message+"</td></tr>"
+				html=html+v1;
+			}
+			$("#indexWarn_personList").empty().append(html);		
+			}
+        })
+	});
+function getTab(key){
+	if(key=='leaveEquip'){
+		parent.App.clickTopTab("EquipmentListView", {params:{Q_status_S_EQ :'1',fill_status_name :'闲置'}});
+	}else if(key=='borrowEquip'){
+		parent.App.clickTopTab("EquipmentListView", {params:{Q_status_S_EQ :'2',fill_status_name :'借用'}});
+	}else if(key=='cancelEquip'){
+		parent.App.clickTopTab("EquipmentListView", {params:{Q_status_S_EQ :'9',fill_status_name :'注销'}});
+	}else if(key=='uselessEquip'){
+		parent.App.clickTopTab("EquipmentListView", {params:{Q_status_S_EQ :'6',fill_status_name :'报废'}});
+	}else if(key=='contract'){
+		parent.App.clickTopTab("ContractLeaseListView", {params:{Q_applyforState_S_EQ :'3',fill_status_name :'计划中'}});
+	}else if(key=='stockOut'){
+		parent.App.clickTopTab("EquipmentListView", {params:{Q_businessStatus_S_EQ :'2',fill_status_name :'已出库'}});
+	}else if(key=='logisOut'){
+		parent.App.clickTopTab("LogisticsTransportListView", {params:{Q_status_S_EQ :'0',fill_status_name :'在途中'}});
+	}else if(key=='logisSign'){
+		parent.App.clickTopTab("LogisticsTransportListView", {params:{Q_status_S_EQ :'1',fill_status_name :'已签收'}});
+	}else if(key=='installForCheck'){
+		parent.App.clickTopTab("EquipInstallListView", {params:{Q_applyforState_S_EQ :'2',fill_status_name :'安装'}});
+	}else if(key=='installForChecked'){
+		parent.App.clickTopTab("EquipInstallListView", {params:{Q_applyforState_S_EQ :'3',fill_status_name :'待启用'}});
+	}else if(key=='equipForDetect'){
+		parent.App.clickTopTab("EquipDetectListView", {params:{fill_status_name :'检测'}});
+	}else if(key=='equipForAccept'){
+		parent.App.clickTopTab("EquipVerifyListView", {params:{fill_status_name :'验收'}});
+	}else if(key=='equipForUse'){
+		parent.App.clickTopTab("EquipActivateListView", {params:{Q_effective_S_EQ :'1',fill_status_name :'使用中'}});
+	}else if(key=='equipForRepair'){
+		parent.App.clickTopTab("EquipRepairListView", {params:{Q_status_S_EQ :'0',fill_status_name :'待维修'}});
+	}else if(key=='equipForPoll'){
+		parent.App.clickTopTab("EquipInspectEmployListView", {params:{Q_status_S_EQ :'0',fill_status_name :'待巡检'}});
+	}else if(key=='equipForKeep'){
+		parent.App.clickTopTab("EquipMaintEmployListView", {params:{Q_status_S_EQ :'0',fill_status_name :'待保养'}});
+	}else if(key=='reform'){
+		parent.App.clickTopTab("EquipInspectEmployListView", {params:{Q_inspectResult_S_EQ :'1',fill_status_name :'待整改'}});
+	}else if(key=='equipForQuip'){
+		parent.App.clickTopTab("EquipBlockupListView", {params:{Q_effective_S_EQ :'1',fill_status_name :'报停'}});
+	}else if(key=='demount'){
+		parent.App.clickTopTab("EquipDismantleListView", {params:{Q_applyforState_S_EQ :'3',fill_status_name :'拆卸'}});
+	}else if(key=='cutTo'){
+		parent.App.clickTopTab("EquipWarehouseListView", {params:{Q_applyforState_S_EQ :'2',fill_status_name :'转场维保'}});
+	}else if(key=='putExcep'){
+		parent.App.clickTopTab("EquipWarehouseAbnormalListView", {params:{fill_status_name :'入库异常'}});
+	}else if(key=='useedEquip'){
+	//	parent.App.clickTopTab("EquipWarehouseAbnormalListView", {params:{fill_status_name :'在用设备分布'}});
+	}else if(key=='repairOut'){
+		parent.App.clickTopTab("EquipRepairListView", {params:{fill_status_name :'待维修超期 '}});
+	}else if(key=='pollOut'){
+		parent.App.clickTopTab("EquipInspectEmployListView", {params:{fill_status_name :'待巡检超期'}});
+	}else if(key=='stocks'){
+		parent.App.clickTopTab("ComponetStocks", {params:{fill_status_name :'总资产及库存 '}});
+	}else if(key=='addDrop'){
+		parent.App.clickTopTab("KnotDispatch", {params:{fill_status_name :'加节/降节动态'}});
+	}else if(key=='remote'){
+	    window.open("http://www.rjtms.com/Map/MMap.aspx"); 
+	}else if(key=='businessForChek'){
+		show();
+	//	parent.App.clickTopTab("EquipWarehouseAbnormalListView", {params:{fill_status_name :'待审业务'}});
+	}
+	
+};
+function show(){
+	parent.App.clickTopTab("AppHomeShowView", {params:{fill_status_name :'待办事项'}});
+
+};
+</script>
+<!--尾部开始-->
+
+   
+ 
+</body>
+</html>

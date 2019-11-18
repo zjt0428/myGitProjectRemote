@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.knight.app.model.TAppEquipDispatchDetail" table="T_APP_DISPATCH_EQUIP_DETAIL" >
+        <id name="equipDeid" type="java.lang.Long">
+            <column name="EQUIP_DEID" />
+            <generator class="native" />
+        </id>
+        <property name="disid" type="java.lang.Long">
+            <column name="DISID" />
+        </property>
+        <property name="equipId" type="java.lang.Long" >
+            <column name="EQUIP_ID" />
+        </property>
+        <property name="equipName" type="java.lang.String" >
+            <column name="EQUIP_NAME"/>
+        </property>
+        <property name="equipSpec" type="java.lang.String">
+            <column name="EQUIP_SPECIFIC"/>
+        </property>
+        <property name="exwSerial" type="java.lang.String">
+            <column name="EXW_SERIAL"/>
+        </property>
+        <property name="recordId" type="java.lang.String">
+            <column name="RECORD_ID"/>
+        </property>
+        <property name="equipVender" type="java.lang.String">
+            <column name="EQUIP_VENDER"/>
+        </property>
+        <property name="disNum" type="java.lang.Long">
+            <column name="DIS_NUM" />
+        </property>
+        <property name="logisticNum" type="java.lang.Long">
+            <column name="LOGISTIC_NUM" />
+        </property>
+        <many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" insert="false" update="false" fetch="join" />
+    </class>
+</hibernate-mapping>

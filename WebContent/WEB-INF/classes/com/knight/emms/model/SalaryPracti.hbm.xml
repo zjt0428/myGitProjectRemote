@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SalaryPracti" table="T_SALARY_PRACTI" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="salaryPractiId" column="SALARY_PRACTI_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="salaryId" type="java.lang.Long" column="SALARY_ID" />
+		<property name="monthId" type="java.lang.Integer" column="MONTH_ID" />
+		<property name="salaryMonth" type="java.lang.String" column="SALARY_MONTH" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="practiTel" type="java.lang.String" column="PRACTI_TEL" />
+		<property name="baseSalary" type="java.math.BigDecimal" column="BASE_SALARY" />
+		<property name="station" type="java.math.BigDecimal" column="STATION" />
+		<property name="overtimeWork" type="java.math.BigDecimal" column="OVERTIME_WORK" />
+		<property name="mealFee" type="java.math.BigDecimal" column="MEAL_FEE" />
+		<property name="housingFund" type="java.math.BigDecimal" column="HOUSING_FUND" />
+		<property name="tax" type="java.math.BigDecimal" column="TAX" />
+		<property name="otherDeduct" type="java.math.BigDecimal" column="OTHER_DEDUCT" />
+		<property name="otherItems" type="java.math.BigDecimal" column="OTHER_ITEMS" />
+		<property name="reward" type="java.math.BigDecimal" column="REWARD" />
+		<property name="totalAmount" type="java.math.BigDecimal" column="TOTAL_AMOUNT" />
+		<property name="deductAmount" type="java.math.BigDecimal" column="DEDUCT_AMOUNT" />
+		<property name="finalAmount" type="java.math.BigDecimal" column="FINAL_AMOUNT" />
+		<property name="insurancePremium" type="java.math.BigDecimal" column="INSURANCE_PREMIUM" />
+		<property name="attendance" type="java.math.BigDecimal" column="ATTENDANCE" />
+		<property name="daibanFee" type="java.math.BigDecimal" column="DAIBAM_FEE" />
+	    <property name="dinnerPartyFee" type="java.math.BigDecimal" column="DINNER_PARTY_FEE" />
+		<property name="driveSubsidies" type="java.math.BigDecimal" column="DRIVE_SUBSIDIES" />
+		<property name="houseSubsidies" type="java.math.BigDecimal" column="HOUSE_SUBSIDIES" />
+		<property name="telephoneFee" type="java.math.BigDecimal" column="TELEPHONE_FEE" />
+		<property name="perAttendance" type="java.math.BigDecimal" column="PERATTENDANCE" />
+	    <property name="fine" type="java.math.BigDecimal" column="FINE" />
+		<property name="borrowFee" type="java.math.BigDecimal" column="BORROWFEE" />
+	    <property name="monthPay" type="java.math.BigDecimal" column="MONTHPAY" />
+		<property name="nonPayment" type="java.math.BigDecimal" column="NON_PAYMENT" />
+		<property name="accBalance" type="java.math.BigDecimal" column="ACC_BALANCE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

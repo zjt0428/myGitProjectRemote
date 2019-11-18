@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AllocationProject" table="T_ALLOCATION_PROJECT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="allocationId" column="ALLOCATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="allocationSerial" type="java.lang.String" column="ALLOCATION_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="makeDate" type="java.lang.String" column="MAKE_DATE" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="allocationDate" type="java.lang.String" column="ALLOCATION_DATE" />
+		<property name="allocationType" type="java.lang.String" column="ALLOCATION_TYPE" />
+		<property name="outContractId" type="java.lang.Long" column="OUT_CONTRACT_ID" />
+		<property name="outContractSerial" type="java.lang.String" column="OUT_CONTRACT_SERIAL" />
+		<property name="outProjectId" type="java.lang.Long" column="OUT_PROJECT_ID" />
+		<property name="outProjectName" type="java.lang.String" column="OUT_PROJECT_NAME" />
+		<property name="inContractId" type="java.lang.Long" column="IN_CONTRACT_ID" />
+		<property name="inContractSerial" type="java.lang.String" column="IN_CONTRACT_SERIAL" />
+		<property name="inProjectId" type="java.lang.Long" column="IN_PROJECT_ID" />
+		<property name="inProjectName" type="java.lang.String" column="IN_PROJECT_NAME" />
+		<property name="allocationTheme" type="java.lang.String" column="ALLOCATION_TMEME" />
+		<property name="vehicleNum" type="java.lang.String" column="VEHICLE_NUM" />
+		<property name="vehiclePerson" type="java.lang.String" column="VEHICLE_PERSON" />
+		<property name="outProjectConsignor" type="java.lang.String" column="OUT_PROJECT_CONSIGNOR" />
+		<property name="inProjectConsignee" type="java.lang.String" column="IN_PROJECT_CONSIGNEE" />
+		<property name="attachSerial" type="java.lang.String" column="ATTACH_SERIAL" />
+		<property name="auditorName" type="java.lang.String" column="AUDITOR_NAME" />
+		<property name="auditorDate" type="java.lang.String" column="AUDITOR_DATE" />
+		<!-- <property name="projectInitId" type="java.lang.Long" column="PROJECT_INIT_ID" /> -->
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="allocationDetailSet" cascade="all" inverse="false" lazy="true"  order-by="COMMODITY_ID DESC,SPECIFICATIONS_ID ASC">
+			<key column="ALLOCATION_ID" />
+			<one-to-many class="com.knight.emms.model.AllocationDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

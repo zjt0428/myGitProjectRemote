@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AutocraneFee" table="T_AUTOCRANE_FEE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="autocraneFeeId" column="AUTOCRANE_FEE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<!-- <property name="installId" type="java.lang.Long" column="INSTALL_ID" /> -->
+		<property name="truckCraneSpecific" type="java.lang.String" column="TRUCK_CRANE_SPECIFIC" />
+		<property name="number" type="java.lang.Integer" column="NUMBER" />
+		<property name="machineTeam" type="java.lang.Integer" column="MACHINE_TEAM" />
+		<property name="projectPrice" type="java.math.BigDecimal" column="PROJECT_PRICE" />
+		<property name="chargesSubtotal" type="java.math.BigDecimal" column="CHARGES_SUBTOTAL" />
+		<property name="startTime" type="java.lang.String" column="START_TIME" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

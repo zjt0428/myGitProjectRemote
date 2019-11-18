@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Equip_Install_Info_Query" language="groovy" pageWidth="1040" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1000" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="027c55fa-d971-48b6-92a7-08925b598b60">
+	<property name="ireport.zoom" value="1.0245201830476058"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="startDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractIds" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="truckCraneSpecific" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @startDate VARCHAR(10)
+DECLARE @endDate VARCHAR(10)
+DECLARE @contractIds VARCHAR(5000)
+DECLARE @truckCraneSpecific VARCHAR(64)
+SET @startDate=$P{startDate}
+SET @endDate=$P{endDate}
+SET @truckCraneSpecific=$P{truckCraneSpecific}
+SET @contractIds=$P{contractIds}
+SELECT T.*
+FROM (
+SELECT
+	AU.TRUCK_CRANE_SPECIFIC,  --汽吊型号
+	AU.NUMBER, --数量
+	AU.MACHINE_TEAM, --台班
+	AU.AUTOCRANE_UNIT, --汽吊单位
+	ISNULL(AU.TEAM_PRICE,0) TEAM_PRICE, --班组单价
+	ISNULL(AU.CHARGES_SUBTOTAL,0) CHARGES_SUBTOTAL, --金额小计
+	AU.START_TIME, --发生时间
+	AU.REMARK,	--备注
+	EF.CONTRACT_ID
+FROM T_AUTOCRANE_UNIT AU,T_EQUIPMENT_INSTALL EI
+LEFT JOIN T_EQUIPMENT_FLOW EF ON EI.FLOW_ID = EF.FLOW_ID
+WHERE AU.RELATE_ID = EI.INSTALL_ID
+AND EI.DEL_FLAG = 1
+AND AU.RELATE_MODULE = 'EQUIP_INSTALL'
+AND CONVERT(VARCHAR(100),EI.ENDIN_DATE,23) >= @startDate
+AND CONVERT(VARCHAR(100),EI.ENDIN_DATE,23) <= @endDate
+)T
+WHERE (T.TRUCK_CRANE_SPECIFIC LIKE '%'+@truckCraneSpecific+'%' OR @truckCraneSpecific = '' OR @truckCraneSpecific IS NULL )
+AND (CHARINDEX(','+convert(VARCHAR,T.CONTRACT_ID)+',',@contractIds)>0 OR @contractIds = '' OR @contractIds IS NULL)
+ORDER BY T.START_TIME]]>
+	</queryString>
+	<field name="TRUCK_CRANE_SPECIFIC" class="java.lang.String"/>
+	<field name="NUMBER" class="java.lang.Short"/>
+	<field name="MACHINE_TEAM" class="java.lang.Short"/>
+	<field name="AUTOCRANE_UNIT" class="java.lang.String"/>
+	<field name="TEAM_PRICE" class="java.math.BigDecimal"/>
+	<field name="CHARGES_SUBTOTAL" class="java.math.BigDecimal"/>
+	<field name="START_TIME" class="java.lang.String"/>
+	<field name="REMARK" class="java.lang.String"/>
+	<field name="CONTRACT_ID" class="java.lang.Long"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="-3" y="0" width="1017" height="79" uuid="3f0d8bb6-acd5-40b7-8d2d-f63348b2b34b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="26" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[天元建设集团有限公司
+汽车吊费用信息查询表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="1014" height="35" isPrintInFirstWholeBand="true" uuid="6b0e5eea-0d53-499f-a98f-066e7ba3ee8e"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="15" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["查询起止日期：" + $P{startDate} + " 至 " + $P{endDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="35">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="55" height="35" backcolor="#99CCFF" uuid="ccdaf997-7e65-4760-80c6-3f4bb9b228b3"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isBold="false" isItalic="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="295" y="0" width="120" height="35" backcolor="#99CCFE" uuid="686e335e-e950-4826-9cde-2ccdd64cdb87"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[台班]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="415" y="0" width="120" height="35" backcolor="#99CCFE" uuid="8fcac685-448d-4685-ae1f-ff8153ebdf26"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[汽吊单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="55" y="0" width="120" height="35" backcolor="#99CCFE" uuid="96f581d0-ce3d-456b-bb76-a26d30e9a948"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[汽吊型号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="175" y="0" width="120" height="35" backcolor="#99CCFE" uuid="940d16cb-326b-420b-a109-4a6b57b13374"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="535" y="0" width="120" height="35" backcolor="#99CCFE" uuid="3ec17ae7-fe96-42bc-b51e-79d80b053877"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[班组单价]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="895" y="0" width="120" height="35" backcolor="#99CCFE" uuid="acef378a-73a3-4d2d-b5f4-6d8c43964360"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[备注]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="775" y="0" width="120" height="35" backcolor="#99CCFE" uuid="7df67620-36b0-4f10-9b92-a4b08e8f27f0"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[金额小计]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="655" y="0" width="120" height="35" backcolor="#99CCFE" uuid="97540636-3541-4f74-b9c2-2ae46f61c953"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[发生时间]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="55" height="20" uuid="d04866df-7df2-4221-9b20-30ebea161cc8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="295" y="0" width="120" height="20" uuid="0b740966-500f-4561-a7ef-40f0eae94d98"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MACHINE_TEAM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="415" y="0" width="120" height="20" uuid="c31d9c23-d5ad-458c-9943-83bb4512d764"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{AUTOCRANE_UNIT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="55" y="0" width="120" height="20" uuid="a776e1a9-2392-405c-8f4a-53e6381f7369"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TRUCK_CRANE_SPECIFIC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="175" y="0" width="120" height="20" uuid="e4dcad5d-2a7c-4ebb-ae6e-376c19e6cb71"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="535" y="0" width="120" height="20" uuid="652f0110-2aba-43a3-ae43-bb7c917ffec4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TEAM_PRICE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="895" y="0" width="120" height="20" uuid="d0c31cd9-8dc0-4a44-8626-739ce36db8b1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{REMARK}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="775" y="0" width="120" height="20" uuid="ef7f7740-5d35-491c-baa4-c0f4f05adbb2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CHARGES_SUBTOTAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="655" y="0" width="120" height="20" uuid="d9517968-033b-49b2-b177-27d7a386b877"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{START_TIME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

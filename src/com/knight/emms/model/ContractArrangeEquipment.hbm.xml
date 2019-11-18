@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractArrangeEquipment" table="T_CONTRACT_ARRANGE_EQUIPMENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="arrangeEquipId" column="ARRANGE_EQUIP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="arrangeId" type="java.lang.Long" column="ARRANGE_ID" />
+		<property name="equipGenericName" type="java.lang.String" column="EQUIP_GENERIC_NAME" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="overallHeight" type="java.math.BigDecimal" column="OVERALL_HEIGHT" />
+<!-- 		<property name="appearanceCost" type="java.math.BigDecimal" column="APPEARANCE_COST" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="embeddedCost" type="java.math.BigDecimal" column="EMBEDDED_COST" />
+		<property name="settleMethod" type="java.lang.String" column="SETTLE_METHOD" /> -->
+		<property name="aboveZeroHeight" type="java.math.BigDecimal" column="ABOVE_ZERO_HEIGHT" />
+		<property name="baseHeight" type="java.math.BigDecimal" column="BASE_HEIGHT" />
+		<property name="mololayerArea" type="java.math.BigDecimal" column="MOLOLAYERAREA" />
+		<property name="brachium" type="java.math.BigDecimal" column="BRACHIUM" />
+		<property name="initialHeight" type="java.math.BigDecimal" column="FIRST_HEIGHT" />
+		<property name="finalHeight" type="java.math.BigDecimal" column="FINAL_HEIGHT" />
+		<property name="supplierName" type="java.lang.String" column="SUPPLIER_NAME" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="endDate" type="java.lang.String" column="END_DATE" />
+		<property name="planEndDate" type="java.lang.String" column="PLAN_END_DATE" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+	</class>
+</hibernate-mapping>

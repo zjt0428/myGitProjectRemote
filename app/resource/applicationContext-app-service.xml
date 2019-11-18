@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd ">
+	<bean id="remindModuleServices" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="APP_DISPATCH" value-ref="tappDispatchService"></entry>
+                <entry key="APP_LOGISTICS" value-ref="tAppLogisticsService"></entry>
+                <entry key="INSPECT_MANAGE" value-ref="inspectManageService"></entry>
+                <entry key="EQUIP_INSPECT" value-ref="equipInspectService"></entry>
+				<entry key="CONSTRUCT_OPERATION" value-ref="constructOperationService"></entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="attendamceService" class="com.knight.app.service.impl.AttendamceServiceImpl">
+		<constructor-arg index="0" ref="attendamceDao" />
+	</bean>
+	<bean id="attendamceSetServiceImpl" class="com.knight.app.service.impl.AttendamceSetServiceImpl">
+		<constructor-arg index="0" ref="attendamceSetDao" />
+	</bean>
+	<bean id="attendamceLocationService"
+		class="com.knight.app.service.impl.AttendamceLocationServiceImpl">
+		<constructor-arg index="0" ref="attendamceLocationDao" />
+	</bean>
+	<bean id="tflowInstanceServiceImpl" class="com.knight.app.service.impl.TFlowInstanceServiceImpl">
+		<constructor-arg index="0" ref="tflowInstanceDao" />
+	</bean>
+	<bean id="tflowDefineServiceImpl" class="com.knight.app.service.impl.TFlowDefineServiceImpl">
+		<constructor-arg index="0" ref="tflowDefineDao" />
+	</bean>
+	<bean id="tflowNodeServiceImpl" class="com.knight.app.service.impl.TFlowNodeServiceImpl">
+		<constructor-arg index="0" ref="tflowNodeDao" />
+	</bean>
+	<bean id="tflowInstanceProcessServiceImpl"
+		class="com.knight.app.service.impl.TFlowInstanceProcessServiceImpl">
+		<constructor-arg index="0" ref="tflowInstanceProcessDao" />
+	</bean>
+	<bean id="tflowCopyChkmanServiceImpl" class="com.knight.app.service.impl.TFlowCopyChkmanServiceImpl">
+		<constructor-arg index="0" ref="tflowCopyChkmanDao" />
+	</bean>
+	<bean id="tappDispatchService" class="com.knight.app.service.impl.TAppDispatchServiceImpl">
+		<constructor-arg index="0" ref="tappDispatchDao" />
+	</bean>
+	<bean id="tappComponDispatchDetailService"
+		class="com.knight.app.service.impl.TAppComponDispatchDetailServiceImpl">
+		<constructor-arg index="0" ref="tappComponDispatchDetailDao" />
+	</bean>
+	<bean id="tappEquipDispatchDetailService"
+		  class="com.knight.app.service.impl.TAppEquipDispatchDetailServiceImpl">
+		<constructor-arg index="0" ref="tappEquipDispatchDetailDao" />
+	</bean>
+	<bean id="tappRepairServiceImpl" class="com.knight.app.service.impl.TAppRepairServiceImpl">
+		<constructor-arg index="0" ref="tappRepairDao" />
+	</bean>
+	<bean id="tappRepairComponServiceImpl" class="com.knight.app.service.impl.TAppRepairComponServiceImpl">
+		<constructor-arg index="0" ref="tappRepairComponDao" />
+	</bean>
+	<bean id="tappRepairTypeServiceImpl" class="com.knight.app.service.impl.TAppRepairTypeServiceImpl">
+		<constructor-arg index="0" ref="tappRepairTypeDao" />
+	</bean>
+	<bean id="inspectRectifyService" class="com.knight.app.service.impl.InspectRectifyServiceImpl">
+		<constructor-arg index="0" ref="inspectRectifyDao" />
+	</bean>
+	<bean id="tAppLogisticsService" class="com.knight.app.service.impl.TAppLogisticsServiceImpl">
+		<constructor-arg index="0" ref="tAppLogisticsDao" />
+	</bean>
+	<bean id="inspectManageService" class="com.knight.emms.service.impl.InspectManageServiceImpl">
+		<constructor-arg index="0" ref="inspectManageDao" />
+	</bean>
+    <bean id="equipInspectService" class="com.knight.emms.service.impl.EquipInspectServiceImpl">
+        <constructor-arg index="0" ref="equipInspectDao" />
+    </bean>
+	<bean id="appRemindService" class="com.knight.app.service.impl.AppRemindServiceImpl">
+	</bean>
+	<bean id="appMessagePushService" class="com.knight.app.core.service.impl.AppMessagePushServiceImpl">
+	</bean>
+	
+	<bean id="sideSystemService" class="com.knight.app.service.impl.SideSystemServiceImpl">
+		<constructor-arg index="0" ref="sideSystemDao" />
+	</bean>
+</beans>

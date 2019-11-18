@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.StoreJoinUser" table="T_STORE_JOIN_USER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="joinId" column="JOIN_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<many-to-one name="storeHouse" column="STORE_ID" class="com.knight.emms.model.StoreHouse" fetch="join" />
+		<many-to-one name="appUser" column="USER_ID" class="com.knight.system.model.AppUser" fetch="join" />
+		
+	</class>
+</hibernate-mapping>

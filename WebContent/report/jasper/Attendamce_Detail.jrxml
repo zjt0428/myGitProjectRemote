@@ -1,0 +1,1135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cash_Flow_Statement" language="groovy" pageWidth="1868" pageHeight="555" whenNoDataType="AllSectionsNoDetail" columnWidth="1868" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" isIgnorePagination="true" uuid="5b6e3590-6e36-41fb-a18b-96ea05279ca3">
+	<property name="ireport.zoom" value="1.6105100000000117"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<style name="rowspan" forecolor="#0066FF" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{ROWSPAN}.compareTo(BigDecimal.ZERO) == -1)]]></conditionExpression>
+			<style mode="Transparent" forecolor="#CC0033" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+				<pen lineWidth="0.5"/>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="columnHead" forecolor="#333333" backcolor="#AAD7FE" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontName="宋体" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5"/>
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="title" hAlign="Center" vAlign="Middle" fontName="宋体" fontSize="18" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+	<style name="pageFooterLable" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="12" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<parameter name="YEARMTH" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="YEARMTH_LAST" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DEP_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FULL_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @YEARMTH VARCHAR(24)
+DECLARE @YEARMTH_LAST VARCHAR(24)
+DECLARE @DEP_NAME VARCHAR(64)
+DECLARE @FULLNAME VARCHAR(24)
+
+SET @YEARMTH = $P{YEARMTH}
+SET @YEARMTH_LAST = $P{YEARMTH_LAST}
+SET @DEP_NAME =  $P{DEP_NAME}
+SET @FULLNAME = $P{FULL_NAME}
+SELECT * FROM(
+--签到
+SELECT USER_SERIAL,FULLNAME,
+	   '01' ROW,
+	   SUBSTRING(MAX(_21Th),0,6) _21Th,
+	   SUBSTRING(MAX(_22Th),0,6) _22Th,
+	   SUBSTRING(MAX(_23Th),0,6) _23Th,
+	   SUBSTRING(MAX(_24Th),0,6) _24Th,
+	   SUBSTRING(MAX(_25Th),0,6) _25Th,
+	   SUBSTRING(MAX(_26Th),0,6) _26Th,
+	   SUBSTRING(MAX(_27Th),0,6) _27Th,
+	   SUBSTRING(MAX(_28Th),0,6) _28Th,
+	   SUBSTRING(MAX(_29Th),0,6) _29Th,
+	   SUBSTRING(MAX(_30Th),0,6) _30Th,
+	   SUBSTRING(MAX(_31Th),0,6) _31Th,
+	   SUBSTRING(MAX(_01Th),0,6) _01Th,
+	   SUBSTRING(MAX(_02Th),0,6) _02Th,
+	   SUBSTRING(MAX(_03Th),0,6) _03Th,
+	   SUBSTRING(MAX(_04Th),0,6) _04Th,
+	   SUBSTRING(MAX(_05Th),0,6) _05Th,
+	   SUBSTRING(MAX(_06Th),0,6) _06Th,
+	   SUBSTRING(MAX(_07Th),0,6) _07Th,
+	   SUBSTRING(MAX(_08Th),0,6) _08Th,
+	   SUBSTRING(MAX(_09Th),0,6) _09Th,
+	   SUBSTRING(MAX(_10Th),0,6) _10Th,
+	   SUBSTRING(MAX(_11Th),0,6) _11Th,
+	   SUBSTRING(MAX(_12Th),0,6) _12Th,
+     SUBSTRING(MAX(_13Th),0,6) _13Th,
+	   SUBSTRING(MAX(_14Th),0,6) _14Th,
+	   SUBSTRING(MAX(_15Th),0,6) _15Th,
+	   SUBSTRING(MAX(_16Th),0,6) _16Th,
+	   SUBSTRING(MAX(_17Th),0,6) _17Th,
+	   SUBSTRING(MAX(_18Th),0,6) _18Th,
+	   SUBSTRING(MAX(_19Th),0,6) _19Th,
+	   SUBSTRING(MAX(_20Th),0,6) _20Th
+FROM(
+SELECT AU.USER_SERIAL,AU.FULLNAME,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-21') _21Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-22') _22Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-23') _23Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-24') _24Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-25') _25Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-26') _26Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-27') _27Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-28') _28Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-29') _29Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-30') _30Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-31') _31Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-01') _01Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-02') _02Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-03') _03Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-04') _04Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-05') _05Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-06') _06Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-07') _07Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-08') _08Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-09') _09Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-10') _10Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-11') _11Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-12') _12Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-13') _13Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-14') _14Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-15') _15Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-16') _16Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-17') _17Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-18') _18Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-19') _19Th,
+		(SELECT top 1 A.SGIN_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-20') _20Th
+FROM T_ATTENDAMCE A
+LEFT JOIN APP_USER AU ON AU.USERID = A.USERID
+LEFT JOIN DEPARTMENT D ON D.DEP_ID = AU.DEP_ID
+WHERE (AU.FULLNAME LIKE '%'+@FULLNAME+'%' OR @FULLNAME IS NULL OR @FULLNAME='')
+AND (D.DEP_NAME LIKE '%'+@DEP_NAME+'%' OR @DEP_NAME IS NULL OR @DEP_NAME='')
+AND (A.SG_DATE LIKE @YEARMTH+'%' OR A.SG_DATE LIKE @YEARMTH_LAST+'%')
+) B
+GROUP BY B.FULLNAME,B.USER_SERIAL
+
+UNION ALL
+--签退
+SELECT USER_SERIAL,FULLNAME,
+	   '02' ROW,
+	   SUBSTRING(MAX(_21Th),0,6) _21Th,
+	   SUBSTRING(MAX(_22Th),0,6) _22Th,
+	   SUBSTRING(MAX(_23Th),0,6) _23Th,
+	   SUBSTRING(MAX(_24Th),0,6) _24Th,
+	   SUBSTRING(MAX(_25Th),0,6) _25Th,
+	   SUBSTRING(MAX(_26Th),0,6) _26Th,
+	   SUBSTRING(MAX(_27Th),0,6) _27Th,
+	   SUBSTRING(MAX(_28Th),0,6) _28Th,
+	   SUBSTRING(MAX(_29Th),0,6) _29Th,
+	   SUBSTRING(MAX(_30Th),0,6) _30Th,
+	   SUBSTRING(MAX(_31Th),0,6) _31Th,
+	   SUBSTRING(MAX(_01Th),0,6) _01Th,
+	   SUBSTRING(MAX(_02Th),0,6) _02Th,
+	   SUBSTRING(MAX(_03Th),0,6) _03Th,
+	   SUBSTRING(MAX(_04Th),0,6) _04Th,
+	   SUBSTRING(MAX(_05Th),0,6) _05Th,
+	   SUBSTRING(MAX(_06Th),0,6) _06Th,
+	   SUBSTRING(MAX(_07Th),0,6) _07Th,
+	   SUBSTRING(MAX(_08Th),0,6) _08Th,
+	   SUBSTRING(MAX(_09Th),0,6) _09Th,
+	   SUBSTRING(MAX(_10Th),0,6) _10Th,
+	   SUBSTRING(MAX(_11Th),0,6) _11Th,
+	   SUBSTRING(MAX(_12Th),0,6) _12Th,
+     SUBSTRING(MAX(_13Th),0,6) _13Th,
+	   SUBSTRING(MAX(_14Th),0,6) _14Th,
+	   SUBSTRING(MAX(_15Th),0,6) _15Th,
+	   SUBSTRING(MAX(_16Th),0,6) _16Th,
+	   SUBSTRING(MAX(_17Th),0,6) _17Th,
+	   SUBSTRING(MAX(_18Th),0,6) _18Th,
+	   SUBSTRING(MAX(_19Th),0,6) _19Th,
+	   SUBSTRING(MAX(_20Th),0,6) _20Th
+FROM(
+SELECT AU.USER_SERIAL,AU.FULLNAME,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-21') _21Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-22') _22Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-23') _23Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-24') _24Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-25') _25Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-26') _26Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-27') _27Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-28') _28Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-29') _29Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-30') _30Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH_LAST+'-31') _31Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-01') _01Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-02') _02Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-03') _03Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-04') _04Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-05') _05Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-06') _06Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-07') _07Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-08') _08Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-09') _09Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-10') _10Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-11') _11Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-12') _12Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-13') _13Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-14') _14Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-15') _15Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-16') _16Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-17') _17Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-18') _18Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-19') _19Th,
+		(SELECT top 1 A.SGOU_TIME WHERE A.SG_DATE LIKE @YEARMTH+'-20') _20Th
+FROM T_ATTENDAMCE A
+LEFT JOIN APP_USER AU ON AU.USERID = A.USERID
+LEFT JOIN DEPARTMENT D ON D.DEP_ID = AU.DEP_ID
+WHERE (AU.FULLNAME LIKE '%'+@FULLNAME+'%' OR @FULLNAME IS NULL OR @FULLNAME='')
+AND (D.DEP_NAME LIKE '%'+@DEP_NAME+'%' OR @DEP_NAME IS NULL OR @DEP_NAME='')
+AND (A.SG_DATE LIKE @YEARMTH+'%' OR A.SG_DATE LIKE @YEARMTH_LAST+'%')
+) B
+GROUP BY B.FULLNAME,B.USER_SERIAL) C ORDER BY ROW]]>
+	</queryString>
+	<field name="USER_SERIAL" class="java.lang.Long"/>
+	<field name="FULLNAME" class="java.lang.String"/>
+	<field name="ROW" class="java.lang.String"/>
+	<field name="_21Th" class="java.lang.String"/>
+	<field name="_22Th" class="java.lang.String"/>
+	<field name="_23Th" class="java.lang.String"/>
+	<field name="_24Th" class="java.lang.String"/>
+	<field name="_25Th" class="java.lang.String"/>
+	<field name="_26Th" class="java.lang.String"/>
+	<field name="_27Th" class="java.lang.String"/>
+	<field name="_28Th" class="java.lang.String"/>
+	<field name="_29Th" class="java.lang.String"/>
+	<field name="_30Th" class="java.lang.String"/>
+	<field name="_31Th" class="java.lang.String"/>
+	<field name="_01Th" class="java.lang.String"/>
+	<field name="_02Th" class="java.lang.String"/>
+	<field name="_03Th" class="java.lang.String"/>
+	<field name="_04Th" class="java.lang.String"/>
+	<field name="_05Th" class="java.lang.String"/>
+	<field name="_06Th" class="java.lang.String"/>
+	<field name="_07Th" class="java.lang.String"/>
+	<field name="_08Th" class="java.lang.String"/>
+	<field name="_09Th" class="java.lang.String"/>
+	<field name="_10Th" class="java.lang.String"/>
+	<field name="_11Th" class="java.lang.String"/>
+	<field name="_12Th" class="java.lang.String"/>
+	<field name="_13Th" class="java.lang.String"/>
+	<field name="_14Th" class="java.lang.String"/>
+	<field name="_15Th" class="java.lang.String"/>
+	<field name="_16Th" class="java.lang.String"/>
+	<field name="_17Th" class="java.lang.String"/>
+	<field name="_18Th" class="java.lang.String"/>
+	<field name="_19Th" class="java.lang.String"/>
+	<field name="_20Th" class="java.lang.String"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement style="title" x="0" y="0" width="1851" height="45" uuid="c8da4909-d587-4acc-96f9-2379010df93c"/>
+				<textElement>
+					<font fontName="宋体" size="24" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[考    勤    表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="28">
+			<textField isBlankWhenNull="false">
+				<reportElement x="0" y="0" width="1851" height="28" uuid="c2f815a9-6aa4-444b-8ff5-5435e37bf969"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA["考勤区间：" + $P{YEARMTH_LAST}+"-21" + " 至 " + $P{YEARMTH}+"-20"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="0" y="0" width="39" height="58" uuid="a26516b8-e88f-4e58-a63a-67a0919963a0"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[员工编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="39" y="0" width="66" height="58" uuid="07d6d880-b418-4032-bd8a-882dd97b9b48"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[姓名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="105" y="36" width="50" height="22" uuid="683c4aa7-519c-4672-acbb-41c5c33a61e4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[26]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="155" y="36" width="50" height="22" uuid="dae14748-5c35-4924-8b2e-4e6d4d924d62"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[27]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="205" y="36" width="50" height="22" uuid="90117779-7aa3-443f-8024-b6f727e990b2"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[28]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="255" y="36" width="50" height="22" uuid="fa10e56a-e51b-48b6-a96f-97086d492f25"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[29]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="305" y="36" width="50" height="22" uuid="b0cf59e7-8751-44f5-8fca-de6af8171733"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[30]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="355" y="36" width="50" height="22" uuid="44ef2574-c333-4854-84b0-0c479adede51"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[31]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="405" y="36" width="50" height="22" uuid="90e344e6-40bd-4ef2-810a-1992ca9586bf"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="455" y="36" width="50" height="22" uuid="bd90274d-975e-41d5-8d1a-38a9bcfb8edf"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="505" y="36" width="50" height="22" uuid="9f72f4c6-6ef5-4e8b-9bb1-8c30df83f2fe"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="555" y="36" width="50" height="22" uuid="2cbecd3a-5024-4fe9-a3f6-a67cd465f2d4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[4]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="605" y="36" width="50" height="22" uuid="4185aaf6-f1be-436c-9a55-93ee4a6348a2"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="655" y="36" width="48" height="22" uuid="22b9ff93-16a5-4988-b5c5-5f7ad595c0c1"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="703" y="36" width="50" height="22" uuid="930a0735-48a0-4ed4-a6b7-025ce24f7140"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[7]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="753" y="36" width="50" height="22" uuid="528a6e51-de17-4e49-813e-3d550a51e5e8"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[8]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="803" y="36" width="50" height="22" uuid="3bb8fcc6-1919-47ac-84f6-2c89b31ca3d9"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[9]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="853" y="36" width="50" height="22" uuid="9636f425-55de-4cb8-ae28-4ebc509cc6f4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[10]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="903" y="36" width="44" height="22" uuid="be4515f2-f410-49ce-88bb-322a454a1507"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[11]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="947" y="36" width="50" height="22" uuid="50b75edf-45f8-4901-b289-faac648a83f0"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[12]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="997" y="36" width="50" height="22" uuid="7b93e807-fce6-46e5-bf81-a29e706f00d4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[13]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1047" y="36" width="50" height="22" uuid="ef937fad-44cb-4d64-aa00-655a09335bf0"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[14]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1097" y="36" width="50" height="22" uuid="5caf5001-ee77-4686-8bf0-2260437b8328"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[15]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1147" y="36" width="50" height="22" uuid="b5a30470-b907-49fb-8f94-71b6769ed885"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[16]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1197" y="36" width="50" height="22" uuid="dc60782c-35cc-45ef-9b2b-3e6ebc426eff"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[17]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1247" y="36" width="50" height="22" uuid="54829c68-6bd5-4bd4-b9d0-96c7b29e7c90"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[18]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1297" y="36" width="50" height="22" uuid="d384dfa2-8281-4515-a176-cf6c8a36bb9e"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[19]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1347" y="36" width="50" height="22" uuid="c3953473-9e85-4b87-805d-254d91845904"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[20]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1397" y="36" width="50" height="22" uuid="5ea9b361-6e9d-4448-95d6-81069e714a3f"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[21]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1447" y="36" width="50" height="22" uuid="a9e38234-4ec2-493d-b5c4-2bddfb49e937"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[22]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1497" y="36" width="50" height="22" uuid="4df3b0d2-aada-4b29-af06-b64aaaabdfb4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[23]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1547" y="36" width="49" height="22" uuid="db299f93-19df-4d67-9ef3-f9d3c5b8f06d"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[24]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1596" y="36" width="51" height="22" uuid="e4f38641-458d-46ce-836f-843e1147fa79"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[25]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1647" y="20" width="34" height="38" uuid="8a666471-d6ed-4071-8136-dc223c1b3caf"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[病假]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1681" y="20" width="34" height="38" uuid="529b78f8-5aa7-4734-8708-d0a92ca4cec4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="宋体" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[事假]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1715" y="20" width="34" height="38" uuid="689d6555-e188-4612-b1a7-0e9d80f994d9"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[探亲]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1749" y="20" width="34" height="38" uuid="49376557-7b80-4e27-a32e-49e42a954359"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[工伤]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1783" y="20" width="34" height="38" uuid="638f6f8c-14d3-4d62-ac48-59629bc4777c"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[年休]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1817" y="20" width="34" height="38" uuid="c303895c-04d8-48af-b0e7-69ba8facbc7e"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[旷工]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="105" y="20" width="1542" height="16" uuid="801085ee-a69b-4e65-92b5-569b43dae21c"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="105" y="0" width="1542" height="20" uuid="5313239b-648c-447c-8178-51d857a5c3cb"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[逐    日    出    勤    情    况]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1647" y="0" width="204" height="20" uuid="95a61940-d242-48aa-9cf3-76076cf9655f"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[缺勤工日]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="39" height="20" uuid="939e2718-d8b5-403d-a53e-9c7c802a3bd4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USER_SERIAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="105" y="0" width="50" height="20" uuid="079e1fc9-9d16-47bf-888f-0a4b48f96075"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_26Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="155" y="0" width="50" height="20" uuid="3a2c2648-26b5-42ec-a1c3-cc7ab988179e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_27Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="205" y="0" width="50" height="20" uuid="ed1c0f95-c1f4-45d9-9a4f-8413c8dc50eb"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_28Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="255" y="0" width="50" height="20" uuid="366d875a-56a2-4bfb-800c-8783fc0beec9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_29Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="305" y="0" width="50" height="20" uuid="7d924362-9874-476c-8db5-4ea0cafa4e1e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_30Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="355" y="0" width="50" height="20" uuid="0d14b7b1-11c5-4b35-894e-89bf5d46ddbe"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_31Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="405" y="0" width="50" height="20" uuid="e08fcd84-8150-4528-b327-96bb893f5bb8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_01Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="455" y="0" width="50" height="20" uuid="24a2f8dd-7c7e-4729-afc1-a01771137ae6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_02Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="505" y="0" width="50" height="20" uuid="549e233d-9f2e-49f5-a8f4-0dc8bf9edca8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_03Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="555" y="0" width="50" height="20" uuid="fceeba9a-dbb0-48cc-8016-25e56e230cad"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_04Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="605" y="0" width="50" height="20" uuid="60557727-a2e0-486f-a71a-f8c6b5eee403"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_05Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="655" y="0" width="48" height="20" uuid="23448f57-b473-46fc-add7-2a20c16846c0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_06Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="703" y="0" width="50" height="20" uuid="65f17f76-3c74-4425-95dc-beea4ef00026"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_07Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="753" y="0" width="50" height="20" uuid="afe7c24a-df89-4965-a28a-345607b8197a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_08Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="803" y="0" width="50" height="20" uuid="cc5c4818-0b24-40c1-8c28-e65af62040a6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_09Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="853" y="0" width="50" height="20" uuid="d10c944d-2e64-4d8d-b4b2-bb838ec8ee6d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_10Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="903" y="0" width="44" height="20" uuid="c4a7d129-16aa-4440-9911-086c76ea2fbd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_11Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="947" y="0" width="50" height="20" uuid="4eca4ab3-3484-4330-ab73-5af7d96fada8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_12Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="997" y="0" width="50" height="20" uuid="26dc81e1-2fd5-429a-bd12-fdeffa3283a6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_13Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1047" y="0" width="50" height="20" uuid="689b2fb5-0722-435f-b6bc-9c25fd63ae1d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_14Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1097" y="0" width="50" height="20" uuid="f77028e2-1800-49be-8cea-1db7009dcd4c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_15Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1147" y="0" width="50" height="20" uuid="9dc95357-ab3c-45c9-92b8-3678aa3a2049"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_16Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1197" y="0" width="50" height="20" uuid="34bd9085-4497-47ee-a755-81ef82e603ee"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_17Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1247" y="0" width="50" height="20" uuid="c59a845c-f772-49ef-8a32-c023a1805c5f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_18Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1297" y="0" width="50" height="20" uuid="e4202df0-c6d4-445a-b067-8fb59a72acd5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_19Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1347" y="0" width="50" height="20" uuid="d91fde01-3874-40a6-b0ee-d28e5a418d8f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_20Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1397" y="0" width="50" height="20" uuid="0e57a66e-10e4-4d53-b77c-dab93064a964"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_21Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1447" y="0" width="50" height="20" uuid="77da7746-1fdb-4d7d-a5b0-cdd0ea451e82"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_22Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1497" y="0" width="50" height="20" uuid="a9e14677-2333-473b-88b9-6bad035c2463"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_23Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1547" y="0" width="50" height="20" uuid="d2faa51c-0b67-4b10-b460-241d96e1c802"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_24Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1597" y="0" width="50" height="20" uuid="2b8cae60-392d-41fa-bf48-c84370fdf1df"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_25Th}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="39" y="0" width="66" height="20" uuid="c8e43c64-a42f-439c-83b9-d62d2cd394c8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FULLNAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1647" y="0" width="34" height="20" uuid="3812ec06-13dc-4008-9804-444c9c60ef7d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1681" y="0" width="34" height="20" uuid="e329893b-1d8d-410d-b1a7-8150a50e5af3"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1715" y="0" width="34" height="20" uuid="b3e33c54-5512-4b30-a907-144d591566e0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1749" y="0" width="34" height="20" uuid="5538c084-9740-4e28-82ec-6057f3afbfdb"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1783" y="0" width="34" height="20" uuid="1926e0bc-1a5b-4fef-943b-b7c3d2301aa4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1817" y="0" width="34" height="20" uuid="10764a37-4af6-4561-9452-0d790265ca85"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" size="10" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="63">
+			<staticText>
+				<reportElement style="title" mode="Transparent" x="0" y="38" width="1851" height="25" uuid="e7d97eaf-6c3a-4305-bf04-8d77eb2ca592"/>
+				<textElement textAlignment="Left" rotation="None">
+					<font fontName="宋体" size="12" isBold="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ 公司领导：                            部门负责人：                              考勤员：                               综合办公室：                                     年  月  日]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="title" x="4" y="0" width="1847" height="38" uuid="dd40ca02-8250-43a6-84a8-2043a77383f7"/>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ 注：考勤符号：全勤出勤8；半日出勤4；公勤△；停工※；病假+；工伤 卄 ；事假√；探亲⊙；旷工×；倒休 ø ；半日出勤、半日缺勤者，分别将符号填写在斜线上，如4/+]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>

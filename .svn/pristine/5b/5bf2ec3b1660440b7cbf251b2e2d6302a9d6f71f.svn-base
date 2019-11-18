@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DismantleManage" table="T_DISMANTLE_MANAGE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="dismantleId" column="DISMANTLE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="startdisDate" type="java.util.Date" column="STARTDIS_DATE" />
+		<property name="enddisDate" type="java.util.Date" column="ENDDIS_DATE" />
+		<property name="dismantleHeight" type="java.lang.String" column="DISMANTLE_HEIGHT" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="dismantleType" type="java.lang.String" column="DISMANTLETYPE" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		
+	</class>
+</hibernate-mapping>

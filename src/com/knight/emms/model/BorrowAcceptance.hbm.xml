@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BorrowAcceptance" table="T_BORROW_ACCEPTANCE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="bacceptanceId" column="BACCEPTANCE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="borrowId" type="java.lang.Long" column="BORROW_ID" />
+		<property name="acceptanceStatus" type="java.lang.String" column="ACCEPTANCE_STATUS" />
+		<property name="unqualified" type="java.lang.String" column="UNQUALIFIED" />
+		<property name="handleMethod" type="java.lang.String" column="HANDLE_METHOD" />
+		<property name="arrivalPlanDate" type="java.lang.String" column="ARRIVAL_PLAN_DATE" />
+		<property name="refundPlanDate" type="java.lang.String" column="REFUND_PLAN_DATE" />
+		<property name="compensateAmount" type="java.math.BigDecimal" column="COMPENSATE_AMOUNT" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

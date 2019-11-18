@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-28 17:11:39 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TFlowDefine" table="T_FLOW_DEFINE">
+		<id name="flowid" type="java.lang.Long">
+			<column name="FLOWID" />
+			<generator class="native" />
+		</id>
+		<property name="flowName" type="java.lang.String">
+			<column name="FLOWNAME" length="100" />
+		</property>
+		<property name="createDt" type="java.lang.String">
+			<column name="CREATE_DT" />
+		</property>
+		<property name="createBy" type="java.lang.Long">
+			<column name="CREATE_BY" />
+		</property>
+		<property name="delFlag" type="java.lang.Integer">
+			<column name="DELFLAG" />
+		</property>
+		<property name="relateModule" type="java.lang.String">
+			<column name="RELATE_MODULE" />
+		</property>
+		<property name="createByName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=CREATE_BY)" />
+		<set name="nodeSet" cascade="all" inverse="false" lazy="true"
+			order-by="seq asc">
+			<key column="FLOWID" />
+			<one-to-many class="com.knight.app.model.TFlowNode" />
+		</set>
+	</class>
+</hibernate-mapping>

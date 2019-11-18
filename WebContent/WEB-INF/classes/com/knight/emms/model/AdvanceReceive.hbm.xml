@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AdvanceReceive" table="T_ADVANCE_RECEIVE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="adreceiveId" column="ADRECEIVE_ID " type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="advanceSerial" type="java.lang.String" column="ADVANCE_SERIAL " />
+		<property name="advanceTheme" type="java.lang.String" column="ADVANCE_THEME " />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="advanceDate" type="java.lang.String" column="ADVANCE_DATE" />
+		<property name="receiveEntId" type="java.lang.Long" column="RECEIVE_ENT_ID" />
+		<property name="receiveModule" type="java.lang.String" column="RECEIVE_MODULE" />
+		<property name="receiveEntName" type="java.lang.String" column="RECEIVE_ENT_NAME" />
+		<property name="paymentId" type="java.lang.Long" column="PAYMENT_ID" />
+		<property name="paymentModule" type="java.lang.String" column="PAYMENT_MODULE" />
+		<property name="paymentName" type="java.lang.String" column="PAYMENT_NAME" />
+		<property name="paymentType" type="java.lang.String" column="PAYMENT_TYPE" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="advanceReceiveAmount" type="java.math.BigDecimal" column="ADVANCE_RECEIVE_AMOUNT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="settleId" type="java.lang.Long" column="SETTLE_ID"  update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID " insert="false" update="false" />
+		<many-to-one name="contractLease" column="CONTRACT_ID" class="com.knight.emms.model.ContractLease" fetch="join" />
+	</class>
+</hibernate-mapping>

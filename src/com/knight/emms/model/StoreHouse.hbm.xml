@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.StoreHouse" table="T_STORE_HOUSE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="storeId" column="STORE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="storeSerial" type="java.lang.String" column="STORE_SERIAL" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="area" type="java.math.BigDecimal" column="AREA" />
+		<property name="linker" type="java.lang.String" column="LINKER" />
+		
+		
+		<property name="linkTel" type="java.lang.String" column="LINK_TEL" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="taskId" type="java.lang.Long" column="TASK_ID" />
+	</class>
+</hibernate-mapping>

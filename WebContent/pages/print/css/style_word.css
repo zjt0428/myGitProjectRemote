@@ -1,0 +1,118 @@
+body {
+	font-size:14px;
+	color:#000000;
+	margin:0 auto;
+   }
+   
+div,table,select,textarea,form,p,h1,h2,h3,h4,h5,fieldset,p{padding:0; margin:0;}
+ul,li,dl,dt,dd{padding:0; margin:0; list-style:none;}
+img{ border:0; padding:0; margin:0}
+p  { line-height:28px; text-align:left;	font-size:14px; }
+.fl{ float: left}
+.fr{ float: right}
+
+
+a{ text-decoration:none;}
+a:link, a:visited{ color:#000000;}
+a:hover{ color:#FF6D00; text-decoration:underline;}
+
+.main_detail{width:640px; margin:0 auto;}
+.mar_15{margin-top:15px; margin-right:20px; width:660px; text-align:right;}
+.indt2{text-indent: 2em;}
+
+
+.width_150{ width:150px; border-bottom:#000000 1px solid; height:32px;}
+
+/*列表页表格*/
+.listtable{
+	width:100%;
+	font-size:14px;	
+	border: 1px solid #000000; 
+	border-collapse: collapse;}
+	
+.listtable th {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000; 
+	font-weight:bold;
+	padding:5px 3px;
+	line-height:20px;
+	text-align:center;
+	}
+	
+.listtable td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	line-height:20px;
+	padding:5px 3px;}	
+	
+	
+
+/*安装协议表格*/
+.anz_table{
+	width:100%;
+	font-size:14px;	
+	border: 1px solid #000000; 
+	border-collapse: collapse;}
+	
+	
+.anz_table td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+    padding-left:3px;}	
+	
+	
+	
+/*没边线表格*/
+.list_none{width:100%;font-size:14px; border:none;}
+.list_none td {color:#000000;line-height:32px;padding-left:3px; border:none;}	
+	
+.tj_title{font-size:26px; text-align:center; font-weight:bold;width:100%; padding-top:10px;padding-bottom:10px;}
+.tj_detail{float:left; padding-top:8px;padding-bottom:28px;line-height:28px; width:100%;}
+	
+/*塔机验收项目表格*/
+.tjtable{
+	width:98%;
+	font-size:14px;	
+	border: 1px solid #000000; 
+	border-collapse: collapse;}
+		
+.tjtable td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	text-align:left;
+	line-height:28px;
+    padding-left:3px;}	
+	
+/*升降机保养规程表格*/
+.bygz_table{
+	width:100%;
+	font-size:14px;	
+	border: 1px solid #000000; 
+	border-collapse: collapse;}
+	
+.bygz_table td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	line-height:24px;
+    padding-left:5px;}		
+	
+	
+
+.tabp {
+    border-color: #000000;
+    border-style: solid;
+    border-width: 1px 2px 2px 1px;
+    margin-top: 5px;}
+	
+
+.tdp {
+    border-bottom: 0 solid #000000;
+    border-right: 0 solid #000000;
+    font-size: 14px;
+    height: 36px;
+}

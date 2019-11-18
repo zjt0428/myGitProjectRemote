@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PractiEvaluation" table="T_PRACTI_EVALUATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="evaluaId" column="EVALUA_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="evaluaSerial" type="java.lang.String" column="EVALUA_SERIAL" />
+		<property name="evaluaDate" type="java.lang.String" column="EVALUA_DATE" />
+		<property name="evaluaMan" type="java.lang.String" column="EVALUA_MAN" />
+		<property name="evaluaManId" type="java.lang.Long" column="EVALUA_MAN_ID" />
+		<property name="acceptMan" type="java.lang.String" column="ACCEPT_MAN" />
+		<property name="acceptManId" type="java.lang.Long" column="ACCEPT_MAN_ID" />
+		<property name="evaluaStar" type="java.lang.String" column="EVALUA_STAR" />
+		<property name="evaluaContent" type="java.lang.String" column="EVALUA_CONTENT" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.USERID = EVALUA_MAN_ID)" />
+	</class>
+</hibernate-mapping>

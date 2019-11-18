@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ProjectDepotInit" table="T_PROJECT_DEPOT_INIT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="projectInitId" column="PROJECT_INIT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="unCustomName" type="java.lang.String" column="UN_CUSTOM_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="initDate" type="java.lang.String" column="INIT_DATE" />
+		<property name="initPerson" type="java.lang.String" column="INIT_PERSON" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="total" type="java.lang.String" column="TOTAL" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="projectDepotInitDetailSet" lazy="true" cascade="all" inverse="true">
+			<key column="PROJECT_INIT_ID"></key>
+			<one-to-many class="com.knight.emms.model.ProjectDepotInitDetail"></one-to-many>
+		</set>
+	</class>
+</hibernate-mapping>

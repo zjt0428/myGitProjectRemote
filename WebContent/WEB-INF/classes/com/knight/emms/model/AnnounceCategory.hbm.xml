@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AnnounceCategory" table="T_ANNOUNCE_CATEGORY" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="announceCategoryId" column="ANNOUNCE_CATEGORY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="announceId" type="java.lang.Long" column="ANNOUNCE_ID" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" />
+		<property name="depName" type="java.lang.String" column="DEP_NAME" />
+		<property name="scopeDepId" type="java.lang.Long" column="SCOPE_DEP_ID" />
+		<property name="scopeDepName" type="java.lang.String" column="SCOPE_DEP_NAME" />
+		<property name="category" type="java.lang.String" column="CATEGORY" />
+	</class>
+</hibernate-mapping>

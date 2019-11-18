@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InspectProjectRecord" table="T_INSPECT_PROJECT_RECORD" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inprojectId" column="INPROJECT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="inprojectSerial" type="java.lang.String" column="INPROJECT_SERIAL" />
+		<property name="inprojectDate" type="java.lang.String" column="INPROJECT_DATE" />
+		<property name="inprojectItem" type="java.lang.String" column="INPROJECT_ITEM" />
+		<property name="inprojectType" type="java.lang.String" column="INPROJECT_TYPE" />
+		<property name="inprojectImage" type="java.lang.String" column="INPROJECT_IMAGE" />
+		<property name="inprojectState" type="java.lang.String" column="INPROJECT_STATE" />
+		<property name="aid" type="java.lang.Long" column="AID" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="attendamce" column="AID" class="com.knight.app.model.Attendamce" insert="false" update="false" fetch="join"  />
+	</class>
+</hibernate-mapping>

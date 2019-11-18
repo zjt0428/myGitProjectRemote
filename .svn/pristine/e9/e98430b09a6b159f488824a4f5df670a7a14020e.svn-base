@@ -1,0 +1,182 @@
+/**
+ *====================================================
+ * 文件名称: SettleContractServiceImpl.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2013-9-24			chenxy(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.service.impl;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.service.ExportService;
+import com.knight.core.web.paging.PagingBean;
+import com.knight.emms.constant.Constant;
+import com.knight.emms.constant.Type;
+import com.knight.emms.core.service.BaseBusinessModelServiceImpl;
+import com.knight.emms.dao.ComponDiaryDao;
+import com.knight.emms.dao.ContractLeaseDao;
+import com.knight.emms.dao.EquipDiaryDao;
+import com.knight.emms.dao.SettleComponBriefDao;
+import com.knight.emms.dao.SettleContractDao;
+import com.knight.emms.dao.SettleEquipBriefDao;
+import com.knight.emms.dao.SettleItemBriefDao;
+import com.knight.emms.domain.FundReceiveVoucherService;
+import com.knight.emms.domain.FundPaymentVoucherService;
+import com.knight.emms.model.*;
+import com.knight.emms.service.InstalmentService;
+import com.knight.emms.service.ReceivementService;
+import com.knight.emms.service.SettleContractService;
+import com.knight.emms.support.FundPlanSupport;
+import com.knight.system.service.impl.CodeServiceImpl;
+
+/**
+ * @ClassName: SettleContractServiceImpl
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2013-9-24 下午5:10:23
+ */
+public class SettleContractServiceImpl extends BaseBusinessModelServiceImpl<SettleContract> implements SettleContractService, FundReceiveVoucherService, FundPaymentVoucherService, ExportService {
+
+	private SettleContractDao settleContractDao;
+
+	@Resource
+	private SettleEquipBriefDao settleEquipBriefDao;
+
+	@Resource
+	private SettleComponBriefDao settleComponBriefDao;
+
+	@Resource
+	private SettleItemBriefDao settleItemBriefDao;
+
+	@Resource
+	private EquipDiaryDao equipDiaryDao;
+
+	@Resource
+	private ContractLeaseDao contractLeaseDao;
+
+	@Resource
+	private InstalmentService instalmentService;
+
+	@Resource
+	private ReceivementService receivementService;
+
+	public SettleContractServiceImpl(SettleContractDao dao) {
+		super(dao);
+		this.settleContractDao = dao;
+	}
+
+	public SettleContract getTranslateAll(Long settleId) {
+		SettleContract settle = settleContractDao.get(settleId);
+		CodeServiceImpl.translate(settle, settleContractDao.getPersistantStruct());
+		settle.getSettleComponBriefSet();
+		settle.getSettleEquipBriefSet();
+		CodeServiceImpl.translate(settle.getInstalmentSet(), instalmentService.getPersistantStruct());
+		CodeServiceImpl.translate(settle.getReceivementSet(), receivementService.getPersistantStruct());
+		return settle;
+	}
+
+	public void saveOrMergeEdit(SettleContract settleContract) {
+		if (settleContract.getSettleId() == null) {
+			settleContractDao.saveSerialModel(settleContract);
+		}
+		settleContract.setSubSettleContract();
+		if (settleContract.getTaxRate() != null && settleContract.getSettleAmount() != null) {
+			settleContract.setTaxAmount(settleContract.getSettleAmount().multiply(settleContract.getTaxRate()));
+		}
+		settleContractDao.merge(settleContract);
+		if (Type.Fund.receive.equals(settleContract.getFundType())) { // 收款
+			settleContract.setReceivementSet(FundPlanSupport.createReceivement(settleContract));
+			receivementService.saveOrMeger(settleContract.getReceivementSet());
+		} else if (Type.Fund.payment.equals(settleContract.getFundType())) { // 付款
+			settleContract.setInstalmentSet(FundPlanSupport.createInstalment(settleContract));
+			instalmentService.saveOrMeger(settleContract.getInstalmentSet());
+		}
+	}
+
+	public void deleteEquipBrief(Long seBriefId) {
+		settleEquipBriefDao.remove(seBriefId);
+	}
+
+	public void deleteComponBrief(Long scBriefId) {
+		settleComponBriefDao.remove(scBriefId);
+	}
+
+	public void deleteItemBrief(Long siBriefId) {
+		settleItemBriefDao.remove(siBriefId);
+	}
+
+	public void effective(SettleContract settleContract) {
+		for (SettleEquipBrief settleEquip : settleContract.getSettleEquipBriefSet()) {
+			if (settleEquip.getEquipDiaryId() == null) {
+				continue;
+			}
+			EquipDiary ed = equipDiaryDao.get(settleEquip.getEquipDiaryId());
+			if (ed == null) {
+				continue;
+			}
+			ed.setLastSettleDate(settleEquip.getEndSettleDate());
+			equipDiaryDao.save(ed);
+		}
+
+		// 合同金额累加
+		ContractLease cl = contractLeaseDao.get(settleContract.getContractId());
+		cl.setContractAmount(cl.getContractAmount().add(settleContract.getSettleAmount()));
+		cl.setDebitReceivable(cl.getDebitReceivable().add(settleContract.getSettleAmount()));
+		contractLeaseDao.save(cl);
+
+		settleContract.setEffective(Constant.ENABLED);
+		settleContractDao.save(settleContract);
+	}
+
+	public void loseEffective(SettleContract settleContract) {
+		// 合同金额累加
+		ContractLease cl = contractLeaseDao.get(settleContract.getContractId());
+		cl.setContractAmount(cl.getContractAmount().subtract(settleContract.getSettleAmount()));
+		cl.setDebitReceivable(cl.getDebitReceivable().subtract(settleContract.getSettleAmount()));
+		contractLeaseDao.save(cl);
+
+		settleContract.setEffective(Constant.DISENABLED);
+		settleContractDao.save(settleContract);
+	}
+
+	// ====================================================================================//
+	public BigDecimal getRelatePaymentAmount(Long settled) {
+		SettleContract settleContract = settleContractDao.get(settled);
+		return settleContract.getSettleAmount();
+	}
+
+	public void saveRelateAmountPaymentStatus(AmountPayment amountPayment, Long settled, String status) {
+		SettleContract b = settleContractDao.get(settled);
+		b.setFinishedAmount(amountPayment.getHasPaymentAmount());
+		b.setFundStatus(status);
+		settleContractDao.save(b);
+	}
+
+	public BigDecimal getRelateReceiveAmount(Long settled) {
+		SettleContract settleContract = settleContractDao.get(settled);
+		return settleContract.getSettleAmount();
+	}
+
+	public void saveRelateAmountReceiveStatus(AmountReceive amountReceive, Long settled, String status) {
+		SettleContract b = settleContractDao.get(settled);
+		b.setFinishedAmount(amountReceive.getHasReceiveAmount());
+		b.setBalanceAmount(amountReceive.getRelateAmount().subtract(amountReceive.getHasReceiveAmount()));
+		b.setFundStatus(status);
+		settleContractDao.save(b);
+	}
+
+	public Set<ContractCostitem> getContractCostitems(Long contractId){
+		ContractLease c = contractLeaseDao.get(contractId);
+		return c.getContractCostitemSet();
+
+	}
+
+}

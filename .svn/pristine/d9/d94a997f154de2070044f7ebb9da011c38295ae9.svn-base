@@ -1,0 +1,1459 @@
+/**
+ *====================================================
+ * 文件名称: EquipmentAction.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2014年10月25日			chenxy(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.terminal.action;
+
+import com.google.gson.JsonObject;
+import com.knight.app.dao.InspectRectifyDao;
+import com.knight.app.model.InspectRectify;
+import com.knight.app.model.TAppRepair;
+import com.knight.app.service.InspectRectifyService;
+import com.knight.app.service.TAppRepairService;
+import com.knight.core.exception.BusinessException;
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.log.ActionLog;
+import com.knight.core.util.DateUtil;
+import com.knight.core.util.GsonUtil;
+import com.knight.core.web.paging.PagingBean;
+import com.knight.emms.constant.Constant;
+import com.knight.emms.constant.Status;
+import com.knight.emms.model.*;
+import com.knight.emms.service.*;
+import com.knight.emms.terminal.Query;
+import com.knight.emms.terminal.Tequest;
+import com.knight.emms.terminal.TerminalBaseAction;
+import com.knight.emms.terminal.dto.*;
+import com.knight.system.application.ApplicationContainer;
+import com.knight.system.constant.SystemConstant;
+import com.knight.system.model.AppUser;
+import com.knight.system.model.FileAttach;
+import com.knight.system.model.UserExtend;
+import com.knight.system.service.AppUserService;
+import com.knight.system.service.CodeService;
+import com.knight.system.service.FileAttachService;
+import com.knight.system.service.impl.CodeServiceImpl;
+import org.apache.commons.lang.StringUtils;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * @ClassName: EquipmentAction
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2014年10月25日 上午10:55:39
+ */
+public class EquipmentAction extends TerminalBaseAction {
+
+	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final long serialVersionUID = 1L;
+
+	@Resource
+	private FileAttachService fileAttachService;
+
+	@Resource
+	private EquipmentService equipmentService;
+
+	@Resource
+	private EquipInstallService equipInstallService;
+	
+	@Resource
+	private TAppRepairService repairService;
+
+	@Resource
+	private InstallManageService installManageService;
+
+	@Resource
+	private EquipDismantleService equipDismantleService;
+
+	@Resource
+	private DismantleManageService dismantleManageService;
+
+    @Resource
+    private IndisSchemaService indisSchemaService;
+
+	@Resource
+	private InspectManageService inspectManageService;
+
+	@Resource
+	private EquipInspectService equipInspectService;
+
+	@Resource
+	private EquipFlowService equipFlowService;
+
+	@Resource
+	private PractitionerService practitionerService;
+
+	@Resource
+	private ComponentService componentService;
+	
+	@Resource
+	private InspectRectifyService inspectRectifyService;
+
+	@Resource
+	private ProjectComponService projectComponService;
+
+    @Resource
+    private CodeService codeService;
+    
+    @Resource
+    private EquipRepairService equipRepairService;
+
+    @Resource
+    private InspectRectifyDao inspectRectifyDao;
+
+    @Resource
+    private AppUserService appUserService;
+//    @Resource
+//	private UserProjectService userProjectService;
+//    
+	public String gather() {
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.gather");
+		EquipmentGatherResponse response = new EquipmentGatherResponse();
+		response.addGather(result);
+		setJsonString(GsonUtil.toJson(response, false));
+		return SUCCESS;
+	}
+	
+	/* 当前设备各状态数量统计 */
+	public String countEquip() {
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.equip_count");
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String listPractitioner() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String mobile = query.getMobile();
+		String practiName = query.getPractiName();
+		String kindWorkName = query.getKindWorkName();
+		List<Map<String, Object>> practiList = practitionerService.queryByScript("terminal.list_practitioner", mobile, practiName, kindWorkName, start, pageSize);
+		successResponse(GsonUtil.toJson(practiList, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+    public String listEquip(){
+        Query query = getTerminalMessage().getQuery();
+        Integer start = query.getStart();
+        Integer pageSize = query.getPageSize();
+		String equipGenericName = codeService.getCode("equipGeneric",query.getKeyword());
+		String equipSpecificName = codeService.getCode("equipSpecific",query.getKeyword());
+		String projectName = query.getProjectName();
+		String keyword = query.getKeyword();
+		Long projectId = query.getStoreId();
+		if(!equipGenericName.equals(keyword)){
+			keyword = equipGenericName;
+		}
+		if(!equipSpecificName.equals(keyword)){
+			keyword = equipSpecificName;
+		}
+		QueryFilter filter = new QueryFilter();
+		if(projectId !=null){
+			if(query.getRelateModule() !=null && query.getRelateModule().equals("projectStore")){
+				filter.addConjunctFilter("Q_projectId_L_EQ",String.valueOf(projectId));
+			}
+			if(query.getRelateModule() !=null && query.getRelateModule().equals("houseStore")){
+				filter.addConjunctFilter("Q_storeId_L_EQ",String.valueOf(projectId));
+			}
+			 
+		}
+		filter.addFieldsDisjunctFilter("Q_exwSerial|recordId|equipGeneric|equipSpecific|equipVender|projectName_S_LK",keyword);
+        filter.addConjunctFilter("Q_delFlag_S_EQ","1");
+//        filter.addFieldsValuesDisjunctFilter("Q_status_S_EQ","1");
+		filter.setPagingBean(new PagingBean(start,pageSize));
+        List<Equipment> equipments = equipmentService.queryTranslateAll(filter);
+		EquipmentInfoResponse info = new EquipmentInfoResponse();
+		for(Equipment e :equipments){
+            ComponentInfoResponse compInfo = new ComponentInfoResponse();
+            CodeServiceImpl.translate(e.getComponentSet());
+            for(Component c :e.getComponentSet()){
+                compInfo.addComponent(c);
+            }
+			info.addEquipment(e,compInfo);
+		}
+        setJsonString(GsonUtil.toJson(info,false));
+        return SUCCESS;
+    }
+
+	public String listComponent() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String componSerial = query.getComponSerial();
+		String dimensions = query.getDimensions();
+		String componGenericName = query.getComponGenericName();
+		String componSpecificName = query.getComponSpecificName();
+		String componIds = query.getComponIds();
+		if(StringUtils.isNotBlank(componIds)){
+			List<Map<String, Object>> componentList = componentService.queryByScript("terminal.list_component2", componSerial, dimensions, componGenericName, componSpecificName, start, pageSize,componIds);
+			successResponse(GsonUtil.toJson(componentList, DateUtil.LINK_DISPLAY_DATE, false));
+		}else{
+			List<Map<String, Object>> componentList = componentService.queryByScript("terminal.list_component", componSerial, dimensions, componGenericName, componSpecificName, start, pageSize);
+			successResponse(GsonUtil.toJson(componentList, DateUtil.LINK_DISPLAY_DATE, false));
+		}
+		return SUCCESS;
+	}
+
+	public String listComponentDispatch() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String componSerial = query.getComponSerial();
+		String dimensions = query.getDimensions();
+		String componGenericName = query.getComponGenericName();
+		String componSpecificName = query.getComponSpecificName();
+		String exwSerial = query.getExwSerial();
+        Long storeId = query.getStoreId();
+        if("storeCompon".equals(query.getRelateModule())) {
+            List<Map<String, Object>> componentList = componentService.queryByScript("terminal.list_component_dispatch", componSerial, dimensions, componGenericName, componSpecificName, start, pageSize,storeId,exwSerial);
+            successResponse(GsonUtil.toJson(componentList, DateUtil.LINK_DISPLAY_DATE, false));
+        }
+		if("projectCompon".equals(query.getRelateModule())){
+			List<Map<String,Object>> projectComponlist = projectComponService.queryByScript("terminal.list_project_compon",componSerial, dimensions, componGenericName, componSpecificName, start, pageSize,storeId,exwSerial);
+			successResponse(GsonUtil.toJson(projectComponlist, DateUtil.LINK_DISPLAY_DATE, false));
+		}
+		return SUCCESS;
+	}
+
+	public String ecinfoLoad() {
+		Query query = getTerminalMessage().getQuery();
+		String qrcode = query.getQrcode();
+		if (StringUtils.isBlank(qrcode)) {
+			setJsonString("{\"success\":false, \"msg\":\"二维码信息有误-" + qrcode + "\"}");
+		}
+		try {
+			Query ecquery = GsonUtil.fromJson(qrcode, Query.class);
+			if (ecquery.getComponId() != null) {
+				Component component = componentService.get(ecquery.getComponId());
+				if (component == null) {
+					setJsonString("{\"success\":false, \"msg\":\"不存在该配件信息[" + ecquery.getComponId() + "]\"}");
+				} else {
+					ComponentInfoResponse response = new ComponentInfoResponse();
+					CodeServiceImpl.translate(component);
+					response.addComponent(component);
+					setJsonString(GsonUtil.toJson(response, false));
+				}
+			} else if (ecquery.getEquipId() != null) {
+				Equipment equipment = equipmentService.get(ecquery.getEquipId());
+				if (equipment == null) {
+					setJsonString("{\"success\":false, \"msg\":\"不存在该设备信息[" + ecquery.getEquipId() + "]\"}");
+				} else {
+					EquipmentInfoResponse response = new EquipmentInfoResponse();
+					CodeServiceImpl.translate(equipment);
+					response.addEquipment(equipment);
+					setJsonString(GsonUtil.toJson(response, false));
+				}
+			} else {
+				setJsonString("{\"success\":false, \"msg\":\"二维码信息有误-" + qrcode + "\"}");
+			}
+		} catch (Exception e) {
+			setJsonString("{\"success\":false, \"msg\":\"二维码信息有误-" + qrcode + "\"}");
+		}
+
+		return SUCCESS;
+	}
+
+	public String installWaitList() {
+		Tequest tequest = getTerminalMessage();
+		String projectName = tequest.getQuery().getProjectName();
+		String recordId = tequest.getQuery().getRecordId();
+		String exwSerial=tequest.getQuery().getExwSerial();
+		String buildingNum=tequest.getQuery().getBuildingNum();
+
+//		if(exwSerial==null){exwSerial="";}
+		List<Map<String, Object>> result = equipInstallService.queryByScript("terminal.wait_install", projectName, recordId,exwSerial,buildingNum);
+		InstallWaitListEquipmentResponse response = new InstallWaitListEquipmentResponse();
+		for (Map<String, Object> data : result) {
+			response.add((Long) data.get("dispatchEquipId"), (Long) data.get("dispatchId"), (String) data.get("recordId"), (String) data.get("projectName"),(Long) data.get("projectId"),
+					(String) data.get("buildingNum"),(String) data.get("exwSerial"));
+		}
+		setJsonString(GsonUtil.toJson(response, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String waitInstallCompon() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter();
+		filter.addConjunctFilter("Q_projectId_L_EQ", tequest.getQuery().getProjectId() == null ? "-1" : tequest.getQuery().getProjectId() + "");
+		filter.addConjunctFilter("Q_counts_N_NEQ","0");
+		filter.addConjunctFilter("Q_status_S_EQ",tequest.getQuery().getStatus());
+		filter.addConjunctFilter("Q_component.componGenericName_S_LK",tequest.getQuery().getComponGenericName());
+		filter.addConjunctFilter("Q_component.componSpecificName_S_LK",tequest.getQuery().getComponSpecificName());
+		filter.addConjunctFilter("Q_component.exwSerial_S_LK",tequest.getQuery().getExwSerial());
+		List<ProjectCompon> list = projectComponService.queryTranslateAll(filter);
+		WaitInstallComponResponse response = new WaitInstallComponResponse();
+		response.add(list);
+		setJsonString(GsonUtil.toJson(response, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String listInstallCompondiary() {
+		Tequest tequest = getTerminalMessage();
+        EquipInstall equipInstall = equipInstallService.getTranslateFull(tequest.getQuery().getInstallId());
+        List list =  equipInstallService.loadCompondiarySet(equipInstall,tequest.getQuery());
+		WaitInstallComponResponse response = new WaitInstallComponResponse();
+		response.add(list);
+		setJsonString(GsonUtil.toJson(response, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String waitInstallPracti() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter();
+        if(tequest.getQuery().getKeyword()!=null&&tequest.getQuery().getKeyword()!=""){
+            filter.addFieldsDisjunctFilter("Q_[practiName|department.depName|kindWork]_S_LK",tequest.getQuery().getKeyword());
+        }
+		filter.setPagingBean(new PagingBean(0,1000));
+		List<Practitioner> list = practitionerService.queryTranslateAll(filter);
+		WaitInstallPractiResponse response = new WaitInstallPractiResponse();
+		response.add(list);
+		setJsonString(GsonUtil.toJson(response, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	@Deprecated
+	public String installList() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter(tequest);
+		filter.addConjunctFilter("Q_equipFlow.equipDiary.recordId_S_LK", tequest.getQuery().getRecordId());
+		filter.addConjunctFilter("Q_equipFlow.equipDiary.projectName_S_LK", tequest.getQuery().getProjectName());
+		filter.addConjunctFilter("Q_equipFlow.flowState_S_EQ", Status.EquipFlow.installed);
+		List<EquipInstall> list = equipInstallService.getAll(filter);
+		for (EquipInstall equipInstall : list) {
+			List<Long> fileIds = fileAttachService.getFileIdByDepend(equipInstall.getInstallId(), SystemConstant.MODULE_EQUIP_INSTALL);
+			equipInstall.setFileAttaches(StringUtils.join(fileIds, ","));
+		}
+		return SUCCESS;
+	}
+
+	public String installLoad() {
+		Tequest tequest = getTerminalMessage();
+		EquipInstall equipInstall = equipInstallService.getTranslateFull(tequest.getQuery().getInstallId());
+		List<Long> fileIds = fileAttachService.getFileIdByDepend(equipInstall.getInstallId(), SystemConstant.MODULE_EQUIP_INSTALL);
+		equipInstall.setFileAttaches(StringUtils.join(fileIds, ","));
+		List<FileAttach> fileAttchs=fileAttachService.getByDepend(equipInstall.getInstallId(), SystemConstant.MODULE_EQUIP_INSTALL);
+		List<Map> images=new ArrayList<Map>();
+		Map<String, Object> map=null;
+		FileAttach attch=null;
+		for(int i=0;i<fileAttchs.size();i++){
+			map=new HashMap<String, Object>();
+			attch=fileAttchs.get(i);
+			map.put("fileid", attch.getFileId());
+			map.put("filesource", attch.getSource());
+			map.put("imagePath", Constant.IMG_PRE_PATH+attch.getFilePath());
+			images.add(map);
+		}
+		InstallLoadEquipmentResponse response = new InstallLoadEquipmentResponse();
+		response.add(equipInstall,images);
+		setJsonString(GsonUtil.toJson(response, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String installSubmit() {
+		Map<String, UserExtend> userExtends = ApplicationContainer.getCurrentUser().getAppUserExtends();
+		if (userExtends == null || userExtends.isEmpty() || userExtends.get(SystemConstant.MODULE_PRACTITIONER) == null || userExtends.get(SystemConstant.MODULE_PRACTITIONER).getForeignId() == null) {
+			throw new BusinessException("非从业人员不允许操作");
+		}
+		Practitioner practitioner = (Practitioner) userExtends.get(SystemConstant.MODULE_PRACTITIONER);
+		Tequest tequest = getTerminalMessage();
+		EquipFlow equipFlow = new EquipFlow();
+		equipFlow.setDispatchEquipId(tequest.getDispatchEquipId());
+		EquipInstall equipInstall = new EquipInstall();
+		equipInstall.setStartinDate(tequest.getStartinDate());
+		equipInstall.setEndinDate(tequest.getEndinDate());
+		equipInstall.setInstallHeight(tequest.getInstallHeight());
+		equipInstall.setKnotCounts(tequest.getKnotCounts());
+		equipInstall.setBrachium(tequest.getBrachium());
+		equipInstall.setWallAttacheQty(tequest.getWallAttacheQty());
+		equipInstall.setEquipFlow(equipFlow);
+		equipInstall.setApplyforState(Status.EquipFlowApplyfor.waitSubmit);
+		equipInstall.setPrincipalId(practitioner.getPractiId());
+		equipInstall.setPrincipal(practitioner.getPractiName());
+		equipInstall.setPrincipalTel(practitioner.getMobile());
+		equipInstall.setDelFlag(Constant.ENABLED);
+		equipInstall.setComponDiarySet(tequest.getComponDiarySet());
+		equipInstall.setPractiDiarySet(tequest.getPractiDiarySet());
+		equipInstall.setFileAttaches(tequest.getFileAttaches());
+		equipInstall.setLongitude(tequest.getLongitude());
+		equipInstall.setLatitude(tequest.getLatitude());
+		equipInstall.setAddress(tequest.getAddress());
+		equipInstall.setInstalltype(tequest.getInstalltype());
+		equipInstall.setRemark(tequest.getRemark());
+		equipInstallService.sceneInstall(equipInstall,tequest.getBuildingNum());
+		setTerminalFileAttach(equipInstall.getInstallId(), equipInstall.getFileAttaches());
+		return SUCCESS;
+	}
+
+	public String jackOrDrop() {
+		Tequest tequest = getTerminalMessage();
+        EquipInstall p = equipInstallService.getTranslate(tequest.getInstallId());
+        p.setJjCompons(GsonUtil.toJson(tequest.getJjComponSet()));
+        p.setSubComponInstall();
+        Integer knotCounts =p.getKnotCounts(),wallAttacheQty =p.getWallAttacheQty();
+        BigDecimal installHeight = p.getInstallHeight();
+        for(InstallJjCompon cd : p.getJjComponSet()){
+            Component c = componentService.get(cd.getComponId());
+            if("1".equals(c.getKnotFlag())){
+                knotCounts += cd.getCounts();
+            }
+            if("1".equals(c.getWallAttacheFlag())){
+                wallAttacheQty += cd.getCounts();
+            }
+            if(c.getKnotMetric()!=null){
+				installHeight = installHeight.add(c.getKnotMetric().multiply(new BigDecimal(cd.getCounts())));
+            }
+        }
+		p.setInstallHeight(installHeight);
+        p.setKnotCounts(knotCounts);
+		p.setWallAttacheQty(wallAttacheQty);
+		if(tequest.getDropFileAttaches()!=null){
+			p.setDropFileAttaches((p.getDropFileAttaches()==null?"":(p.getDropFileAttaches()+","))+tequest.getDropFileAttaches());
+		}
+		if(tequest.getJackFileAttaches()!=null){
+			p.setJackFileAttaches((p.getJackFileAttaches()==null?"":(p.getJackFileAttaches()+","))+tequest.getJackFileAttaches());
+		}
+
+        if ((Boolean) ApplicationContainer.getSystemParam("schemaNoticeSwitch")) {
+            QueryFilter filter = new QueryFilter();
+            filter.addConjunctFilter("Q_relateModule_S_EQ", SystemConstant.MODULE_EQUIP_EMPLOY);
+            filter.addConjunctFilter("Q_equipment.equipId_L_EQ", p.getEquipFlow().getEquipId() + "");
+            filter.addConjunctFilter("Q_project.projectId_L_EQ", p.getEquipFlow().getDispatch().getProjectId() + "");
+            filter.addConjunctFilter("Q_contractLease.contractId_L_EQ", p.getEquipFlow().getContractId() + "");
+            List<IndisSchema> s = indisSchemaService.getAll(filter);
+            if (s.isEmpty()) {
+                throw new BusinessException("该设备未做附墙方案");
+            }
+        }
+        if("jack".equals(tequest.getType())){
+            setTerminalFileAttach(tequest.getInstallId(), tequest.getDropFileAttaches());
+        }else if("drop".equals(tequest.getType())){
+            setTerminalFileAttach(tequest.getInstallId(), tequest.getJackFileAttaches());
+        }
+        equipInstallService.setJjCompon(p,tequest.getType());
+		return SUCCESS;
+	}
+
+	public String installManageList() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter(tequest);
+		filter.addConjunctFilter("Q_recordId_S_LK", tequest.getQuery().getRecordId());
+		filter.addConjunctFilter("Q_projectName_S_LK", tequest.getQuery().getProjectName());
+		List<InstallManage> list = installManageService.getAll(filter);
+		successResponse(GsonUtil.toJson(list));
+		return SUCCESS;
+	}
+
+	public String installManageLoad() {
+		Tequest tequest = getTerminalMessage();
+		InstallManage installManage = installManageService.get(tequest.getQuery().getInstallId());
+		EquipFlow equipFlow = new EquipFlow();
+		EquipDiary equipDiary = new EquipDiary();
+		equipDiary.setProjectName(installManage.getProjectName());
+		equipDiary.setRecordId(installManage.getRecordId());
+		equipFlow.setEquipDiary(equipDiary);
+		installManage.setEquipFlow(equipFlow);
+		List<Long> fileIds = fileAttachService.getFileIdByDepend(installManage.getInstallId(), SystemConstant.MODULE_INSTALL_MANAGE);
+		installManage.setFileAttaches(StringUtils.join(fileIds, ","));
+		List<FileAttach> fileAttchs=fileAttachService.getByDepend(installManage.getInstallId(), SystemConstant.MODULE_INSTALL_MANAGE);
+		List<Map> images=new ArrayList<Map>();
+		Map<String, Object> map=null;
+		FileAttach attch=null;
+		for(int i=0;i<fileAttchs.size();i++){
+			map=new HashMap<String, Object>();
+			attch=fileAttchs.get(i);
+			map.put("fileid", attch.getFileId());
+			map.put("filesource", attch.getSource());
+			images.add(map);
+		}
+		installManage.setImages(images);
+		List<InstallManage> list = new ArrayList<InstallManage>();
+		list.add(installManage);
+		successResponse(GsonUtil.toJson(list));
+		return SUCCESS;
+	}
+
+	public String installManageSubmit() {
+		Tequest tequest = getTerminalMessage();
+		AppUser currentUser = ApplicationContainer.getCurrentUser();
+		InstallManage install = new InstallManage();
+		EquipInstall equipInstall  = new  EquipInstall();
+		install.setRecordId(tequest.getRecordId());
+		install.setProjectName(tequest.getProjectName());
+		install.setStartinDate(tequest.getStartinDate());
+		install.setEndinDate(tequest.getEndinDate());
+		install.setWallAttacheQty(tequest.getWallAttacheQty());
+		install.setBrachium(tequest.getBrachium());
+		install.setInstallHeight(tequest.getInstallHeight());
+		install.setLongitude(tequest.getLongitude());
+		install.setLatitude(tequest.getLatitude());
+		install.setAddress(tequest.getAddress());
+		install.setUserId(currentUser.getUserId());
+		install.setUserName(currentUser.getFullname());
+		install.setProvidedDate(DateUtil.getCurrentLinkDateStr());
+		install.setInstalltype(tequest.getInstalltype());
+		install.setExwserial(tequest.getExwSerial());
+		install.setBuildingnum(tequest.getBuildingNum());
+		equipInstall.setContractSerial(equipInstall.getContractSerial());
+		equipInstall.setEquipmentNo(equipInstall.getEquipmentNo());
+		equipInstall.setExwDate(equipInstall.getExwDate());
+		equipInstall.setEquipVender(equipInstall.getEquipVender());
+		installManageService.save(install);
+		setTerminalFileAttach(install.getInstallId(), tequest.getFileAttaches());
+		return SUCCESS;
+	}
+
+	public String installAllList() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String recordId = query.getRecordId();
+		String projectName = query.getProjectName();
+		String exwSerial=query.getExwSerial();
+		String buildingNum=query.getBuildingNum();
+		String flowState = query.getFlowState();
+		List<Map<String, Object>> installAllList = installManageService.queryByScript("terminal.list_install_all", projectName, recordId, exwSerial,buildingNum,flowState,start, pageSize);
+		for (Map<String, Object> data : installAllList) {
+//			List<Long> fileIds = fileAttachService.getFileIdByDepend((Long) data.get("installId"), data.get("relateModule").toString());
+//			data.put("fileAttaches", StringUtils.join(fileIds, ","));
+			List<FileAttach> fileAttchList = fileAttachService.getByDepend((Long) data.get("installId"), data.get("relateModule").toString());
+			if(fileAttchList.size()>0) {
+				StringBuffer sb = new StringBuffer();
+				List<String> imgList = new ArrayList<String>();
+				for(FileAttach fa : fileAttchList) {
+					sb.append(fa.getFileId()).append(",");
+					imgList.add(Constant.IMG_PRE_PATH+fa.getFilePath());
+				}
+				data.put("imgList", imgList);
+				data.put("fileAttaches", sb.substring(0, sb.length()-1));
+			}
+		}
+		Integer count = 0;
+		if(installAllList.size()>0){
+			count = (Integer)installAllList.get(0).get("count");
+		}
+		setJsonString("{\"success\":true,\"msg\":\"操作成功\",\"info\":{\"result\":" + GsonUtil.toJson(installAllList, DateUtil.LINK_DISPLAY_DATE, false)
+		+ ",\"count\":"+count+"}}");
+//		successResponse(GsonUtil.toJson(installAllList, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String inspectWaitList() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = new QueryFilter();
+		Query query = tequest.getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		if(start!=null && pageSize!=null) {
+			if(!"0".equals(start.toString())) {
+				filter.setPagingBean(new PagingBean(start+1, pageSize));
+			}else {
+				filter.setPagingBean(new PagingBean(start, pageSize));
+			}
+		}
+		if(StringUtils.isNotBlank(query.getKeyword())) {
+			filter.addFieldsDisjunctFilter("Q_[equipInspectSchema.equipDiary.projectName"
+					+ "|equipInspectSchema.equipDiary.recordId|equipInspectSchema.equipDiary.exwSerial"
+					+ "|equipInspectSchema.equipDiary.equipSerial]_S_LK", query.getKeyword());
+		}
+		filter.addConjunctFilter("Q_status_S_EQ", Status.HandleResult.untreated);
+		//已经拆卸入库的设备，其对应的巡检单尚未巡检过的不显示
+		filter.addConjunctFilter("Q_flowState_S_LT", Status.EquipFlow.dismantling);
+		filter.addConjunctFilter("Q_sealStatus_S_EQ", Constant.DISENABLED);
+		AppUser au = appUserService.findByUserName(ApplicationContainer.getCurrentUser().getUsername());
+		appUserService.getRoleDataPermission(au);
+		filter.addValuesDisjunctFilter("QVO_permissionFlag_S_LK", au.getDataPermission());
+		List<EquipInspect> list = equipInspectService.getAll(filter);
+		for(EquipInspect ei:list){
+			CodeServiceImpl.translate(ei.getEquipInspectSchema().getEquipDiary());
+		}
+		setJsonString("{\"success\":true,\"msg\":\"操作成功\",\"info\":{\"result\":" + GsonUtil.toJson(list, DateUtil.LINK_DISPLAY_DATE, false)
+		+ ",\"totalCounts\":"+filter.getPagingBean().getTotalItems()+"}}");
+		return SUCCESS;
+	}
+
+	public String inspectList() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter(tequest);
+		filter.addConjunctFilter("Q_status_S_GT", Status.HandleResult.untreated);
+		filter.addConjunctFilter("Q_equipInspectSchema.equipDiary.projectName_S_LK", tequest.getQuery().getProjectName());
+		List<EquipInspect> list = equipInspectService.queryTranslateAll(filter);
+		for (EquipInspect equipInspect : list) {
+			List<Long> fileIds = fileAttachService.getFileIdByDepend(equipInspect.getInspectId(), SystemConstant.MODULE_EQUIP_INSPECT);
+			equipInspect.setFileAttaches(StringUtils.join(fileIds, ","));
+		}
+		successResponse(GsonUtil.toJson(list));
+		return SUCCESS;
+	}
+
+	public String inspectLoad() {
+		Tequest tequest = getTerminalMessage();
+		EquipInspect equipInspect = equipInspectService.getTranslateFull(tequest.getQuery().getInspectId());
+//		List<Long> fileIds = fileAttachService.getFileIdByDepend(equipInspect.getInspectId(), SystemConstant.MODULE_EQUIP_INSPECT);
+//		equipInspect.setFileAttaches(StringUtils.join(fileIds, ","));
+		List<FileAttach> fileAttchs=fileAttachService.getByDepend(equipInspect.getInspectId(), SystemConstant.MODULE_EQUIP_INSPECT);
+		List<Map> images=new ArrayList<Map>();
+		Map<String, Object> map=null;
+		FileAttach attch=null;
+		for(int i=0;i<fileAttchs.size();i++){
+			attch=fileAttchs.get(i);
+			if(equipInspect.getFileAttaches().contains(attch.getFileId()+"")) {
+				map=new HashMap<String, Object>();
+				map.put("fileid", attch.getFileId());
+				map.put("filesource", attch.getSource());
+				map.put("remark", attch.getRemark());
+				map.put("imagePath", Constant.IMG_PRE_PATH+attch.getFilePath());
+				images.add(map);
+			}
+		}
+		//-----------------读取巡检整改信息---------------
+		if(equipInspect.getInspectRectifyId()!=null){
+			InspectRectify inspectRectify = inspectRectifyService.get(equipInspect.getInspectRectifyId());
+//			List<Long> inspectRectifyFileIds = fileAttachService.getFileIdByDepend(inspectRectify.getInspectRectifyId(), SystemConstant.MODULE_INSPECT_RECTIFY);
+//			inspectRectify.setFileAttaches(StringUtils.join(inspectRectifyFileIds, ","));
+			List<FileAttach> fileAttchList = fileAttachService.getByDepend(inspectRectify.getInspectRectifyId(), SystemConstant.MODULE_INSPECT_RECTIFY);
+			StringBuffer sb = new StringBuffer();
+			List<String> list = new ArrayList<String>();
+			for (int i = 0; i < fileAttchList.size(); i++) {
+				sb.append(fileAttchList.get(i).getFileId()).append(",");
+				list.add(Constant.IMG_PRE_PATH+fileAttchList.get(i).getFilePath());
+			}
+			if(fileAttchList.size()>0) {
+				inspectRectify.setFileAttaches(sb.substring(0, sb.length()-1));
+				inspectRectify.setImgList(list);
+			}
+			equipInspect.setInspectRectify(inspectRectify);
+		}
+		InspectLoadResponse response = new InspectLoadResponse();
+		response.add(equipInspect,images);
+		setJsonString(GsonUtil.toJson(response, DateUtil.LINK_DISPLAY_DATE_FULL, false));
+		return SUCCESS;
+	}
+
+	public String inspectSubmit() {
+		Tequest tequest = getTerminalMessage(DateUtil.LINK_DISPLAY_DATE_FULL);
+		logger.info("tequest : "+tequest);
+		logger.info(String.valueOf(tequest.getInspectId()));
+		EquipInspect inspect = equipInspectService.get(tequest.getInspectId());
+		inspect.setInspectResult(tequest.getInspectResult());
+		inspect.setInspectDate(tequest.getInspectDate());
+		inspect.setInspectPepoles(ApplicationContainer.getCurrentUser().getFullname());
+		inspect.setRemark(tequest.getRemark());
+		inspect.setFileAttaches(tequest.getFileAttaches());
+		inspect.setLongitude(tequest.getLongitude());
+		inspect.setLatitude(tequest.getLatitude());
+		inspect.setAddress(tequest.getAddress());
+		inspect.setBuildingNum(tequest.getBuildingNum());
+		inspect.setExwSerial(tequest.getExwSerial());
+		inspect.setRecordId(tequest.getRecordId());
+		inspect.setRectification(tequest.getRectification());
+		inspect.setInspectSchedule(Status.InspectSchedule.planed);
+		if(!equipInspectService.immediate(inspect)) {
+			errorResponse("请为当前账户绑定企业档案，以正常使用短信提醒功能");
+		}
+		if("3".equals(tequest.getInspectResult())||"4".equals(tequest.getInspectResult())||"5".equals(tequest.getInspectResult())){
+			repairService.createRepair(tequest);
+		}
+		
+		JsonObject obj  = new JsonObject();
+    	obj.addProperty("inspectId", inspect.getInspectId());
+    	obj.addProperty("relateModule", "EQUIP_INSPECT");
+		
+		send("您收到一条整改通知，"+tequest.getProjectName()+"项目,"+inspect.getBuildingNum()+"号楼,"+inspect.getRemark(),obj.toString(),String.valueOf(ApplicationContainer.getCurrentUserId()),"INSPECTIONDEETAIL");
+		setTerminalFileAttach(inspect.getInspectId(), inspect.getFileAttaches());
+		return SUCCESS;
+	}
+
+	public String inspectComplete() {
+		Tequest tequest = getTerminalMessage(DateUtil.LINK_DISPLAY_DATE_FULL);
+		String relateModule = tequest.getRelateModule();
+		if (SystemConstant.MODULE_EQUIP_INSPECT.equals(relateModule)) {
+			EquipInspect inspect = equipInspectService.get(tequest.getInspectId());
+			inspect.setInspectResult(tequest.getProjectName());
+			inspect.setBuildingNum(tequest.getBuildingNum());
+			inspect.setExwSerial(tequest.getExwSerial());
+			inspect.setInspectPepoles(tequest.getInspectPepoles());
+			inspect.setInspectDate(tequest.getInspectDate());
+			inspect.setRectification(tequest.getRectification());
+			inspect.setInspectResult(tequest.getInspectResult());
+			inspect.setAddress(tequest.getAddress());
+			inspect.setRemark(tequest.getRemark());
+			inspect.setFileAttaches(tequest.getFileAttaches());
+			inspect.setLongitude(tequest.getLongitude());
+			inspect.setLatitude(tequest.getLatitude());
+			
+			if(tequest.getRectification().equals("1")){
+				inspect.setInspectSchedule(Status.InspectSchedule.unInspect);
+			}else{
+				inspect.setInspectSchedule(Status.InspectSchedule.completed);
+			}
+		
+			if(!equipInspectService.immediate(inspect)) {
+				errorResponse("请为当前账户绑定企业档案，以正常使用短信提醒功能");
+			}
+			
+			JsonObject obj  = new JsonObject();
+	    	obj.addProperty("inspectId", inspect.getInspectId());
+	    	obj.addProperty("relateModule", SystemConstant.MODULE_EQUIP_INSPECT);
+			
+			send("您收到一条整改通知，"+tequest.getProjectName()+"项目,"+inspect.getBuildingNum()+"号楼,"+inspect.getRemark(),obj.toString(),String.valueOf(ApplicationContainer.getCurrentUserId()),"INSPECTIONDEETAIL");
+			setTerminalFileAttach(inspect.getInspectId(), inspect.getFileAttaches());
+		}else if(SystemConstant.MODULE_INSPECT_MANAGE.equals(relateModule)){
+			InspectManage inspect = inspectManageService.get(tequest.getInspectId());
+			inspect.setInspectResult(tequest.getProjectName());
+			inspect.setBuildingNum(tequest.getBuildingNum());
+			inspect.setExwSerial(tequest.getExwSerial());
+			inspect.setInspectPepoles(tequest.getInspectPepoles());
+			inspect.setInspectDate(tequest.getInspectDate());
+			inspect.setRectification(tequest.getRectification());
+			inspect.setInspectResult(tequest.getInspectResult());
+			inspect.setAddress(tequest.getAddress());
+			inspect.setRemark(tequest.getRemark());
+			inspect.setFileAttaches(tequest.getFileAttaches());
+			inspect.setLongitude(tequest.getLongitude());
+			inspect.setLatitude(tequest.getLatitude());
+			
+			if(tequest.getRectification().equals("1")){
+				inspect.setInspectSchedule(Status.InspectSchedule.unInspect);
+			}else{
+				inspect.setInspectSchedule(Status.InspectSchedule.completed);
+			}
+			
+			JsonObject obj  = new JsonObject();
+	    	obj.addProperty("inspectId", inspect.getInspectId());
+	    	obj.addProperty("relateModule", SystemConstant.MODULE_INSPECT_MANAGE);
+			
+			send("您收到一条整改通知，"+tequest.getProjectName()+"项目,"+inspect.getBuildingNum()+"号楼,"+inspect.getRemark(),obj.toString(),String.valueOf(ApplicationContainer.getCurrentUserId()),"INSPECTIONDEETAIL");
+			setTerminalFileAttach(inspect.getInspectId(), inspect.getFileAttaches());
+			
+		}
+		return SUCCESS;
+	}
+	
+	
+	public String inspectManageList() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter(tequest);
+		filter.addConjunctFilter("Q_projectName_S_LK", tequest.getQuery().getProjectName());
+		List<InspectManage> list = inspectManageService.queryTranslateAll(filter);
+		successResponse(GsonUtil.toJson(list));
+		return SUCCESS;
+	}
+
+	public String inspectManageLoad() {
+		Tequest tequest = getTerminalMessage();
+		InspectManage inspectManage = inspectManageService.get(tequest.getQuery().getInspectId());
+		EquipInspectSchema equipInspectSchema = new EquipInspectSchema();
+		EquipDiary equipDiary = new EquipDiary();
+		equipDiary.setProjectName(inspectManage.getProjectName());
+		equipInspectSchema.setEquipDiary(equipDiary);
+		inspectManage.setEquipInspectSchema(equipInspectSchema);
+		List<Long> fileIds = fileAttachService.getFileIdByDepend(inspectManage.getInspectId(), SystemConstant.MODULE_INSPECT_MANAGE);
+		inspectManage.setFileAttaches(StringUtils.join(fileIds, ","));
+		List<FileAttach> fileAttchs=fileAttachService.getByDepend(inspectManage.getInspectId(), SystemConstant.MODULE_INSPECT_MANAGE);
+		List<Map> images=new ArrayList<Map>();
+		Map<String, Object> map=null;
+		FileAttach attch=null;
+		for(int i=0;i<fileAttchs.size();i++){
+			map=new HashMap<String, Object>();
+			attch=fileAttchs.get(i);
+			map.put("fileid", attch.getFileId());
+			map.put("filesource", attch.getSource());
+			map.put("imagePath", Constant.IMG_PRE_PATH+attch.getFilePath());
+			images.add(map);
+		}
+		inspectManage.setImages(images);
+		
+		//-----------------读取巡检整改信息---------------
+		if(inspectManage.getInspectRectifyId()!=null){
+			InspectRectify inspectRectify = inspectRectifyService.get(inspectManage.getInspectRectifyId());
+			List<Long> inspectRectifyFileIds = fileAttachService.getFileIdByDepend(inspectRectify.getInspectRectifyId(), SystemConstant.MODULE_INSPECT_RECTIFY);
+			inspectRectify.setFileAttaches(StringUtils.join(inspectRectifyFileIds, ","));
+			inspectManage.setInspectRectify(inspectRectify);
+		}
+		
+		List<InspectManage> list = new ArrayList<InspectManage>();
+		list.add(inspectManage);
+		successResponse(GsonUtil.toJson(list));
+		return SUCCESS;
+	}
+
+	public String inspectManageSubmit() {
+		setJsonString("待巡检单不能为空，请通过查询待巡检单选择要巡检的设备");
+		/*AppUser currentUser = ApplicationContainer.getCurrentUser();
+		Tequest tequest = getTerminalMessage(DateUtil.LINK_DISPLAY_DATE_FULL);
+		InspectManage inspect = new InspectManage();
+		inspect.setProjectName(tequest.getProjectName());
+		inspect.setInspectDate(tequest.getInspectDate());
+		inspect.setInspectPepoles(ApplicationContainer.getCurrentUser().getFullname());
+		inspect.setInspectResult(tequest.getInspectResult());
+		inspect.setRemark(tequest.getRemark());
+		inspect.setFileAttaches(tequest.getFileAttaches());
+		inspect.setLongitude(tequest.getLongitude());
+		inspect.setLatitude(tequest.getLatitude());
+		inspect.setAddress(tequest.getAddress());
+		inspect.setBuildingNum(tequest.getBuildingNum());
+		inspect.setExwSerial(tequest.getExwSerial());
+		inspect.setRecordId(tequest.getRecordId());
+		inspect.setUserId(currentUser.getUserId());
+		inspect.setUserName(currentUser.getFullname());
+		inspect.setProvidedDate(DateUtil.getCurrentLinkDateStr());
+		inspect.setRectification(tequest.getRectification());
+		inspect.setProjectId(tequest.getProjId());
+		inspectManageService.saveOrMergeForEdit(inspect);
+		
+		JsonObject obj  = new JsonObject();
+    	obj.addProperty("inspectId", inspect.getInspectId());
+    	obj.addProperty("relateModule", "INSPECT_MANAGE");
+		
+		send("您收到一条整改通知，"+tequest.getProjectName()+"项目,"+inspect.getBuildingNum()+"号楼,"+inspect.getRemark(),obj.toString(),String.valueOf(ApplicationContainer.getCurrentUserId()),"INSPECT_MANAGE");
+
+		
+		setTerminalFileAttach(inspect.getInspectId(), inspect.getFileAttaches());*/
+		return SUCCESS;
+	}
+		
+	//整改反馈提交
+	public String inspectRectifySubmit(){
+		AppUser currentUser = ApplicationContainer.getCurrentUser();
+		Tequest tequest = getTerminalMessage(DateUtil.LINK_DISPLAY_DATE_FULL);
+		InspectRectify inspectRectify = new InspectRectify();
+		inspectRectify.setInspectId(tequest.getInspectId());
+		inspectRectify.setLatitude(tequest.getLatitude());
+		inspectRectify.setLongitude(tequest.getLatitude());
+		inspectRectify.setRectifyDate(tequest.getRectifyDate());
+		inspectRectify.setRectifyIntroduce(tequest.getRectifyIntroduce());
+		inspectRectify.setRectifyResult(tequest.getRectifyResult());
+		inspectRectify.setFileAttaches(tequest.getFileAttaches());
+		inspectRectify.setRectifyUsername(currentUser.getFullname());
+		inspectRectify.setRectifyUserId(currentUser.getUserId());
+		if(!currentUser.getFullname().equals(tequest.getRectifyUsername())){
+			inspectRectify.setRectifyResultName(tequest.getRectifyUsername());
+		}
+		inspectRectifyService.save(inspectRectify);
+		setTerminalFileAttach(inspectRectify.getInspectRectifyId(), inspectRectify.getFileAttaches());
+		if(tequest.getRelateModule().equals("INSPECT_MANAGE")){
+			InspectManage inspectManage = inspectManageService.getTranslate(tequest.getInspectId());
+			inspectManage.setInspectRectifyId(inspectRectify.getInspectRectifyId());
+			inspectManage.setRectification("2");
+			inspectManageService.merge(inspectManage);
+			inspectRectifyService.sendSms(inspectManage.getProjectName(), inspectManage.getBuildingNum(), inspectManage.getInspectResultName());
+		}
+		if(tequest.getRelateModule().equals("EQUIP_INSPECT")){
+			EquipInspect inspect = equipInspectService.getTranslateFull(tequest.getInspectId());
+			inspect.setInspectRectifyId(inspectRectify.getInspectRectifyId());
+			inspect.setRectification("2");
+			equipInspectService.merge(inspect);
+			inspectRectifyService.sendSms(inspect.getEquipInspectSchema().getEquipDiary().getProjectName(), inspect.getBuildingNum(), inspect.getInspectResultName());
+		}
+		
+		JsonObject obj  = new JsonObject();
+    	obj.addProperty("practiNames", tequest.getPractiNames());
+    	obj.addProperty("buildingNum", tequest.getBuildingNum());
+    	obj.addProperty("inspectId", inspectRectify.getInspectId());
+    	obj.addProperty("rectifyResult", inspectRectify.getRectifyResult());
+    	obj.addProperty("rectifyUsername", inspectRectify.getRectifyUsername());
+    	obj.addProperty("rectifyIntroduce", inspectRectify.getRectifyIntroduce());
+    	obj.addProperty("longitude", inspectRectify.getLongitude());
+    	obj.addProperty("latitude", inspectRectify.getLatitude());
+    	obj.addProperty("fileAttaches", inspectRectify.getFileAttaches());
+    	obj.addProperty("latitude", inspectRectify.getLatitude());
+    	obj.addProperty("fileAttaches", inspectRectify.getFileAttaches());
+    	obj.addProperty("relateModule", tequest.getRelateModule());
+    	obj.addProperty("projectName", tequest.getProjectName());
+		
+		send("您收到一条整改反馈，"+tequest.getProjectName()+"项目,"+tequest.getBuildingNum()+"号楼,"+inspectRectify.getRectifyIntroduce(),obj.toString(),String.valueOf(currentUser.getUserId()),"INSPECTRECTIFY");
+
+		return SUCCESS;
+	}
+	
+	public String changeInspectResult() {
+		Tequest tequest = getTerminalMessage();
+		Long inspectRectifyId = tequest.getInspectRectifyId();
+		String rectifyResult =  tequest.getRectifyResult();
+		if(StringUtils.isBlank(inspectRectifyId+"")||StringUtils.isBlank(rectifyResult)) {
+			errorResponse(); 
+		}
+		InspectRectify inspectRectify = inspectRectifyDao.get(inspectRectifyId);
+		inspectRectify.setRectifyResult(rectifyResult);
+		inspectRectifyDao.update(inspectRectify);
+		return SUCCESS;
+	}
+
+	public String inspectAllList() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String recordId=query.getRecordId();
+		String exwSerial=query.getExwSerial();
+		String buildingNum=query.getBuildingNum();
+		String projectName = query.getProjectName();
+		String rectification = query.getRectification();
+		Long type = query.getType();
+//		appUserService.getRoleDataPermission(ApplicationContainer.getCurrentUser());
+		AppUser au = appUserService.findByUserName(ApplicationContainer.getCurrentUser().getUsername());
+		appUserService.getRoleDataPermission(au);
+		List<Map<String, Object>> installAllList = null;
+		if("0".equals(type.toString())){		//异常
+			String inspectResult  = "345";
+			installAllList = inspectManageService.queryByScript("terminal.list_inspect_all", projectName,exwSerial,buildingNum, recordId,start, pageSize,rectification,inspectResult,au.getDataPermission());
+		}else if("1".equals(type.toString())) {		//正常
+			String inspectResult = "012";
+			installAllList = inspectManageService.queryByScript("terminal.list_inspect_all2", projectName,exwSerial,buildingNum, recordId,start, pageSize,rectification,inspectResult,au.getDataPermission());
+		}
+		//**************************************************************
+		/*QueryFilter filter = new QueryFilter();
+		if(start!=null && pageSize!=null) {
+			if(!"0".equals(start.toString())) {
+				start = start/pageSize;
+			}
+			filter.setPagingBean(new PagingBean(start, pageSize));
+		}
+		filter.addConjunctFilter("Q_inspectResult_S_LK", inspectResult);
+		if(StringUtils.isNotBlank(projectName)) {
+			filter.addFieldsDisjunctFilter("Q_[equipInspectSchema.equipDiary.projectName"
+					+ "|equipInspectSchema.equipDiary.recordId|equipInspectSchema.equipDiary.exwSerial"
+					+ "|equipInspectSchema.equipDiary.equipSerial]_S_LK", projectName);
+		}
+		if("0".equals(type.toString())){
+			filter.addConjunctFilter("Q_rectification_S_EQ", "1");
+		}else {
+			filter.addConjunctFilter("Q_rectification_S_NEQ", "1");
+		}
+		if(!ApplicationContainer.isCurrentSuperAdmin()) {
+			AppUser ap = ApplicationContainer.getCurrentUser();
+			appUserService.getRoleDataPermission(ap);
+			filter.addValuesDisjunctFilter("QVO_permissionFlag_S_LK", ap.getDataPermission());
+		}
+		List<EquipInspect> equipInspectList = equipInspectService.getAll(filter);
+		CodeServiceImpl.translate(equipInspectList);*/
+		
+		//****************************************************************************************************
+		
+		for (Map<String, Object> data : installAllList) {
+//			List<Long> fileIds = fileAttachService.getFileIdByDepend((Long) data.get("inspectId"), data.get("relateModule").toString());
+//			data.put("fileAttaches", StringUtils.join(fileIds, ","));
+			List<FileAttach> list = fileAttachService.getByDepend((Long) data.get("inspectId"), data.get("relateModule").toString());
+			if(list.size()>0) {
+				StringBuffer sb = new StringBuffer();
+				List<String> imgList = new ArrayList<String>();
+				for(FileAttach fa : list) {
+					sb.append(fa.getFileId()).append(",");
+					imgList.add(Constant.IMG_PRE_PATH+fa.getFilePath());
+				}
+				data.put("imgList", imgList);
+				data.put("fileAttaches", sb.substring(0, sb.length()-1));
+			}
+		}
+		Integer count = 0;
+		if(installAllList.size()>0) {
+			count =(Integer) installAllList.get(0).get("count");
+		}
+		setJsonString("{\"success\":true,\"msg\":\"操作成功\",\"info\":{\"result\":" + GsonUtil.toJson(installAllList, DateUtil.LINK_DISPLAY_DATE, false)
+				+ ",\"count\":"+count+"}}");
+		return SUCCESS;
+	}
+	
+	
+	public String querySecureOnEquipId() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		long equipId = 0;
+		long projId=0;
+		if(query !=null){
+			equipId=query.getEquipId();
+			projId= query.getProjectId();
+		}
+		List<Map<String, Object>> projectList = inspectManageService.queryByScript("terminal.list_secure_on_equip_id",equipId,projId,start,pageSize);
+		
+		StringBuffer buff = new StringBuffer("{\"success\":true,\"totalCounts\":").append(projectList.size()).append(",\"info\":{\"result\":");
+		buff.append(GsonUtil.toJson(projectList, DateUtil.LINK_DISPLAY_DATE, false));
+		buff.append("}}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+
+	public String dismantleWaitList() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String recordId = query.getRecordId();
+		String projectName = query.getProjectName();
+		String exwSerial=query.getExwSerial();
+		String buildingNum=query.getBuildingNum();
+		List<Map<String, Object>> installAllList = installManageService.queryByScript("terminal.list_dismantle_wait", projectName,buildingNum, recordId,exwSerial, start, pageSize);
+		for (Map<String, Object> data : installAllList) {
+			List<Long> fileIds = fileAttachService.getFileIdByDepend((Long) data.get("installId"), data.get("relateModule").toString());
+			data.put("fileAttaches", StringUtils.join(fileIds, ","));
+            // 拆卸配件表
+            EquipInstall equipInstall = equipInstallService.getTranslateFull((Long) data.get("installId"));
+            List list = equipInstallService.loadCompondiarySet(equipInstall);
+            WaitInstallComponResponse response = new WaitInstallComponResponse();
+            response.add(list);
+            data.put("dismantleComponSet",response.getInfo().getResult());
+		}
+		Integer count = 0;
+		if(installAllList.size()>0) {
+			count =(Integer) installAllList.get(0).get("count");
+		}
+		setJsonString("{\"success\":true,\"msg\":\"操作成功\",\"info\":{\"result\":" + GsonUtil.toJson(installAllList, DateUtil.LINK_DISPLAY_DATE, false)
+				+ ",\"count\":"+count+"}}");
+		return SUCCESS;
+	}
+
+	@Deprecated
+	public String dismantleList() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter(tequest);
+		filter.addConjunctFilter("Q_equipFlow.equipDiary.recordId_S_LK", tequest.getQuery().getRecordId());
+		filter.addConjunctFilter("Q_equipFlow.equipDiary.projectName_S_LK", tequest.getQuery().getProjectName());
+		filter.addConjunctFilter("Q_equipFlow.flowState_S_EQ", Status.EquipFlow.dismantled);
+		List<EquipDismantle> list = equipDismantleService.getAll(filter);
+		for (EquipDismantle dismantle : list) {
+			List<Long> fileIds = fileAttachService.getFileIdByDepend(dismantle.getDismantleId(), SystemConstant.MODULE_EQUIP_DISMANTLE);
+			dismantle.setFileAttaches(StringUtils.join(fileIds, ","));
+		}
+		return SUCCESS;
+	}
+
+	public String dismantleLoad() {
+		Tequest tequest = getTerminalMessage();
+		EquipDismantle dismantle = equipDismantleService.getTranslateFull(tequest.getQuery().getDismantleId());
+        Set<ComponDiary> cd = equipInstallService.getTranslateFull(dismantle.getEquipFlow().getInstallId()).getComponDiarySet();
+        List<ComponDiary> list_cd = new ArrayList<ComponDiary>(cd);
+        //将相同配件归为一条记录
+        List<ComponDiary> list_temp = new ArrayList<ComponDiary>();
+            for(int i = 0;i < list_cd.size();i++){
+            for(int j = i+1;j<list_cd.size();j++){
+                if(list_cd.get(i).getComponId().equals(list_cd.get(j).getComponId())){
+                    list_cd.get(j).setCounts(list_cd.get(i).getCounts()+list_cd.get(j).getCounts());
+                    list_temp.add(list_cd.get(i));
+                    break;
+                }
+            }
+        }
+        list_cd.removeAll(list_temp);
+        dismantle.setComponDiarySet(new HashSet<ComponDiary>(list_cd));
+		EquipFlow ef=dismantle.getEquipFlow();
+		EquipDiary ed=ef.getEquipDiary();
+		List<Long> fileIds = fileAttachService.getFileIdByDepend(dismantle.getDismantleId(), SystemConstant.MODULE_EQUIP_DISMANTLE);
+		dismantle.setFileAttaches(StringUtils.join(fileIds, ","));
+		List<FileAttach> fileAttchs=fileAttachService.getByDepend(dismantle.getDismantleId(), SystemConstant.MODULE_EQUIP_DISMANTLE);
+		List<Map> images=new ArrayList<Map>();
+		Map<String, Object> map=null;
+		FileAttach attch=null;
+		for(int i=0;i<fileAttchs.size();i++){
+			map=new HashMap<String, Object>();
+			attch=fileAttchs.get(i);
+			map.put("fileid", attch.getFileId());
+			map.put("filesource", attch.getSource());
+			map.put("imagePath", Constant.IMG_PRE_PATH+attch.getFilePath());
+			images.add(map);
+		}
+		DismantleLoadResponse response = new DismantleLoadResponse();
+		response.add(dismantle,images);
+		
+		setJsonString(GsonUtil.toJson(response, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+
+	public String dismantleSubmit() {
+		Tequest tequest = getTerminalMessage();
+		EquipDismantle equipDismantle = new EquipDismantle();
+		equipDismantle.setEquipFlow(equipFlowService.get(tequest.getFlowId()));
+		equipDismantle.setStartdisDate(tequest.getStartdisDate());
+		equipDismantle.setEnddisDate(tequest.getEnddisDate());
+		equipDismantle.setDismantleHeight(tequest.getDismantleHeight());
+		equipDismantle.setApplyforState(Status.EquipFlowApplyfor.waitSubmit);
+		equipDismantle.setDelFlag(Constant.ENABLED);
+		equipDismantle.setFileAttaches(tequest.getFileAttaches());
+		equipDismantle.setLongitude(tequest.getLongitude());
+		equipDismantle.setLatitude(tequest.getLatitude());
+		equipDismantle.setAddress(tequest.getAddress());
+		Set<ComponDiary> set = new HashSet<ComponDiary>();
+		//做深拷贝
+		for(ComponDiary cd :equipDismantle.getEquipFlow().getComponDiarySet()){
+			set.add(cd);
+		}
+		equipDismantle.setComponDiarySet(set);
+		equipDismantle.setPractiDiarySet(tequest.getPractiDiarySet());
+		equipDismantle.setDismantleType(tequest.getDismantleType());
+		equipDismantleService.sceneDismantle(equipDismantle);
+		setTerminalFileAttach(equipDismantle.getDismantleId(), equipDismantle.getFileAttaches());
+		return SUCCESS;
+	}
+
+	public String dismantleManageList() {
+		Tequest tequest = getTerminalMessage();
+		QueryFilter filter = getTerminalQueryFilter(tequest);
+		filter.addConjunctFilter("Q_recordId_S_LK", tequest.getQuery().getRecordId());
+		filter.addConjunctFilter("Q_projectName_S_LK", tequest.getQuery().getProjectName());
+		List<DismantleManage> list = dismantleManageService.getAll(filter);
+		successResponse(GsonUtil.toJson(list));
+		return SUCCESS;
+	}
+
+	public String dismantleManageLoad() {
+		Tequest tequest = getTerminalMessage();
+		DismantleManage dismantleManage = dismantleManageService.get(tequest.getQuery().getDismantleId());
+        EquipFlow equipFlow = new EquipFlow();
+		EquipDiary equipDiary = new EquipDiary();
+		equipDiary.setProjectName(dismantleManage.getProjectName());
+		equipDiary.setRecordId(dismantleManage.getRecordId());
+		equipFlow.setEquipDiary(equipDiary);
+		dismantleManage.setEquipFlow(equipFlow);
+		List<Long> fileIds = fileAttachService.getFileIdByDepend(dismantleManage.getDismantleId(), SystemConstant.MODULE_DISMANTLE_MANAGE);
+		dismantleManage.setFileAttaches(StringUtils.join(fileIds, ","));
+		List<FileAttach> fileAttchs=fileAttachService.getByDepend(dismantleManage.getDismantleId(), SystemConstant.MODULE_DISMANTLE_MANAGE);
+		List<Map> images=new ArrayList<Map>();
+		Map<String, Object> map=null;
+		FileAttach attch=null;
+		for(int i=0;i<fileAttchs.size();i++){
+			map=new HashMap<String, Object>();
+			attch=fileAttchs.get(i);
+			map.put("fileid", attch.getFileId());
+			map.put("filesource", attch.getSource());
+			images.add(map);
+		}
+		dismantleManage.setImages(images);
+		List<DismantleManage> list = new ArrayList<DismantleManage>();
+		list.add(dismantleManage);
+		successResponse(GsonUtil.toJson(list));
+		return SUCCESS;
+	}
+
+	public String dismantleManageSubmit() {
+		Tequest tequest = getTerminalMessage();
+		AppUser currentUser = ApplicationContainer.getCurrentUser();
+		DismantleManage dismantle = new DismantleManage();
+		dismantle.setRecordId(tequest.getRecordId());
+		dismantle.setProjectName(tequest.getProjectName());
+		dismantle.setStartdisDate(tequest.getStartdisDate());
+		dismantle.setEnddisDate(tequest.getEnddisDate());
+		dismantle.setDismantleHeight(tequest.getDismantleHeight());
+		dismantle.setLongitude(tequest.getLongitude());
+		dismantle.setLatitude(tequest.getLatitude());
+		dismantle.setAddress(tequest.getAddress());
+		dismantle.setDismantleType(tequest.getDismantleType());
+		dismantle.setExwSerial(tequest.getExwSerial());
+		dismantle.setBuildingNum(tequest.getBuildingNum());
+		dismantle.setUserId(currentUser.getUserId());
+		dismantle.setUserName(currentUser.getFullname());
+		dismantle.setProvidedDate(DateUtil.getCurrentLinkDateStr());
+		dismantleManageService.save(dismantle);
+		setTerminalFileAttach(dismantle.getDismantleId(), tequest.getFileAttaches());
+		return SUCCESS;
+	}
+
+	public String dismantleAllList() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String recordId = query.getRecordId();
+		String projectName = query.getProjectName();
+		String exwSerial=query.getExwSerial();
+		String buildingNum=query.getBuildingNum();
+		List<Map<String, Object>> dismantleAllList = dismantleManageService.queryByScript("terminal.list_dismantle_all", projectName, recordId,exwSerial, buildingNum,start, pageSize);
+		for (Map<String, Object> data : dismantleAllList) {
+//			List<Long> fileIds = fileAttachService.getFileIdByDepend((Long) data.get("dismantleId"), data.get("relateModule").toString());
+//			data.put("fileAttaches", StringUtils.join(fileIds, ","));
+			List<FileAttach> fileAttchList = fileAttachService.getByDepend((Long) data.get("dismantleId"), data.get("relateModule").toString());
+			if(fileAttchList.size()>0) {
+				StringBuffer sb = new StringBuffer();
+				List<String> imgList = new ArrayList<String>();
+				for(FileAttach fa : fileAttchList) {
+					sb.append(fa.getFileId()).append(",");
+					imgList.add(Constant.IMG_PRE_PATH+fa.getFilePath());
+				}
+				data.put("imgList", imgList);
+				data.put("fileAttaches", sb.substring(0, sb.length()-1));
+			}
+		}
+		Integer count = 0;
+		if(dismantleAllList.size()>0) {
+			count =(Integer) dismantleAllList.get(0).get("count");
+		}
+		setJsonString("{\"success\":true,\"msg\":\"操作成功\",\"info\":{\"result\":" + GsonUtil.toJson(dismantleAllList, DateUtil.LINK_DISPLAY_DATE, false)
+				+ ",\"count\":"+count+"}}");
+		return SUCCESS;
+	}
+
+	public String query() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		Integer totalnums = 0;
+		String exwSerial = query.getExwSerial()==null? "" : query.getExwSerial();
+		String recordId = query.getRecordId()==null? "" : query.getRecordId();
+		String projName = query.getProjName()==null? "" : query.getProjName();
+
+		List<Map<String, Object>> numslist = equipmentService.queryByScript("terminal.get_app_equipnums", "%" + projName + "%", "%" + exwSerial + "%", "%" + recordId + "%");
+		if (numslist != null && numslist.size() > 0) {
+			totalnums = (Integer) numslist.get(0).get("_ROWNUM");
+		}
+
+		List<Map<String, Object>> equipList = equipmentService.queryByScript("terminal.list_app_equips", "%" + projName + "%", "%" + exwSerial + "%", "%" + recordId + "%", start, pageSize + start);
+
+		setJsonString("{\"success\":true,\"msg\":\"操作成功\",\"totalCounts\":" + totalnums + ",\"result\":" + GsonUtil.toJson(equipList, true, DateUtil.LINK_DISPLAY_DATE, false) + "}");
+		// successResponse();
+		return SUCCESS;
+	}
+
+	
+	/*查看指定状态的设备列表*/
+	public String listEquipOnStatus() {
+		Tequest tequest = getTerminalMessage();
+		int businessStatus = tequest.getQuery().getBusinessStatus();
+		Integer start = tequest.getQuery().getStart();
+		Integer pageSize = tequest.getQuery().getPageSize();
+		List<Map<String, Object>> result= new ArrayList<Map<String,Object>>();
+		switch(businessStatus){
+		case 0:   //闲置在仓： 业务状态 0 ，且设备状态 status = 1闲置
+			result = equipmentService.queryByScript("terminal.list_equip_notinuse_detail",start,pageSize, String.valueOf(businessStatus));
+			break;
+		case 5:  //调度： 业务状态  2  ，且设备状态 status = 1闲置
+			result = equipmentService.queryByScript("terminal.list_equip_out_detail",start,pageSize, String.valueOf(businessStatus));
+			break;
+		case 6://在用： 业务状态 3 4 5 6 ，且设备状态 status = 0 8 9 
+			result = equipmentService.queryByScript("terminal.list_equip_online_detail",start,pageSize, String.valueOf(businessStatus));
+			break;
+		case 7: //报停未入仓设： 业务状态  7 9 ，或设备状态 status = 4
+			result = equipmentService.queryByScript("terminal.list_equip_broke_detail",start,pageSize, String.valueOf(businessStatus));
+			break;
+		case 8: //报废：设备状态 status = 6
+			result = equipmentService.queryByScript("terminal.list_scrap_equip_detail",start,pageSize);
+			break;
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	/*维修次数和详情*/
+	public String listRepairCounts() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		long projectId = 0;
+		if(query.getProjectId() !=null){
+			projectId=query.getProjectId();
+		}
+		List<Map<String, Object>> list = equipRepairService.queryByScript("terminal.list_repair_counts",String.valueOf(projectId),start,pageSize);
+		StringBuffer buff = new StringBuffer("{\"success\":true,\"totalCounts\":").append(list.size()).append(",\"result\":");
+		buff.append(GsonUtil.toJson(list));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+	
+	public String equipList() {
+		Query query = getTerminalMessage().getQuery();
+		Long type = query.getType();
+		String keyword = query.getKeyword();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.equip_list", start, pageSize, type, keyword);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "我的安装列表")
+	public String myInstallList() {
+		Query query = getTerminalMessage().getQuery();
+		String keyword = query.getKeyword();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String state = query.getState();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_install_all_list", start, pageSize,keyword,state);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "设备安装列表")
+	public String equipmentInstallList() {
+		Query query = getTerminalMessage().getQuery();
+		String keyword = query.getKeyword();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_equip_install_list", start, pageSize,keyword);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "顶升加节列表")
+	public String jackupSectionList() {
+		Query query = getTerminalMessage().getQuery();
+		String keyword = query.getKeyword();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_jackup_section_list", start, pageSize,keyword);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "正在安装列表")
+	public String equipInstallingList() {
+		Query query = getTerminalMessage().getQuery();
+		Integer start = query.getStart();
+		String keyword = query.getKeyword();
+		Integer pageSize = query.getPageSize();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_equip_installing_list", start, pageSize,keyword);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "顶升加节详情")
+	public String jackupDetail() {
+		Query query = getTerminalMessage().getQuery();
+		Long keyword = query.getInstallId();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_jackup_detail", keyword);
+		for(Map<String, Object> map : result){
+			map.put("checkAttachList", getFilePath(map.get("checkAttach").toString()));
+			map.put("fileAttachsList", getFilePath(map.get("fileAttachs").toString()));
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "安装完成详情")
+	public String installedDetail() {
+		Query query = getTerminalMessage().getQuery();
+		Long keyword = query.getInstallId();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_install_pass_detail", keyword);
+		for(Map<String, Object> map : result){
+			map.put("checkAttachList", getFilePath(map.get("checkAttach").toString()));
+			map.put("fileAttachsList", getFilePath(map.get("fileAttachs").toString()));
+			map.put("revinCheckAttachList", getFilePath(map.get("revinCheckAttach").toString()));
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "现场安装之整改验收详情")
+	public String rectificaDetail() {
+		Query query = getTerminalMessage().getQuery();
+		Long keyword = query.getInstallId();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_install_rectifica_detail", keyword);
+		for(Map<String, Object> map : result){
+			map.put("checkAttachList", getFilePath(map.get("checkAttach").toString()));
+			map.put("fileAttachsList", getFilePath(map.get("fileAttachs").toString()));
+			map.put("revinCheckAttachList", getFilePath(map.get("revinCheckAttach").toString()));
+			map.put("rectificaImageList", getFilePath(map.get("rectificaImage").toString()));
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "现场安装之整改验收记录列表")
+	public String rectificaCheckList() {
+		Query query = getTerminalMessage().getQuery();
+		Long keyword = query.getInstallId();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_rectifica_check_detail",keyword);
+		for(Map<String, Object> map : result){
+			map.put("revinCheckAttachList", getFilePath(map.get("revinCheckAttach").toString()));
+			map.put("rectificaImageList", getFilePath(map.get("rectificaImage").toString()));
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "现场拆卸通用列表")
+	public String dismantleGeneralList() {
+		Query query = getTerminalMessage().getQuery();
+		String keyword = query.getKeyword();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		String state = query.getState();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_dismantle_all_list", start, pageSize,keyword,state);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "待拆卸列表")
+	public String waitDismantleList() {
+		Query query = getTerminalMessage().getQuery();
+		String keyword = query.getKeyword();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_wait_dismantle_list", start, pageSize,keyword);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "现场拆卸之整改验收记录列表")
+	public String dismantleCheckList() {
+		Query query = getTerminalMessage().getQuery();
+		Long keyword = query.getInstallId();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_dismantle_check_detail",keyword);
+		for(Map<String, Object> map : result){
+			map.put("revinCheckAttachList", getFilePath(map.get("revinCheckAttach").toString()));
+			map.put("rectificaImageList", getFilePath(map.get("rectificaImage").toString()));
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	
+	@ActionLog(description = "现场拆卸之整改验收详情")
+	public String dismantleRectificaDetail() {
+		Query query = getTerminalMessage().getQuery();
+		Long keyword = query.getDismantleId();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_dismantle_rectifica_detail", keyword);
+		for(Map<String, Object> map : result){
+			map.put("checkAttachList", getFilePath(map.get("checkAttach").toString()));
+			map.put("fileAttachsList", getFilePath(map.get("fileAttachs").toString()));
+			map.put("revinCheckAttachList", getFilePath(map.get("revinCheckAttach").toString()));
+			map.put("rectificaImageList", getFilePath(map.get("rectificaImage").toString()));
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "拆卸完成详情")
+	public String dismantleedDetail() {
+		Query query = getTerminalMessage().getQuery();
+		Long keyword = query.getInstallId();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_dismantle_pass_detail", keyword);
+		for(Map<String, Object> map : result){
+			map.put("checkAttachList", getFilePath(map.get("checkAttach").toString()));
+			map.put("fileAttachsList", getFilePath(map.get("fileAttachs").toString()));
+			map.put("revinCheckAttachList", getFilePath(map.get("revinCheckAttach").toString()));
+		}
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "拆卸中列表")
+	public String dismantleingList() {
+		Query query = getTerminalMessage().getQuery();
+		String keyword = query.getKeyword();
+		Integer start = query.getStart();
+		Integer pageSize = query.getPageSize();
+		List<Map<String, Object>> result = equipmentService.queryByScript("terminal.wechat_dismantleing_list", start, pageSize,keyword);
+		successResponse(GsonUtil.toJson(result, DateUtil.LINK_DISPLAY_DATE, false));
+		return SUCCESS;
+	}
+	
+	public List<String> getFilePath(String id){
+		QueryFilter filter = new QueryFilter();
+		filter.addValuesDisjunctFilter("QVO_fileId_L_EQ", id);
+		List<FileAttach> fileList = fileAttachService.getAll(filter);
+		String url = null;
+		StringBuffer sb = new StringBuffer();
+		List<String> imgList = new ArrayList<String>();
+		for (int i = 0; i < fileList.size(); i++) {
+			sb.append(fileList.get(i).getFileId()).append(",");
+			imgList.add(Constant.IMG_PRE_PATH+fileList.get(i).getFilePath());
+		}
+		return imgList;
+	}
+}

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="COMPONENT_STOCKS_RPT" language="groovy" pageWidth="792" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="029eea4d-fcb1-49e8-9f7e-b349f57892db">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DIMENSIONS" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPON_GE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPON_SP" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PROJECT_NAME" class="java.lang.String"/>
+	<parameter name="EXW_SERIAL" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @componGe varchar(16)
+DECLARE @componSp varchar(16)
+DECLARE @dimensions varchar(16)
+DECLARE @projectName varchar(16)
+DECLARE @EXW_SERIAL varchar(50)
+
+SET @componGe = $P{COMPON_GE}
+SET @componSp = $P{COMPON_SP}
+SET @dimensions = $P{DIMENSIONS}
+SET @projectName = $P{PROJECT_NAME}
+SET @EXW_SERIAL = $P{EXW_SERIAL}
+
+SELECT
+COMPON_GENERIC,
+COMPON_SPECIFIC,
+DIMENSIONS,
+PROJECT_NAME,
+EXW_SERIAL,
+SUM(ISNULL(USED_QUANTITY,0)) USED_QUANTITY,
+SUM(ISNULL(UNUSED_QUANTITY,0)) UNUSED_QUANTITY
+FROM(
+SELECT
+(select value from BM_COMPONENT_GENERIC where code=c.COMPON_GENERIC) COMPON_GENERIC,
+(select value from BM_COMPONENT_SPECIFIC where code=c.COMPON_SPECIFIC) COMPON_SPECIFIC,
+(SELECT E.EXW_SERIAL FROM T_EQUIPMENT E WHERE E.EQUIP_ID = C.EQUIP_ID) EXW_SERIAL,
+C.DIMENSIONS DIMENSIONS,
+P.PROJECT_NAME PROJECT_NAME,
+(SELECT PC.COUNTS WHERE PC.STATUS = 1) USED_QUANTITY,
+(SELECT PC.COUNTS WHERE PC.STATUS = 0) UNUSED_QUANTITY
+FROM (SELECT TEMP.COMPON_ID,TEMP.PROJECT_ID FROM T_PROJECT_COMPON TEMP GROUP BY TEMP.COMPON_ID,TEMP.PROJECT_ID ) A
+LEFT JOIN T_PROJECT_COMPON PC ON PC.COMPON_ID = A.COMPON_ID AND PC.PROJECT_ID = A.PROJECT_ID AND COUNTS != 0
+LEFT JOIN T_COMPONENT C ON C.COMPON_ID = PC.COMPON_ID
+LEFT JOIN T_PROJECT P ON P.PROJECT_ID = PC.PROJECT_ID
+WHERE (C.COMPON_SPECIFIC = @componSp OR @componSp IS NULL OR @componSp = '')
+AND (C.COMPON_GENERIC = @componGe OR @componGe IS NULL OR @componGe = '')
+) D
+WHERE(D.DIMENSIONS LIKE '%'+@dimensions+ '%' OR @dimensions IS NULL OR @dimensions = '')
+AND (D.PROJECT_NAME LIKE '%'+@projectName+ '%' OR @projectName IS NULL OR @projectName = '')
+AND (D.EXW_SERIAL LIKE '%'+@EXW_SERIAL+ '%' OR @EXW_SERIAL IS NULL OR @EXW_SERIAL = '')
+AND LEN(D.COMPON_GENERIC)>0
+GROUP BY
+COMPON_GENERIC,
+COMPON_SPECIFIC,
+DIMENSIONS,
+EXW_SERIAL,
+PROJECT_NAME
+
+UNION ALL
+SELECT
+COMPON_GENERIC,
+COMPON_SPECIFIC,
+DIMENSIONS,
+PROJECT_NAME,
+EXW_SERIAL,
+SUM(ISNULL(USED_QUANTITY,0)) USED_QUANTITY,
+UNUSED_QUANTITY
+FROM(
+SELECT
+(select value from BM_COMPONENT_GENERIC where code=c.COMPON_GENERIC) COMPON_GENERIC,
+(select value from BM_COMPONENT_SPECIFIC where code=c.COMPON_SPECIFIC) COMPON_SPECIFIC,
+(SELECT E.EXW_SERIAL FROM T_EQUIPMENT E WHERE E.EQUIP_ID = C.EQUIP_ID) EXW_SERIAL,
+C.DIMENSIONS DIMENSIONS,
+'基地仓库' PROJECT_NAME,
+0 USED_QUANTITY,
+C.CONSUME_COUNTS UNUSED_QUANTITY
+FROM (SELECT * FROM T_COMPONENT WHERE DEL_FLAG=1) C
+WHERE (C.COMPON_SPECIFIC = @componSp OR @componSp IS NULL OR @componSp = '')
+AND (C.COMPON_GENERIC = @componGe OR @componGe IS NULL OR @componGe = '')
+AND C.CONSUME_COUNTS!=0
+) D
+WHERE(D.DIMENSIONS LIKE '%'+@dimensions+ '%' OR @dimensions IS NULL OR @dimensions = '')
+AND (D.PROJECT_NAME LIKE '%'+@projectName+ '%' OR @projectName IS NULL OR @projectName = '')
+AND (D.EXW_SERIAL LIKE '%'+@EXW_SERIAL+ '%' OR @EXW_SERIAL IS NULL OR @EXW_SERIAL = '')
+AND LEN(D.COMPON_GENERIC)>0
+GROUP BY
+COMPON_GENERIC,
+COMPON_SPECIFIC,
+DIMENSIONS,
+EXW_SERIAL,
+UNUSED_QUANTITY,
+PROJECT_NAME]]>
+	</queryString>
+	<field name="COMPON_GENERIC" class="java.lang.String"/>
+	<field name="COMPON_SPECIFIC" class="java.lang.String"/>
+	<field name="DIMENSIONS" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="USED_QUANTITY" class="java.lang.Integer"/>
+	<field name="UNUSED_QUANTITY" class="java.lang.Integer"/>
+	<field name="EXW_SERIAL" class="java.lang.String"/>
+	<title>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="662" height="50" uuid="ef37aeba-ca9d-464e-b863-d242002dcfcb"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="36" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["零部件分布表"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="124" height="39" uuid="d09c8fd8-58d5-4dbf-a2b2-7265b1106d30"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[零部件名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="0" width="86" height="39" uuid="7c6c8ec6-7a59-4c4c-9966-4d1aacd1d538"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[设备型号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="73" height="39" uuid="2fce7660-ff5a-4740-9483-3fee4818ceb5"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[配件规格]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="0" width="125" height="39" uuid="720b5d7a-2e3e-4303-b82d-fce01aae0e86"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[当前存放地]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="502" y="0" width="81" height="39" uuid="3c69c059-597a-42f1-8dc9-46175d80cbf0"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[在用数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="583" y="0" width="79" height="39" uuid="6cafb15d-ac8b-48ef-af0f-8e598eec7c0c"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[闲置数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="0" width="94" height="39" uuid="e4ba33d4-dca8-4202-9a57-bac324b76e4a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[归属设备]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="124" height="37" uuid="b7653ebc-4dce-4074-a09f-017901dbe70f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_GENERIC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="124" y="0" width="86" height="37" uuid="0e080fbd-5aef-4ca4-9e6c-651fef7bfa9e"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_SPECIFIC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="210" y="0" width="73" height="37" uuid="d925acb7-4f8a-4505-89ee-d54dca82818f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIMENSIONS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="377" y="0" width="125" height="37" uuid="07b0738a-4620-4809-86a4-4d0ed17a04b4"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROJECT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="502" y="0" width="81" height="37" uuid="afb4d4c5-9379-48be-a542-8f2e5b892e19"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USED_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="583" y="0" width="79" height="37" uuid="73efa2a2-23e2-4934-a7de-e89b92a4d699"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UNUSED_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="283" y="0" width="94" height="37" uuid="789f5835-f70c-4573-800e-0c480e42fb55"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXW_SERIAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- FORM -->
+	<bean id="attendamceDao" class="com.knight.app.dao.impl.AttendamceDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="attendamceSetDao" class="com.knight.app.dao.impl.AttendamceSetDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="attendamceLocationDao" class="com.knight.app.dao.impl.AttendamceLocationDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tappDispatchDao" class="com.knight.app.dao.impl.TAppDispatchDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tappComponDispatchDetailDao" class="com.knight.app.dao.impl.TAppComponDispatchDetailDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tappEquipDispatchDetailDao" class="com.knight.app.dao.impl.TAppEquipDispatchDetailDaoImpl"
+		  parent="baseLongPKDao" />
+	<bean id="tappRepairComponDao" class="com.knight.app.dao.impl.TAppRepairComponDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tappRepairTypeDao" class="com.knight.app.dao.impl.TAppRepairTypeDaoImpl"
+		parent="baseStrPKDao" />
+	<bean id="tappRepairDao" class="com.knight.app.dao.impl.TAppRepairDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tflowCopyChkmanDao" class="com.knight.app.dao.impl.TFlowCopyChkmanDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tflowDefineDao" class="com.knight.app.dao.impl.TFlowDefineDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tflowInstanceDao" class="com.knight.app.dao.impl.TFlowInstanceDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tflowInstanceProcessDao" class="com.knight.app.dao.impl.TFlowInstanceProcessDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tflowNodeDao" class="com.knight.app.dao.impl.TFlowNodeDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="inspectRectifyDao" class="com.knight.app.dao.impl.InspectRectifyDaoImpl"
+		parent="baseLongPKDao" />
+	<bean id="tAppLogisticsDao" class="com.knight.app.dao.impl.TAppLogisticsDaoImpl"
+		  parent="baseLongPKDao" />
+	<bean id="tAppLogisticsCompDao" class="com.knight.app.dao.impl.TAppLogisticsCompDaoImpl"
+		  parent="baseLongPKDao" />
+	<bean id="tAppLogisticsEquipDao" class="com.knight.app.dao.impl.TAppLogisticsEquipDaoImpl"
+		  parent="baseLongPKDao" /> 
+	<bean id="sideSystemDao" class="com.knight.app.dao.impl.SideSystemDaoImpl"
+		  parent="baseLongPKDao" /> 
+	<bean id="sideReportingDao" class="com.knight.app.dao.impl.SideReportingDaoImpl"
+		  parent="baseLongPKDao" /> 	  	  
+</beans>

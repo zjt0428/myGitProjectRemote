@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cash_Flow_Statement" language="groovy" pageWidth="1008" pageHeight="595" whenNoDataType="AllSectionsNoDetail" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" isIgnorePagination="true" uuid="5b6e3590-6e36-41fb-a18b-96ea05279ca3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<style name="rowspan" forecolor="#0066FF" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{ROWSPAN}.compareTo(BigDecimal.ZERO) == -1)]]></conditionExpression>
+			<style mode="Transparent" forecolor="#CC0033" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+				<pen lineWidth="0.5"/>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="columnHead" forecolor="#333333" backcolor="#AAD7FE" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontName="宋体" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5"/>
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="title" hAlign="Center" vAlign="Middle" fontName="宋体" fontSize="18" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+	<style name="pageFooterLable" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="12" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<parameter name="DEP_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USERNAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FLOWTYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BEGIN_DATE" class="java.lang.String"/>
+	<parameter name="END_DATE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @ym_beg CHAR(12)
+DECLARE @ym_end CHAR(12)
+DECLARE @ymds DATE
+DECLARE @ymde DATE
+DECLARE @depName CHAR(12)
+DECLARE @userName CHAR(12)
+DECLARE @flowType CHAR(12)
+
+SET @ym_beg = $P{BEGIN_DATE}
+SET @ym_end = $P{END_DATE}
+SET @depName = $P{DEP_NAME}
+SET @userName = $P{USERNAME}
+SET @flowType = $P{FLOWTYPE}
+
+SET @ymds = CONVERT(datetime,@ym_beg,112)
+SET @ymde = CONVERT(datetime,@ym_end,112)
+
+	   SELECT A.FULLNAME USERNAME,
+	   D.DEP_NAME DEP_NAME,
+	   (SELECT A.DEP_ID FROM APP_USER A WHERE A.USERID=FI.userid ) DEPID,
+	   FI.APPLY_DT APPLYDT,
+	   FI.FLOW_TYPE FLOWTYPE,
+	   FI.CONTENT,
+	   ISNULL(FI.DAYS,0) DAYS,
+	   (SELECT  TOP 1(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=FIP.CHK_USERID)FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =1 ) NODEID1,
+	   (CASE WHEN (SELECT TOP 1 FIP.CHK_RESULT FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =1 ) = '1' THEN '同意'
+	   WHEN (SELECT TOP 1 FIP.CHK_RESULT FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =1 ) = '2' THEN '不同意' ELSE '' END ) CHKRESULT1,
+	   (SELECT  TOP 1(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=FIP.CHK_USERID)FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =2 ) NODEID2,
+	   (CASE WHEN (SELECT TOP 1 FIP.CHK_RESULT FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =2 ) = '1' THEN '同意'
+	   WHEN (SELECT TOP 1 FIP.CHK_RESULT FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =2 ) = '2' THEN '不同意' ELSE '' END ) CHKRESULT2,
+	   (SELECT  TOP 1(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=FIP.CHK_USERID)FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =3 ) NODEID3,
+	   (CASE WHEN (SELECT TOP 1 FIP.CHK_RESULT FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =3 ) = '1' THEN '同意'
+	   WHEN (SELECT TOP 1 FIP.CHK_RESULT FROM T_FLOW_INSTANCE_PROCESS FIP WHERE FIP.INSID = FI.INSID AND FIP.NODEID =3 ) = '1' THEN '不同意' ELSE '' END ) CHKRESULT3
+	   FROM T_FLOW_INSTANCE FI
+	   LEFT JOIN APP_USER A ON A.USERID=FI.userid
+	   LEFT JOIN DEPARTMENT D ON D.DEP_ID = A.DEP_ID
+	   WHERE FI.STATE=3
+	   AND FI.APPLY_DT BETWEEN @ymds AND @ymde
+	   AND (A.FULLNAME = @userName OR @userName IS NULL OR @userName='')
+	   AND (FI.FLOW_TYPE = @flowType OR @flowType IS NULL OR @flowType='')
+	   AND (D.DEP_NAME = @depName OR @depName IS NULL OR @depName='')]]>
+	</queryString>
+	<field name="USERNAME" class="java.lang.String"/>
+	<field name="APPLYDT" class="java.lang.String"/>
+	<field name="FLOWTYPE" class="java.lang.String"/>
+	<field name="CONTENT" class="java.lang.String"/>
+	<field name="DAYS" class="java.lang.String"/>
+	<field name="NODEID1" class="java.lang.String"/>
+	<field name="CHKRESULT1" class="java.lang.String"/>
+	<field name="NODEID2" class="java.lang.String"/>
+	<field name="CHKRESULT2" class="java.lang.String"/>
+	<field name="NODEID3" class="java.lang.String"/>
+	<field name="CHKRESULT3" class="java.lang.String"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement style="title" x="98" y="0" width="794" height="62" uuid="c8da4909-d587-4acc-96f9-2379010df93c"/>
+				<textElement>
+					<font fontName="宋体" size="36" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[审批情况表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="0" y="0" width="55" height="40" uuid="a26516b8-e88f-4e58-a63a-67a0919963a0"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="128" y="0" width="110" height="40" uuid="df313e49-4aa6-4f7a-904b-f985184315f3"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[申请日期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="238" y="0" width="70" height="40" uuid="f4d0a95a-f848-4985-90bc-1c0235c07056"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[流程类型]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="308" y="0" width="116" height="40" uuid="42c94954-067c-4f6b-aa5d-acc14955dcf8"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[申请内容]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="424" y="0" width="93" height="40" uuid="191f7971-06f0-44f8-a849-4d4e80d8d5b8"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[出差/休假天数]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="517" y="0" width="150" height="22" uuid="fc761099-90a6-48cf-b28c-0e0c75abe914"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[第一级审批]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="55" y="0" width="73" height="40" uuid="e1b4d6e6-27b9-4949-b388-bc538dcbbce6"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[申请人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="667" y="0" width="150" height="22" uuid="03376a53-1d1f-4182-b491-7917c465b076"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[第二级审批]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="817" y="0" width="150" height="22" uuid="be14cc54-cfd6-4eea-82b1-216bb195d2b5"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[第三级审批]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="517" y="22" width="75" height="18" backcolor="#FFFFFF" uuid="22bddee0-8a4f-4d3c-99f6-2e9b40d593f1"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[审批人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="592" y="22" width="75" height="18" backcolor="#FFFFFF" uuid="58d6b325-66c6-432c-afcc-8c020d6bc4a7"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[审批结果]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="667" y="22" width="75" height="18" backcolor="#FFFFFF" uuid="af49920f-0e57-4c14-930d-52eafd9f84e5"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[审批人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="817" y="22" width="75" height="18" backcolor="#FFFFFF" uuid="0c405624-838e-4c76-be54-542fcf6afda2"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[审批人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="742" y="22" width="75" height="18" backcolor="#FFFFFF" uuid="e902f8f6-328a-4730-b0ad-83787d542b2f"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[审批结果]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="892" y="22" width="75" height="18" backcolor="#FFFFFF" uuid="bca97ec3-1755-49d3-9c42-705c9eba7818"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[审批结果]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="55" height="20" uuid="939e2718-d8b5-403d-a53e-9c7c802a3bd4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="128" y="0" width="110" height="20" uuid="018f50a6-2768-4793-bced-ceb5aac7418a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APPLYDT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="238" y="0" width="70" height="20" uuid="bc24883f-b548-4b27-a2b0-3815f5298efa"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FLOWTYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="308" y="0" width="116" height="20" uuid="21ff4351-c0b4-4c78-9e4a-e0af452163a2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONTENT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="592" y="0" width="75" height="20" uuid="3357db25-83a4-478d-9b6d-7da1b175243c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHKRESULT1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="424" y="0" width="93" height="20" uuid="7989a94b-5b7b-447e-a217-9e5eb45a19ae"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DAYS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="517" y="0" width="75" height="20" uuid="c87f72ba-d856-476b-94d2-5991d9b94634"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NODEID1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="55" y="0" width="73" height="20" uuid="a17e08ba-d8fd-4255-92a8-5501489e4582"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USERNAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="667" y="0" width="75" height="20" uuid="cf0cb1c1-58f9-4298-af8e-cf84158fa1de"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NODEID2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="742" y="0" width="75" height="20" uuid="9732b4e4-cb97-44c4-8af6-d847c14921a3"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHKRESULT2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="892" y="0" width="75" height="20" uuid="9da116eb-945f-45cb-b919-e689f7f5ae3d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHKRESULT3}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="817" y="0" width="75" height="20" uuid="32195936-a45f-4a33-930f-29ef3321506b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NODEID3}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band/>
+	</lastPageFooter>
+</jasperReport>

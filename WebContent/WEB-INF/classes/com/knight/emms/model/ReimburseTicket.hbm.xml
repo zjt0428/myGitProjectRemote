@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ReimburseTicket" table="T_REIMBURSE_TICKET" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="ticketId" column="TICKET_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="reimburseId" type="java.lang.Long" column="REIMBURSE_ID" />
+		<property name="reimburseType" type="java.lang.String" column="REIMBURSE_TYPE" />
+		<property name="ticketDate" type="java.lang.String" column="TICKET_DATE" />
+		<property name="ticketQuantity" type="java.lang.Integer" column="TICKET_QUANTITY" />
+		<property name="specificName" type="java.lang.String" column="SPECIFIC_NAME" />
+		<property name="modelName" type="java.lang.String" column="MODEL_NAME" />
+		<property name="unitPrice" type="java.math.BigDecimal" column="UNIT_PRICE" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="carId" type="java.lang.Long" column="CAR_ID" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+	</class>
+</hibernate-mapping>

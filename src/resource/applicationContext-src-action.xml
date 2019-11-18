@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd ">
+	<!-- FORM -->
+	<bean id="AutocraneAction" class="com.knight.emms.web.action.AutocraneAction" scope="prototype" />
+	<bean id="EquipWarehouseAbnormalAction" class="com.knight.emms.web.action.EquipWarehouseAbnormalAction" scope="prototype" />
+	<bean id="ConstructOperationAction" class="com.knight.emms.web.action.ConstructOperationAction" scope="prototype" />
+	<bean id="FormAcceptAction" class="com.knight.emms.web.action.FormAcceptAction" scope="prototype" />
+	<bean id="FormApproveAction" class="com.knight.emms.web.action.FormApproveAction" scope="prototype" />
+	<bean id="FormReviewAction" class="com.knight.emms.web.action.FormReviewAction" scope="prototype" />
+	<bean id="FormOpinionAction" class="com.knight.emms.web.action.FormOpinionAction" scope="prototype" />
+	<bean id="BusinessMessageAction" class="com.knight.emms.web.action.BusinessMessageAction" scope="prototype" />
+	<bean id="AnnounceAction" class="com.knight.emms.web.action.AnnounceAction" scope="prototype" />
+	<bean id="AnnounceUserAction" class="com.knight.emms.web.action.AnnounceUserAction" scope="prototype" />
+	<bean id="InventoryAction" class="com.knight.emms.web.action.InventoryAction" scope="prototype" />
+	<bean id="IncomeExpenseAction" class="com.knight.emms.web.action.IncomeExpenseAction" scope="prototype" />
+	<bean id="OverduePaymentAction" class="com.knight.emms.web.action.OverduePaymentAction" scope="prototype" />
+	<bean id="CorpInfoAction" class="com.knight.emms.web.action.CorpInfoAction" scope="prototype" />
+	<bean id="CorpCertAction" class="com.knight.emms.web.action.CorpCertAction" scope="prototype" />
+	<bean id="PractitionerAction" class="com.knight.emms.web.action.PractitionerAction" scope="prototype" />
+	<bean id="PractiCertAction" class="com.knight.emms.web.action.PractiCertAction" scope="prototype" />
+	<bean id="SupplierAction" class="com.knight.emms.web.action.SupplierAction" scope="prototype" />
+	<bean id="CustomerAction" class="com.knight.emms.web.action.CustomerAction" scope="prototype" />
+	<bean id="ProjectAction" class="com.knight.emms.web.action.ProjectAction" scope="prototype" />
+	<bean id="ComponentAction" class="com.knight.emms.web.action.ComponentAction" scope="prototype" />
+	<bean id="EquipmentAction" class="com.knight.emms.web.action.EquipmentAction" scope="prototype" />
+	<bean id="InstalmentAction" class="com.knight.emms.web.action.InstalmentAction" scope="prototype" />
+	<bean id="ReceivementAction" class="com.knight.emms.web.action.ReceivementAction" scope="prototype" />
+	<bean id="StoreHouseAction" class="com.knight.emms.web.action.StoreHouseAction" scope="prototype" />
+	<bean id="CarAction" class="com.knight.emms.web.action.CarAction" scope="prototype" />
+	<bean id="RentContractAction" class="com.knight.emms.web.action.RentContractAction" scope="prototype" />
+	<bean id="ContractLeaseAction" class="com.knight.emms.web.action.ContractLeaseAction" scope="prototype" />
+	<bean id="ContractLeaseVersionAction" class="com.knight.emms.web.action.ContractLeaseVersionAction" scope="prototype" />
+	<bean id="ContractMaterialsAction" class="com.knight.emms.web.action.ContractMaterialsAction" scope="prototype" />
+	<bean id="SettleContractAction" class="com.knight.emms.web.action.SettleContractAction" scope="prototype" />
+	<bean id="DispatchAction" class="com.knight.emms.web.action.DispatchAction" scope="prototype" />
+	<bean id="PickupAction" class="com.knight.emms.web.action.PickupAction" scope="prototype" />
+	<bean id="PurchaseAction" class="com.knight.emms.web.action.PurchaseAction" scope="prototype" />
+	<bean id="PurchasePlanAction" class="com.knight.emms.web.action.PurchasePlanAction" scope="prototype" />
+	<bean id="BorrowAction" class="com.knight.emms.web.action.BorrowAction" scope="prototype" />
+	<bean id="PractiCreditAction" class="com.knight.emms.web.action.PractiCreditAction" scope="prototype" />
+	<bean id="PractiResumeAction" class="com.knight.emms.web.action.PractiResumeAction" scope="prototype" />
+	<bean id="ComponDiaryAction" class="com.knight.emms.web.action.ComponDiaryAction" scope="prototype" />
+	<bean id="EquipDetectAction" class="com.knight.emms.web.action.EquipDetectAction" scope="prototype" />
+	<bean id="AntiFallDetectionAction" class="com.knight.emms.web.action.AntiFallDetectionAction" scope="prototype" />
+	<bean id="EquipDismantleAction" class="com.knight.emms.web.action.EquipDismantleAction" scope="prototype" />
+	<bean id="EquipEmployAction" class="com.knight.emms.web.action.EquipEmployAction" scope="prototype" />
+	<bean id="EquipInspectAction" class="com.knight.emms.web.action.EquipInspectAction" scope="prototype" />
+	<bean id="EquipInstallAction" class="com.knight.emms.web.action.EquipInstallAction" scope="prototype" />
+	<bean id="EquipFlowAction" class="com.knight.emms.web.action.EquipFlowAction" scope="prototype" />
+	<bean id="EquipMaintAction" class="com.knight.emms.web.action.EquipMaintAction" scope="prototype" />
+	<bean id="EquipmentDiaryAction" class="com.knight.emms.web.action.EquipmentDiaryAction" scope="prototype" />
+	<bean id="EquipVerifyAction" class="com.knight.emms.web.action.EquipVerifyAction" scope="prototype" />
+	<bean id="InsureEquipAction" class="com.knight.emms.web.action.InsureEquipAction" scope="prototype" />
+	<bean id="PractiDiaryAction" class="com.knight.emms.web.action.PractiDiaryAction" scope="prototype" />
+	<bean id="EquipActivateAction" class="com.knight.emms.web.action.EquipActivateAction" scope="prototype" />
+	<bean id="ProductPlanAction" class="com.knight.emms.web.action.ProductPlanAction" scope="prototype" />
+	<bean id="EquipBlockupAction" class="com.knight.emms.web.action.EquipBlockupAction" scope="prototype" />
+	<bean id="MoneyBackAction" class="com.knight.emms.web.action.MoneyBackAction" scope="prototype" />
+	<bean id="MoneyLendAction" class="com.knight.emms.web.action.MoneyLendAction" scope="prototype" />
+	<bean id="AmountPaymentAction" class="com.knight.emms.web.action.AmountPaymentAction" scope="prototype" />
+	<bean id="AmountReceiveAction" class="com.knight.emms.web.action.AmountReceiveAction" scope="prototype" />
+	<bean id="DeductScaleAction" class="com.knight.emms.web.action.DeductScaleAction" scope="prototype" />
+	<bean id="DeductAction" class="com.knight.emms.web.action.DeductAction" scope="prototype" />
+	<bean id="InvoiceCollectAction" class="com.knight.emms.web.action.InvoiceCollectAction" scope="prototype" />
+	<bean id="InvoiceIssueAction" class="com.knight.emms.web.action.InvoiceIssueAction" scope="prototype" />
+	<bean id="ReimburseAction" class="com.knight.emms.web.action.ReimburseAction" scope="prototype" />
+	<bean id="SalaryAction" class="com.knight.emms.web.action.SalaryAction" scope="prototype" />
+	<bean id="AmountEquipShareAction" class="com.knight.emms.web.action.AmountEquipShareAction" scope="prototype" />
+	<bean id="VerifyItemAction" class="com.knight.emms.web.action.VerifyItemAction" scope="prototype" />
+	<bean id="VerifyItemDemandAction" class="com.knight.emms.web.action.VerifyItemDemandAction" scope="prototype" />
+	<bean id="VerifyStandardAction" class="com.knight.emms.web.action.VerifyStandardAction" scope="prototype" />
+	<bean id="AccidentAction" class="com.knight.emms.web.action.AccidentAction" scope="prototype" />
+	<bean id="AccidentReportAction" class="com.knight.emms.web.action.AccidentReportAction" scope="prototype" />
+	<bean id="RiskAction" class="com.knight.emms.web.action.RiskAction" scope="prototype" />
+	<bean id="RiskReportAction" class="com.knight.emms.web.action.RiskReportAction" scope="prototype" />
+	<bean id="ContingencyPlanAction" class="com.knight.emms.web.action.ContingencyPlanAction" scope="prototype" />
+	<bean id="IndisBasecheckAction" class="com.knight.emms.web.action.IndisBasecheckAction" scope="prototype" />
+	<bean id="IndisPrecheckAction" class="com.knight.emms.web.action.IndisPrecheckAction" scope="prototype" />
+	<bean id="IndisProtocolAction" class="com.knight.emms.web.action.IndisProtocolAction" scope="prototype" />
+	<bean id="IndisSchemaAction" class="com.knight.emms.web.action.IndisSchemaAction" scope="prototype" />
+	<bean id="IndisNoticeAction" class="com.knight.emms.web.action.IndisNoticeAction" scope="prototype" />
+	<bean id="MemoAction" class="com.knight.emms.web.action.MemoAction" scope="prototype" />
+	<bean id="SecureProtocolAction" class="com.knight.emms.web.action.SecureProtocolAction" scope="prototype" />
+	<bean id="TechnicalDisclosureAction" class="com.knight.emms.web.action.TechnicalDisclosureAction" scope="prototype" />
+	<bean id="EquipInstallReviewAction" class="com.knight.emms.web.action.EquipInstallReviewAction" scope="prototype" />
+	<bean id="LogisticsTransportAction" class="com.knight.emms.web.action.LogisticsTransportAction" scope="prototype" />
+	<bean id="LogisticsBacksportAction" class="com.knight.emms.web.action.LogisticsBacksportAction" scope="prototype" />
+	<bean id="VerifySelfAction" class="com.knight.emms.web.action.VerifySelfAction" scope="prototype" />
+	<bean id="EquipWarehouseAction" class="com.knight.emms.web.action.EquipWarehouseAction" scope="prototype" />
+	<bean id="EquipHitchAction" class="com.knight.emms.web.action.EquipHitchAction" scope="prototype" />
+	<bean id="EquipInspectSchemaAction" class="com.knight.emms.web.action.EquipInspectSchemaAction" scope="prototype" />
+	<bean id="EquipMaintSchemaAction" class="com.knight.emms.web.action.EquipMaintSchemaAction" scope="prototype" />
+	<bean id="EquipRepairAction" class="com.knight.emms.web.action.EquipRepairAction" scope="prototype" />
+	<bean id="DismantleManageAction" class="com.knight.emms.web.action.DismantleManageAction" scope="prototype" />
+	<bean id="InstallManageAction" class="com.knight.emms.web.action.InstallManageAction" scope="prototype" />
+	<bean id="InspectManageAction" class="com.knight.emms.web.action.InspectManageAction" scope="prototype" />
+	<bean id="TeamsAccountAction" class="com.knight.emms.web.action.TeamsAccountAction" scope="prototype" />
+	<bean id="ContractArrangeAction" class="com.knight.emms.web.action.ContractArrangeAction" scope="prototype" />
+	<bean id="ContractArrangeSituationAction" class="com.knight.emms.web.action.ContractArrangeSituationAction" scope="prototype" />
+	<bean id="MaterialsPlanAction" class="com.knight.emms.web.action.MaterialsPlanAction" scope="prototype" />
+	<bean id="TruckPlanAction" class="com.knight.emms.web.action.TruckPlanAction" scope="prototype" />
+	<bean id="ExeuntPlanAction" class="com.knight.emms.web.action.ExeuntPlanAction" scope="prototype" />
+	<bean id="ComponIntoStoreAction" class="com.knight.emms.web.action.ComponIntoStoreAction" scope="prototype" />
+	<bean id="LostHandleAction" class="com.knight.emms.web.action.LostHandleAction" scope="prototype" />
+	<bean id="DispatchAllocateInitAction" class="com.knight.emms.web.action.DispatchAllocateInitAction" scope="prototype" />
+	<bean id="IndexWarnAction" class="com.knight.emms.web.action.IndexWarnAction" scope="prototype" />
+	<bean id="EnterFactoryNoticeAction" class="com.knight.emms.web.action.EnterFactoryNoticeAction" scope="prototype" />
+	<bean id="ExitFactoryNoticeAction" class="com.knight.emms.web.action.ExitFactoryNoticeAction" scope="prototype" />
+	<bean id="BasicPreEmbeddingNoticeAction" class="com.knight.emms.web.action.BasicPreEmbeddingNoticeAction" scope="prototype" />
+	<bean id="PrintDataAction" class="com.knight.emms.web.action.PrintDataAction" scope="prototype" />
+	<bean id="SafeCheckAction" class="com.knight.emms.web.action.SafeCheckAction" scope="prototype"/>
+	<bean id="SideStationAction" class="com.knight.emms.web.action.SideStationAction" scope="prototype"/>
+	<bean id="MaterialsInfoAction" class="com.knight.emms.web.action.MaterialsInfoAction" scope="prototype"/>
+	<bean id="InstallPriceSetAction" class="com.knight.emms.web.action.InstallPriceSetAction" scope="prototype"/>
+	<bean id="TruckCranePriceSetAction" class="com.knight.emms.web.action.TruckCranePriceSetAction" scope="prototype"/>
+	<bean id="AdvanceReceiveAction" class="com.knight.emms.web.action.AdvanceReceiveAction" scope="prototype" />
+	<bean id="EquipInsuranceAction" class="com.knight.emms.web.action.EquipInsuranceAction" scope="prototype"/>
+	<bean id="EquipInsuranceClaimAction" class="com.knight.emms.web.action.EquipInsuranceClaimAction" scope="prototype"/>
+	<bean id="PractiInsuranceAction" class="com.knight.emms.web.action.PractiInsuranceAction" scope="prototype"/>
+	<bean id="SafeClarificationAction" class="com.knight.emms.web.action.SafeClarificationAction" scope="prototype"/>
+	<bean id="SafetyEducationAction" class="com.knight.emms.web.action.SafetyEducationAction" scope="prototype"/>
+	<bean id="InspectProjectRecordAction" class="com.knight.emms.web.action.InspectProjectRecordAction" scope="prototype"/>
+	<bean id="PractiEvaluationAction" class="com.knight.emms.web.action.PractiEvaluationAction" scope="prototype"/>
+	<bean id="ClosedSettleInfoAction" class="com.knight.emms.web.action.ClosedSettleInfoAction" scope="prototype"/>
+	<bean id="PractiLeaveAction" class="com.knight.emms.web.action.PractiLeaveAction" scope="prototype"/>
+	<bean id="LaborPayAction" class="com.knight.emms.web.action.LaborPayAction" scope="prototype"/>
+	<bean id="LaborSettleAction" class="com.knight.emms.web.action.LaborSettleAction" scope="prototype"/>
+	
+	<!-- 周材子系统 -->
+	<bean id="MaterialsCommodityAction" class="com.knight.emms.web.action.MaterialsCommodityAction" scope="prototype"/>
+	<bean id="MaterialsSpecificationsAction" class="com.knight.emms.web.action.MaterialsSpecificationsAction" scope="prototype"/>
+	<bean id="MaterialsDamageAction" class="com.knight.emms.web.action.MaterialsDamageAction" scope="prototype"/>
+	<bean id="ScrapApplyAction" class="com.knight.emms.web.action.ScrapApplyAction" scope="prototype"/>
+	<bean id="ScrapContractAction" class="com.knight.emms.web.action.ScrapContractAction" scope="prototype"/>
+	<bean id="ScrapHandleAction" class="com.knight.emms.web.action.ScrapHandleAction" scope="prototype"/>
+	<bean id="MaterialsScrapAction" class="com.knight.emms.web.action.MaterialsScrapAction" scope="prototype"/>
+	<bean id="AssembleAndDisassembleFeeAction" class="com.knight.emms.web.action.AssembleAndDisassembleFeeAction" scope="prototype"/>
+	<bean id="MaterialsAmortizationAction" class="com.knight.emms.web.action.MaterialsAmortizationAction" scope="prototype"/>
+	<bean id="AmortizationInitializationAction" class="com.knight.emms.web.action.AmortizationInitializationAction" scope="prototype"/>
+	<bean id="MaterialsDispatchAction" class="com.knight.emms.web.action.MaterialsDispatchAction" scope="prototype"/>
+	<bean id="MaterialsPackageAction" class="com.knight.emms.web.action.MaterialsPackageAction" scope="prototype"/>
+	<bean id="BaseDepotAction" class="com.knight.emms.web.action.BaseDepotAction" scope="prototype"/>
+	<bean id="BaseDepotPermissionAction" class="com.knight.emms.web.action.BaseDepotPermissionAction" scope="prototype"/>
+	<bean id="BaseLocationAction" class="com.knight.emms.web.action.BaseLocationAction" scope="prototype"/>
+	<bean id="BaseDepotInitAction" class="com.knight.emms.web.action.BaseDepotInitAction" scope="prototype"/>
+	<bean id="ProjectDepotInitAction" class="com.knight.emms.web.action.ProjectDepotInitAction" scope="prototype"/>
+	<bean id="ReceiveManageAction" class="com.knight.emms.web.action.ReceiveManageAction" scope="prototype"/>
+	<bean id="CeaseReportAction" class="com.knight.emms.web.action.CeaseReportAction" scope="prototype"/>
+	<bean id="TakeStockAction" class="com.knight.emms.web.action.TakeStockAction" scope="prototype"/>
+	<bean id="InstallDismantlePriceAction" class="com.knight.emms.web.action.InstallDismantlePriceAction" scope="prototype"/>
+	<bean id="LostCompensationAction" class="com.knight.emms.web.action.LostCompensationAction" scope="prototype"/>
+	<bean id="AllocationProjectAction" class="com.knight.emms.web.action.AllocationProjectAction" scope="prototype"/>
+	<bean id="AllocationDepotAction" class="com.knight.emms.web.action.AllocationDepotAction" scope="prototype"/>
+	<bean id="OtherBusinessAction" class="com.knight.emms.web.action.OtherBusinessAction" scope="prototype"/>
+	<bean id="OtherBetsAction" class="com.knight.emms.web.action.OtherBetsAction" scope="prototype"/>
+	<bean id="TruckCranePriceAction" class="com.knight.emms.web.action.TruckCranePriceAction" scope="prototype"/>
+	<bean id="RecycleManageAction" class="com.knight.emms.web.action.RecycleManageAction" scope="prototype"/>
+	<bean id="AnnexDetailsAction" class="com.knight.emms.web.action.AnnexDetailsAction" scope="prototype"/>
+	<bean id="MaterialsRepairAction" class="com.knight.emms.web.action.MaterialsRepairAction" scope="prototype"/>
+	<bean id="ApplyMakeAction" class="com.knight.emms.web.action.ApplyMakeAction" scope="prototype"/>
+	<bean id="InstallFeeAction" class="com.knight.emms.web.action.InstallFeeAction" scope="prototype"/>
+	<bean id="AutocraneFeeAction" class="com.knight.emms.web.action.AutocraneFeeAction" scope="prototype"/>
+	<bean id="InstallDismantelTeamAction" class="com.knight.emms.web.action.InstallDismantelTeamAction" scope="prototype"/>
+	<bean id="AutocraneUnitAction" class="com.knight.emms.web.action.AutocraneUnitAction" scope="prototype"/>
+	<bean id="SettleProjectAction" class="com.knight.emms.web.action.SettleProjectAction" scope="prototype"/>
+	<bean id="BasedepotJoinMaterialsAction" class="com.knight.emms.web.action.BasedepotJoinMaterialsAction" scope="prototype"/>
+	<bean id="MaterialsStoreAction" class="com.knight.emms.web.action.MaterialsStoreAction" scope="prototype"/>
+	<bean id="ProjectMaterialsStoreAction" class="com.knight.emms.web.action.ProjectMaterialsStoreAction" scope="prototype"/>
+	<bean id="SettleMaterialsAction" class="com.knight.emms.web.action.SettleMaterialsAction" scope="prototype"/>
+	<bean id="OtherMaterialStockAction" class="com.knight.emms.web.action.OtherMaterialStockAction" scope="prototype"/>
+	<bean id="HandleMakeAction" class="com.knight.emms.web.action.HandleMakeAction" scope="prototype"/>
+	<bean id="MaterialsRemodelAction" class="com.knight.emms.web.action.MaterialsRemodelAction" scope="prototype"/>
+	<bean id="LeasedLostCompensationAction" class="com.knight.emms.web.action.LeasedLostCompensationAction" scope="prototype"/>
+	<bean id="TemporaryReturnAction" class="com.knight.emms.web.action.TemporaryReturnAction" scope="prototype"/>
+	<bean id="ReturnTempStoreAction" class="com.knight.emms.web.action.ReturnTempStoreAction" scope="prototype"/>
+	<bean id="ContractJoinUserAction" class="com.knight.emms.web.action.ContractJoinUserAction" scope="prototype"/>
+	<bean id="LeaseBlockUpAction" class="com.knight.emms.web.action.LeaseBlockUpAction" scope="prototype"/>
+	<bean id="OtherLeaseBusinessAction" class="com.knight.emms.web.action.OtherLeaseBusinessAction" scope="prototype"/>
+	<bean id="PractiDispatchAction" class="com.knight.emms.web.action.PractiDispatchAction" scope="prototype"/>
+	<bean id="EquipAddReduceDetailAction" class="com.knight.emms.web.action.EquipAddReduceDetailAction" scope="prototype"/>
+	<bean id="InspectSelfInitAction" class="com.knight.emms.web.action.InspectSelfInitAction" scope="prototype"/>
+	<bean id="InspectSelfChooseAction" class="com.knight.emms.web.action.InspectSelfChooseAction" scope="prototype"/>
+	<bean id="DepotTransfersAction" class="com.knight.emms.web.action.DepotTransfersAction" scope="prototype"/>
+	
+	<!-- 泵车系统 -->
+	<bean id="PumpTruckAction" class="com.knight.emms.web.action.PumpTruckAction" scope="prototype"/>
+	
+</beans>

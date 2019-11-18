@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="/" extends="knight-default" namespace="/">
+		<action name="export" class="ExportAction" method="export">
+			<result>/jsonString.jsp</result>
+		</action>
+		<action name="login" class="LoginAction" method="login">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="check" class="LoginAction" method="check">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="modelsMenu" class="MenuAction" method="models">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="panelTreeMenu" class="MenuAction" method="panelTree">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="fileDetail" class="FileDetailAction">
+			<result>/pages/document/fileDetail.jsp</result>
+		</action>
+		<action name="loginMiniProgram" class="MiniProgramAction" method="login">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<package name="system" extends="knight-default" namespace="/system">
+		<action name="*AppUser" class="AppUserAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AppUserKey" class="AppUserKeyAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="grantXmlAppRole" class="AppRoleAction" method="grantXml">
+			<result>/jsonXml.jsp</result>
+		</action>
+		<action name="*AppRole" class="AppRoleAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Department" class="DepartmentAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*IndexDisplay" class="IndexDisplayAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SysConfig" class="SysConfigAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Code" class="CodeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SystemLog" class="SystemLogAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*FileAttach" class="FileAttachAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*GlobalType" class="GlobalTypeAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+	<package name="systemsql" extends="knight-default" namespace="/system/sql">
+		<action name="*SystemDataBase" class="SystemSqlAction" method="{1}">
+			<result name="success">/pages/public/loadsql.jsp</result>
+			<result name="fail">/403.jsp</result>
+			<result name="query">/pages/public/loadsql.jsp</result>
+			<result name="update">/pages/public/loadsql.jsp</result>
+		</action>
+	</package>
+	<package name="info" extends="knight-default" namespace="/info">
+		<action name="*InMessage" class="InMessageAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="display">/pages/indexpages/messageListPage.jsp</result>
+		</action>
+		<action name="*ShortMessage" class="ShortMessageAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*AppTips" class="AppTipsAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+</struts>
+
+		

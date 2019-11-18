@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-29 9:21:52 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TAppComponDispatchDetail" table="T_APP_DISPATCH_COMPON_DETAIL">
+		<id name="compDeid" type="java.lang.Long">
+			<column name="COMP_DEID" />
+			<generator class="native" />
+		</id>
+		<property name="disid" type="java.lang.Long">
+			<column name="DISID" />
+		</property>
+		<property name="compId" type="java.lang.Long">
+			<column name="COMP_ID" />
+		</property>
+		<property name="compName" type="string">
+			<column name="COMP_NAME" length="50" />
+		</property>
+		<property name="compSpec" type="string">
+			<column name="COMP_SPEC" length="50" />
+		</property>
+		<property name="dimensions" type="string">
+			<column name="DIMENSIONS" length="50" />
+		</property>
+		<property name="stockNum" type="java.lang.Long">
+			<column name="STOCK_NUM" />
+		</property>
+		<property name="disNum" type="java.lang.Long">
+			<column name="DIS_NUM" />
+		</property>
+		<property name="logisticNum" type="java.lang.Long">
+			<column name="LOGISTIC_NUM" />
+		</property>
+		<property name="componSerial" type="string">
+			<column name="COMPON_SERIAL" length="64" />
+		</property>
+	</class>
+</hibernate-mapping>

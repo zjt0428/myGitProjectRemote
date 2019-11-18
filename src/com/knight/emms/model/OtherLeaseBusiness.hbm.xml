@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.OtherLeaseBusiness" table="T_OTHER_LEASE_BUSINESS" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="otherId" column="OTHER_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="businessSerial" type="java.lang.String" column="BUSINESS_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="chargeableTime" type="java.lang.String" column="CHARGEABLE_TIME" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="totalCosts" type="java.lang.String" column="TOTAL_COSTS" />
+		<property name="affiliatedSerial" type="java.lang.String" column="AFFILIATED_SERIAL" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="baseDepot" column="DEPOT_ID" class="com.knight.emms.model.BaseDepot" fetch="join" />
+		<many-to-one name="leaseContract" column="LEASE_ID" class="com.knight.emms.model.LeaseContract" fetch="join" />
+		<set name="otherLeaseDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="OTHER_ID" />
+			<one-to-many class="com.knight.emms.model.OtherLeaseDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

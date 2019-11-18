@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ExitFactoryEquip" table="T_EXIT_FACTORY_EQUIP" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="exitFactoryEquipId" column="EXIT_FACTORY_EQUIP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="exitFactoryNoticeId" type="java.lang.Long" column="EXIT_FACTORY_NOTICE_ID" />
+		<property name="equipGenericName" type="java.lang.String" column="EQUIP_GENERIC_NAME" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="initHeight" type="java.math.BigDecimal" column="INIT_HEIGHT" />
+		<property name="contractHeight" type="java.math.BigDecimal" column="CONTRACT_HEIGHT" />
+		<property name="wallAttacheQty" type="java.lang.Integer" column="WALL_ATTACHE_QTY" />
+		<property name="brachium" type="java.math.BigDecimal" column="BRACHIUM" />
+	</class>
+</hibernate-mapping>

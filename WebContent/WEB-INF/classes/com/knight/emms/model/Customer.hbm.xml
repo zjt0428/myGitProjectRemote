@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Customer" table="T_CUSTOMER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="customerId" column="CUSTOMER_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="customerName" type="java.lang.String" column="CUSTOMER_NAME" />
+		<property name="customerNiceName" type="java.lang.String" column="CUSTOMER_NICK_NAME" />
+		<property name="customerLevel" type="java.lang.String" column="CUSTOMER_LEVEL" />
+		<property name="unitType" type="java.lang.String" column="UNIT_TYPE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="tel" type="java.lang.String" column="TEL" />
+		<property name="mainBusiness" type="java.lang.String" column="MAIN_BUSINESS" />
+		<property name="regCapital" type="java.math.BigDecimal" column="REG_CAPITAL" />
+		<property name="birthDate" type="java.lang.String" column="BIRTH_DATE" />
+		<property name="businessArea" type="java.lang.String" column="BUSINESS_AREA" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="parentId" type="java.lang.Long" column="PARENT_ID" />
+		<property name="customerAttribute" type="java.lang.String" column="CUSTOMER_ATTRIBUTE" />
+		<many-to-one name="customerLinker" column="CUSTOMER_LINKER_ID" class="com.knight.emms.model.CustomerLinker" fetch="join" />
+		<many-to-one name="customerAccount" column="CUSTOMER_ACCOUNT_ID" class="com.knight.emms.model.CustomerAccount" fetch="join" />
+		<set name="customerLinkerSet" lazy="true" cascade="all" inverse="false">
+			<key column="CUSTOMER_ID"></key>
+			<one-to-many class="com.knight.emms.model.CustomerLinker" />
+		</set>
+		<set name="customerAccountSet" lazy="true" cascade="all" inverse="false">
+			<key column="CUSTOMER_ID"></key>
+			<one-to-many class="com.knight.emms.model.CustomerAccount" />
+		</set>
+	</class>
+</hibernate-mapping>

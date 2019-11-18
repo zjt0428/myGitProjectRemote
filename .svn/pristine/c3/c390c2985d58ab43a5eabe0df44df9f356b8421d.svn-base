@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AttachmentStorage" table="T_ATTACHMENT_STORAGE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="attachmentId" column="ATTACHMENT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="rowId" type="java.lang.Long" column="ROW_ID" />
+		<property name="componGeneric" type="java.lang.String" column="COMPON_GENERIC" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="componVender" type="java.lang.String" column="COMPO_VENDER" />
+		<property name="componCategory" type="java.lang.String" column="COMPON_CATEGORY" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="projectCounts" type="java.lang.String" column="PROJECT_COUNTS" />
+		<property name="counts" type="java.lang.String" column="COUNTS"></property>		
+		<property name="disAllInitId" type="java.lang.Long" column="DIS_ALL_INIT_ID"></property>		
+		<property name="remark" type="java.lang.String" column="REMARK"></property>		
+	</class>
+</hibernate-mapping>

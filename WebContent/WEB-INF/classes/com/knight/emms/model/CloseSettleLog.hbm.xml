@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.CloseSettleLog" table="T_CLOSE_SETTLE_LOG" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+	optimistic-lock="version">
+		<id name="closeLogId" column="CLOSE_LOG_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="providedId" type="java.lang.Long" column="PROVIDED_ID" />
+		<property name="closedStatus" type="java.lang.String" column="CLOSED_STATUS" />
+		<property name="months" type="java.lang.String" column="MONTHS" />
+	</class>
+</hibernate-mapping>

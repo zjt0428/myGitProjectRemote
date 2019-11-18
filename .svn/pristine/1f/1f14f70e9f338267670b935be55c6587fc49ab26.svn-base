@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Materials_Work_Site_Occupancy" language="groovy" pageWidth="3000" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="2960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3348d40e-b88c-4cc3-94a8-c946eeea97e2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="contractIds" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="queryDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @queryDate VARCHAR(24)
+SET @queryDate = $P{queryDate}
+
+;WITH QUERY AS (
+	SELECT
+	CHAR(65+COMMODITY_ID)+COMMODITY AS 'NEW_COMMODITY',
+	COMMODITY,
+	COMMODITY_ID
+	FROM T_MATERIALS_COMMODITY)
+SELECT
+BCC.[VALUE] AS 'CONTRACT_CATEGORY_NAME',
+(CASE TCM.PA_ENT_NAME
+	WHEN '天元集团一公司' THEN 'A天元集团一公司'
+	WHEN '天元集团二公司' THEN 'B天元集团二公司'
+	WHEN '天元集团三公司' THEN 'C天元集团三公司'
+	WHEN '天元集团四公司' THEN 'D天元集团四公司'
+	WHEN '天元集团五公司' THEN 'E天元集团五公司'
+	WHEN '天元集团六公司' THEN 'F天元集团六公司'
+	WHEN '天元集团七公司' THEN 'G天元集团七公司'
+	WHEN '天元集团八公司' THEN 'H天元集团八公司'
+	WHEN '天元集团九公司' THEN 'I天元集团九公司'
+	WHEN '天元集团十公司' THEN 'J天元集团十公司'
+	WHEN '天元集团十一公司' THEN 'K天元集团十一公司'
+	WHEN '天元集团青二公司' THEN 'L天元集团青二公司'
+	WHEN '天元集团路桥公司' THEN 'M天元集团路桥公司'
+	WHEN '天元集团装饰公司' THEN 'N天元集团装饰公司'
+	WHEN '天元集团安装公司' THEN 'O天元集团安装公司'
+	WHEN '天元集团北京公司' THEN 'P天元集团北京公司'
+	WHEN '天元集团六公司济南办事处' THEN 'Q天元集团六公司济南办事处'
+	WHEN '外租经营客户' THEN 'R外租经营客户'
+	WHEN '天元集团临港公司' THEN 'S天元集团临港公司'
+	WHEN '集团内部其他单位' THEN 'T集团内部其他单位'
+	END) AS 'PA_ENT_NAME',
+TCM.CONTRACT_SERIAL,
+TCM.PROJECT_NAME,
+TCM.COMPETENT_DEPARTMET,
+BP.[VALUE]+BC.[VALUE] AS 'ADDRESS',
+MC.COMMODITY_ID,
+MC.NEW_COMMODITY,
+T.*
+FROM(
+	SELECT
+	COMMODITY,
+	CONTRACT_ID,
+	SUM(CASE
+		WHEN OPERATION_WAY='初始化' THEN SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='正常出租' THEN SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='项目间调拨入库' THEN SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='租借出租' THEN SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='项目维修入库' THEN SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='租借维修入库' THEN SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='项目维修出库' THEN -SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='租借维修出库' THEN -SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='正常回收' THEN -SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='丢失赔偿出库' THEN -SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='项目间调拨出库' THEN -SUPPLEMENT_QUANTITY
+		WHEN OPERATION_WAY='退货管理' THEN -SUPPLEMENT_QUANTITY
+		ELSE 0 END
+	) AS 'SUPPLEMENT_QUANTITY'
+	 FROM
+		(SELECT
+			TPD.COMMODITY,
+			CONTRACT_ID,
+			OPERATION_WAY,
+			QUANTITY,
+			SECOND_CONVERTED_QUANTITY,
+			CONVERT(INT,QUANTITY)*CONVERT(DECIMAL(15,2),SECOND_CONVERTED_QUANTITY) AS 'SUPPLEMENT_QUANTITY'
+			FROM T_PROJECT_DEPOT_IN_OUT TPD
+			LEFT JOIN T_MATERIALS_SPECIFICATIONS MS ON TPD.SPECIFICATIONS_ID = MS.SPECIFICATIONS_ID
+			WHERE OPERATION_DATE<=@queryDate) A
+	GROUP BY COMMODITY,CONTRACT_ID
+) T
+LEFT JOIN T_CONTRACT_MATERIALS TCM ON T.CONTRACT_ID = TCM.CONTRACTMA_ID
+LEFT JOIN T_PROJECT TP ON TP.PROJECT_ID = TCM.PROJECT_ID
+LEFT JOIN BM_PROVINCE BP ON BP.CODE=TP.PROVINCE
+LEFT JOIN BM_CITY BC ON BC.CODE=TP.CITY
+LEFT JOIN BM_CONTRACT_CATEGORY BCC ON BCC.CODE=TCM.CONTRACT_CATEGORY
+LEFT JOIN QUERY MC ON MC.COMMODITY=T.COMMODITY
+WHERE ($P{contractIds}='' OR $P{contractIds} IS NULL OR T.CONTRACT_ID IN (SELECT * FROM Split($P{contractIds},',')))
+ORDER BY MC.COMMODITY_ID DESC]]>
+	</queryString>
+	<field name="CONTRACT_CATEGORY_NAME" class="java.lang.String"/>
+	<field name="PA_ENT_NAME" class="java.lang.String"/>
+	<field name="CONTRACT_SERIAL" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="COMPETENT_DEPARTMET" class="java.lang.String"/>
+	<field name="ADDRESS" class="java.lang.String"/>
+	<field name="COMMODITY_ID" class="java.lang.Long"/>
+	<field name="NEW_COMMODITY" class="java.lang.String"/>
+	<field name="COMMODITY" class="java.lang.String"/>
+	<field name="CONTRACT_ID" class="java.lang.Long"/>
+	<field name="SUPPLEMENT_QUANTITY" class="java.math.BigDecimal"/>
+	<title>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="876" height="71" uuid="2e92302f-fb87-4d10-b214-8aa6a99c0808"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="28" isBold="false"/>
+				</textElement>
+				<text><![CDATA[租赁物资工地占有量表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<summary>
+		<band height="93" splitType="Stretch">
+			<crosstab>
+				<reportElement x="0" y="0" width="2960" height="93" uuid="96745b80-59ec-4859-950a-c5339fd6e331"/>
+				<crosstabHeaderCell>
+					<cellContents backcolor="#99CCFF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="43" uuid="c049ecf1-fab1-4e9f-a8b2-9767353114a9"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[合同类型]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="70" y="0" width="70" height="43" uuid="14b9d6b0-ab1d-4a78-b20b-0f5e45434a2e"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[承租单位]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="140" y="0" width="100" height="43" uuid="b7b6fff6-560a-431f-9d88-a29df2845db4"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[合同编号]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="240" y="0" width="192" height="43" uuid="b4babbd6-1319-4a28-a7fe-e69f95e19dbd"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[项目名称]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="432" y="0" width="100" height="43" uuid="0670baa7-5593-4efa-aeeb-94b1e62edcf9"/>
+							<box>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textElement verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[项目主管部门]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="532" y="0" width="100" height="43" uuid="73e9db1f-7e4e-4ab1-b560-495e3b3188f5"/>
+							<textElement verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[项目地址]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="CONTRACT_CATEGORY_NAME" width="70" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{CONTRACT_CATEGORY_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="87" uuid="bdc02e08-9bb6-4a4f-9700-0f2c68a2cb89"/>
+								<textElement verticalAlignment="Middle">
+									<font size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CONTRACT_CATEGORY_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="PA_ENT_NAME" width="70" totalPosition="End" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{PA_ENT_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="62" uuid="a70a38cb-3c28-4d9e-bd9e-06f399025f7c"/>
+								<textElement verticalAlignment="Middle">
+									<font size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{PA_ENT_NAME}.substring( 1 )]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#B9B4F8" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="562" height="25" uuid="1c902f28-ee8d-41e9-b032-96d93be6ad7e"/>
+								<textElement verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CONTRACT_CATEGORY_NAME}+" 合计"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="CONTRACT_SERIAL" width="100" totalPosition="End" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{CONTRACT_SERIAL}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="100" height="37" uuid="fc0072b3-2db3-4cd9-adc1-edd4e04c0d4a"/>
+								<textElement verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CONTRACT_SERIAL}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#ADDDB7" mode="Opaque">
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="492" height="25" uuid="cc95144e-2547-4f7b-ba16-33b0ea9c101e"/>
+								<textElement verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{PA_ENT_NAME}.substring( 1 )+" 合计"]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="PROJECT_NAME" width="192" headerPosition="Middle">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{PROJECT_NAME}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" mode="Transparent" x="0" y="0" width="192" height="37" uuid="d503b996-ea07-4fa8-96b6-2463b67fc66c"/>
+								<textElement verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{PROJECT_NAME}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="COMPETENT_DEPARTMET" width="100">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{COMPETENT_DEPARTMET}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="100" height="37" uuid="a21e0c13-83dc-4c85-bf44-f201fb6ba11b"/>
+								<textElement verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{COMPETENT_DEPARTMET}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="ADDRESS" width="100">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{ADDRESS}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<box>
+								<pen lineWidth="0.5"/>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="100" height="37" uuid="beb6b4e8-7bc1-4055-b185-f09564bc75cc"/>
+								<textElement verticalAlignment="Middle">
+									<font size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{ADDRESS}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="NEW_COMMODITY" height="43">
+					<bucket order="Descending" class="java.lang.String">
+						<bucketExpression><![CDATA[$F{NEW_COMMODITY}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="75" height="43" uuid="c6fbc36d-1e3e-4e83-a601-480d0565ed03"/>
+								<textElement verticalAlignment="Middle">
+									<font size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{NEW_COMMODITY}.substring( 1 )]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="QUANTITYMeasure" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{SUPPLEMENT_QUANTITY}]]></measureExpression>
+				</measure>
+				<crosstabCell width="75" height="37">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="75" height="37" uuid="4dff5d12-7ca6-4e58-92b3-44c30b307773"/>
+							<textElement verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{QUANTITYMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="CONTRACT_CATEGORY_NAME">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="82be1c75-615f-4d8c-b87c-d2e4e475522e"/>
+							<textFieldExpression><![CDATA[$V{QUANTITYMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" columnTotalGroup="NEW_COMMODITY">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="db3bcc66-3960-4789-9844-99cf409cedbf"/>
+							<textFieldExpression><![CDATA[$V{QUANTITYMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="CONTRACT_CATEGORY_NAME" columnTotalGroup="NEW_COMMODITY">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="8fd63a8f-26b9-4eba-a4ac-45fb3570feb6"/>
+							<textFieldExpression><![CDATA[$V{QUANTITYMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="75" height="25" rowTotalGroup="PA_ENT_NAME">
+					<cellContents backcolor="#B9B4F8" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="75" height="25" uuid="7e77f35c-70fd-4dca-9e12-810b46d58f2b"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{QUANTITYMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="PA_ENT_NAME" columnTotalGroup="NEW_COMMODITY">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="7ca9a630-af2c-4dbf-9867-7a5d2b512bcc"/>
+							<textFieldExpression><![CDATA[$V{QUANTITYMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="75" height="25" rowTotalGroup="CONTRACT_SERIAL">
+					<cellContents backcolor="#ADDDB7" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5"/>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="75" height="25" uuid="d582c777-7e2a-4a1d-a196-a868fdedd2c1"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{QUANTITYMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="CONTRACT_SERIAL" columnTotalGroup="NEW_COMMODITY">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="PROJECT_NAME">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="PROJECT_NAME" columnTotalGroup="NEW_COMMODITY">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="COMPETENT_DEPARTMET">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="COMPETENT_DEPARTMET" columnTotalGroup="NEW_COMMODITY">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="ADDRESS">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="ADDRESS" columnTotalGroup="NEW_COMMODITY">
+					<cellContents/>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

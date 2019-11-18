@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-29 9:21:52 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TAppRepair" table="T_APP_REPAIR">
+		<id name="repid" type="java.lang.Long">
+			<column name="REPID" />
+			<generator class="native" />
+		</id>
+		<property name="equipId" type="java.lang.Long">
+			<column name="EQUIP_ID" />
+		</property>
+		<property name="projectId" type="java.lang.Long">
+			<column name="PROJECT_ID" />
+		</property>
+		<property name="recordSerial" type="string">
+			<column name="RECORD_SERIAL" length="64" />
+		</property>
+		<property name="recordId" type="string">
+			<column name="RECORD_ID" length="24" />
+		</property>
+		<property name="exwSerial" type="string">
+			<column name="EXW_SERIAL" length="64" />
+		</property>
+		<property name="buildingNum" type="string">
+			<column name="BUILDING_NUM" length="64" />
+		</property>
+		<property name="projName" type="string">
+			<column name="PROJ_NAME" length="200" />
+		</property>
+		<property name="reportDt" type="java.lang.String">
+			<column name="REPORT_DT" />
+		</property>
+		<property name="faultLevel" type="string">
+			<column name="FAULT_LEVEL" length="20" />
+		</property>
+		<property name="faultDesc" type="string">
+			<column name="FAULT_DESC" length="200" />
+		</property>
+		<property name="procMan" type="string">
+			<column name="PROC_MAN" length="200" />
+		</property>
+		<property name="procManId" type="string">
+			<column name="PROC_MAN_ID" length="256" />
+		</property>
+		<property name="replaceCompon" type="string">
+			<column name="REPLACE_COMPON" length="200" />
+		</property>
+		<property name="repairBeforeImage" type="string">
+			<column name="REPAIR_BEFORE_IMAGE" length="200" />
+		</property>
+		<property name="repairAfterImage" type="string">
+			<column name="REPAIR_AFTER_IMAGE" length="200" />
+		</property>
+		<property name="componBeforeImage" type="string">
+			<column name="COMPON_BEFORE_IMAGE" length="200" />
+		</property>
+		<property name="componAfterImage" type="string">
+			<column name="COMPON_AFTER_IMAGE" length="200" />
+		</property>
+		<property name="location" type="string">
+			<column name="LOCATION" length="200" />
+		</property>
+		<property name="disMan" type="string">
+			<column name="DIS_MAN" />
+		</property>
+		<property name="disDate" type="string">
+			<column name="DIS_Date" />
+		</property>
+		<property name="arriveTime" type="string">
+			<column name="ARRIVE_TIME" />
+		</property>
+		<property name="startOffTime" type="string">
+			<column name="START_OFF_TIME" />
+		</property>
+		<property name="repairType" type="string">
+			<column name="REPAIR_TYPE" />
+		</property>
+		<property name="repairTypeName" type="java.lang.String"
+			formula="(SELECT A.NAME FROM T_APP_REPAIR_TYPE A WHERE A.ID= REPAIR_TYPE)" />
+		<property name="disRemark" type="string">
+			<column name="DIS_REMARK" />
+		</property>
+		<property name="repairDt" type="string">
+			<column name="REPAIR_DT" length="19" />
+		</property>
+		<property name="repScheme" type="string">
+			<column name="REP_SCHEME" length="300" />
+		</property>
+		<property name="procResult" type="string">
+			<column name="PROC_RESULT" length="64" />
+		</property>
+		<property name="repMan" type="string">
+			<column name="REP_MAN" length="64" />
+		</property>
+		<property name="repTimes" type="string">
+			<column name="REP_TIMES" length="32" />
+		</property>
+		<property name="repFee" type="big_decimal">
+			<column name="REP_FEE" precision="12" />
+		</property>
+		<property name="repReason" type="string">
+			<column name="REP_REASON" />
+		</property>
+		<property name="repImage" type="string">
+			<column name="REP_IMAGE"/>
+		</property>
+		<property name="state" type="string">
+			<column name="STATE" length="1" />
+		</property>
+		<property name="createDt" type="string">
+			<column name="CREATE_DT" length="19" />
+		</property>
+		<property name="createBy" type="java.lang.Long">
+			<column name="CREATE_BY" />
+		</property>
+		<property name="createByPhone" type="java.lang.Long">
+			<column name="CREATE_BY_PHONE" />
+		</property>
+		<property name="createByname" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID= CREATE_BY)" />
+		<property name="equipSerial" type="java.lang.String"
+			formula="(SELECT A.EQUIP_SERIAL FROM T_EQUIPMENT A WHERE A.EQUIP_ID= EQUIP_ID)" />
+		<property name="fileAttaches" type="string">
+			<column name="FILEATTACHES" length="200" />
+		</property>
+		<property name="hasview" type="string">
+			<column name="HASVIEW" length="1" />
+		</property>
+		<property name="equipSpec" type="java.lang.String" column="EQUIPSPEC" />
+		<set name="repairComponSet" cascade="none" inverse="true" lazy="true">
+			<key column="REPID" />
+			<one-to-many class="com.knight.app.model.TAppRepairCompon" />
+		</set>
+		<property name="weightOfFailure" type="string">
+			<column name="WEIGHT_OF_FAILURE" length="19" />
+		</property>
+		<property name="inputVoltage" type="string">
+			<column name="IMPUT_VOLTAGE" length="19" />
+		</property>
+		<property name="breakdownVoltage" type="string">
+			<column name="BREAK_DOWN_VOLTAGE" length="19" />
+		</property>
+		<property name="switchFault1" type="string">
+			<column name="SWITCH_FAULT_1" length="19" />
+		</property>
+		<property name="switchFault2" type="string">
+			<column name="SWITCH_FAULT_2" length="19" />
+		</property>
+		<property name="switchFault3" type="string">
+			<column name="SWITCH_FAULT_3" length="19" />
+		</property>
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" insert="false" update="false" fetch="join"/>
+<!-- 		<property name="paymentState" type="string">
+			<column name="PAYMENT_STATE" length="1" />
+		</property> -->
+		<property name="permissionFlag" type="java.lang.String"
+			formula="(SELECT A.PERMISSION_FLAG FROM T_EQUIPMENT A WHERE A.EQUIP_ID= EQUIP_ID)" />
+		<set name="appRepairCostGridSet" cascade="all" inverse="false" lazy="true">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.AppRepairCostGrid" />
+		</set>
+	</class>
+</hibernate-mapping>

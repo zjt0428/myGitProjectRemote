@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.IndisNotice" table="T_INDIS_NOTICE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="noticeId" column="NOTICE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractNumber" type="java.lang.String" column="CONTRACT_NUMBER" />
+		<property name="plannedDate" type="java.lang.String" column="PLANNED_DATE" />
+		<property name="workDate" type="java.lang.String" column="WORK_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="acceptNumber" type="java.lang.String" column="ACCEPT_NUMBER" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<many-to-one name="indisSchema" column="SCHEMA_ID" class="com.knight.emms.model.IndisSchema" fetch="join" />
+		<set name="indisNoticePractiSet" cascade="all" inverse="false" lazy="true">
+			<key column="NOTICE_ID" />
+			<one-to-many class="com.knight.emms.model.IndisNoticePracti" />
+		</set>
+	</class>
+</hibernate-mapping>

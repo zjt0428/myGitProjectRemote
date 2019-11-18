@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SideStation" table="T_SIDE_STATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="stationId" column="STATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="stationSerial" type="java.lang.String" column="STATION_SERIAL" />
+		<property name="category" type="java.lang.String" column="CATEGORY" />
+		<property name="details" type="java.lang.String" column="DETAILS" />
+	</class>
+</hibernate-mapping>

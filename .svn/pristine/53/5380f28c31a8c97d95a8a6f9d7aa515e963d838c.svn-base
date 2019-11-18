@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>头文件</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="zt_top_box">
+ <div class="zt_top_title"><a href="index.html" target="_top"><img src="images/top_title.png" width="659" height="79" border="0" /></a></div>
+ <div class="zt_top_right">
+   <span><img src="images/top_user.png" /></span>
+   <span>王小明王小明</span>&nbsp;&nbsp;
+   <span><img src="images/top_line.png" /></span>&nbsp;&nbsp;
+   <span><img src="images/top_system.png" /></span>&nbsp;&nbsp;
+   <span><img src="images/top_exit.png" /></span>
+ </div>
+  
+</div> 
+</body>
+</html>

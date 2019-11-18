@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TeamsAccount" table="T_TEAMS_ACCOUNT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="teamsAccountId" column="TEAMS_ACCOUNT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="teamsAccountSerial" type="java.lang.String" column="TEAMS_ACCOUNT_SERIAL" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="projectSerial" type="java.lang.String" formula="(SELECT P.PROJECT_SERIAL FROM T_PROJECT P WHERE P.PROJECT_ID = PROJECT_ID)" />
+		<property name="address" type="java.lang.String" formula="(SELECT P.ADDRESS FROM T_PROJECT P WHERE P.PROJECT_ID = PROJECT_ID)" />
+		<property name="teams" type="java.lang.String" column="TEAMS" />
+		<property name="accountStartDate" type="java.util.Date" column="ACCOUNT_START_DATE" />
+		<property name="accountEndDate" type="java.util.Date" column="ACCOUNT_END_DATE" />
+		<property name="knotPrice" type="java.math.BigDecimal" column="KNOT_PRICE" />
+		<property name="wallAttachePrice" type="java.math.BigDecimal" column="WALL_ATTACHE_PRICE" />
+		<property name="deductAmount" type="java.math.BigDecimal" column="DEDUCT_AMOUNT" />
+		<property name="paymentAmount" type="java.math.BigDecimal" column="PAYMENT_AMOUNT" />
+		<property name="finishedAmount" type="java.math.BigDecimal" column="FINISHED_AMOUNT" />
+		<property name="knotAmount" type="java.math.BigDecimal" column="KNOT_AMOUNT" />
+		<property name="wallAmount" type="java.math.BigDecimal" column="WALL_AMOUNT" />
+		<property name="autocraneAmount" type="java.math.BigDecimal" column="AUTOCRANE_AMOUNT" />
+		<property name="lgisticsAmount" type="java.math.BigDecimal" column="LGISTICS_AMOUNT" />
+		<property name="otherAmount" type="java.math.BigDecimal" column="OTHER_AMOUNT" />
+		<property name="practiAmount" type="java.math.BigDecimal" column="PRACTI_AMOUNT" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<set name="teamsAccountKnotSet" cascade="all" inverse="false" lazy="true">
+			<key column="TEAMS_ACCOUNT_ID" />
+			<one-to-many class="com.knight.emms.model.TeamsAccountKnot" />
+		</set>
+		<set name="teamsAccountWallSet" cascade="all" inverse="false" lazy="true">
+			<key column="TEAMS_ACCOUNT_ID" />
+			<one-to-many class="com.knight.emms.model.TeamsAccountWall" />
+		</set>
+		<set name="teamsAccountAutocraneSet" cascade="all" inverse="false" lazy="true">
+			<key column="TEAMS_ACCOUNT_ID" />
+			<one-to-many class="com.knight.emms.model.TeamsAccountAutocrane" />
+		</set>
+		<set name="teamsAccountLogisticsSet" cascade="all" inverse="false" lazy="true">
+			<key column="TEAMS_ACCOUNT_ID" />
+			<one-to-many class="com.knight.emms.model.TeamsAccountLogistics" />
+		</set>
+		<set name="teamsAccountOtherSet" cascade="all" inverse="false" lazy="true">
+			<key column="TEAMS_ACCOUNT_ID" />
+			<one-to-many class="com.knight.emms.model.TeamsAccountOther" />
+		</set>
+		<set name="teamsAccountPractiSet" cascade="all" inverse="false" lazy="true">
+			<key column="TEAMS_ACCOUNT_ID" />
+			<one-to-many class="com.knight.emms.model.TeamsAccountPracti" />
+		</set>
+	</class>
+</hibernate-mapping>

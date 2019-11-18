@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-18 13:57:11 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.LeaseBlockUp" table="T_LEASE_BLOCK_UP" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+        <id name="blockId" type="java.lang.Long">
+            <column name="BLOCK_ID" />
+            <generator class="native" />
+        </id>
+        <property name="blockSerial" type="java.lang.String">
+            <column name="BLOCK_SERIAL" length="64" />
+        </property>
+        <property name="userId" type="java.lang.Long">
+            <column name="USER_ID" not-null="true" />
+        </property>
+        <property name="userName" type="java.lang.String">
+            <column name="USER_NAME" length="32" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" length="1" not-null="true" />
+        </property>
+        <property name="blockTitle" type="java.lang.String">
+            <column name="BLOCK_TITLE" length="64" />
+        </property>
+        <property name="startDate" type="java.lang.String">
+            <column name="START_DATE" length="10" />
+        </property>
+        <property name="endDate" type="java.lang.String">
+            <column name="END_DATE" length="10" />
+        </property>
+        <property name="applyDate" type="java.lang.String">
+            <column name="APPLY_DATE" length="10" />
+        </property>
+        <property name="settledAmount" type="java.lang.String">
+            <column name="SETTLED_AMOUNT" length="20" />
+        </property>
+        <property name="finishAmount" type="java.lang.String">
+            <column name="FINISH_AMOUNT" length="20" />
+        </property>
+        <property name="backOff" type="java.lang.String">
+            <column name="BACK_OFF" length="1" />
+        </property>
+        <property name="tranportCaculateType" type="java.lang.String">
+            <column name="TRANSPORT_CACULATE_TYPE" length="1"/>
+        </property>
+        <property name="caculateRule" type="java.lang.String">
+            <column name="CACULATE_RULE" length="1"/>
+        </property>
+        <property name="delFlag" type="java.lang.String">
+            <column name="DEL_FLAG" length="1" not-null="true" />
+        </property>
+        <property name="insideAmount" type="java.lang.String">
+            <column name="INSIDE_AMOUNT" length="20" />
+        </property>
+        <property name="contractSerial" type="java.lang.String" formula="(SELECT CM.CONTRACT_SERIAL FROM T_CONTRACT_MATERIALS CM, T_LEASE_CONTRACT LC WHERE CM.CONTRACTMA_ID = LC.CONTRACT_ID AND LC.LEASE_ID = LEASE_ID)"/>
+  		<property name="blockupDays" type="java.lang.Integer" column="BLOCKUP_DAYS" />
+        
+        <many-to-one name="leaseContract" column="LEASE_ID" class="com.knight.emms.model.LeaseContract" fetch="join"></many-to-one>
+        <set name="leaseBlockUpDetailSet" lazy="true" cascade="all" inverse="false">
+        	<key column="BLOCK_ID"></key>
+        	<one-to-many class="com.knight.emms.model.LeaseBlockUpDetail"/>
+        </set>
+        <set name="insideBlockUpDetailSet" lazy="true" cascade="all" inverse="false">
+        	<key column="BLOCK_ID"></key>
+        	<one-to-many class="com.knight.emms.model.InsideBlockUpDetail"/>
+        </set>
+    </class>
+</hibernate-mapping>

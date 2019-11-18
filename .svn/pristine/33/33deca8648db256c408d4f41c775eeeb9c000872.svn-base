@@ -1,0 +1,74 @@
+
+var EquipInsureClaimRecordGrid = function(a, b) {
+	Ext.apply(this, a || {});
+	Ext.apply(this, b || {});
+	this.currentDate = new Date();
+	var columns = [  {
+		header : "保单号",
+		dataIndex : "insureSerial"
+	}, {
+		header : "开户行",
+		dataIndex : "bankDeposit"
+	}, {
+		header : "账号",
+		dataIndex : "DepositAccount"
+	}, {
+		width : 90,
+		header : "理赔时间",
+		dataIndex : "claimDate",
+		editor : new Ext.form.TextField({
+			maxLength : 32
+		})
+	},{
+		header : "损失数",
+		dataIndex : "costAmount"
+	},{
+		header : "赔偿额",
+		dataIndex : "claimAmount"
+	}, {
+		width : 90,
+		header : "理赔事由",
+		dataIndex : "claimReason"
+	} ];
+	/*this.tbarItems = this.tbarItems ? this.tbarItems : [];
+	if (this.saveable && this.equipId) {
+		this.tbarItems = [{
+			hidden : true,
+			iconCls : "btn-pred",
+			text : "核算",
+			handler : this.calculate.createDelegate(this)
+		}];
+	}*/
+	EquipInsureClaimRecordGrid.superclass.constructor.call(this, Ext.apply({
+		saveable : true,
+		loadurl : __ctxPath + "/equip/claimRecordListEquipInsurance.do?equipId=" + this.equipId,
+		fields : EquipInsuranceClaimListViewField,
+		title : "设备理赔记录单",
+		tbarItems : this.tbarItems,
+		option : "设备",
+		addForbidden : true,
+		delForbidden : true,
+		tbarItems : this.tbarItems,
+		height : this.height,
+		columns : columns,
+	}, this.grid_config || {}));
+};
+
+Ext.extend(EquipInsureClaimRecordGrid, Knight.ux.SubModuleBaseGrid, {
+	addSubModule : function() {
+		var selector = new EquipInsuranceClaimSelector({
+			collectEnable : true,
+			callback : function(d) {
+				for (var i = 0; i < d.length; i++) {
+					var data = d[i].data;
+					this.addSubModuleDate(data);
+				}
+				if (typeof (this.afterRecordCallback) == "function") {
+					this.afterRecordCallback.call(this, d);
+				}
+			}.createDelegate(this)
+		});
+		selector.fbar.addText("<a style=\"color: red\">提示：双击鼠标左键选中设备</a>");
+		selector.show();
+	}
+});

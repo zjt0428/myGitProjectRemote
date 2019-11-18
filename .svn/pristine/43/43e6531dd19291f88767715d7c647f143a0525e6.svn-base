@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.OtherBets" table="T_OTHER_BETS" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="otherBetsId" column="OTHER_BETS_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="otherBetsSerial" type="java.lang.String" column="OTHER_BETS_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="chargeableTime" type="java.lang.String" column="CHARGEABLE_TIME" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO"/>
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="totalCosts" type="java.lang.String" column="TOTAL_COSTS" />
+		<property name="affiliatedSerial" type="java.lang.String" column="AFFILIATED_SERIAL" />
+
+		<property name="contractNumber" type="java.lang.String" column="CONTRACT_NUMBER" />		
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="equipSerial" type="java.lang.String" column="EQUIP_SERIAL" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+
+		
+		<set name="otherBetsDetailSet" cascade="all" inverse="true" lazy="true">
+			<key column="OTHER_BETS_ID" />
+			<one-to-many class="com.knight.emms.model.OtherBetsDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

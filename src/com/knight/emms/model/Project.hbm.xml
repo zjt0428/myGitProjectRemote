@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Project" table="T_PROJECT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="projectId" column="PROJECT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="projectType" type="java.lang.String" column="PROJECT_TYPE" />
+		<property name="depName" type="java.lang.String"  formula="(SELECT (CASE WHEN T1.DEP_LEVEL=4 THEN T2.DEP_NAME+'/'+T1.DEP_NAME ELSE T1.DEP_NAME END) AS 'DEP_NAME'
+									FROM DEPARTMENT T1,DEPARTMENT T2 WHERE T1.PARENT_ID=T2.DEP_ID AND T1.DEP_ID=DEP_ID)"/>
+		<property name="province" type="java.lang.String" column="PROVINCE" />
+		<property name="city" type="java.lang.String" column="CITY" />
+		<property name="county" type="java.lang.String" column="COUNTY" />
+		<property name="street" type="java.lang.String" column="STREET" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="scale" type="java.lang.String" column="SCALE" />
+		<property name="startPlanDate" type="java.lang.String" column="START_PLAN_DATE" />
+		<property name="endPlanDate" type="java.lang.String" column="END_PLAN_DATE" />
+		<property name="projectCost" type="java.math.BigDecimal" column="PROJECT_COST" />
+		<property name="cover" type="java.math.BigDecimal" column="COVER" />
+		<property name="overallHeight" type="java.math.BigDecimal" column="OVERALL_HEIGHT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="ctCustomId" type="java.lang.Long" column="CT_CUSTOM_ID" />
+		<property name="ctCustomName" type="java.lang.String" column="CT_CUSTOM_NAME" />
+		<property name="ctCustomLinker" type="java.lang.String" column="CT_CUSTOM_LINKER" />
+		<property name="ctCustomLinkTel" type="java.lang.String" column="CT_CUSTOM_LINK_TEL" />
+		<property name="unCustomId" type="java.lang.Long" column="UN_CUSTOM_ID" />
+		<property name="unCustomName" type="java.lang.String" column="UN_CUSTOM_NAME" />
+		<property name="unCustomLinker" type="java.lang.String" column="UN_CUSTOM_LINKER" />
+		<property name="unCustomLinkTel" type="java.lang.String" column="UN_CUSTOM_LINK_TEL" />
+		<property name="supCustomId" type="java.lang.Long" column="SUP_CUSTOM_ID" />
+		<property name="supCustomName" type="java.lang.String" column="SUP_CUSTOM_NAME" />
+		<property name="supCustomLinker" type="java.lang.String" column="SUP_CUSTOM_LINKER" />
+		<property name="supCustomLinkTel" type="java.lang.String" column="SUP_CUSTOM_LINK_TEL" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="projectPractiId" type="java.lang.Long" column="PROJECT_PRACTI_ID" />
+		<property name="projectPractiName" type="java.lang.String" column="PROJECT_PRACTI_NAME" />
+		<property name="projectMobile" type="java.math.BigDecimal" column="PROJECT_MOBILE" />
+		<property name="materialPractiId" type="java.lang.Long" column="MATERIAL_PRACTI_ID" />
+		<property name="materialPractiName" type="java.lang.String" column="MATERIAL_PRACTI_NAME" />
+		<property name="materialMobile" type="java.math.BigDecimal" column="MATERIAL_MOBILE" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="constractNo" type="java.lang.String" formula="(SELECT  TOP 1 E.CONSTRACT_NO FROM T_CONTRACT_LEASE E WHERE E.PROJECT_ID=PROJECT_ID)" />
+		<property name="contractId" type="java.lang.Long" formula="(SELECT  TOP 1 E.CONTRACT_ID FROM T_CONTRACT_LEASE E WHERE E.PROJECT_ID=PROJECT_ID)" />
+		<property name="customerNickName" type="java.lang.String" column="CUSTOMER_NICK_NAME" />
+		<property name="reqsDesc" type="java.lang.String" column="REQS_DESC" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="expectEndDate" type="java.lang.String" column="EXPECT_END_DATE" />
+		<property name="constructPermit" type="java.lang.String" column="CONSTRUCT_PERMIT" />
+		<property name="projectRegister" type="java.lang.String" column="PROJECT_REGISTER" />
+		<property name="leaseProjectHead" type="java.lang.String" column="LEASE_PROJECT_HEAD" />
+		<property name="taxMode" type="java.lang.String" column="TAX_MODE" />
+		<property name="contracted" type="java.lang.String" column="CONTRACTED" />
+		<property name="materialsed" type="java.lang.String" column="MATERIALSED" />
+		<property name="permissionFlag" type="java.lang.String" column="PERMISSION_FLAG" />
+		<property name="contractSerial" type="java.lang.String" formula="(SELECT  TOP 1 E.CONTRACT_SERIAL FROM T_CONTRACT_MATERIALS E WHERE E.PROJECT_ID=PROJECT_ID)" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" />
+		<set name="projectExpenseSet" lazy="true" cascade="all" inverse="false">
+			<key column="PROJECT_ID"></key>
+			<one-to-many class="com.knight.emms.model.ProjectExpense" />
+		</set>
+	</class>
+</hibernate-mapping>

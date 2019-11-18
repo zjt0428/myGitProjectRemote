@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.FormApprove" table="T_FORM_APPROVE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="approveId" column="APPROVE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="approveUserid" type="java.lang.Long" column="APPROVE_USERID" />
+		<property name="approveUsername" type="java.lang.String" column="APPROVE_USERNAME" />
+		<property name="approveDep" type="java.lang.String" column="APPROVE_DEP" />
+		<property name="approveTime" type="java.util.Date" column="APPROVE_TIME" />
+		<property name="approveOpinion" type="java.lang.String" column="APPROVE_OPINION" />
+		<property name="approveRemark" type="java.lang.String" column="APPROVE_REMARK" />
+		<property name="approveAddress" type="java.lang.String" column="APPROVE_ADDRESS" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-17 16:25:45 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.MaterialsPackage" table="T_MATERIALS_PACKAGE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+       optimistic-lock="version">
+        <id name="packageId" type="java.lang.Long">
+            <column name="PACKAGE_ID" />
+            <generator class="native" />
+        </id>
+        <property name="packageSerial" type="java.lang.String">
+            <column name="PACKAGE_SERIAL" length="64" />
+        </property>
+        <property name="applyDate" type="java.lang.String">
+            <column name="APPLY_DATE" length="64" />
+        </property>
+        <property name="userId" type="java.lang.Long">
+            <column name="USER_ID" not-null="true" />
+        </property>
+        <property name="userName" type="java.lang.String">
+            <column name="USER_NAME" length="32" />
+        </property>
+        <property name="storeId" type="java.lang.Long">
+            <column name="STORE_ID" not-null="false" />
+        </property>
+        <property name="storeName" type="java.lang.String">
+            <column name="STORE_NAME" length="16" />
+        </property>
+        <property name="locationId" type="java.lang.Long">
+            <column name="LOCATION_ID" not-null="false"  />
+        </property>
+        <property name="storageLocation" type="java.lang.String">
+            <column name="STORAGE_LOCATION" length="16" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" length="1" not-null="true" />
+        </property>
+        <property name="contractId" type="java.lang.Long">
+            <column name="CONTRACT_ID" not-null="true" />
+        </property>
+        <property name="contractSerial" type="java.lang.String">
+            <column name="CONTRACT_SERIAL" length="32" />
+        </property>
+        <property name="pbEntId" type="java.lang.Long">
+            <column name="PB_ENT_ID" not-null="false" />
+        </property>
+        <property name="pbEntName" type="java.lang.String">
+            <column name="PB_ENT_NAME" length="64" />
+        </property>
+        <property name="projectId" type="java.lang.Long">
+            <column name="PROJECT_ID" not-null="false" />
+        </property>
+        <property name="projectName" type="java.lang.String">
+            <column name="PROJECT_NAME" length="64" />
+        </property>
+        <property name="packageDate" type="java.lang.String">
+            <column name="PACKAGE_DATE" length="64" />
+        </property>
+        <property name="attachSerial" type="java.lang.String">
+            <column name="ATTACH_SERIAL" length="64" />
+        </property>
+        <property name="rentType" type="java.lang.String">
+            <column name="RENT_TYPE" length="1" not-null="false" />
+        </property>
+        <property name="vehicleNum" type="java.lang.String">
+            <column name="VEHICLE_NUM" length="64" />
+        </property>
+        <property name="vehiclePerson" type="java.lang.String">
+            <column name="VEHICLE_PERSON" length="32" />
+        </property>
+        <property name="qrCode" type="string">
+            <column name="QR_CODE" length="256" />
+        </property>
+        <property name="tranportAmount" type="java.lang.String">
+            <column name="TRANPORT_AMOUNT" length="32" />
+        </property>
+        <property name="tranportCaculateType" type="java.lang.String">
+            <column name="TRANPORT_CACULATE_TYPE" length="32" />
+        </property>
+        <property name="dispatchAuditorId" type="java.lang.Long">
+            <column name="DISPATCH_AUDITOR_ID" not-null="false" />
+        </property>
+        <property name="dispatchAuditorName" type="java.lang.String">
+            <column name="DISPATCH_AUDITOR_NAME" length="32" />
+        </property>
+        <property name="dispatchAuditorDate" type="java.lang.String">
+            <column name="DISPATCH_AUDITOR_DATE" length="64" />
+        </property>
+        <property name="orderAuditorId" type="java.lang.Long">
+            <column name="ORDER_AUDITOR_ID" not-null="false" />
+        </property>
+        <property name="orderAuditorName" type="java.lang.String">
+            <column name="ORDER_AUDITOR_NAME" length="32" />
+        </property>
+        <property name="orderAuditorDate" type="java.lang.String">
+            <column name="ORDER_AUDITOR_DATE" length="64" />
+        </property>
+        <property name="applyforState" type="java.lang.String">
+            <column name="APPLYFOR_STATE" length="1" not-null="true" />
+        </property>
+        <property name="handingCharge" type="java.lang.String">
+            <column name="HANDING_CHARGE" length="24" not-null="false" />
+        </property>
+        <property name="packAmount" type="java.lang.String">
+            <column name="PACK_AMOUNT" length="24" not-null="false" />
+        </property>
+        <property name="remark" type="java.lang.String">
+            <column name="REMARK" length="128" not-null="false" />
+        </property>
+        <property name="delFlag" type="java.lang.String">
+            <column name="DEL_FLAG" length="1" not-null="true" />
+        </property>
+        <property name="materialsId" type="java.lang.Long">
+            <column name="MATERIALS_ID" not-null="false" />
+        </property>
+        <property name="receiveId" type="java.lang.Long">
+            <column name="RECEIVE_ID" not-null="false" />
+        </property>
+        <property name="receiveName" type="java.lang.String">
+            <column name="RECEIVE_NAME" not-null="false" />
+        </property>
+        <property name="acceptTime" type="java.util.Date" formula="(SELECT TOP 1 T.ACCEPT_TIME FROM T_FORM_ACCEPT T WHERE T.RELATE_ID = PACKAGE_ID AND T.RELATE_MODULE='MATERIALS_PACKAGE' ORDER BY T.ACCEPT_TIME DESC)" />
+        <property name="approveTime" type="java.util.Date" formula="(SELECT TOP 1 T.APPROVE_TIME FROM T_FORM_APPROVE T WHERE T.RELATE_ID = PACKAGE_ID AND T.RELATE_MODULE='MATERIALS_PACKAGE' ORDER BY T.APPROVE_TIME DESC)" />
+        <!-- <many-to-one name="materialsDispatch" column="MATERIALS_ID" class="com.knight.emms.model.MaterialsDispatch" insert="false" update="false" fetch="join" /> -->
+        <set name="packageDetailSet" cascade="all" inverse="false" lazy="true" order-by="COMMODITY_ID DESC,SPECIFICATIONS_ID ASC">
+			<key column="PACKAGE_ID" />
+			<one-to-many class="com.knight.emms.model.PackageDetail" />
+		</set>
+		<set name="costDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="PACKAGE_ID" />
+			<one-to-many class="com.knight.emms.model.CostDetail" />
+		</set>
+    </class>
+</hibernate-mapping>

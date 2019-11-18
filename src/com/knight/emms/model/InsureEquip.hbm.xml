@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InsureEquip" table="T_INSURE_EQUIPMENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="insureId" column="INSURE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="insureSerial" type="java.lang.String" column="INSURE_SERIAL" />
+		<property name="startInsureDate" type="java.lang.String" column="START_INSURE_DATE" />
+		<property name="endInsureDate" type="java.lang.String" column="END_INSURE_DATE" />
+		<property name="coverage" type="java.math.BigDecimal" column="COVERAGE" />
+		<property name="insureProgram" type="java.lang.String" column="INSURE_PROGRAM" />
+		<property name="premium" type="java.math.BigDecimal" column="PREMIUM" />
+		<property name="insuranceCompany" type="java.lang.String" column="INSURANCE_COMPANY" />
+		<property name="claimPhone" type="java.lang.String" column="CLAIM_PHONE" />
+		<property name="linkman" type="java.lang.String" column="LINKMAN" />
+		<property name="stopInsureDate" type="java.lang.String" column="STOP_INSURE_DATE" />
+		<property name="recoverInsureDate" type="java.lang.String" column="RECOVER_INSURE_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+		<set name="insureClaimSet" cascade="all" inverse="false" lazy="true">
+			<key column="INSURE_ID" />
+			<one-to-many class="com.knight.emms.model.InsureClaim" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.InitLoadTable" table="INIT_LOAD_TABLE">
+		<id name="tableAlias" column="TABLE_ALIAS" type="java.lang.String">
+			<generator class="assigned" />
+		</id>
+		<property name="tableName" column="TABLE_NAME" not-null="true" />
+		<property name="tableType" column="TABLE_TYPE" type="java.lang.Integer" />
+		<property name="refresh" column="REFRESH" type="java.lang.Short" />
+		<property name="lazyInit" column="LAZY_INIT" type="java.lang.Short" />
+		<property name="bhFieldName" column="BH_FIELD_NAME" type="java.lang.String" not-null="true" />
+		<property name="mcFieldName" column="MC_FIELD_NAME" type="java.lang.String" not-null="true" />
+		<property name="bhFieldType" column="BH_FIELD_TYPE" type="java.lang.Short" />
+		<property name="parentFieldName" column="PARENT_FIELD_NAME" type="java.lang.String" />
+		<property name="aliasFieldName" column="ALIAS_FIELD_NAME" type="java.lang.String" />
+		<property name="aliasFieldLable" column="ALIAS_FIELD_LABLE" type="java.lang.String" />
+		<property name="aliasFieldName1" column="ALIAS_FIELD_NAME1" type="java.lang.String" />
+		<property name="aliasFieldLable1" column="ALIAS_FIELD_LABLE1" type="java.lang.String" />
+		<property name="aliasFieldName2" column="ALIAS_FIELD_NAME2" type="java.lang.String" />
+		<property name="aliasFieldLable2" column="ALIAS_FIELD_LABLE2" type="java.lang.String" />
+		<property name="aliasFieldName3" column="ALIAS_FIELD_NAME3" type="java.lang.String" />
+		<property name="aliasFieldLable3" column="ALIAS_FIELD_LABLE3" type="java.lang.String" />
+		<property name="remark" column="REMARK" type="java.lang.String" />
+	</class>
+</hibernate-mapping>

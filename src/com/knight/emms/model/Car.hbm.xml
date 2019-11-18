@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Car" table="T_CAR" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="carId" column="CAR_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="idCard" type="java.lang.String" column="ID_CARD" />
+		<property name="sedan" type="java.lang.String" column="SEDAN" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+		<property name="engineNumber" type="java.lang.String" column="ENGINE_NUMBER" />
+		<property name="scrapDate" type="java.util.Date" column="SCRAP_DATE" />
+		<property name="nominalLoad" type="java.math.BigDecimal" column="NOMINAL_LOAD" />
+		<property name="purchaseDate" type="java.util.Date" column="PURCHASE_DATE" />
+		<property name="propertyBelong" type="java.lang.String" column="PROPERTY_BELONG" />
+		<property name="driver" type="java.lang.String" column="DRIVER" />
+		<property name="driverPhone" type="java.lang.String" column="DRIVER_PHONE" />
+		<property name="disbursement" type="java.math.BigDecimal" column="DISBURSEMENT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="carExpenseSet" lazy="true" cascade="all" inverse="false">
+			<key column="CAR_ID"></key>
+			<one-to-many class="com.knight.emms.model.CarExpense" />
+		</set>
+	</class>
+</hibernate-mapping>

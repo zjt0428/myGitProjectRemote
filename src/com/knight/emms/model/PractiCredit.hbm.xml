@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PractiCredit" table="T_PRACTI_CREDIT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="creditId" column="CREDIT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="practiKindwork" type="java.lang.String" column="PRACTI_KINDWORK" />
+		<property name="creditType" type="java.lang.String" column="CREDIT_TYPE" />
+		<property name="reason" type="java.lang.String" column="REASON" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="appraiseOrg" type="java.lang.String" column="APPRAISE_ORG" />
+		<property name="appraiseDate" type="java.lang.String" column="APPRAISE_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.PRACTI_ID = PRACTI_ID)" />
+	</class>
+</hibernate-mapping>

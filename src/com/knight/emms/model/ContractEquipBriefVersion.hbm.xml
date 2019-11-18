@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractEquipBriefVersion" table="T_CONTRACT_EQUIP_BRIEF_VERSION" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="briefVersionId" column="BRIEF_VERSION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="leaseVersionId" type="java.lang.Long" column="LEASE_VERSION_ID" />
+		<property name="ceBriefId" type="java.lang.Long" column="CE_BRIEF_ID" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="endDate" type="java.lang.String" column="END_DATE" />
+		<property name="initialHeight" type="java.lang.String" column="INITIAL_HEIGHT" />
+		<property name="finalHeight" type="java.lang.String" column="FINAL_HEIGHT" />
+		<property name="quantity" type="java.lang.Short" column="QUANTITY" />
+		<property name="rentStandard" type="java.math.BigDecimal" column="RENT_STANDARD" />
+		<property name="measurement" type="java.lang.String" column="MEASUREMENT" />
+		<property name="tenancy" type="java.lang.Short" column="TENANCY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+	</class>
+</hibernate-mapping>

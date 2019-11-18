@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="store">
+	<!-- 清空设备仓库信息 -->
+	<select id="clean_equip_relation">
+	<![CDATA[
+		UPDATE E
+		   SET E.STORE_ID = NULL, E.STORE_STATUS = '0' FROM T_EQUIPMENT E
+		 WHERE NOT EXISTS (SELECT 'X'
+		          FROM T_STORE_HOUSE SH
+		         WHERE SH.DEL_FLAG = '1'
+		           AND E.STORE_ID = SH.STORE_ID)
+	]]>
+	</select>
+	<!-- 清空零配件仓库信息 -->
+	<select id="clean_compon_relation">
+	<![CDATA[
+		UPDATE C
+		   SET C.STORE_ID = NULL FROM T_COMPONENT C
+		 WHERE NOT EXISTS (SELECT 'X'
+		          FROM T_STORE_HOUSE SH
+		         WHERE SH.DEL_FLAG = '1'
+		           AND C.STORE_ID = SH.STORE_ID)
+	]]>
+	</select>
+	<!-- 在用配件数量 -->
+	<select id="count_compon_inuse">
+	<![CDATA[
+		 SELECT PC.COMPON_ID, SUM(ISNULL(PC.COUNTS,0)) COUNTS
+		 FROM T_PROJECT_COMPON PC
+		 WHERE PC.STATUS = 1
+		 GROUP BY PC.COMPON_ID 
+	]]>
+	</select>
+	<!-- 在用+未用配件数量 -->
+	<select id="count_compon_on_status">
+	<![CDATA[
+		  SELECT PC.COMPON_ID,PC.STATUS, SUM(ISNULL(PC.COUNTS,0)) COUNTS
+		 	FROM T_PROJECT_COMPON PC 
+			 GROUP BY PC.COMPON_ID ,PC.STATUS
+	]]>
+	</select>
+	<!-- 在用配件数量 -->
+	<select id="count_single_compon_inuse">
+	<![CDATA[
+		DECLARE @COMPON_ID BIGINT
+		SET @COMPON_ID = ?
+		SELECT ISNULL(SUM(A.COUNTS), 0) COUNTS
+		  FROM (SELECT SUM(CD.COUNTS - CD.WAREHOUSE_COUNTS) COUNTS
+		          FROM T_COMPONENT_DIARY CD
+		         WHERE CD.ACTIVE = '1'
+		           AND CD.COMPON_ID = @COMPON_ID
+		        UNION ALL
+		        SELECT ERC.COUNTS
+		          FROM T_EQUIPMENT_REPAIR_COMPON ERC
+		         WHERE ERC.TYPE = '1' 
+		           AND ERC.COMPON_ID = @COMPON_ID) A
+	]]>
+	</select>
+	<!-- 库存明细查询统计-->
+	<select id="count_component_detail">
+	<![CDATA[
+		SELECT  SUM(SJC.COUNTS) counts,T.STORE_NAME storeName FROM T_STORE_JOIN_COMPONENT  SJC 
+		LEFT JOIN T_STORE_HOUSE T ON T.STORE_ID = SJC.STORE_ID
+		WHERE SJC.COMPON_ID = ?
+		GROUP BY SJC.COMPON_ID,T.STORE_NAME,SJC.COUNTS  
+	]]>
+	</select>
+	<!-- 库存配件列表-->
+	<select id="store_compo_list">
+			DECLARE @STOREID VARCHAR(64)
+			SET @STOREID =?
+				SELECT T.COMPON_ID  componId
+		      ,T.COMPON_SERIAL  componSerial
+		      ,BCC.VALUE  componCategoryName
+      		  ,BCG.VALUE  componGenericName
+		      ,BCS.VALUE  componSpecificName
+		      ,BV.VALUE   equipVenderName
+		      ,T.PURCHASE_DATE  purchaseDate
+		      ,T.SCRAP_DATE  scrapDate
+		      ,T.CALCULATE calculate
+		      ,T.RFID_CODE rfidCode
+		      ,T.SUPPLIER_ID supplierId
+		      ,T.SUPPLIER_NAME supplierName
+		      ,T.SUPPLIER_ADD supplierAdd
+		      ,T.SUPPLIER_TEL supplierTel
+		      ,T.PRACTI_ID practiId
+		      ,T.PRACTI_NAME practiName
+		      ,T.MOBILE mobile
+		      ,T.ASSET_VALUE assetValue
+		      ,T.DEPRECIATE_RATE depreciateRate
+		      ,T.TOTAL_RATE totalRate
+		      ,T.PRESENT_VALUE presentValue
+		      ,T.BATCH_NUMBER batchNumber
+		      ,T.DEPRECIATE_DATE depreciateRate
+		      ,T.EQUIP_ID equipId
+		      ,T.CONSUME_FLAG consumeFlag
+		      ,T.CONSUME_COUNTS consumeCounts
+		      ,T.KNOT_METRIC knotMetric
+		      ,T.BRACHIUM brachium
+		      ,T.USER_ID userId
+		      ,T.USER_NAME userName
+		      ,T.DEP_ID depId
+		      ,T.STATUS status
+		      ,T.STATUS_DATE statusDate
+		      ,T.DIMENSIONS dimensions
+		      ,T.PARACHUTE_FLAG parachuteFlag
+		      ,T.WALL_ATTACHE_FLAG wallAttacheFlag
+		      ,T.KNOT_FLAG knotFlag
+		      ,T.UNITPRICE unitprice
+		      ,T.COMPON_CODE componCode
+		      ,T.PERIOD_RESERVE periodReserve
+		      ,T.BOLT_FLAG boltFlag
+		      ,T.PICKUP_DATE pickupDate
+		      ,T.TOTAL_COUNTS totalCounts
+		      ,T.INUSE_COUNTS inuseCounts
+		      ,T.UNUSE_COUNTS unuseCounts
+		      ,T.EXW_SERIAL exwSerial
+		      ,T.DELIVER_FROM_GODOWN deliverFromGodown
+		      ,T.YES_FLAG yesFlag
+		      ,T.NO_FLAG noFlag
+		      ,T.MANUFACTURER manufacturer
+		      ,T.STORE_NAME storeName
+		      ,T.COMPO_VENDER compoVender
+		      ,TSC.COUNTS storeCounts
+		  FROM T_COMPONENT T
+		  LEFT JOIN T_STORE_JOIN_COMPONENT TSC ON TSC.COMPON_ID = T.COMPON_ID AND TSC.STORE_ID = @STOREID
+		  LEFT JOIN BM_REPERTORY_CATEGORY BCC ON BCC.CODE = T.COMPON_CATEGORY
+  	 	  LEFT JOIN BM_COMPONENT_GENERIC BCG ON BCG.CODE = T.COMPON_GENERIC
+  	 	  LEFT JOIN BM_COMPONENT_SPECIFIC BCS ON BCS.CODE = T.COMPON_SPECIFIC
+  	 	  LEFT JOIN  BM_EQUIP_VENDER BV ON BV.CODE = T.EQUIP_VENDER 
+		WHERE T.COMPON_ID IN (
+			SELECT TC.COMPON_ID FROM T_STORE_JOIN_COMPONENT  TC WHERE  TC.STORE_ID = @STOREID
+		)
+
+	
+	<![CDATA[
+	
+	]]>
+	</select>
+	
+		<!-- 出库查询-->
+	<select id="out_stock_info">
+	<![CDATA[
+		DECLARE @KEYWORD VARCHAR(64)
+		SET @KEYWORD =2
+		
+		IF @KEYWORD = 0  	--现场装车
+		BEGIN
+		SELECT * FROM T_MATERIALS_PACKAGE
+		END
+		
+		ELSE IF @KEYWORD = 1
+		BEGIN
+			SELECT * FROM T_APP_DISPATCH
+		END
+		
+		ELSE IF @KEYWORD = 2
+		BEGIN
+			SELECT * FROM APP_USER
+		END
+	]]>
+	</select>
+		<!-- 项目库存-查询设备合同-->
+	<select id="list_project_contract_lease">
+	<![CDATA[
+		SELECT DISTINCT PROJECT_ID  FROM T_CONTRACT_LEASE
+	]]>
+	</select>
+	
+	<!-- 项目库存配件列表-->
+	<select id="project_dis_allocate_list">
+		<![CDATA[
+		DECLARE @INIT_STATUS VARCHAR(64)
+		DECLARE @EQUIPSPECI VARCHAR(64)
+		DECLARE @EQUIPVENDER VARCHAR(64)
+		DECLARE @PROJECTID VARCHAR(64)
+		SET @INIT_STATUS =?
+		SET @EQUIPSPECI = ?
+		SET @EQUIPVENDER = ?
+		SET @PROJECTID = ?
+			SELECT 
+					TA.DISPATCH_ALLOCATE_INIT_ID disAllInitId,
+					TA.JOIN_ID joinId,
+					BC.VALUE componCateGoryName,
+				   TI.[EQUIP_SPECIFIC ]  componSpecific,
+				   BV.VALUE equipVenderName,
+				   BS.VALUE equipSpecificName,
+				   TI.COMPON_GENERIC_NAME componGenericName,
+				   TI.DIMENSIONS dimension,
+				   TI.CALCULATE calculate,
+				   TA.COUNTS quantity
+			 FROM T_PROJECT_JOIN_ANNEX TA 
+			LEFT JOIN T_PROJECT TP ON TP.PROJECT_ID = TA.PROJECT_ID
+			LEFT JOIN T_DISPATCH_ALLOCATE_INIT TI ON TI.DISPATCH_ALLOCATE_INIT_ID =TA.DISPATCH_ALLOCATE_INIT_ID
+			LEFT JOIN BM_EQUIP_VENDER BV ON BV.CODE = TI.EQUIPVENDER
+			LEFT JOIN BM_REPERTORY_CATEGORY BC ON BC.CODE = TI.INIT_STATUS
+			LEFT JOIN BM_EQUIP_SPECIFIC BS ON BS.CODE = TI.EQUIP_SPECIFIC
+		WHERE TA.PROJECT_ID = @PROJECTID
+		AND (TI.INIT_STATUS=@INIT_STATUS OR @INIT_STATUS IS NULL OR @INIT_STATUS='')
+		AND (TI.[EQUIP_SPECIFIC]=@EQUIPSPECI OR @EQUIPSPECI IS NULL OR @EQUIPSPECI='')
+		AND (TI.EQUIPVENDER=@EQUIPVENDER OR @EQUIPVENDER IS NULL OR @EQUIPVENDER='')
+		AND TA.COUNTS <>0
+		ORDER BY disAllInitId ASC
+
+	]]>
+	</select>
+	
+		<!-- 库存人员列表-->
+	<select id="store_user_list">
+	<![CDATA[
+		SELECT TU.JOIN_ID joinId,AU.USERID userId, AU.STATUS status,AU.USERNAME
+			username,AU.FULLNAME fullname,AU.MOBILE phone from T_STORE_JOIN_USER TU
+			LEFT JOIN T_STORE_HOUSE TH ON TH.STORE_ID =TU.STORE_ID
+			LEFT JOIN APP_USER AU ON AU.USERID = TU.USER_ID
+			WHERE TU.STORE_ID = ?
+	]]>
+	</select>
+	
+	
+		<!-- 根据用户过滤仓库-->
+	<select id="store_list_by_user">
+	<![CDATA[
+	DECLARE @USERID VARCHAR(32)
+	SET @USERID = ?
+		SELECT  SH.STORE_ID storeId,SH.STORE_SERIAL storeSerial,SH.STORE_NAME storeName,SH.ADDRESS address,SH.LINKER linker,SH.LINK_TEL linkTel from T_STORE_JOIN_USER SU
+		LEFT JOIN T_STORE_HOUSE SH ON SU.STORE_ID = SH.STORE_ID 
+		WHERE SU.USER_ID = @USERID
+		AND SH.DEL_FLAG = 1
+	]]>
+	</select>
+	
+	<!-- 根据巡检计划来查现场安装信息 -->
+	<select id="equipInstall_inspect_list">
+	<![CDATA[
+		DECLARE @FLOW_ID BIGINT
+		SET @FLOW_ID =?
+		SELECT * FROM T_EQUIPMENT_INSTALL TI WHERE TI.FLOW_ID = @FLOW_ID
+	]]>
+	</select>
+	
+	<!--查询调度仓库的发货仓库 -->
+	<select id="deliveryEntName_list">
+	<![CDATA[
+		DECLARE @FLOW_ID BIGINT
+		SET @FLOW_ID =?
+		SELECT DI.DELIVERY_ENT_NAME FROM T_DISPATCH DI,(SELECT EF.DISPATCH_ID FROM T_EQUIPMENT_FLOW EF WHERE EF.FLOW_ID =@FLOW_ID ) ST WHERE DI.DISPATCH_ID=ST.DISPATCH_ID
+	]]>
+	</select>
+</mapper>

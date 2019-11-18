@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MaterialsRepair" table="T_MATERIALS_REPAIR" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="materialsRepairId" column="MATERIALS_REPAIR_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="repairSerial" type="java.lang.String" column="REPAIR_SERIAL" />
+		<property name="repairPersonnel" type="java.lang.String" column="REPAIR_PERSONNEL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="teamId" type="java.lang.Long" column="TEAM_ID" />
+		<property name="teamName" type="java.lang.String" column="TEAM_NAME" />
+		<property name="repairTheme" type="java.lang.String" column="REPAIR_THEME" />
+		<property name="repairDate" type="java.lang.String" column="REPAIR_DATE" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="storeAddress" type="java.lang.String" formula="(SELECT A.ADDRESS FROM T_BASE_DEPOT A WHERE A.DEPOT_ID=STORE_ID)"/>
+		<property name="repairCost" type="java.lang.String" column="REPAIR_COST" />
+		<property name="repairSituation" type="java.lang.String" column="REPAIR_SITUATION" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="affiliatedSerial" type="java.lang.String" column="AFFILIATED_SERIAL" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="beforeMaterialsRepairSet" cascade="all" inverse="false" lazy="true">
+			<key column="MATERIALS_REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.BeforeMaterialsRepair" />
+		</set>
+		<set name="afterMaterialsRepairSet" cascade="all" inverse="false" lazy="true">
+			<key column="MATERIALS_REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.AfterMaterialsRepair" />
+		</set>
+	</class>
+</hibernate-mapping>

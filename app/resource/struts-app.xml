@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="app" extends="knight-default" namespace="/app">
+		<action name="*Attendamce" class="AttendamceAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="print">/pages/print/dispatch/Attendamce.jsp</result>
+		</action>
+		<action name="*Flow" class="TransApprovalAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Fdefine" class="AppFlowDefineAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Dispatch" class="AppDispatchAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*Repair" class="AppRepairAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="AppRepair">/pages/print/equip/AppRepair.jsp</result>
+		</action>
+		<action name="*Logistics" class="AppLogisticsAction" method="{1}">
+			<result>${successResultValue}</result>
+			<result name="AppLogistics">/pages/print/app/AppLogistics.jsp</result>
+		</action>
+		<action name="*Set" class="attendamceSetAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+		<action name="*SideSystem" class="SideSystemAction" method="{1}">
+			<result>${successResultValue}</result>
+		</action>
+	</package>
+
+</struts>

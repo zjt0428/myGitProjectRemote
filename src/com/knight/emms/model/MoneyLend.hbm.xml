@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MoneyLend" table="T_MONEY_LEND" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="lendId" column="LEND_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="lendSerial" type="java.lang.String" column="LEND_SERIAL" />
+		<property name="lendTheme" type="java.lang.String" column="LEND_THEME" />
+		<property name="paymentEntId" type="java.lang.Long" column="PAYMENT_ENT_ID" />
+		<property name="paymentModule" type="java.lang.String" column="PAYMENT_MODULE" />
+		<property name="paymentEntName" type="java.lang.String" column="PAYMENT_ENT_NAME" />
+		<property name="paymentEntAccountId" type="java.lang.Long" column="PAYMENT_ENT_ACCOUNT_ID" />
+		<property name="paymentBank" type="java.lang.String" column="PAYMENT_BANK" />
+		<property name="paymentAccount" type="java.lang.String" column="PAYMENT_ACCOUNT" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="practiTel" type="java.lang.String" column="PRACTI_TEL" />
+		<property name="lendDate" type="java.lang.String" column="LEND_DATE" />
+		<property name="lendAmount" type="java.math.BigDecimal" column="LEND_AMOUNT" />
+		<property name="backAmount" type="java.math.BigDecimal" column="BACK_AMOUNT" />
+		<property name="arrearsAmount" type="java.math.BigDecimal" column="ARREARS_AMOUNT" />
+		<property name="backDate" type="java.lang.String" column="BACK_DATE" />
+		<property name="lendbackStatus" type="java.lang.String" column="LENDBACK_STATUS" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

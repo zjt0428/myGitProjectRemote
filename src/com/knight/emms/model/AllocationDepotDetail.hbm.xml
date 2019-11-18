@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AllocationDepotDetail" table="T_ALLOCATION_DEPOT_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="allocationId" type="java.lang.Long" column="ALLOCATION_ID" />
+		<property name="mnemonicCode" type="java.lang.String" column="MNEMONIC_CODE" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="outLocationId" type="java.lang.Long" column="OUT_LOCATION_ID" />
+		<property name="outLocationName" type="java.lang.String" column="OUT_LOCATION_NAME" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="allocationCounts" type="java.lang.String" column="ALLOCATION_COUNTS" />
+		<property name="secondConvertedQuantity" type="java.lang.String" column="SECOND_CONVERTED_QUANTITY" />
+		<property name="auxiliaryQuantity" type="java.lang.String" column="AUXILIARY_QUANTITY" />
+		<property name="inLocationId" type="java.lang.Long" column="IN_LOCATION_ID" />
+		<property name="inLocationName" type="java.lang.String" column="IN_LOCATION_NAME" />
+		<property name="surplusCounts" type="java.lang.String" column="SURPLUS_COUNTS" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="secondUnitConversion" type="java.lang.String" formula="(SELECT T.SECOND_UNIT_CONVERSION FROM T_MATERIALS_SPECIFICATIONS T WHERE T.SPECIFICATIONS_ID = SPECIFICATIONS_ID)"/>
+	</class>
+</hibernate-mapping>

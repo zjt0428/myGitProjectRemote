@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractLeaseVersion" table="T_CONTRACT_LEASE_VERSION" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="leaseVersionId" column="LEASE_VERSION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="leaseSerial" type="java.lang.String" column="LEASE_SERIAL" />
+		<property name="saveTime" type="java.lang.String" column="SAVE_TIME" />
+		<property name="saveUserId" type="java.lang.Long" column="SAVE_USER_ID" />
+		<property name="saveUserName" type="java.lang.String" column="SAVE_USER_NAME" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="contractTheme" type="java.lang.String" column="CONTRACT_THEME" />
+		<property name="contractCategory" type="java.lang.String" column="CONTRACT_CATEGORY" />
+		<property name="subcontract" type="java.lang.String" column="SUBCONTRACT" />
+		<property name="fundType" type="java.lang.String" column="FUND_TYPE" />
+		<property name="paEnt" type="java.lang.Long" column="PA_ENT" />
+		<property name="paModule" type="java.lang.String" column="PA_MODULE" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="paEntLinkMan" type="java.lang.String" column="PA_ENT_LINK_MAN" />
+		<property name="paEntLinkTel" type="java.lang.String" column="PA_ENT_LINK_TEL" />
+		<property name="pbEnt" type="java.lang.Long" column="PB_ENT" />
+		<property name="pbModule" type="java.lang.String" column="PB_MODULE" />
+		<property name="pbEntName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="pbEntLinkMan" type="java.lang.String" column="PB_ENT_LINK_MAN" />
+		<property name="pbEntLinkTel" type="java.lang.String" column="PB_ENT_LINK_TEL" />
+		<property name="enterpriseSerial" type="java.lang.String" column="ENTERPRISE_SERIAL" />
+		<property name="overallHeight" type="java.math.BigDecimal" column="OVERALL_HEIGHT" />
+		<property name="buildingQuantity" type="java.lang.Integer" column="BUILDING_QUANTITY" />
+		<property name="cover" type="java.math.BigDecimal" column="COVER" />
+		<property name="salesmanId" type="java.lang.Long" column="SALESMAN_ID" />
+		<property name="salesman" type="java.lang.String" column="SALESMAN" />
+		<property name="salesmanTel" type="java.lang.String" column="SALESMAN_TEL" />
+		<property name="collectionRatio" type="java.lang.String" column="COLLECTION_RATIO" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="signingTime" type="java.lang.String" column="SIGNING_TIME" />
+		<property name="contractAmount" type="java.math.BigDecimal" column="CONTRACT_AMOUNT" />
+		<!-- <property name="segmentQty" type="java.lang.Short" column="SEGMENT_QTY" /> -->
+		<property name="wallAttacheQty" type="java.lang.Short" column="WALL_ATTACHE_QTY" />
+		<property name="debitReceivable" type="java.math.BigDecimal" column="DEBIT_RECEIVABLE" />
+		<!-- <property name="deduct" type="java.lang.String" column="DEDUCT" /> -->
+		<property name="deductDesc" type="java.lang.String" column="DEDUCT_DESC" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="squareUpDate" type="java.lang.String" column="SQUARE_UP_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="equipCount" type="java.lang.Short" column="EQUIP_COUNT" />
+		<!-- <property name="practiCount" type="java.lang.Short" column="PRACTI_COUNT" /> -->
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="bargain" type="java.lang.String" column="BARGAIN" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="buildingArea" type="java.lang.String" column="BUILDING_AREA" />
+		<property name="contractNo" type="java.lang.String" column="CONSTRACT_NO" />
+		<property name="competentDepartmentId" type="java.lang.Long" column="COMPETENT_DEPARTMET_ID" />
+		<property name="competentDepartment" type="java.lang.String" column="COMPETENT_DEPARTMET" />
+		<property name="taxMode" type="java.lang.String" column="TAX_MODE" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="applicableTaxRate" type="java.lang.String" column="APPLICABLE_TAX_RATE" />
+		<property name="signedArea" type="java.lang.String" column="SIGNEG_AREA" />			
+		<property name="permissionFlag" type="java.lang.String" column="PERMISSION_FLAG" />
+		<property name="arrangeId" type="java.lang.Long" column="ARRANGE_ID" />
+		<property name="billUnitId" type="java.lang.Long" column="BILL_UNIT_ID" />
+		<property name="billUnitName" type="java.lang.String" column="BILL_UNIT_NAME" />
+		<property name="settleMonthDate" type="java.lang.String" column="SETTLE_MONTH_DATE" />
+		<property name="equipAllDismantleMonth" type="java.lang.String" column="EQUIP_ALL_DISMANTLE_MONTH" />
+		<property name="equipSpecificNames" type="java.lang.String" formula="(SELECT dbo.JOIN_EQUIPSPECIFICNAME(C.CONTRACT_ID) FROM T_CONTRACT_LEASE C WHERE C.CONTRACT_ID = CONTRACT_ID)" />
+		<property name="sentEquipQuantity" type="java.lang.String" formula="(SELECT COUNT(*) FROM T_DISPATCH_EQUIP DE WHERE DE.DISPATCH_ID IN 
+		(SELECT D.DISPATCH_ID FROM T_DISPATCH D WHERE D.RELATE_ID = CONTRACT_ID AND D.RELATE_MODULE = 'CONTRACT_LEASE' AND D.DEL_FLAG = 1 AND (D.APPLYFOR_STATE = 3 OR D.APPLYFOR_STATE = 5)))" />
+		<property name="installEquipQuantity" type="java.lang.String" formula="(SELECT COUNT(*) FROM T_DISPATCH_EQUIP DE LEFT JOIN T_EQUIPMENT E ON E.EQUIP_ID = DE.EQUIP_ID 
+LEFT JOIN T_DISPATCH  D ON  D.RELATE_ID = CONTRACT_ID AND D.RELATE_MODULE = 'CONTRACT_LEASE' AND D.DEL_FLAG = 1 AND (D.APPLYFOR_STATE = 3 OR D.APPLYFOR_STATE = 5 )
+WHERE DE.DISPATCH_ID = D.DISPATCH_ID AND (E.BUSINESS_STATUS = '3' OR E.BUSINESS_STATUS = '6'))" />
+		<property name="usedQuantity" type="java.lang.String" formula="(SELECT COUNT(*) FROM T_DISPATCH_EQUIP DE LEFT JOIN T_EQUIPMENT E ON E.EQUIP_ID = DE.EQUIP_ID 
+LEFT JOIN T_DISPATCH  D ON  D.RELATE_ID = CONTRACT_ID AND D.RELATE_MODULE = 'CONTRACT_LEASE' AND D.DEL_FLAG = 1 AND (D.APPLYFOR_STATE = 3 OR D.APPLYFOR_STATE = 5 )
+WHERE DE.DISPATCH_ID = D.DISPATCH_ID AND E.BUSINESS_STATUS = '6')" />
+		<property name="removeQuantity" type="java.lang.String" formula="(SELECT COUNT(*) FROM T_DISPATCH_EQUIP DE LEFT JOIN T_EQUIPMENT E ON E.EQUIP_ID = DE.EQUIP_ID 
+LEFT JOIN T_DISPATCH  D ON  D.RELATE_ID = CONTRACT_ID AND D.RELATE_MODULE = 'CONTRACT_LEASE' AND D.DEL_FLAG = 1 AND (D.APPLYFOR_STATE = 3 OR D.APPLYFOR_STATE = 5 )
+WHERE DE.DISPATCH_ID = D.DISPATCH_ID AND E.BUSINESS_STATUS = '9')" />
+      	<property name="materialPractiName" type="java.lang.String" formula="(SELECT P.MATERIAL_PRACTI_NAME FROM T_PROJECT P WHERE P.PROJECT_ID = PROJECT_ID )" />
+		<property name="contractType" type="java.lang.String" column="CONTRACT_TYPE" />
+		<property name="cooperationWay" type="java.lang.String" column="COOPERATION_WAY" />
+		<property name="invoiceType" type="java.lang.String" column="INVOICE_TYPE" />
+		<property name="enabled" type="java.lang.String" column="ENABLED" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" update="false" insert="false" fetch="join" />
+		<set name="contractEquipBriefVersionSet" cascade="all" inverse="false" lazy="true">
+			<key column="LEASE_VERSION_ID" />
+			<one-to-many class="com.knight.emms.model.ContractEquipBriefVersion" />
+		</set>
+		<!-- <set name="contractEquipSet" cascade="all" inverse="false" lazy="true">
+			<key column="CONTRACT_ID" />
+			<one-to-many class="com.knight.emms.model.ContractEquip" />
+		</set> 
+		<set name="contractEquipOutlaySet" lazy="true" cascade="all" inverse="false">
+			<key column="CONTRACT_ID"></key>
+			<one-to-many class="com.knight.emms.model.ContractEquipOutlay" />
+		</set>
+		<set name="contractEquipCostSet" lazy="true" cascade="all" inverse="false">
+			<key column="CONTRACT_ID"></key>
+			<one-to-many class="com.knight.emms.model.ContractEquipCost" />
+		</set>
+		<set name="contractPractiBriefSet" cascade="all" inverse="false" lazy="true">
+			<key column="CONTRACT_ID" />
+			<one-to-many class="com.knight.emms.model.ContractPractiBrief" />
+		</set>
+		<set name="contractCostitemSet" cascade="all" inverse="false" lazy="true">
+			<key column="CONTRACT_ID" />
+			<one-to-many class="com.knight.emms.model.ContractCostitem" />
+		</set>-->
+		<!-- <set name="installPriceVerSet" cascade="all" inverse="false" lazy="true">
+			<key column="LEASE_VERSION_ID" />
+			<one-to-many class="com.knight.emms.model.InstallPriceSetVersion" />
+		</set> -->
+		<!-- <set name="truckCranePriceSet" cascade="all" inverse="false" lazy="true">
+			<key column="CONTRACT_ID" />
+			<one-to-many class="com.knight.emms.model.TruckCranePriceSet" />
+		</set> -->
+		<set name="safetyMonitorSettleListVersionSet" cascade="all" inverse="false" lazy="true">
+			<key column="LEASE_VERSION_ID" />
+			<one-to-many class="com.knight.emms.model.SafetyMonitorSettleListVersion" />
+		</set>
+		<set name="contractInoutFreeVersionSet" cascade="all" inverse="false" lazy="true">
+			<key column="LEASE_VERSION_ID" />
+			<one-to-many class="com.knight.emms.model.ContractInoutFreeVersion" />
+		</set>
+		<set name="contractOperatorFreeVersionSet" cascade="all" inverse="false" lazy="true">
+			<key column="LEASE_VERSION_ID" />
+			<one-to-many class="com.knight.emms.model.ContractOperatorFreeVersion" />
+		</set>
+	</class>
+</hibernate-mapping>

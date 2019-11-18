@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipMaint" table="T_EQUIPMENT_MAINT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="maintId" column="MAINT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>		
+	
+		<property name="basics" type="java.lang.String" column="BASIC" />
+		<property name="amplitude" type="java.lang.String" column="AMPLITUDE" />
+		<property name="rotation" type="java.lang.String" column="ROTATION" />
+		<property name="lift" type="java.lang.String" column="LIFT" />
+		<property name="electric" type="java.lang.String" column="ELETRIC" />
+		<property name="safe" type="java.lang.String" column="SAFE" />
+		<property name="wire" type="java.lang.String" column="WIRE" />
+		<property name="hook" type="java.lang.String" column="HOOK" />
+		<property name="drum" type="java.lang.String" column="DRUM" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="counterweight" type="java.lang.String" column="COUNTERWEIGHT" />
+		<property name="cab" type="java.lang.String" column="CAB" />
+		<property name="complete" type="java.lang.String" column="COMPLETE" />
+		<property name="brake" type="java.lang.String" column="BRAKE" />
+		<property name="maintSerial" type="java.lang.String" column="MAINT_SERIAL" />
+		<property name="cycleTimes" type="java.lang.Integer" column="CYCLE_TIMES" />
+		<property name="thisEndCycleDate" type="java.util.Date" column="THIS_END_CYCLE_DATE" />
+		<property name="maintDate" type="java.util.Date" column="MAINT_DATE" />
+		<property name="lastMaintDate" type="java.util.Date" column="LAST_MAINT_DATE" />
+		<property name="maintPepoles" type="java.lang.String" column="MAINT_PEPOLES" />
+		<property name="maintResult" type="java.lang.String" column="MAINT_RESULT" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="corpId" type="java.lang.String" column="CORPID" />
+		<property name="repairStatus" type="java.lang.String" column="REPAIR_STATUS" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="summary" type="java.lang.String" column="SUMMARY" />
+<!-- 		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" /> -->
+		<many-to-one name="equipMaintSchema" column="MAINT_SCHEMA_ID" class="com.knight.emms.model.EquipMaintSchema" fetch="join" />
+		<set name="equipMaintDetailSet" cascade="all" inverse="true" lazy="true">
+			<key column="MAINT_ID" />
+			<one-to-many class="com.knight.emms.model.EquipMaintDetail" />
+		</set>
+		<set name="equipMaintComponSet" cascade="all" inverse="true" lazy="true">
+			<key column="MAINT_ID" />
+			<one-to-many class="com.knight.emms.model.EquipMaintCompon" />
+		</set>
+	</class>
+</hibernate-mapping>

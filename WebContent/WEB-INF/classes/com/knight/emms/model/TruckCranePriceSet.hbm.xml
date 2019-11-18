@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TruckCranePriceSet" table="T_TRUCK_CRANE_PRICE_SET" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="tcPriceId" column="TC_PRICE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="belongToAreaName" type="java.lang.String" column="BELONG_TO_AREA_NAME" />
+		<property name="truckCraneSpecificName" type="java.lang.String" column="TRUCK_CRANE_SPECIFIC_NAME" />
+		<property name="projectPrice" type="java.lang.Long" column="PROJECT_PRICE" />
+	</class>
+</hibernate-mapping>

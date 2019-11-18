@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipWarehouseAbnormalCompon" table="T_EQUIPMENT_WAREHOUSE_ABNORMAL_COMPON" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="abnormalComponId" column="ABNORMAL_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="abnormalId" type="java.lang.Long" column="ABNORMAL_ID" />
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="componSpecificName" type="java.lang.String" column="COMPON_SPECIFIC_NAME" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="dispatchCounts" type="java.lang.Integer" column="DISPATCH_COUNTS" />
+		<property name="warehouseWaitCounts" type="java.lang.Integer" column="WAREHOUSE_WAIT_COUNTS" />
+		<property name="warehouseCounts" type="java.lang.Integer" column="WAREHOUSE_COUNTS" />
+		<property name="warehouseResultName" type="java.lang.String" column="WAREHOUSE_RESULT_NAME" />
+		<property name="statusName" type="java.lang.String" column="STATUS_NAME" />
+	</class>
+</hibernate-mapping>

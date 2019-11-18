@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ApplicationDetail" table="T_APPLICATION_DETAIL"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="applicationDetailId" column="APPLICATION_DETAIL_ID" type="java.lang.Long"
+			length="19">
+			<generator class="native" />
+		</id>
+		<property name="otherMaterialStockId" type="java.lang.Long" column="OTHER_MATERIAL_STOCK_ID" />
+		<property name="materialsStoreId" type="java.lang.Long" column="MATERIALS_STORE_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="locationName" type="java.lang.String" column="LOCATION_NAME" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="number" type="java.lang.String" column ="NUMBER" />
+		<property name="supplementUnit" type="java.lang.String" column="SUPPLEMENT_UNIT" />
+		<property name="secondConvertedQuantity" type="java.lang.String" column="SECOND_CONVERTED_QUANTITY" />
+		<property name="supplementNum" type="java.lang.String" column="SUPPLEMENT_NUM" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=t1aqbjCOiyGsk9e1M1yG12UbyXYYwINM"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.0/css/bootstrap.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.0.0/echarts.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.14/vue.min.js"></script>
+    <script src="../bigData/infoBox.js"></script>
+    <script src="../bigData/public.js" type="text/javascript" charset="utf-8"></script>
+    <link href="index.css">
+
+    <style>
+        [v-cloak] {display: none!important;}
+        *{
+            font-family: "微软雅黑";
+            padding: 0;
+            margin: 0;
+            text-decoration: none;
+        }
+        /*//圆角*/
+        .border_3{
+            border-radius: 3px;
+        }
+        .all{
+            width: 100%;
+
+            height: auto;
+        }
+        .bottomAll{
+            width: 100%;
+            padding: 20px 20px;
+            background: #e4e7ee;
+        }
+        .title{
+            width: 100%;
+            height: 80px;
+            line-height: 100px;
+            background: #4e9de5!important;
+            color: #ffffff;
+        }
+        h1{
+            text-align: center;
+            font-size: 32px;
+            margin:0  auto!important;
+            line-height: 80px;
+        }
+        h3{
+            margin-top: 0;
+            margin-bottom: 0;
+            /*text-align: center;*/
+            font-size: 27px!important;
+            text-align: left!important;
+        }
+        .ranking>h3{
+
+            font-weight: 500!important;
+            /*margin:0  auto!important;*/
+        }
+        .we_title{
+            margin-left: 30px;
+            margin-top: 25px;
+            margin-bottom: 30px;
+            height: 27px;
+            padding-left: 8px;
+            /*padding: 25px 0px 0 30px;*/
+            border-left: 3px solid #079fff;
+            color: #079fff;
+        }
+        #GMap{
+            width: 100%;
+            height: 700px;
+            top: 300px;
+            left: 0;
+            position: absolute;
+            z-index: 2;
+            /*t1aqbjCOiyGsk9e1M1yG12UbyXYYwINM*/
+        }
+        .map{
+            width: 100%;
+            height: 1000px;
+            position: relative;
+        }
+        .td{
+            text-overflow:ellipsis;
+            font-size: 14px!important;
+            text-overflow:clip;
+            white-space:nowrap;
+            overflow:hidden;
+        }
+        .distribute{
+            /*width: 1920px;*/
+            width: 100%;
+            height: 300px;
+            background: white;
+            position: absolute;
+            /*margin-top: 30px;*/
+            padding-top: 30px;
+            margin: 0 auto;
+            /*left: 50%;*/
+            /*margin-left: -960px;*/
+            z-index: 9999;
+            /*opacity: 0.5;*/
+            background: rgba(255,255,255,.8)!important;
+            /*opacity: 0.8;*/
+
+            border-bottom: 1px solid #e3e6ed;
+        }
+        .device{
+            width: 350px;
+            position: absolute;
+            z-index:99999 ;
+            right: 0;
+            top: 300px;
+            background: white;
+            background: rgba(255,255,255,.8);
+            height: 700px;
+        }
+        .report{
+            width: 100%;
+            height: 320px;
+            position: relative;
+            background: white;
+            margin: 20px 0;
+        }
+      .my>div{
+         width: 32.7%;
+          height: 220px;
+          margin-top: 80px;
+          /*background: blue;*/
+          /*opacity: 0.2;*/
+
+
+      }
+        .my{
+            display: -webkit-flex; /* Safari */
+            display: flex;
+            width: 95%;
+            justify-content: space-between;
+            margin:0 auto;
+            height: auto;
+        }
+        .ranking{
+            display: -webkit-flex; /* Safari */
+            height: 500px;
+            /*background: white;*/
+            display: flex;
+            justify-content: space-between;
+        }
+        .ranking>div{
+            width: 33%;
+            position: relative;
+            background: white;
+            height: 500px;
+        }
+        .table{
+            width: 97%;
+            margin: 0 auto;
+            font-size: 22px!important;
+        }
+        .table>div{
+            /*font-size: 22px!important;*/
+        }
+        .thead,.tbody{
+            display: -webkit-flex; /* Safari */
+            display: flex;
+        }
+        .thead{
+            background: #e3e6ed;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .thead>div,.tbody>div{
+            padding: 8px 0;
+            width: 25%;
+            text-align: center;
+            font-size: 20px!important;
+            font-weight: 500!important;
+        }
+        .tbody>div{
+            font-size: 17px!important;
+        }
+        .tbody{
+            border-bottom: 1px solid #e3e6ed;
+        }
+        .titleImg{
+            background: url("image/2.png");
+            width: 118px;
+            height: 13px;
+        }
+        .myTitle{
+            width: 140px;
+            height: 30px;
+            border-left: 3px solid #079fff;
+            position: absolute;
+            padding-left: 8px;
+            left: 30px;
+            top: 25px;
+            /*background: blueviolet;*/
+        }
+        .myTitle>h3{
+            color: #079fff;
+        }
+        .myTop{
+            height: 48px;
+            background: url("image/title.png");
+        }
+        .myTop>h3{
+            font-size: 20px!important;
+            padding-left: 26px;
+            padding-top: 16px;
+            color: white;
+            /*margin-left: 30px;*/
+            /*margin-top: 20px;*/
+        }
+        .myBottom{
+            display: -webkit-flex; /* Safari */
+            display: flex;
+            border: 1px solid #e3e6ed;
+        }
+        .myBottom>div{
+            width: 50%;
+            /*display: flex;*/
+            /*display: -webkit-flex; !* Safari *!*/
+            /*justify-content: center;*/
+        }
+        .myBottom>div>div{
+            display: block;
+        }
+        .ehcart_pie{
+            height: 80px;
+            background: white;
+            width: 80px;
+        }
+        .myB_left,.myB_right{
+            height: 170px;
+            width: 50%;
+            display: flex;
+            display: -webkit-flex; /* Safari */
+            align-items: center;
+            justify-content: center;
+            flex-direction:column;
+        }
+        .inspectionTitle{
+            font-size: 16px!important;
+            margin-top: 2px;
+                 }
+        #inspectionNone,#planNone,#projectNone{
+            border-radius: 50%;
+            border: 2px solid #f42e61;
+        }
+        #inspectionNone>h3,#planNone>h3,#projectNone>h3{
+            margin: 0 auto;
+            text-align: center!important;
+            font-weight: 600!important;
+            color: #f42e61;
+            line-height: 80px;
+        }
+        #distribute{
+
+        }
+        .distributeTitle{
+            position: absolute;
+            z-index: 10000;
+            left: 30px;
+            top: 25px;
+            border-left: 3px solid #079fff;
+            padding-left: 8px;
+            font-size: 30px!important;
+            color: #079fff;
+            /*margin-top: 25px;*/
+        }
+        .titleTitleImg{
+            width: 118px;
+            height: 13px;
+            position: absolute;
+            z-index: 10008;
+            left: 38px;
+            top:55px;
+            background: url("image/2.png");
+        }
+        .device>div{
+            height: 33.33333%;
+        }
+        .deviceAll,.crame,.lift{
+            /*background: blueviolet;*/
+        }
+
+
+        .deviceAll,.crame,.lift{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .deviceAll>div{
+
+        }
+        .chart_piedevice{
+            width: 130px;
+            height: 130px;
+            /*background: #f42e61;*/
+        }
+        .deviceStatic{
+          width: 40%;
+            height: 130px;
+        }
+        .circle{
+            width: 10px;
+            height: 10px;
+            margin: 0  10px 0 20px;
+            border-radius: 50%;
+            background: #fe9d00;
+        }
+        .circle1{
+            width: 10px;
+            height: 10px;
+            margin: 0  10px 0 20px;
+            border-radius: 50%;
+            background: #557af2;
+        }
+        .deviceStaticTop,.deviceStaticBottom{
+            align-items: center;
+          display: flex;
+        }
+        .deviceStatic h3{
+            font-size: 18px!important;
+            font-weight: 500!important;
+        }
+        .deviceStatic h2{
+            margin: 0;
+            font-size: 26px;
+            font-weight: 600!important;
+        }
+        .deviceStaticBottom{
+            margin-top: 20px;
+        }
+        .showDevice{
+            position: absolute;z-index: 10020;
+            /*display: flex;*/
+            right: 8%;
+            top: 20px;
+        }
+        .showDevice h3{
+            font-size: 12px!important;
+            margin-left: 8px;
+        }
+
+        .showDevice>div{
+            display: flex;
+            margin-left: 10px;
+        }
+        .squ{
+           width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            background: #fe9d00;
+        }
+        .more{
+            color: #079fff;
+            position: absolute;
+            right: 20px;
+            top: 50px;
+            z-index: 10040;
+        }
+        /*//地图提示框*/
+        .mapCue{
+            width: 140px;
+            height: 140px;
+            padding: 10px;
+            /*border: 0.5px solid #CCCCCC;*/
+            border-radius: 4px;
+            -moz-box-shadow:1px 1px 8px  #333333; -webkit-box-shadow:1px 1px 8px #333333; box-shadow:1px 1px 8px #333333;
+            position: relative;
+        }
+        .mapTitle>h3{
+            height: 30px;
+            line-height: 30px;
+            font-size: 22px!important;
+            margin-top:0px ;
+            margin-left: 6px;
+            margin-bottom: 5px;
+            background: white!important;
+            color: #666;
+        }
+
+        .myMap>div{
+            height: 20px;
+            color: #666;
+            padding-left: 5px;
+            line-height: 20px;
+            font-size: 12px;
+        }
+
+        /*.mapClose{*/
+            /*width: 10px;*/
+            /*height: 10px;*/
+            /*right:6px;*/
+            /*top: 6px;*/
+            /*position: absolute;*/
+            /*background: url("image/close2.png")no-repeat center center;*/
+        /*}*/
+        .squOne{
+            display: flex;
+            margin-left: 5px;
+            align-items: center;
+        }
+        .first>h3{
+            display: flex;
+            align-items: center;
+        }
+        .showDevice>.first{
+            display: flex;
+        }
+        .squOne{
+            font-size: 12px;
+        }
+        .first{
+            display: flex;
+            margin-top: 5px;
+            color:#666 ;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+   <div class="all" id="all">
+       <div class="title">
+           <h1>租赁管理服务平台</h1>
+       </div>
+       <div class="bottomAll">
+           <div class="map">
+               <div id="GMap" v-bind:style="{width:mapWidth}">
+               </div>
+               <div class="distributeTitle">
+                   <h3>设备分布</h3>
+               </div>
+               <div class="showDevice">
+                  <div class="first">
+                      <!--<div class="squ"></div>-->
+                      <h3 style="color: #fe9d00">&nbsp;&nbsp;&nbsp;塔吊</h3>
+                      <div class="squOne">
+                          <div>(</div>
+                          <div>&nbsp;在用</div>
+                          <div class="squ" style="background: #fe9d00!important;margin-left: 5px;"></div>
+                          <div>&nbsp;闲置</div>
+                          <div class="squ" style="background: #fec467!important;margin-left: 5px;"></div>
+                          <div>&nbsp)</div>
+                      </div>
+                  </div>
+                   <div class="first">
+                       <!--<div class="squ"></div>-->
+                       <h3 style="color: #557af2">升降机</h3>
+                       <div class="squOne">
+                           <div>(</div>
+                           <div>&nbsp;在用</div>
+                           <div class="squ" style="background: #557af2!important;margin-left: 5px;"></div>
+                           <div>&nbsp;闲置</div>
+                           <div class="squ" style="background: #a6bbfe!important;margin-left: 5px;"></div>
+                           <div>&nbsp)</div>
+                       </div>
+                   </div>
+                   <!--<div class="second">-->
+                       <!--<div class="squ" style="background: #557af2"></div>-->
+                       <!--<h3 style="color: #557af2">升降机</h3>-->
+                   <!--</div>-->
+               </div>
+               <div class="titleTitleImg"></div>
+               <div class="distribute" id="distribute"></div>
+               <div class="device">
+                   <div class="deviceAll" >
+                       <div class="chart_piedevice" id="deviceAll"></div>
+                       <div class="deviceStatic">
+                           <div class="deviceStaticTop">
+                               <div class="circle"></div>
+                               <div class="deviceright" >
+                                   <h2 style="color: #fe9d00">{{allCrameCount}}</h2>
+                                   <h3 style="color: #8d9096;margin-top: 8px;">塔吊总数</h3>
+                               </div>
+                           </div>
+                           <div class="deviceStaticBottom">
+                               <div class="circle1"></div>
+                               <div class="deviceright">
+                                   <h2 style="color: #557af2">{{allLiftCount}}</h2>
+                                   <h3 style="color: #8d9096;margin-top: 8px;">升降机总数</h3>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="crame">
+                       <div class="chart_piedevice" id="crame"></div>
+                       <div class="deviceStatic">
+                           <div class="deviceStaticTop">
+                               <div class="circle" style="background: #36c398"></div>
+                               <div class="deviceright" >
+                                   <h2 style="color: #36c398">{{allCrameInuse}}</h2>
+                                   <h3 style="color: #8d9096;margin-top: 8px;">在用（台）</h3>
+                               </div>
+                           </div>
+                           <div class="deviceStaticBottom">
+                               <div class="circle" style="background:#f65463"></div>
+                               <div class="deviceright">
+                                   <h2 style="color: #f65463">{{allCrameUnuse}}</h2>
+                                   <h3 style="color: #8d9096;margin-top: 8px;">闲置（台）</h3>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="lift" >
+                       <div class="chart_piedevice" id="lift"></div>
+                       <div class="deviceStatic">
+                           <div class="deviceStaticTop">
+                               <div class="circle" style="background: #36c398"></div>
+                               <div class="deviceright"  >
+                                   <h2 style="color: #36c398">{{allLiftInuse}}</h2>
+                                   <h3 style="color: #8d9096;margin-top: 8px;">在用（台）</h3>
+                               </div>
+                           </div>
+                           <div class="deviceStaticBottom">
+                               <div class="circle" style="background: #f65463"></div>
+                               <div class="deviceright">
+                                   <h2 style="color: #f65463">{{allLiftUnuse}}</h2>
+                                   <h3 style="color: #8d9096;margin-top: 8px;">闲置（台）</h3>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="report">
+               <div class="myTitle">
+                    <h3>预警提醒</h3>
+                   <div class="titleImg"></div>
+               </div>
+               <div class="my">
+                   <div class="routing border_3">
+                       <div class="myTop">
+                           <h3>巡检预警</h3>
+                       </div>
+                       <div class="myBottom">
+                             <div class="myB_left">
+                                 <div id="inspectionNone" class="ehcart_pie">
+                                     <h3>{{waring[0].overdueNotInspect}}</h3>
+                                 </div>
+                                 <div class="inspectionTitle">
+                                     超期未巡检（台）
+                                 </div>
+                             </div>
+                           <div class="myB_right">
+                                 <div id="inspectionOk" class="ehcart_pie"></div>
+                               <div class="inspectionTitle">
+                                   巡检完成率（%）
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="plan border_3 ">
+                       <div class="myTop">
+                           <h3>计划预警</h3>
+                       </div>
+                       <div class="myBottom">
+                           <div class="myB_left">
+                               <div id="planNone" class="ehcart_pie">
+                                   <h3>{{waring[0].installNotPlan}}</h3>
+                               </div>
+                               <div class="inspectionTitle">
+                                   启用未计划（台）
+                               </div>
+                           </div>
+                           <div class="myB_right">
+                               <div id="planOk" class="ehcart_pie"></div>
+                               <div class="inspectionTitle">
+                                   巡检计划率（%）
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="maintenance border_3">
+                       <div class="myTop">
+                           <h3>维保预警</h3>
+                       </div>
+                       <div class="myBottom">
+                           <div class="myB_left">
+                               <div id="projectNone" class="ehcart_pie">
+                                   <h3>{{waring[0].maintNotManage}}</h3>
+                               </div>
+                               <div class="inspectionTitle">
+                                   超期未维保（台）
+                               </div>
+                           </div>
+                           <div class="myB_right">
+                               <div id="projectOk" class="ehcart_pie"></div>
+                               <div class="inspectionTitle">
+                                   维保完成率（%）
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="ranking">
+               <div class="week">
+                   <div class="we_title">
+                       <h3>本周排名</h3>
+                       <div class="titleImg"></div>
+                   </div>
+                   <div class="more">
+                       查看更多
+                   </div>
+                   <div class="we_report">
+                       <div class="table border_3">
+                           <div class="thead">
+                               <div class="th">公司名称</div>
+                               <div class="th">巡检完成率</div>
+                               <div class="th">巡检计划率</div>
+                               <div class="th">维保计划率</div>
+                           </div>
+                           <div class="tbody" v-for="item in weekData">
+                               <div class="td">{{item.corpName}}</div>
+                               <div class="td">{{item.corpInspectCompleted}}</div>
+                               <div class="td">{{item.corpInspectPlan}}</div>
+                               <div class="td">{{item.corpMaintCompleted}}</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div class="month">
+                   <div class="we_title">
+                       <h3>本月排名</h3>
+                       <div class="titleImg"></div>
+                   </div>
+                   <div class="more">
+                       查看更多
+                   </div>
+                   <div class="we_report">
+                       <div class="table border_3">
+                           <div class="thead">
+                               <div class="th">公司名称</div>
+                               <div class="th">巡检完成率</div>
+                               <div class="th">巡检计划率</div>
+                               <div class="th">维保计划率</div>
+                           </div>
+                           <div class="tbody" v-for="item in weekData">
+                               <div class="td">{{item.corpName}}</div>
+                               <div class="td">{{item.corpInspectCompleted}}</div>
+                               <div class="td">{{item.corpInspectPlan}}</div>
+                               <div class="td">{{item.corpMaintCompleted}}</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div class="year">
+                   <div class="we_title">
+                       <h3>本年排名</h3>
+                       <div class="titleImg"></div>
+                   </div>
+                   <div class="more">
+                       查看更多
+                   </div>
+                   <div class="we_report">
+                       <div class="table border_3">
+                           <div class="thead">
+                               <div class="th">公司名称</div>
+                               <div class="th">巡检完成率</div>
+                               <div class="th">巡检计划率</div>
+                               <div class="th">维保计划率</div>
+                           </div>
+                           <div class="tbody" v-for="item in weekData">
+                               <div class="td">{{item.corpName}}</div>
+                               <div class="td">{{item.corpInspectCompleted}}</div>
+                               <div class="td">{{item.corpInspectPlan}}</div>
+                               <div class="td">{{item.corpMaintCompleted}}</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+       </div>
+
+   </div>
+</body>
+<script type="text/javascript">
+  var dataGroup = [
+      [{"counts":167,"code":"370100","value":"济南市","LONGITUDE":"116.98","LATITUDE":"36.67","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":77,"liftCityCount":52,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":114,"code":"370200","value":"青岛市","LONGITUDE":"120.38","LATITUDE":"36.07","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":60,"liftCityCount":30,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":11,"code":"370300","value":"淄博市","LONGITUDE":"118.05","LATITUDE":"36.82","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":5,"liftCityCount":6,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":5,"code":"370400","value":"枣庄市","LONGITUDE":"117.32","LATITUDE":"34.82","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":4,"liftCityCount":1,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":4,"code":"370500","value":"东营市","LONGITUDE":"118.67","LATITUDE":"37.43","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":0,"liftCityCount":4,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"370600","value":"烟台市","LONGITUDE":"121.43","LATITUDE":"37.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":4,"liftCityCount":3,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":21,"code":"370700","value":"潍坊市","LONGITUDE":"119.15","LATITUDE":"36.7","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":18,"liftCityCount":3,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":22,"code":"370800","value":"济宁市","LONGITUDE":"116.58","LATITUDE":"35.42","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":14,"liftCityCount":8,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":37,"code":"370900","value":"泰安市","LONGITUDE":"117.08","LATITUDE":"36.2","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":18,"liftCityCount":7,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":18,"code":"371000","value":"威海市","LONGITUDE":"122.12","LATITUDE":"37.52","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":7,"liftCityCount":11,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":51,"code":"371100","value":"日照市","LONGITUDE":"119.52","LATITUDE":"35.42","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":16,"liftCityCount":5,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"371200","value":"莱芜市","LONGITUDE":"117.67","LATITUDE":"36.22","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":7,"liftCityCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":1011,"code":"371300","value":"临沂市","LONGITUDE":"118.35","LATITUDE":"35.05","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":360,"liftCityCount":260,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":27,"code":"371400","value":"德州市","LONGITUDE":"116.3","LATITUDE":"37.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":20,"liftCityCount":7,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":4,"code":"371500","value":"聊城市","LONGITUDE":"115.98","LATITUDE":"36.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":2,"liftCityCount":2,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":0,"code":"371600","value":"滨州市","LONGITUDE":"117.97","LATITUDE":"37.38","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":0,"liftCityCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"371700","value":"菏泽市","LONGITUDE":"115.43","LATITUDE":"35.25","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":2,"liftCityCount":5,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769}]
+  ]
+</script>
+
+<script>
+
+    var vm = new Vue({
+        el: '#all',
+        data: {
+            mapWidth: (window.innerWidth - 405)+"px",
+            deviceData:[]
+            // deviceData:[{"counts":167,"code":"370100","value":"济南市","LONGITUDE":"116.98","LATITUDE":"36.67","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":77,"liftCityCount":52,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":114,"code":"370200","value":"青岛市","LONGITUDE":"120.38","LATITUDE":"36.07","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":60,"liftCityCount":30,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":11,"code":"370300","value":"淄博市","LONGITUDE":"118.05","LATITUDE":"36.82","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":5,"liftCityCount":6,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":5,"code":"370400","value":"枣庄市","LONGITUDE":"117.32","LATITUDE":"34.82","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":4,"liftCityCount":1,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":4,"code":"370500","value":"东营市","LONGITUDE":"118.67","LATITUDE":"37.43","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":0,"liftCityCount":4,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"370600","value":"烟台市","LONGITUDE":"121.43","LATITUDE":"37.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":4,"liftCityCount":3,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":21,"code":"370700","value":"潍坊市","LONGITUDE":"119.15","LATITUDE":"36.7","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":18,"liftCityCount":3,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":22,"code":"370800","value":"济宁市","LONGITUDE":"116.58","LATITUDE":"35.42","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":14,"liftCityCount":8,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":37,"code":"370900","value":"泰安市","LONGITUDE":"117.08","LATITUDE":"36.2","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":18,"liftCityCount":7,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":18,"code":"371000","value":"威海市","LONGITUDE":"122.12","LATITUDE":"37.52","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":7,"liftCityCount":11,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":51,"code":"371100","value":"日照市","LONGITUDE":"119.52","LATITUDE":"35.42","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":16,"liftCityCount":5,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"371200","value":"莱芜市","LONGITUDE":"117.67","LATITUDE":"36.22","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":7,"liftCityCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":1011,"code":"371300","value":"临沂市","LONGITUDE":"118.35","LATITUDE":"35.05","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":360,"liftCityCount":260,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":27,"code":"371400","value":"德州市","LONGITUDE":"116.3","LATITUDE":"37.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":20,"liftCityCount":7,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":4,"code":"371500","value":"聊城市","LONGITUDE":"115.98","LATITUDE":"36.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":2,"liftCityCount":2,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":0,"code":"371600","value":"滨州市","LONGITUDE":"117.97","LATITUDE":"37.38","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":0,"liftCityCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"371700","value":"菏泽市","LONGITUDE":"115.43","LATITUDE":"35.25","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":2,"liftCityCount":5,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769}]
+            //deviceData:[{"counts":167,"code":"370100","value":"济南市","LONGITUDE":"116.98","LATITUDE":"36.67","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":77,"towerCityInuseCount":76,"towerCityIdleCount":1,"liftCityCount":52,"liftCityInuseCount":52,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":114,"code":"370200","value":"青岛市","LONGITUDE":"120.38","LATITUDE":"36.07","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":60,"towerCityInuseCount":57,"towerCityIdleCount":3,"liftCityCount":30,"liftCityInuseCount":29,"liftCityIdleCount":1,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":11,"code":"370300","value":"淄博市","LONGITUDE":"118.05","LATITUDE":"36.82","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":5,"towerCityInuseCount":5,"towerCityIdleCount":0,"liftCityCount":6,"liftCityInuseCount":6,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":5,"code":"370400","value":"枣庄市","LONGITUDE":"117.32","LATITUDE":"34.82","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":4,"towerCityInuseCount":4,"towerCityIdleCount":0,"liftCityCount":1,"liftCityInuseCount":1,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":4,"code":"370500","value":"东营市","LONGITUDE":"118.67","LATITUDE":"37.43","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":0,"towerCityInuseCount":0,"towerCityIdleCount":0,"liftCityCount":4,"liftCityInuseCount":4,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"370600","value":"烟台市","LONGITUDE":"121.43","LATITUDE":"37.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":4,"towerCityInuseCount":4,"towerCityIdleCount":0,"liftCityCount":3,"liftCityInuseCount":3,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":21,"code":"370700","value":"潍坊市","LONGITUDE":"119.15","LATITUDE":"36.7","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":18,"towerCityInuseCount":18,"towerCityIdleCount":0,"liftCityCount":3,"liftCityInuseCount":1,"liftCityIdleCount":2,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":22,"code":"370800","value":"济宁市","LONGITUDE":"116.58","LATITUDE":"35.42","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":14,"towerCityInuseCount":14,"towerCityIdleCount":0,"liftCityCount":8,"liftCityInuseCount":8,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":37,"code":"370900","value":"泰安市","LONGITUDE":"117.08","LATITUDE":"36.2","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":18,"towerCityInuseCount":16,"towerCityIdleCount":2,"liftCityCount":7,"liftCityInuseCount":7,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":18,"code":"371000","value":"威海市","LONGITUDE":"122.12","LATITUDE":"37.52","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":7,"towerCityInuseCount":7,"towerCityIdleCount":0,"liftCityCount":11,"liftCityInuseCount":10,"liftCityIdleCount":1,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":51,"code":"371100","value":"日照市","LONGITUDE":"119.52","LATITUDE":"35.42","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":16,"towerCityInuseCount":15,"towerCityIdleCount":1,"liftCityCount":5,"liftCityInuseCount":5,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"371200","value":"莱芜市","LONGITUDE":"117.67","LATITUDE":"36.22","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":7,"towerCityInuseCount":7,"towerCityIdleCount":0,"liftCityCount":0,"liftCityInuseCount":0,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":1011,"code":"371300","value":"临沂市","LONGITUDE":"118.35","LATITUDE":"35.05","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":360,"towerCityInuseCount":347,"towerCityIdleCount":13,"liftCityCount":260,"liftCityInuseCount":253,"liftCityIdleCount":7,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":27,"code":"371400","value":"德州市","LONGITUDE":"116.3","LATITUDE":"37.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":20,"towerCityInuseCount":20,"towerCityIdleCount":0,"liftCityCount":7,"liftCityInuseCount":6,"liftCityIdleCount":1,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":4,"code":"371500","value":"聊城市","LONGITUDE":"115.98","LATITUDE":"36.45","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":2,"towerCityInuseCount":2,"towerCityIdleCount":0,"liftCityCount":2,"liftCityInuseCount":2,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":0,"code":"371600","value":"滨州市","LONGITUDE":"117.97","LATITUDE":"37.38","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":0,"towerCityInuseCount":0,"towerCityIdleCount":0,"liftCityCount":0,"liftCityInuseCount":0,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769},{"counts":7,"code":"371700","value":"菏泽市","LONGITUDE":"115.43","LATITUDE":"35.25","inuseCount":1487,"idleCount":55,"inuseRate":84,"idleRate":3,"towerCityCount":2,"towerCityInuseCount":2,"towerCityIdleCount":0,"liftCityCount":5,"liftCityInuseCount":5,"liftCityIdleCount":0,"towerTotalCounts":718,"towerInuseCounts":605,"towerIdleCounts":113,"liftTotalCounts":469,"liftInuseCounts":411,"liftIdleCounts":58,"totalCounts":1769}]
+            ,allDeviceCount:0,
+            allCrameCount:0,
+            allCrameInuse:0,
+            allCrameUnuse:0,
+            allLiftUnuse:0,
+            allLiftInuse:0,
+            allLiftCount:0,
+            waring:[],
+            //waring:[{"overdueNotInspect":2856,"inspectCompleted":59,"installNotPlan":0,"inspectPlanRate":0,"maintNotManage":0,"maintCompleted":0}],
+            //weekData:[{"corpId":66,"corpName":"天元建设集团有限公司建设租赁分公司","_ROWNUM":1,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":67,"corpName":"天元建设集团有限公司","_ROWNUM":2,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":68,"corpName":"天元集团租赁公司","_ROWNUM":3,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":69,"corpName":"天元集团分包公司","_ROWNUM":4,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":70,"corpName":"山东天元工程科技有限公司","_ROWNUM":5,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0}],
+            weekData:[],
+            //monthData:[{"corpId":66,"corpName":"天元建设集团有限公司建设租赁分公司","_ROWNUM":1,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":67,"corpName":"天元建设集团有限公司","_ROWNUM":2,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":68,"corpName":"天元集团租赁公司","_ROWNUM":3,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":69,"corpName":"天元集团分包公司","_ROWNUM":4,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":70,"corpName":"山东天元工程科技有限公司","_ROWNUM":5,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0}],
+             monthData:[],
+             yearData:[],
+            //yearData:[{"corpId":66,"corpName":"天元建设集团有限公司建设租赁分公司","_ROWNUM":1,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":67,"corpName":"天元建设集团有限公司","_ROWNUM":2,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":68,"corpName":"天元集团租赁公司","_ROWNUM":3,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":69,"corpName":"天元集团分包公司","_ROWNUM":4,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0},{"corpId":70,"corpName":"山东天元工程科技有限公司","_ROWNUM":5,"corpInspectCompleted":0,"corpInspectPlan":0,"corpMaintCompleted":0}]
+        },
+
+        method:{
+            createMap(dataGroup){
+                var pointsData = dataGroup._data.deviceData
+                var points = [
+                    {"lng":109.17 ,"lat":25.03,"url":"http://www.baidu.com","id":1,"name":"p1"},
+                    {"lng":109.56 ,"lat":25.32,"url":"http://www.baidu.com","id":2,"name":"p1"},
+                    {"lng":110.17 ,"lat":24.67,"url":"http://www.baidu.com","id":3,"name":"p1"},
+                    {"lng":107.02 ,"lat":25.03,"url":"http://www.baidu.com","id":4,"name":"p1"},
+                    {"lng":109.43 ,"lat":24.67,"url":"http://www.baidu.com","id":5,"name":"p1"},
+                    // {"lng":117 ,"lat":24.00,"url":"http://www.taobao.com","id":2,"name":"p2"},
+                    // {"lng":118.67 ,"lat":24.10,"url":"http://www.taobao.com","id":3,"name":"p2"},
+                    // {"lng":118.01 ,"lat":24.49,"url":"http://www.taobao.com","id":4,"name":"p2"},
+                    // {"lng":118.02 ,"lat":24.90,"url":"http://www.taobao.com","id":5,"name":"p2"},
+                ];
+                // 百度坐标系坐标(地图中需要使用这个)
+                var bPoints = new Array();
+                //创建标注点并添加到地图中
+                function addMarker(points) {
+                    //循环建立标注点
+
+                    for(var i=0, pointsLen = pointsData.length; i<pointsLen; i++) {
+                        console.log()
+                        var point = new BMap.Point(pointsData[i].longitude, pointsData[i].latitude); //将标注点转化成地图上的点
+                        bPoints.push(point); // 添加到百度坐标数组 用于自动调整缩放级别
+                        // var marker = new BMap.Marker(point); //将点转化成标注点
+
+                        var myIcon = new BMap.Icon("image/position2.png", new BMap.Size(16,21));
+                        var marker = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+                        // console.log(marker)
+
+                        map.addOverlay(marker);  //将标注点添加到地图上
+                        marker.addEventListener("click",getAttr);
+                    }
+                }
+                //有两种办法，把之前的覆盖了 重新新建一个
+                function  getAttr(my){
+                    if( this.map.De[0]){
+                        this.map.De[0].close()
+                    }
+                    console.log(this.LA.lng)
+                    // console.log(my.point.lng.toFixed(3))
+                    // 循环
+                    dataSting = {}
+                    console.log(pointsData)
+                    for(var i = 0,len =pointsData.length;i<len;i++){
+                        console.log(pointsData[i].longitude)
+                        if( this.LA.lng == pointsData[i].longitude){
+                            dataSting = pointsData[i]
+                        }
+                    }
+                    console.log(dataSting)
+                    var html = ["<div class='mapCue'>",
+                        // "<div class='mapClose'></div>",
+                        " <div class='mapTitle'>"
+                        ,"<h3>",
+                        dataSting.value,
+                        "</h3></div>"
+                        ,"<div class='myMap'>"
+                        ,"<div>设备总台数:"+
+                        dataSting.counts+
+                        "台</div>"
+                        ,"<div>塔机总台数:"+dataSting.towerCityCount+"台</div>"
+                        ,"<div>升降机总台数:"+dataSting.liftCityCount+" 台</div>"
+                        ,"</div>"
+                        ,"</div>"];
+                    var infoBox = new BMapLib.InfoBox(map,html.join(""),{
+                        boxStyle:{
+                            background:"white",
+                            width: "140px"
+                            ,height: "140px"
+                        },
+                        closeIconUrl:"image/close2.png"
+                        ,closeIconMargin: "6px 6px 0 0"
+                        ,enableAutoPan: true
+                        ,align: INFOBOX_AT_TOP
+                    });
+                    // console.log(infoBox)
+                    infoBox.open(my.point);
+                    console.log(this.map.De)
+                    // // map.centerAndZoom(this.point,this.map.Oa);
+                    var _that=this
+                    console.log(this)
+                    setTimeout(function(){
+                        map.panTo(_that.point);
+                    },200);
+                }
+                // 根据点的数组自动调整缩放级别
+                function setZoom (bPoints) {
+                    var view = map.getViewport(eval(bPoints));
+                    console.log(view)
+                    var mapZoom = view.zoom;
+                    console.log(mapZoom)
+                    var centerPoint = view.center;
+                    map.centerAndZoom(centerPoint,mapZoom);
+                }
+
+                //创建地图
+
+                var map = new BMap.Map("GMap");
+                // map.enableAutoResize()
+                map.centerAndZoom(new BMap.Point(112.591886,26.905407), 14); // 设置中心点
+                addMarker(points);
+                // console.log(BMapLib.InfoBox)
+                map.addControl(new BMap.MapTypeControl());
+                map.enableScrollWheelZoom(true);
+
+
+                // setTimeout(function(){
+                setZoom(bPoints);
+            },
+            showStatic(dataGroup){
+            	console.log("设备数据")
+                console.log(dataGroup._data.deviceData)
+                
+                console.log(dataGroup._data.deviceData[0].totalCounts)
+                if(dataGroup._data.deviceData){
+                    dataGroup._data.allDeviceCount =  dataGroup._data.deviceData[0].totalCounts;
+                    dataGroup._data.allLiftCount =  dataGroup._data.deviceData[0].liftTotalCounts
+                    dataGroup._data.allCrameCount =  dataGroup._data.deviceData[0].towerTotalCounts
+                    dataGroup._data.allLiftInuse =  dataGroup._data.deviceData[0].liftInuseCounts
+                    dataGroup._data.allCrameInuse =  dataGroup._data.deviceData[0].towerInuseCounts
+                    dataGroup._data.allLiftUnuse =  dataGroup._data.deviceData[0].liftIdleCounts
+                    dataGroup._data.allCrameUnuse =  dataGroup._data.deviceData[0].towerIdleCounts
+                }else{
+                    dataGroup._data.allDeviceCount =  0;
+                    dataGroup._data.allLiftCount =  0
+                    dataGroup._data.allCrameCount =  0
+                    dataGroup._data.allLiftInuse =  0
+                    dataGroup._data.allCrameInuse =  0
+                    dataGroup._data.allLiftUnuse =  0
+                    dataGroup._data.allCrameUnuse =  0
+                }
+
+            },
+            createDeviceAll(device){
+                console.log(device._data.allLiftCount)
+                var dom = document.getElementById("deviceAll");
+                var myChart = echarts.init(dom);
+                option = {
+                    title: {
+                    },
+                    graphic: {
+                        elements: [{
+                            type: 'text',
+                            style: {
+                                fill: '#13cbf2',
+                                text: device._data.allDeviceCount,
+                                font: '500 32px "Microsoft YaHei", sans-serif',
+                            },
+                            left: 'center',
+                            top: '35'
+                        },
+                            {
+                                type: 'text',
+                                left: 'center', // 相对父元素居中
+                                top: '70',  // 相对父元素上下的位置
+                                style: {
+                                    fill: '#666',
+                                    text: ['设备总数'],
+                                    font: 'bold 20px "Microsoft YaHei", sans-serif'
+                                }
+                            }]
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    series: [
+                        {
+                            name:'设备总数',
+                            type:'pie',
+                            color:['#557af2',"#fe9d00"],
+                            radius: ['90%', '100%'],
+                            avoidLabelOverlap: false,
+                            hoverAnimation:false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                            },
+                            // center:[150,250],
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            data:[
+                                {value: (device._data.allLiftCount),name:'升降机台数',textStyle: {
+                                        color: 'red'
+                                    }},
+                                {value: (device._data.allCrameCount),name:'塔机台数',textStyle: {
+                                        color: 'red'}},
+                            ]
+                        }
+                    ]
+                };
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            },
+            createCrame(datagroup){
+                console.log(datagroup._data)
+                var dom = document.getElementById("crame");
+                var myChart = echarts.init(dom);
+                option = null;
+                option = {
+                    title: {
+                        text:'塔吊',
+                        //字体居中
+                        left:'center',
+                        top:'center',
+                        show:true,
+                        textStyle:{
+                            color:'#666666',
+                            fontSize:22,
+                            verticalAlign: 'middle',
+                            align:'center'
+                        },
+                        subtextStyle:{
+                            color:'#666666',
+                            fontSize:20,
+                            // verticalAlign: 'bottom',
+                            // align:'center'
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    series: [
+                        {
+                            name:'塔吊',
+                            type:'pie',
+                            color:['#36c398',"#f65463"],
+                            radius: ['90%', '100%'],
+                            avoidLabelOverlap: false,
+                            hoverAnimation:false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                            },
+                            // center:[150,250],
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            data:[
+                                {value:datagroup._data.allCrameInuse,name:'在用台数',textStyle: {
+                                        color: 'red'
+                                    }},
+                                {value:datagroup._data.allCrameUnuse,name:'闲置台数',textStyle: {
+                                        color: 'red'}},
+                            ]
+                        }
+                    ]
+                };
+                ;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            },
+            createLift(datagroup){
+                var dom = document.getElementById("lift");
+                var myChart = echarts.init(dom);
+                option = null;
+                option = {
+                    title: {
+                        text:'升降机',
+                        //字体居中
+                        left:'center',
+                        top:'center',
+                        show:true,
+                        textStyle:{
+                            color:'#666',
+                            fontSize:22,
+                            verticalAlign: 'middle',
+                            align:'center'
+                        },
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    // legend: {
+                    //     orient: 'vertical',
+                    //     x: 'left',
+                    //     data:['','']
+                    // },
+                    series: [
+                        {
+                            name:'升降机',
+                            type:'pie',
+                            color:['#36c398',"#f65463"],
+                            radius: ['90%', '100%'],
+                            avoidLabelOverlap: false,
+                            hoverAnimation:false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                //这是里面的文字显示
+                                // emphasis: {
+                                //     show: true,
+                                //     textStyle: {
+                                //         fontSize: '30',
+                                //         fontWeight: 'bold'
+                                //     }
+                                // }
+                            },
+                            // center:[150,250],
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            // series:[
+                            //     { value:0, name:'闲置台数',textStyle: {
+                            //             color: 'red'
+                            //         }},
+                            //
+                            //     }
+                            // ],
+                            data:[
+                                {value:datagroup._data.allLiftInuse,name:'在用台数',textStyle: {
+                                        color: 'red'
+                                    }},
+                                {value:datagroup._data.allLiftUnuse,name:'闲置台数',textStyle: {
+                                        color: 'red'}},
+                            ]
+                        }
+                    ]
+                };
+                ;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            },
+            createAll(datagroup){
+                console.log(datagroup)
+                //需要城市的数据
+                // ajxa请求访问之后等到数据
+                //处理数据
+                cityData = []
+                crameInuse = []
+                crameUnuse = []
+                liftInuse = []
+                liftUnuse = []
+                var data = datagroup._data.deviceData
+                console.log(data)
+                for(var i=0,len = data.length ;i<len;i++){
+                    cityData.push(data[i].value)
+                    crameInuse.push(data[i].towerCityInuseCount)
+                    crameUnuse.push((data[i].towerCityIdleCount+data[i].towerCityInuseCount))
+                    liftInuse.push(data[i].liftCityInuseCount)
+                    liftUnuse.push((data[i].liftCityIdleCount+data[i].liftCityInuseCount))
+                }
+                console.log( crameInuse)
+                console.log( crameUnuse)
+                console.log( liftInuse)
+                console.log( liftUnuse)
+                var myChart = echarts.init(document.getElementById('distribute'));
+                option = {
+
+                    title : {
+                        // text: '某地区蒸发量和降水量',
+                        // subtext: '纯属虚构'
+                    },
+                    // grid: {y: 70, y2:30, x2:20},
+                    calculable : true,
+                    hoverAnimation:false,
+                    grid:{
+                        left: '80px;',   // 与容器左侧的距离
+                        right:'80px;'
+                    },
+                    tooltip : {
+
+                        trigger: 'axis',
+                        axisPointer:{
+                            type:"none"
+                        },
+                    formatter:function(prams){
+                        console.log(prams)
+                        var str = prams[0].name + "</br>" + "塔机总数:" + prams[0].data  +"台"
+                        + "</br>" + "在用台数:" + prams[2].data +"台" + "&nbsp;&nbsp;闲置台数:" + (prams[0].data-prams[2].data)+ "台"
+                        + "</br>" + "升降机总数:" + prams[1].data + "台"
+                        + "</br>" + "在用台数:" + prams[3].data +"台" + "&nbsp;&nbsp;闲置台数:" +(prams[1].data-prams[3].data)+ "台"
+                        return str
+                    }
+
+                    },
+
+                    xAxis : [
+                        {
+                            // boundaryGap: [0, 1],
+                            // min:0,
+                            // minInterval: 100,
+                            type : 'category',
+                            data : cityData,
+                            axisTick: {
+                                show: false
+                            },
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#c3c6c9'
+                                }
+
+                            },
+                            // axisLabel:{
+                            //
+                            //     //X轴刻度配置
+                            //     //间隔显示
+                            //     // interval:0 //0：表示全部显示不间隔；auto:表示自动根据刻度个数和宽度自动设置间隔个数
+                            // }
+                        },
+                        {
+
+                            type : 'category',
+                            data : cityData,
+                            axisLine: {show:false},
+
+                            axisTick: {show:false},
+
+                            axisLabel: {show:false},
+
+                            splitArea: {show:false},
+
+                            splitLine: {show:false},
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type: 'value',
+                            axisLabel:{formatter:'{value}'},
+                            //限定高度
+                            // boundaryGap: [0, 1],
+                            // min:0,
+                            // minInterval: 1
+                            // type : 'value'
+                            axisTick: {
+                                show: false
+                            },
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#c3c6c9'
+                                }
+
+                            },
+                        }
+                    ],
+                    series : [
+
+
+                        {
+                            name:'塔机在用',
+                            type:'bar',
+                            // barWidth:40,
+                            // barMaxWidth: '60',
+                            offset:5,
+
+                            //柱状图间距
+                            // barGap:1,
+                            data:crameUnuse,
+                            itemStyle: {
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    textStyle: {
+                                        color:"#666",
+                                        // color: 'black'
+                                    },
+                                },
+                                normal: {
+                                    //塔吊总数
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                        textStyle: {
+                                            color:"#666",
+                                            // color: 'black'
+                                        },
+                                    },
+                                    // 随机显示
+                                    //color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+                                    //柱状图圆角
+                                    barBorderRadius:[5, 5, 0, 0],
+                                    // 定制显示（按顺序）
+                                    color: '#fec467'
+                                },
+                            },
+                        },
+                        {
+                            name:'塔机闲置',
+                            type:'bar',
+                            // barWidth:40,
+                            // barMaxWidth: '60',
+                            offset:5,
+                            //柱状图间距
+                            // barGap:1,
+
+                            xAxisIndex:1,
+                            data: crameInuse,
+                            itemStyle: {
+                                normal: {
+                                    // 随机显示
+                                    //color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+                                    //柱状图圆角
+                                    barBorderRadius:[5, 5, 0, 0],
+                                    // 定制显示（按顺序）
+                                    color: '#fe9d00'
+                                },
+                            },
+                        },
+
+
+                        {
+                            name:'升降机闲置',
+                            type:'bar',
+                            // barWidth:40,
+                            data:liftUnuse,
+                            itemStyle: {
+                                normal: {
+                                    // 随机显示
+                                    barBorderRadius:[5, 5, 0, 0],
+                                    //color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                        textStyle: {
+                                            color:"#666",
+                                            // color: 'black'
+                                        },
+                                    },
+                                    // 定制显示（按顺序）
+                                    color: '#a6bbfe'
+                                },
+                            },
+                        },
+                        {
+                            name:'升降机在用',
+                            type:'bar',
+                            // barWidth:40,
+                            data:liftInuse,
+                            xAxisIndex:1,
+                            itemStyle: {
+                                normal: {
+                                    // 随机显示
+                                    barBorderRadius:[5, 5, 0, 0],
+                                    //color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+                                    label: {
+                                        show: false,
+                                        position: 'top',
+                                        textStyle: {
+                                            color:"#999",
+                                            // color: 'black'
+                                        },
+                                    },
+                                    // 定制显示（按顺序）
+                                    color: '#557af2'
+                                },
+                            },
+                        },
+                    ]
+                };
+                myChart.setOption(option);
+                //自适应宽度
+                console.log(myChart.resize)
+
+                // window.addEventListener("resize",function(){
+                //     option.chart.resize();
+                // });
+                // window.onresize = function(){
+                //     // myChart._zr.painter._width+60
+                //     myChart._zr.painter._width = window.innerWidth;
+                //     console.log(myChart._zr.painter._width)
+                //     // myChart.style.height = window.innerHeight+'px';
+                //
+                //     myChart.refresh;
+                //     // console.log(myChart._zr.painter._width+60)
+                // }
+
+
+            },
+            CreateInspectionOk(dataGroup){
+                var dom = document.getElementById("inspectionOk");
+                var myChart = echarts.init(dom);
+                option = null;
+                console.log(dataGroup)
+            
+                option = {
+
+                    title: {
+                        text:dataGroup._data.waring[0].inspectCompleted+'%',
+                        //字体居中
+                        left:'center',
+                        top:'center',
+                        show:true,
+                        textStyle:{
+                            color:'#f42f62',
+                            fontSize:26,
+                            verticalAlign: 'middle',
+                            align:'center'
+                        }
+                    },
+
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    // legend: {
+                    //     orient: 'vertical',
+                    //     x: 'left',
+                    //     data:['','']
+                    // },
+                    series: [
+                        {
+                            name:'巡检完成率',
+                            type:'pie',
+                            color:['#dddee1',"#f42e61"],
+                            radius: ['90%', '100%'],
+                            avoidLabelOverlap: false,
+                            hoverAnimation:false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                //这是里面的文字显示
+                                // emphasis: {
+                                //     show: true,
+                                //     textStyle: {
+                                //         fontSize: '30',
+                                //         fontWeight: 'bold'
+                                //     }
+                                // }
+                            },
+                            // center:[150,250],
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            // series:[
+                            //     { value:0, name:'闲置台数',textStyle: {
+                            //             color: 'red'
+                            //         }},
+                            //
+                            //     }
+                            // ],
+                            data:[
+                                {value:dataGroup._data.waring[0].inspectCompleted,name:'巡检已完成率',textStyle: {
+                                        color: 'red'
+                                    }},
+                                {value:(100-(dataGroup._data.waring[0].inspectCompleted)),name:'巡检未完成率',textStyle: {
+                                        color: 'red'}},
+                            ]
+                        }
+                    ]
+                };
+                ;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            },
+            CreatePlanOk(dataGroup){
+                var dom = document.getElementById("planOk");
+                var myChart = echarts.init(dom);
+                option = null;
+
+
+                option = {
+
+                    title: {
+                        text:dataGroup._data.waring[0].inspectPlanRate+'%',
+                        //字体居中
+                        left:'center',
+                        top:'center',
+                        show:true,
+                        textStyle:{
+                            color:'#f42f62',
+                            fontSize:26,
+                            verticalAlign: 'middle',
+                            align:'center'
+                        }
+                    },
+
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    // legend: {
+                    //     orient: 'vertical',
+                    //     x: 'left',
+                    //     data:['','']
+                    // },
+                    series: [
+                        {
+                            name:'巡检计划率',
+                            type:'pie',
+                            color:['#dddee1',"#f42e61"],
+                            radius: ['90%', '100%'],
+                            avoidLabelOverlap: false,
+                            hoverAnimation:false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                //这是里面的文字显示
+                                // emphasis: {
+                                //     show: true,
+                                //     textStyle: {
+                                //         fontSize: '30',
+                                //         fontWeight: 'bold'
+                                //     }
+                                // }
+                            },
+                            // center:[150,250],
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            // series:[
+                            //     { value:0, name:'闲置台数',textStyle: {
+                            //             color: 'red'
+                            //         }},
+                            //
+                            //     }
+                            // ],
+                            data:[
+                                {value:dataGroup._data.waring[0].inspectPlanRate,name:'计划完成',textStyle: {
+                                        color: 'red'
+                                    }},
+                                {value:(100-dataGroup._data.waring[0].inspectPlanRate),name:'计划未完成率',textStyle: {
+                                        color: 'red'}},
+                            ]
+                        }
+                    ]
+                };
+                ;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            },
+            CreateProjectOk(dataGroup){
+            	
+                var dom = document.getElementById("projectOk");
+                var myChart = echarts.init(dom);
+                option = null;
+
+
+                option = {
+
+                    title: {
+                        text:dataGroup._data.waring[0].maintCompleted+'%',
+                        //字体居中
+                        left:'center',
+                        top:'center',
+                        show:true,
+                        textStyle:{
+                            color:'#f42f62',
+                            fontSize:26,
+                            verticalAlign: 'middle',
+                            align:'center'
+                        }
+                    },
+
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    // legend: {
+                    //     orient: 'vertical',
+                    //     x: 'left',
+                    //     data:['','']
+                    // },
+                    series: [
+                        {
+                            name:'维保预警',
+                            type:'pie',
+                            color:['#dddee1',"#f42e61"],
+                            radius: ['90%', '100%'],
+                            avoidLabelOverlap: false,
+                            hoverAnimation:false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                //这是里面的文字显示
+                                // emphasis: {
+                                //     show: true,
+                                //     textStyle: {
+                                //         fontSize: '30',
+                                //         fontWeight: 'bold'
+                                //     }
+                                // }
+                            },
+                            // center:[150,250],
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            // series:[
+                            //     { value:0, name:'闲置台数',textStyle: {
+                            //             color: 'red'
+                            //         }},
+                            //
+                            //     }
+                            // ],
+                            data:[
+                                {value:dataGroup._data.waring[0].maintCompleted,name:'维保完成率',textStyle: {
+                                        color: 'red'
+                                    }},
+                                {value:(100-dataGroup._data.waring[0].maintCompleted),name:'维保未完成率',textStyle: {
+                                        color: 'red'}},
+                            ]
+                        }
+                    ]
+                };
+                ;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+            },
+        },
+        create(){
+          //需要访问数据
+        },
+        mounted (){
+            window.onresize = function(){
+                // 监听地图大小变化
+                var distribute = window.innerWidth
+                console.log(distribute)
+                // console.log(document.getElementById("Gmap"))
+                console.log( document.getElementById("GMap"))
+                document.getElementById("GMap").style.width = (distribute - 405)+"px"
+                // console.log(Gmap.width())
+            }
+            //地图显示
+            var that = this
+             $.when
+            //设备查询
+            var ajax1 = $.ajax({
+                url:urlPath+"/archive/equipDistributionEquipment.do",
+                type: "get",
+                async: true,
+                contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                dataType:"jsonp",
+                jsonp:"callback",
+                crossDomain: true,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(data){
+                	console.log(data)
+             
+                	//var data = JSON.parse(data)
+                	if(data.success == true) {	
+                		that._data.deviceData = data.result;
+               
+                	}	
+                   console.log(data)
+
+                }
+            });
+          //预警查询
+             var ajax2 =$.ajax({
+                url:urlPath+"/archive/equipInspectWarningEquipment.do",
+                type: "get",
+                async: true,
+                contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                dataType:"jsonp",
+                jsonp:"callback",
+                crossDomain: true,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(data){
+                	console.log(data)
+                	console.log("预警")
+                	if(data.success) {
+                		console.log(data.result)
+                		that._data.waring = data.result;
+                	
+                	}	
+                }
+            });
+          //本周排行
+           var ajax3 =$.ajax({
+                url:urlPath+"/archive/equipInspectWeekRankingEquipment.do",
+                type: "get",
+                async: true,
+                contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                dataType:"jsonp",
+                jsonp:"callback",
+                crossDomain: true,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(data){
+                	if(data.success) {
+                		that._data.weekData = data.result;
+                		console.log(data.result)
+                	}	
+                    
+
+                }
+            });
+          //本月排行
+           var ajax4 = $.ajax({
+                url:urlPath+"/archive/equipInspectMonthRankingEquipment.do",
+                type: "get",
+                async: true,
+                contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                dataType:"jsonp",
+                jsonp:"callback",
+                crossDomain: true,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(data){
+                	if(data.success) {
+                		that._data.monthData = data.result;
+                		console.log(data.result)
+                	}	
+                }
+            });
+          //本年排行
+           var ajax5 = $.ajax({
+                url:urlPath+"/archive/equipInspectYearRankingEquipment.do",
+                type: "get",
+                async: true,
+                contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+                dataType:"jsonp",
+                jsonp:"callback",
+                crossDomain: true,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(data){
+                	if(data.success) {
+                		that._data.yearData = data.result;
+                		console.log(data.result)
+                		
+                	}	
+                    
+
+                }
+            });
+          $.when(ajax1,ajax2,ajax3,ajax4,ajax5).done(function(){
+        	  console.log("数据")
+        	  that.$options.method.showStatic(that)
+        	  console.log(that._data)
+        	  that.$nextTick(
+                //地图加载
+                that.$options.method.createMap(that),
+                //设备用台数
+                that.$options.method.createDeviceAll(that),
+                //塔机总台数
+                that.$options.method.createCrame(that),
+                //升降机总台数
+                that.$options.method.createLift(that),
+                //全省设备台数
+                that.$options.method.createAll(that),
+                //巡检预警数据
+                that.$options.method.CreateInspectionOk(that),
+                //计划预警数据
+                that.$options.method.CreatePlanOk(that),
+                //维保预警数据
+               that.$options.method.CreateProjectOk(that)
+            )
+          })
+            //console.log(this._data)
+            //this.$options.method.showStatic(this)
+            //vue 解决异步加载问题
+            // 处理数据
+            
+
+
+        }
+    })
+
+</script>
+</html>

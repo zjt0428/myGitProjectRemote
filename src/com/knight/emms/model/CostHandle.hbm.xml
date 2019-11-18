@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.CostHandle" table="T_COST_HANDLE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="costHandleId" column="COST_HANDLE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractmaId" type="java.lang.Long" column="CONTRACTMA_ID" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="feeId" type="java.lang.String" column="FEE_ID" />
+		<property name="chargeUnitPrice" type="java.lang.String" column="CHARGE_UNIT_PRICE" />
+		<property name="feesType" type="java.lang.String" column="FEES_TYPE" />
+		<property name="feesTypeName" type="java.lang.String" column="FEES_TYPE_NAME" />
+		<property name="theoriesValueConversion" type="java.lang.String" column="THEORIES_VALUE_CONVERSION" />
+		<property name="auxiliaryUnit" type="java.lang.String" column="AUXILIARY_UNIT" />
+		<property name="feeCategory" type="java.lang.String" column="FEE_CATEGORY" />
+	</class>
+</hibernate-mapping>

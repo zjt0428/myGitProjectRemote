@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ReceiveManage" table="T_RECEIVE_MANAGE"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="receiveId" column="RECEIVE_ID" type="java.lang.Long"
+			length="19">
+			<generator class="native" />
+		</id>
+		
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="receiveSerial" type="java.lang.String" column="RECEIVE_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="receiveMan" type="java.lang.String" column="RECEIVE_MAN" />
+		<property name="provideDate" type="java.lang.String" column="PROVIDE_DATE" />
+		<property name="receiveTheme" type="java.lang.String" column ="RECEIVE_THEME" ></property>
+		<property name="receiveDate" type="java.lang.String" column="RECEIVE_DATE" />
+		<property name="depotId" type="java.lang.Long" column="DEPOT_ID" />
+		<property name="depotName" type="java.lang.String" column="DEPOT_NAME" />
+		<property name="totalAmount" type="java.lang.String" column="TOTAL_AMOUNT" />
+		<property name="receivePurpose" type="java.lang.String" column="RECEIVE_PURPOSE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" ></property>
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		
+		<!-- <many-to-one name="equipment" column="EQUIP_ID"	class="com.knight.emms.model.Equipment" fetch="join" not-found="ignore"/>
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" /> -->
+		<set name="receiveManageDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="RECEIVE_ID" />
+			<one-to-many class="com.knight.emms.model.ReceiveManageDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

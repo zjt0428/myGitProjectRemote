@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- 基础DAO -->
+	<bean id="genericDao" abstract="true" class="com.knight.core.dao.impl.GenericDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="baseLongPKDao" abstract="true" class="com.knight.core.dao.impl.BaseLongPKDaoImpl" parent="genericDao" />
+	<bean id="baseStrPKDao" abstract="true" class="com.knight.core.dao.impl.BaseStrPKDaoImpl" parent="genericDao" />
+	<bean id="baseHibernateDao" class="com.knight.core.dao.impl.BaseDaoHibernate">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="baseJdbcDao" class="com.knight.core.dao.impl.BaseDaoJdbcTemplate">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<bean id="initLoadTableDao" class="com.knight.system.dao.impl.InitLoadTableDaoImpl" parent="baseStrPKDao" />
+
+	<!-- 用户角色信息 -->
+	<bean id="appRoleDao" class="com.knight.system.dao.impl.AppRoleDaoImpl" parent="baseLongPKDao" />
+	<bean id="appUserDao" class="com.knight.system.dao.impl.AppUserDaoImpl" parent="baseLongPKDao" />
+	<bean id="appUserExtendDao" class="com.knight.system.dao.impl.AppUserExtendDaoImpl" parent="baseLongPKDao" />
+	<bean id="appUserKeyDao" class="com.knight.system.dao.impl.AppUserKeyDaoImpl" parent="baseLongPKDao" />
+	<bean id="appUserKeyExtendDao" class="com.knight.system.dao.impl.AppUserKeyExtendDaoImpl" parent="baseLongPKDao" />
+	<bean id="companyDao" class="com.knight.system.dao.impl.CompanyDaoImpl" parent="baseLongPKDao" />
+	<bean id="departmentDao" class="com.knight.system.dao.impl.DepartmentDaoImpl" parent="baseStrPKDao" />
+	<bean id="indexDisplayDao" class="com.knight.system.dao.impl.IndexDisplayDaoImpl" parent="baseLongPKDao" />
+	<bean id="shortMessageDao" class="com.knight.system.dao.impl.ShortMessageDaoImpl" parent="baseLongPKDao" />
+	<bean id="inMessageDao" class="com.knight.system.dao.impl.InMessageDaoImpl" parent="baseLongPKDao" />
+	<bean id="appTipsDao" class="com.knight.system.dao.impl.AppTipsDaoImpl" parent="baseLongPKDao" />
+
+	<!-- 权限菜单相关 -->
+	<bean id="appFunctionDao" class="com.knight.system.dao.impl.AppFunctionDaoImpl" parent="baseLongPKDao" />
+	<bean id="fileAttachDao" class="com.knight.system.dao.impl.FileAttachDaoImpl" parent="baseLongPKDao" />
+	<bean id="funUrlDao" class="com.knight.system.dao.impl.FunUrlDaoImpl" parent="baseLongPKDao" />
+	<bean id="sysConfigDao" class="com.knight.system.dao.impl.SysConfigDaoImpl" parent="baseLongPKDao" />
+
+	<!-- 系统日志相关 -->
+	<bean id="systemLogDao" class="com.knight.system.dao.impl.SystemLogDaoImpl" parent="baseLongPKDao" />
+	<bean id="appUserKeyLogDao" class="com.knight.system.dao.impl.AppUserKeyLogDaoImpl" parent="baseLongPKDao" />
+</beans>

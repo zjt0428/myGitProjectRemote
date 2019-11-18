@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Equipment" table="T_EQUIPMENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="equipId" column="EQUIP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="recordSerial" type="java.lang.String" column="RECORD_SERIAL" />
+		<property name="equipSerial" type="java.lang.String" column="EQUIP_SERIAL" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="brachium" type="java.math.BigDecimal" column="BRACHIUM" />
+		<property name="loadingWeight" type="java.math.BigDecimal" column="LOADING_WEIGHT" />
+		<property name="workingRange" type="java.math.BigDecimal" column="WORKING_RANGE" />
+		<property name="independentHeight" type="java.math.BigDecimal" column="INDEPENDENT_HEIGHT" />
+		<property name="attachmentHeight" type="java.math.BigDecimal" column="ATTACHMENT_HEIGHT" />
+		<property name="licenseNumber" type="java.lang.String" column="LICENSE_NUMBER" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="exwDate" type="java.lang.String" column="EXW_DATE" />
+		<property name="purchaseDate" type="java.util.Date" column="PURCHASE_DATE" />
+		<property name="scrapDate" type="java.util.Date" column="SCRAP_DATE" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="propertyEnt" type="java.lang.Long" column="PROPERTY_ENT" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+		<property name="dutyman" type="java.lang.String" column="DUTYMAN" />
+		<property name="dutymanTel" type="java.lang.String" column="DUTYMAN_TEL" />
+		<property name="mortgage" type="java.lang.String" column="MORTGAGE" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="rfidCode" type="java.lang.String" column="RFID_CODE" />
+		<property name="supplierId" type="java.lang.Long" column="SUPPLIER_ID" />
+		<property name="supplierName" type="java.lang.String" column="SUPPLIER_NAME" />
+		<property name="supplierAdd" type="java.lang.String" column="SUPPLIER_ADD" />
+		<property name="supplierTel" type="java.lang.String" column="SUPPLIER_TEL" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="mobile" type="java.lang.String" column="MOBILE" />
+		<property name="equipSource" type="java.lang.String" column="EQUIP_SOURCE" />
+		<property name="customerId" type="java.lang.Long" column="CUSTOMER_ID" />
+		<property name="customerLinkerId" type="java.lang.Long" column="CUSTOMER_LINKER_ID" />
+		<property name="customerName" type="java.lang.String" column="CUSTOMER_NAME" />
+		<property name="linkman" type="java.lang.String" column="LINKMAN" />
+		<property name="linkmanTel" type="java.lang.String" column="LINKMAN_TEL" />
+		<property name="paymentType" type="java.lang.String" column="PAYMENT_TYPE" />
+		<property name="assetValue" type="java.math.BigDecimal" column="ASSET_VALUE" />
+		<property name="depreciateRate" type="java.math.BigDecimal" column="DEPRECIATE_RATE" />
+		<property name="totalRate" type="java.math.BigDecimal" column="TOTAL_RATE" />
+		<property name="presentValue" type="java.math.BigDecimal" column="PRESENT_VALUE" />
+		<property name="depreciateDate" type="java.lang.String" column="DEPRECIATE_DATE" />
+		<property name="rentalUnit" type="java.math.BigDecimal" column="RENTAL_UNIT" />
+		<property name="priceUnit" type="java.lang.String" column="PRICE_UNIT" />
+		<property name="mortgageAmount" type="java.math.BigDecimal" column="MORTGAGE_AMOUNT" />
+		<property name="finishedAmount" type="java.math.BigDecimal" column="FINISHED_AMOUNT" />
+		<property name="remainderAmount" type="java.math.BigDecimal" column="REMAINDER_AMOUNT" />
+		<property name="mortgagePeriods" type="java.lang.Short" column="MORTGAGE_PERIODS" />
+		<property name="owingStartDate" type="java.lang.String" column="OWING_START_DATE" />
+		<property name="owingEndDate" type="java.lang.String" column="OWING_END_DATE" />
+		<property name="monthlyPayment" type="java.math.BigDecimal" column="MONTHLY_PAYMENT" />
+		<property name="payeeId" type="java.lang.Long" column="PAYEE_ID" />
+		<property name="payeeName" type="java.lang.String" column="PAYEE_NAME" />
+		<property name="payeeAdd" type="java.lang.String" column="PAYEE_ADD" />
+		<property name="payeeTel" type="java.lang.String" column="PAYEE_TEL" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="monitorSerial" type="java.lang.String" column="MONITOR_SERIAL" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="insureStatus" type="java.lang.String" column="INSURE_STATUS" />
+		<property name="insureTime" type="java.lang.String" column="INSURE_TIME" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="storeName" type="java.lang.String" formula="(SELECT SH.STORE_NAME FROM T_STORE_HOUSE SH WHERE SH.STORE_ID = STORE_ID)" />
+		<property name="businessStatus" type="java.lang.String" column="BUSINESS_STATUS" />
+		<property name="storeStatus" type="java.lang.String" column="STORE_STATUS" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="statusDate" type="java.util.Date" column="STATUS_DATE" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" formula="(SELECT P.PROJECT_NAME FROM T_PROJECT P WHERE P.PROJECT_ID = PROJECT_ID)" />
+		<property name="projectAddress" type="java.lang.String" formula="(SELECT P.ADDRESS FROM T_PROJECT P WHERE P.PROJECT_ID = PROJECT_ID)" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM"/>
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<!-- <property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" /> -->
+		<property name="flowId" type="java.lang.Long" column="FLOW_ID" />
+		<property name="examineDate" type="java.lang.String" column="EXAMINE_DATE" />
+		<property name="latestRepairDate" type="java.util.Date" column="LATEST_REPAIR_DATE" />
+		<property name="latestInspectDate" type="java.util.Date" column="LATEST_INSPECT_DATE" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="armTipWeight" type="java.math.BigDecimal" column="ARM_TIP_WEIGHT" />
+		<property name="mostMoment" type="java.math.BigDecimal" column="MOST_MOMENT" />
+		<property name="amplitudeForm" type="java.lang.String" column="AMPLITUDE_FORM" />
+		<property name="amplitudeSpeed" type="java.lang.String" column="AMPLITUDE_SPEED" />
+		<property name="motorPower" type="java.lang.String" column="MOTOR_POWER" />
+		<property name="driveForm" type="java.lang.String" column="DROVE_FORM" />
+		<property name="ssDriveForm" type="java.lang.String" column="SS_DROVE_FORM" />
+		<property name="ratedLiftSpeed" type="java.lang.String" column="RATED_LIFT_SPEED" />
+		<property name="railFrameHeight" type="java.math.BigDecimal" column="RAIL_FRAME_HEIGHT" />
+		<property name="railUpHeight" type="java.math.BigDecimal" column="RAIL_UP_HEIGHT" />
+		<property name="freedomHeight" type="java.math.BigDecimal" column="FREEDOM_HEIGHT" />
+		<property name="maxLiftHeight" type="java.math.BigDecimal" column="MAX_LIFT_HEIGHT" />
+		<property name="ratedCrewNum" type="java.lang.Integer" column="RATED_CREW_NUM" />
+		<property name="warehouseDate" type="java.lang.String" column="WAREHOUSE_DATE" />
+		<property name="permissionFlag" type="java.lang.String" column="PERMISSION_FLAG" />
+		<property name="seatState" type="java.lang.String" column="SEAT_STATE" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" insert="false" update="false" fetch="join" />
+		<many-to-one name="equipDiary" column="EQUIP_DIARY_ID" class="com.knight.emms.model.EquipDiary" fetch="join"  />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="instalmentSet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIPMENT'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.Instalment" />
+		</set>
+		<set name="equipmentAffiliatedSet" cascade="all" inverse="false" lazy="true">
+			<key column="EQUIP_ID" />
+			<one-to-many class="com.knight.emms.model.EquipmentAffiliated" />
+		</set>
+		<set name="componentSet" cascade="none" inverse="true" lazy="true" where=" DEL_FLAG = '1'">
+			<key column="EQUIP_ID" />
+			<one-to-many class="com.knight.emms.model.Component" />
+		</set>
+	</class>
+</hibernate-mapping>

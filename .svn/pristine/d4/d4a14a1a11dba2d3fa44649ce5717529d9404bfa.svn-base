@@ -1,0 +1,319 @@
+Ext.ns("Knight.ux");
+Knight.ux.RelationCompositeField = function(a) {
+	var cfg = {
+		allowBlank : false,
+		disabled : false,
+		single : true,
+		params : null,
+		collectEnable : false,
+		width : 130
+	};
+	Ext.apply(cfg, a);
+	this.relateModule = cfg.relateModule;
+	this.cleanhandler = cfg.cleanhandler;
+	this.importhandler = cfg.importhandler;
+	this.disabled = cfg.disabled;
+	this.fields = cfg.fields;
+	this.single = cfg.single;
+	this.params = cfg.params;
+	this.collectEnable = cfg.collectEnable;
+	var width = cfg.width;
+	var textView = {
+		xtype : "textfield",
+		margins : "0 0 0 0",
+		disabled : this.disabled,
+		name : a.name,
+		readOnly : a.readOnly==undefined ? true : a.readOnly,
+		allowBlank : cfg.allowBlank,
+		value : a.value,
+		flex : 1
+	}, cleanView = {
+		xtype : "button",
+		margins : "0 3 0 0",
+		disabled : this.disabled,
+		autoWidth : true,
+		iconCls : "btn-clean",
+		handler : this.cleanFieldHandler.createDelegate(this)
+	}, importView = {
+		xtype : "button",
+		margins : "0 0 0 0",
+		disabled : this.disabled,
+		autoWidth : true,
+		iconCls : "btn-anchor-point",
+		handler : this.importFieldHandler.createDelegate(this)
+	};
+	Ext.apply(textView, a.textView || {});
+
+	var items = [ textView ];
+	if (!this.disabled) {
+		if (this.cleanhandler) {
+			Ext.apply(cleanView, a.cleanView || {});
+			items.push(cleanView);
+		}
+		Ext.apply(importView, a.importView || {});
+		items.push(importView);
+		width += 21;
+	}
+	Knight.ux.RelationCompositeField.superclass.constructor.call(this, {
+		fieldLabel : a.fieldLabel,
+		width : width,
+		allowBlank : cfg.allowBlank,
+		items : items
+	});
+};
+Ext.extend(Knight.ux.RelationCompositeField, Ext.form.CompositeField, {
+	relateCallback : function(data) {
+		this.importhandler.call(this, data, this.fields);
+	},
+	cleanFieldHandler : function() {
+		this.cleanhandler.call(this, this.fields);
+	},
+	resultResolveHandler : function(d) {
+		if (this.single) {
+			var data = d[0].data;
+			this.relateCallback(data);
+		} else {
+			this.relateCallback(d);
+		}
+	},
+	importFieldHandler : function() {
+		var data = null;
+		switch (this.relateModule) {
+			case RelationModule.corpCert.relateModule:
+				new CorpCertSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.corp.relateModule:
+				new CorpSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.corpAccount.relateModule:
+				new CorpAccountSelector({
+					single : true,
+					collectEnable : this.collectEnable? true : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.practitioner.relateModule:
+				new PractitionerSelector({
+					params : this.params,
+					single : this.singler?this.singler:this.single,
+					//single : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.appUser.relateModule:
+				new AppUserSelector({
+					single : this.singler?this.singler:this.single,
+					//single : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.practiCert.relateModule:
+				new PractiCertSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.equipment.relateModule:
+				new EquipSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.equipments.relateModule:
+				new EquipLostHandleSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.equipmentes.relateModule:
+				new EquipLostHandleSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.equipT.relateModule:
+				new EquipTSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.project.relateModule:
+				new ProjectSelector({
+					single : this.single? true : false,
+					collectEnable : this.collectEnable? true : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.supplier.relateModule:
+				new SupplierSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.customer.relateModule:
+				new CustomerSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.customerLinker.relateModule:
+				new CustomerLinkerSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.car.relateModule:
+				new CarSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.storeHouse.relateModule:
+				new StoreHouseSelector({
+					single : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.constructOperation.relateModule:
+				new ConstructOperationSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.equipFlow.relateModule:
+				new EquipFlowSelector({
+					single : true,
+					callback : function(d){
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.materialsCommodity.relateModule :
+				new MaterialsCommoditySelector({
+					single : true,
+					callback : function(d){
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.materialsInfo.relateModule : 
+				new MaterialsInfoSelector({
+					single : true,
+					callback : function(d){
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.materialsAmortization.relateModule : 
+				new MaterialsAmortizationSelector({
+					single : true,
+					callback : function(d){
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.baseDepot.relateModule : 
+				new BaseDepotSelector({
+					single : true,
+					callback : function(d){
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;	
+			case RelationModule.baseLocation.relateModule:
+				new BaseLocationSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.baseDepotJoinUser.relateModule:
+				new BaseDepotJoinUserSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.dispatchAllocateInit.relateModule:
+				new DispatchAllocateInitSelector({
+					single : true,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;	
+			case RelationModule.leaseContract.relateModule:
+				new LeaseContractSelector({
+					params : this.params,
+					single : this.single? true : false,
+					collectEnable : this.collectEnable? true : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.contractMaterials.relateModule:
+				new ContractMaterialsSelector({
+					params : this.params,
+					single : this.single? true : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+			case RelationModule.contractMaterialsSecond.relateModule:
+				new ContractMaterialsSecondSelector({
+					params : this.params,
+					single : this.single? true : false,
+					collectEnable : this.collectEnable? true : false,
+					callback : function(d) {
+						this.resultResolveHandler(d);
+					}.createDelegate(this)
+				}).show();
+				break;
+		}
+	}
+});
+Ext.reg("relationCompositeField", Knight.ux.RelationCompositeField);

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TeamsAccountKnot" table="T_TEAMS_ACCOUNT_KNOT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="accountKnotId" column="ACCOUNT_KNOT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="teamsAccountId" type="java.lang.Long" column="TEAMS_ACCOUNT_ID" />
+		<property name="accountDate" type="java.lang.String" column="ACCOUNT_DATE" />
+		<property name="knotType" type="java.lang.String" column="KNOT_TYPE" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="componGeneric" type="java.lang.String" column="COMPON_GENERIC" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="measurement" type="java.lang.String" column="MEASUREMENT" />
+		<property name="accountPrice" type="java.math.BigDecimal" column="ACCOUNT_PRICE" />
+		<property name="deductQuantity" type="java.lang.Integer" column="DEDUCT_QUANTITY" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="knotMetric" type="java.math.BigDecimal" column="KNOT_METRIC" />
+	</class>
+</hibernate-mapping>

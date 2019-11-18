@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TechnicalDisclosure" table="T_TECHNICAL_DISCLOSURE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="disclosureId" column="DISCLOSURE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dispatchEquipId" type="java.lang.Long" column="DISPATCH_EQUIP_ID" />
+		<property name="disclosureSerial" type="java.lang.String" column="DISCLOSURE_SERIAL" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="height" type="java.lang.String" column="HEIGHT" />
+		<property name="brachium" type="java.math.BigDecimal" column="BRACHIUM" />
+		<property name="constructeEntname" type="java.lang.String" column="CONSTRUCTE_ENTNAME" />
+		<property name="erectingEquipart" type="java.lang.String" column="ERECTING_EQUIPART" />
+		<property name="deliveryEquipart" type="java.lang.String" column="DELIVERY_EQUIPART" />
+		<property name="disclosureMan" type="java.lang.String" column="DISCLOSURE_MAN" />
+		<property name="disclosureManId" type="java.lang.Long" column="DISCLOSURE_MAN_ID" />
+		<property name="acceptanceMan" type="java.lang.String" column="ACCEPTANCE_MAN" />
+		<property name="acceptanceManId" type="java.lang.String" column="ACCEPTANCE_MAN_ID" />
+		<property name="relevanceMan" type="java.lang.String" column="RELEVANCE_MAN" />
+		<property name="disclosureItem" type="java.lang.String" column="DISCLOSURE_ITEM" />
+		<property name="disclosureDate" type="java.lang.String" column="DISCLOSURE_DATE" />
+		<property name="contents" type="java.lang.String" column="CONTENTS" />
+		<property name="replenishContents" type="java.lang.String" column="REPLENISH_CONTENTS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="disclosurePhoto" type="java.lang.String" column="DISCLOSURE_PHOTO" />
+		<property name="disclosureLocation" type="java.lang.String" column="DISCLOSURE_LOCATION" />
+		<property name="operationWay" type="java.lang.Integer" column="OPERATION_WAY" />
+		<property name="installId" type="java.lang.Long" column="INSTALL_ID" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<many-to-one name="contractLease" column="CONTRACT_ID" class="com.knight.emms.model.ContractLease" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+	</class>
+</hibernate-mapping>

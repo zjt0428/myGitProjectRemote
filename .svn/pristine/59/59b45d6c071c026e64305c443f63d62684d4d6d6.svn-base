@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ScrapApply" table="T_SCRAP_APPLY" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="scrapId" column="SCRAP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="scrapSerial" type="java.lang.String" column="SCRAP_SERIAL" />
+		<property name="scrapTheme" type="java.lang.String" column="SCRAP_THEME" />
+		<property name="applyDate" type="java.lang.String" column="APPLY_DATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="storageLocation" type="java.lang.String" column="STORAGE_LOCATION" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="auditorId" type="java.lang.Long" column="AUDITOR_ID" />
+		<property name="auditorName" type="java.lang.String" column="AUDITOR_NAME" />
+		<property name="auditorDate" type="java.lang.String" column="AUDITOR_DATE" />
+		<property name="approvId" type="java.lang.Long" column="APPROV_ID" />
+		<property name="approvName" type="java.lang.String" column="APPROV_NAME" />
+		<property name="approvDate" type="java.lang.String" column="APPROV_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<set name="scrapDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.ScrapDetail" />
+			<filter name="nameEqualFilter" condition="RELATE_MODULE=:relateModule"></filter>
+		</set>
+	</class>
+	 <filter-def name="nameEqualFilter" >
+	  <filter-param name="relateModule" type="java.lang.String"/>
+	 </filter-def>
+</hibernate-mapping>

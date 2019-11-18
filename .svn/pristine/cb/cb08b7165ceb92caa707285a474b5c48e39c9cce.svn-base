@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContingencyWorker" table="T_CONTINGENCY_WORKER" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="workerId" column="WORKER_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contingencyId" type="java.lang.Long" column="CONTINGENCY_ID" />
+		<property name="name" type="java.lang.String" column="NAME" />
+		<property name="duties" type="java.lang.String" column="DUTIES" />
+		<property name="contingencyDuties" type="java.lang.String" column="CONTINGENCY_DUTIES" />
+		<property name="phone" type="java.lang.String" column="PHONE" />
+	</class>
+</hibernate-mapping>

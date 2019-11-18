@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InspectSelfChooseDetail" table="T_INSPECT_SELF_CHOOSE_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="chooseId" type="java.lang.Long" column="CHOOSE_ID" />
+		<property name="inspectType" type="java.lang.String" column="INSPECT_TYPE" />
+		<property name="detailContent" type="java.lang.String" column="DETAIL_CONTENT" />
+	</class>
+</hibernate-mapping>

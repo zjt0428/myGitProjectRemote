@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<!-- FORM -->
+	<bean id="businessFlowServices" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="CONTRACT_LEASE" value-ref="contractLeaseService"></entry>
+				<entry key="CONTRACT_MATERIALS" value-ref="contractMaterialsService"></entry>
+				<entry key="DISPATCH" value-ref="dispatchService"></entry>
+				<entry key="EQUIP_INSTALL" value-ref="equipInstallService"></entry>
+				<entry key="EQUIP_EMPLOY" value-ref="equipEmployService"></entry>
+				<entry key="EQUIP_DISMANTLE" value-ref="equipDismantleService"></entry>
+				<entry key="EQUIP_WAREHOUSE" value-ref="equipWarehouseService"></entry>
+				<entry key="EQUIP_HITCH" value-ref="equipHitchService"></entry>
+				<entry key="EQUIP_REPAIR" value-ref="equipRepairService"></entry>
+				<entry key="PICKUP" value-ref="pickupService"></entry>
+				<entry key="PURCHASE" value-ref="purchaseService"></entry>
+				<entry key="BORROW" value-ref="borrowService"></entry>
+				<entry key="MONEY_LEND" value-ref="moneyLendService"></entry>
+				<entry key="MONEY_BACK" value-ref="moneyBackService"></entry>
+				<entry key="INVOICE_ISSUE" value-ref="invoiceIssueService"></entry>
+				<entry key="AMOUNT_RECEIVE" value-ref="amountReceiveService"></entry>
+				<entry key="INVOICE_COLLECT" value-ref="invoiceCollectService"></entry>
+				<entry key="AMOUNT_PAYMENT" value-ref="amountPaymentService"></entry>
+				<entry key="DEDUCT" value-ref="deductService"></entry>
+				<entry key="SALARY" value-ref="salaryService"></entry>
+				<entry key="REIMBURSE" value-ref="reimburseService"></entry>
+				<entry key="CONTRACT_ARRANGE" value-ref="contractArrangeService"></entry>
+				<entry key="MATERIALS_PLAN" value-ref="materialsPlanService"></entry>
+				<entry key="TRUCK_PLAN" value-ref="truckPlanService"></entry>
+				<entry key="EXEUNT_PLAN" value-ref="exeuntPlanService"></entry>
+				<entry key="LOGISTICS_TRANSPORT" value-ref="logisticsTransportService"></entry>
+				<entry key="COMPON_INTO_STORE" value-ref="componIntoStoreService"></entry>
+				<entry key="INDIS_SCHEMA" value-ref="indisSchemaService"></entry>
+				<entry key="CONSTRUCT_OPERATION" value-ref="constructOperationService"></entry>
+				<entry key="SCRAP_APPLY" value-ref="scrapApplyService"></entry>
+				<entry key="SCRAP_CONTRACT" value-ref="scrapContractService"></entry>
+				<entry key="SCRAP_HANDLE" value-ref="scrapHandleService"></entry>
+				<entry key="RECEIVE_MANAGE" value-ref="receiveManageService"></entry>
+				<entry key="LOST_COMPENSATION" value-ref="lostCompensationService"></entry>
+				<entry key="RECYCLE_MANAGE" value-ref="recycleManageService"></entry>
+				<entry key="ALLOCATION_PROJECT" value-ref="allocationProjectService"></entry>
+				<entry key="ALLOCATION_DEPOT" value-ref="allocationDepotService"></entry>
+				<entry key="OTHER_BUSINESS" value-ref="otherBusinessService"></entry>
+				<entry key="OTHER_BETS" value-ref="otherBetsService"></entry>
+				<entry key="TAKE_STOCK" value-ref="takeStockService"></entry>
+				<entry key="MATERIALS_REPAIR" value-ref="materialsRepairService"></entry>
+				<entry key="APPLY_MAKE" value-ref="applyMakeService"></entry>
+				<entry key="LOST_HANDLE" value-ref="lostHandleService"></entry>
+				<entry key="EQUIP_INSPECT" value-ref="equipInspectService"></entry>
+				<entry key="MATERIALS_DISPATCH" value-ref="materialsDispatchService"></entry>
+				<entry key="MATERIALS_PACKAGE" value-ref="materialsPackageService"></entry>
+				<entry key="LEASE_APPLICATION" value-ref="leaseApplicationService"></entry>
+				<entry key="LEASE_CONTRACT" value-ref="leaseContractService"></entry>
+				<entry key="GOODS_RECIPIENT" value-ref="goodsRecipientService"></entry>
+				<entry key="RETURN_GOODS" value-ref="returnGoodsService"></entry>
+				<entry key="LEASE_SETTLEMENT" value-ref="leaseSettlementService"></entry>
+				<entry key="OTHER_MATERIAL_STOCK" value-ref="otherMaterialStockService"></entry>
+				<entry key="HANDLE_MAKE" value-ref="handleMakeService"></entry>
+				<entry key="MATERIALS_REMODEL" value-ref="materialsRemodelService"></entry>
+				<entry key="LEASE_REPAIR" value-ref="leaseRepairService"></entry>
+				<entry key="PROJECT_REPAIR" value-ref="projectRepairService"></entry>
+				<entry key="LEASED_LOST_COMPENSATION" value-ref="leasedLostCompensationService"></entry>
+				<entry key="TEMPORARY_RETURN" value-ref="temporaryReturnService"></entry>
+				<entry key="OTHER_LEASE_BUSINESS" value-ref="otherLeaseBusinessService"></entry>
+				<entry key="ADVANCE_RECEIVE" value-ref="advanceReceiveService"></entry>
+				<entry key="PRACTI_DISPATCH" value-ref="practiDispatchService"></entry>
+				<entry key="LABOR_SETTLE" value-ref="laborSettleService"></entry>
+				<entry key="DEPOT_TRANSFERS" value-ref="depotTransfersService"></entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="dispatchRelateDomains" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="CONTRACT_LEASE" value-ref="dispatchContractDomain"></entry>
+				<entry key="EQUIP_DISMANTLE" value-ref="dispatchEquipDismantleDomain"></entry>
+				<entry key="EQUIP_EMPLOY" value-ref="dispatchEquipEmployDomain"></entry>
+				<entry key="EQUIP_INSTALL" value-ref="dispatchEquipInstallDomain"></entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="fundPaymentVoucherServices" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="EQUIPMENT" value-ref="equipmentService"></entry>
+				<entry key="EQUIP_DETECT" value-ref="equipDetectService"></entry>
+				<entry key="SETTLE_CONTRACT" value-ref="settleContractService"></entry>
+				<entry key="BORROW" value-ref="borrowService"></entry>
+				<entry key="PURCHASE" value-ref="purchaseService"></entry>
+				<entry key="LOGISTICS_TRANSPORT" value-ref="logisticsTransportService"></entry>
+				<entry key="LOGISTICS_BACKSPORT" value-ref="logisticsBacksportService"></entry>
+				<entry key="TEAMS_ACCOUNT" value-ref="teamsAccountService"></entry>
+				<entry key="RENT_CONTRACT" value-ref="rentContractService"></entry>
+				<entry key="DISPATCH_AUTOCRANE" value-ref="dispatchAutocraneService"></entry>
+				<entry key="DISPATCH" value-ref="dispatchService"></entry>
+				<entry key="CONSTRUCT_OPERATION" value-ref="constructOperationService"></entry>
+				<entry key="AUTOCRANE" value-ref="autocraneService"></entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="fundReceiveVoucherServices" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="SETTLE_CONTRACT" value-ref="settleContractService"></entry>
+				<entry key="BORROW" value-ref="borrowService"></entry>
+				<entry key="PURCHASE" value-ref="purchaseService"></entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="autocraneService" class="com.knight.emms.service.impl.AutocraneServiceImpl">
+		<constructor-arg index="0" ref="autocraneDao" />
+	</bean>
+	<bean id="autocraneExpenseService" class="com.knight.emms.service.impl.AutocraneExpenseServiceImpl">
+		<constructor-arg index="0" ref="autocraneExpenseDao" />
+	</bean>
+	<bean id="equipWarehouseAbnormalService" class="com.knight.emms.service.impl.EquipWarehouseAbnormalServiceImpl">
+		<constructor-arg index="0" ref="equipWarehouseAbnormalDao" />
+	</bean>
+	<bean id="constructOperationService" class="com.knight.emms.service.impl.ConstructOperationServiceImpl">
+		<constructor-arg index="0" ref="constructOperationDao" />
+	</bean>
+	<bean id="formAcceptService" class="com.knight.emms.service.impl.FormAcceptServiceImpl">
+		<constructor-arg index="0" ref="formAcceptDao" />
+		<property name="businessFlowServices" ref="businessFlowServices" />
+	</bean>
+	<bean id="formApproveService" class="com.knight.emms.service.impl.FormApproveServiceImpl">
+		<constructor-arg index="0" ref="formApproveDao" />
+		<property name="businessFlowServices" ref="businessFlowServices" />
+	</bean>
+	<bean id="formReviewService" class="com.knight.emms.service.impl.FormReviewServiceImpl">
+		<constructor-arg index="0" ref="formReviewDao" />
+		<property name="businessFlowServices" ref="businessFlowServices" />
+	</bean>
+	<bean id="formOpinionService" class="com.knight.emms.service.impl.FormOpinionServiceImpl">
+		<constructor-arg index="0" ref="formOpinionDao" />
+	</bean>
+	<bean id="overduePaymentService" class="com.knight.emms.service.impl.OverduePaymentServiceImpl">
+		<constructor-arg index="0" ref="overduePaymentDao" />
+	</bean>
+	<bean id="rentContractService" class="com.knight.emms.service.impl.RentContractServiceImpl">
+		<constructor-arg index="0" ref="rentContractDao" />
+	</bean>
+	<bean id="corpInfoService" class="com.knight.emms.service.impl.CorpInfoServiceImpl">
+		<constructor-arg index="0" ref="corpInfoDao" />
+	</bean>
+	<bean id="corpCertService" class="com.knight.emms.service.impl.CorpCertServiceImpl">
+		<constructor-arg index="0" ref="corpCertDao" />
+	</bean>
+	<bean id="practitionerService" class="com.knight.emms.service.impl.PractitionerServiceImpl">
+		<constructor-arg index="0" ref="practitionerDao" />
+	</bean>
+	<bean id="practiCertService" class="com.knight.emms.service.impl.PractiCertServiceImpl">
+		<constructor-arg index="0" ref="practiCertDao" />
+	</bean>
+	<bean id="supplierService" class="com.knight.emms.service.impl.SupplierServiceImpl">
+		<constructor-arg index="0" ref="supplierDao" />
+	</bean>
+	<bean id="customerService" class="com.knight.emms.service.impl.CustomerServiceImpl">
+		<constructor-arg index="0" ref="customerDao" />
+	</bean>
+	<bean id="projectService" class="com.knight.emms.service.impl.ProjectServiceImpl">
+		<constructor-arg index="0" ref="projectDao" />
+	</bean>
+	<bean id="ProjectComponService" class="com.knight.emms.service.impl.ProjectComponServiceImpl">
+		<constructor-arg index="0" ref="projectComponDao" />
+	</bean>
+	<bean id="componentService" class="com.knight.emms.service.impl.ComponentServiceImpl">
+		<constructor-arg index="0" ref="componentDao" />
+	</bean>
+	<bean id="equipmentService" class="com.knight.emms.service.impl.EquipmentServiceImpl">
+		<constructor-arg index="0" ref="equipmentDao" />
+	</bean>
+	<bean id="equipInsuranceService" class="com.knight.emms.service.impl.EquipInsuranceServiceImpl">
+		<constructor-arg index="0" ref="equipInsuranceDao" />
+	</bean>
+	<bean id="equipInsuranceDetailService" class="com.knight.emms.service.impl.EquipInsuranceDetailServiceImpl">
+		<constructor-arg index="0" ref="equipInsuranceDetailDao" />
+	</bean>
+	<bean id="equipInsuranceClaimService" class="com.knight.emms.service.impl.EquipInsuranceClaimServiceImpl">
+		<constructor-arg index="0" ref="equipInsuranceClaimDao" />
+	</bean>
+	<bean id="practiInsuranceService" class="com.knight.emms.service.impl.PractiInsuranceServiceImpl">
+		<constructor-arg index="0" ref="practiInsuranceDao" />
+	</bean>
+	<bean id="practiInsuranceDetailService" class="com.knight.emms.service.impl.PractiInsuranceDetailServiceImpl">
+		<constructor-arg index="0" ref="practiInsuranceDetailDao" />
+	</bean>
+	<bean id="practiInsuranceClaimRecordService" class="com.knight.emms.service.impl.PractiInsuranceClaimRecordServiceImpl">
+		<constructor-arg index="0" ref="practiInsuranceClaimRecordDao" />
+	</bean>
+	<bean id="safetyEducationService" class="com.knight.emms.service.impl.SafetyEducationServiceImpl">
+		<constructor-arg index="0" ref="safetyEducationDao" />
+	</bean>
+	<bean id="practiEvaluationService" class="com.knight.emms.service.impl.PractiEvaluationServiceImpl">
+		<constructor-arg index="0" ref="practiEvaluationDao" />
+	</bean>
+	<bean id="inspectProjectRecordService" class="com.knight.emms.service.impl.InspectProjectRecordServiceImpl">
+		<constructor-arg index="0" ref="inspectProjectRecordDao" />
+	</bean>
+	
+	<bean id="instalmentService" class="com.knight.emms.service.impl.InstalmentServiceImpl">
+		<constructor-arg index="0" ref="instalmentDao" />
+	</bean>
+	<bean id="receivementService" class="com.knight.emms.service.impl.ReceivementServiceImpl">
+		<constructor-arg index="0" ref="receivementDao" />
+	</bean>
+	<bean id="contractLeaseService" class="com.knight.emms.service.impl.ContractLeaseServiceImpl">
+		<constructor-arg index="0" ref="contractLeaseDao" />
+	</bean>
+	<bean id="contractLeaseVersionService" class="com.knight.emms.service.impl.ContractLeaseVersionServiceImpl">
+		<constructor-arg index="0" ref="contractLeaseVersionDao" />
+	</bean>
+	<bean id="contractMaterialsService" class="com.knight.emms.service.impl.ContractMaterialsServiceImpl">
+		<constructor-arg index="0" ref="contractMaterialsDao" />
+	</bean>
+	<bean id="settleContractService" class="com.knight.emms.service.impl.SettleContractServiceImpl">
+		<constructor-arg index="0" ref="settleContractDao" />
+	</bean>
+	<bean id="settleContractRecordService" class="com.knight.emms.service.impl.SettleContractRecordServiceImpl">
+		<constructor-arg index="0" ref="settleContractRecordDao" />
+	</bean>
+	<bean id="practiCreditService" class="com.knight.emms.service.impl.PractiCreditServiceImpl">
+		<constructor-arg index="0" ref="practiCreditDao" />
+	</bean>
+	<bean id="practiResumeService" class="com.knight.emms.service.impl.PractiResumeServiceImpl">
+		<constructor-arg index="0" ref="practiResumeDao" />
+	</bean>
+	<bean id="dispatchService" class="com.knight.emms.service.impl.DispatchServiceImpl">
+		<constructor-arg index="0" ref="dispatchDao" />
+		<property name="relateDomains" ref="dispatchRelateDomains" />
+	</bean>
+	<bean id="pickupService" class="com.knight.emms.service.impl.PickupServiceImpl">
+		<constructor-arg index="0" ref="pickupDao" />
+	</bean>
+	<bean id="purchaseService" class="com.knight.emms.service.impl.PurchaseServiceImpl">
+		<constructor-arg index="0" ref="purchaseDao" />
+	</bean>
+	<bean id="purchasePlanService" class="com.knight.emms.service.impl.PurchasePlanServiceImpl">
+		<constructor-arg index="0" ref="purchasePlanDao" />
+	</bean>
+	<bean id="borrowService" class="com.knight.emms.service.impl.BorrowServiceImpl">
+		<constructor-arg index="0" ref="borrowDao" />
+	</bean>
+
+	<bean id="componDiaryService" class="com.knight.emms.service.impl.ComponDiaryServiceImpl">
+		<constructor-arg index="0" ref="componDiaryDao" />
+	</bean>
+	<bean id="equipDetectService" class="com.knight.emms.service.impl.EquipDetectServiceImpl">
+		<constructor-arg index="0" ref="equipDetectDao" />
+	</bean>
+	<bean id="antiFallDetectionService" class="com.knight.emms.service.impl.AntiFallDetectionServiceImpl">
+		<constructor-arg index="0" ref="antiFallDetectionDao" />
+	</bean>
+	<bean id="equipDismantleService" class="com.knight.emms.service.impl.EquipDismantleServiceImpl">
+		<constructor-arg index="0" ref="equipDismantleDao" />
+	</bean>
+	<bean id="equipEmployService" class="com.knight.emms.service.impl.EquipEmployServiceImpl">
+		<constructor-arg index="0" ref="equipEmployDao" />
+	</bean>
+	<bean id="equipInstallService" class="com.knight.emms.service.impl.EquipInstallServiceImpl">
+		<constructor-arg index="0" ref="equipInstallDao" />
+	</bean>
+	<bean id="equipFlowService" class="com.knight.emms.service.impl.EquipFlowServiceImpl">
+		<constructor-arg index="0" ref="equipFlowDao" />
+	</bean>
+	<bean id="equipMaintService" class="com.knight.emms.service.impl.EquipMaintServiceImpl">
+		<constructor-arg index="0" ref="equipMaintDao" />
+	</bean>
+	<bean id="equipDiaryService" class="com.knight.emms.service.impl.EquipDiaryServiceImpl">
+		<constructor-arg index="0" ref="equipDiaryDao" />
+	</bean>
+	<bean id="equipVerifyService" class="com.knight.emms.service.impl.EquipVerifyServiceImpl">
+		<constructor-arg index="0" ref="equipVerifyDao" />
+	</bean>
+	<bean id="insureEquipService" class="com.knight.emms.service.impl.InsureEquipServiceImpl">
+		<constructor-arg index="0" ref="insureEquipDao" />
+	</bean>
+	<bean id="equipActivateService" class="com.knight.emms.service.impl.EquipActivateServiceImpl">
+		<constructor-arg index="0" ref="equipActivateDao" />
+	</bean>
+	<bean id="equipContractLeaseService" class="com.knight.emms.service.impl.EquipContractLeaseServiceImpl">
+		<constructor-arg index="0" ref="equipContractLeaseDao" />
+	</bean>
+	<bean id="productPlanService" class="com.knight.emms.service.impl.ProductPlanServiceImpl">
+		<constructor-arg index="0" ref="productPlanDao" />
+	</bean>
+	<bean id="practiDiaryService" class="com.knight.emms.service.impl.PractiDiaryServiceImpl">
+		<constructor-arg index="0" ref="practiDiaryDao" />
+	</bean>
+	<bean id="moneyBackService" class="com.knight.emms.service.impl.MoneyBackServiceImpl">
+		<constructor-arg index="0" ref="moneyBackDao" />
+	</bean>
+	<bean id="moneyLendService" class="com.knight.emms.service.impl.MoneyLendServiceImpl">
+		<constructor-arg index="0" ref="moneyLendDao" />
+	</bean>
+	<bean id="amountPaymentService" class="com.knight.emms.service.impl.AmountPaymentServiceImpl">
+		<constructor-arg index="0" ref="amountPaymentDao" />
+		<property name="fundPaymentVoucherServices" ref="fundPaymentVoucherServices" />
+	</bean>
+	<bean id="amountReceiveService" class="com.knight.emms.service.impl.AmountReceiveServiceImpl">
+		<constructor-arg index="0" ref="amountReceiveDao" />
+		<property name="fundReceiveVoucherServices" ref="fundReceiveVoucherServices" />
+	</bean>
+	<bean id="amountEquipShareService" class="com.knight.emms.service.impl.AmountEquipShareServiceImpl">
+		<constructor-arg index="0" ref="amountEquipShareDao" />
+	</bean>
+	<bean id="deductScaleService" class="com.knight.emms.service.impl.DeductScaleServiceImpl">
+		<constructor-arg index="0" ref="deductScaleDao" />
+	</bean>
+	<bean id="deductService" class="com.knight.emms.service.impl.DeductServiceImpl">
+		<constructor-arg index="0" ref="deductDao" />
+	</bean>
+	<bean id="invoiceCollectService" class="com.knight.emms.service.impl.InvoiceCollectServiceImpl">
+		<constructor-arg index="0" ref="invoiceCollectDao" />
+		<property name="fundPaymentVoucherServices" ref="fundPaymentVoucherServices" />
+	</bean>
+	<bean id="invoiceIssueService" class="com.knight.emms.service.impl.InvoiceIssueServiceImpl">
+		<constructor-arg index="0" ref="invoiceIssueDao" />
+		<property name="fundReceiveVoucherServices" ref="fundReceiveVoucherServices" />
+	</bean>
+	<bean id="reimburseService" class="com.knight.emms.service.impl.ReimburseServiceImpl">
+		<constructor-arg index="0" ref="reimburseDao" />
+	</bean>
+	<bean id="salaryService" class="com.knight.emms.service.impl.SalaryServiceImpl">
+		<constructor-arg index="0" ref="salaryDao" />
+	</bean>
+	<bean id="businessMessageService" class="com.knight.emms.service.impl.BusinessMessageServiceImpl">
+		<constructor-arg index="0" ref="businessMessageDao" />
+	</bean>
+	<bean id="announceService" class="com.knight.emms.service.impl.AnnounceServiceImpl">
+		<constructor-arg index="0" ref="announceDao" />
+	</bean>
+	<bean id="announceUserService" class="com.knight.emms.service.impl.AnnounceUserServiceImpl">
+		<constructor-arg index="0" ref="announceUserDao" />
+	</bean>
+	<bean id="inventoryService" class="com.knight.emms.service.impl.InventoryServiceImpl">
+		<constructor-arg index="0" ref="inventoryDao" />
+	</bean>
+	<bean id="storeHouseService" class="com.knight.emms.service.impl.StoreHouseServiceImpl">
+		<constructor-arg index="0" ref="storeHouseDao" />
+	</bean>
+	<bean id="storeEquipStockService" class="com.knight.emms.service.impl.StoreEquipStockServiceImpl">
+		<constructor-arg index="0" ref="storeEquipStockDao" />
+	</bean>
+	<bean id="storeComponStockService" class="com.knight.emms.service.impl.StoreComponStockServiceImpl">
+		<constructor-arg index="0" ref="storeComponStockDao" />
+	</bean>
+	<bean id="incomeExpenseService" class="com.knight.emms.service.impl.IncomeExpenseServiceImpl" />
+	<bean id="metadataService" class="com.knight.emms.domain.impl.MetadataServiceImpl" />
+	<bean id="terminalProxyService" class="com.knight.emms.terminal.TerminalProxyServiceImpl" />
+	<bean id="verifyItemService" class="com.knight.emms.service.impl.VerifyItemServiceImpl">
+		<constructor-arg index="0" ref="verifyItemDao" />
+	</bean>
+	<bean id="verifyItemDemandService" class="com.knight.emms.service.impl.VerifyItemDemandServiceImpl">
+		<constructor-arg index="0" ref="verifyItemDemandDao" />
+	</bean>
+	<bean id="verifyStandardService" class="com.knight.emms.service.impl.VerifyStandardServiceImpl">
+		<constructor-arg index="0" ref="verifyStandardDao" />
+	</bean>
+	<bean id="carService" class="com.knight.emms.service.impl.CarServiceImpl">
+		<constructor-arg index="0" ref="carDao" />
+	</bean>
+	<bean id="accidentService" class="com.knight.emms.service.impl.AccidentServiceImpl">
+		<constructor-arg index="0" ref="accidentDao" />
+	</bean>
+	<bean id="accidentReportService" class="com.knight.emms.service.impl.AccidentReportServiceImpl">
+		<constructor-arg index="0" ref="accidentReportDao" />
+	</bean>
+	<bean id="riskService" class="com.knight.emms.service.impl.RiskServiceImpl">
+		<constructor-arg index="0" ref="riskDao" />
+	</bean>
+	<bean id="riskReportService" class="com.knight.emms.service.impl.RiskReportServiceImpl">
+		<constructor-arg index="0" ref="riskReportDao" />
+	</bean>
+
+	<bean id="contingencyPlanService" class="com.knight.emms.service.impl.ContingencyPlanServiceImpl">
+		<constructor-arg index="0" ref="contingencyPlanDao" />
+	</bean>
+	<bean id="indisBasecheckService" class="com.knight.emms.service.impl.IndisBasecheckServiceImpl">
+		<constructor-arg index="0" ref="indisBasecheckDao" />
+	</bean>
+	<bean id="indisPrecheckService" class="com.knight.emms.service.impl.IndisPrecheckServiceImpl">
+		<constructor-arg index="0" ref="indisPrecheckDao" />
+	</bean>
+	<bean id="indisProtocolService" class="com.knight.emms.service.impl.IndisProtocolServiceImpl">
+		<constructor-arg index="0" ref="indisProtocolDao" />
+	</bean>
+	<bean id="indisSchemaService" class="com.knight.emms.service.impl.IndisSchemaServiceImpl">
+		<constructor-arg index="0" ref="indisSchemaDao" />
+	</bean>
+	<bean id="memoService" class="com.knight.emms.service.impl.MemoServiceImpl">
+		<constructor-arg index="0" ref="memoDao" />
+	</bean>
+	<bean id="dispatchAutocraneService" class="com.knight.emms.service.impl.DispatchAutocraneServiceImpl">
+		<constructor-arg index="0" ref="dispatchAutocraneDao" />
+	</bean>
+	<bean id="secureProtocolService" class="com.knight.emms.service.impl.SecureProtocolServiceImpl">
+		<constructor-arg index="0" ref="secureProtocolDao" />
+	</bean>
+	<bean id="technicalDisclosureService" class="com.knight.emms.service.impl.TechnicalDisclosureServiceImpl">
+		<constructor-arg index="0" ref="technicalDisclosureDao" />
+	</bean>
+	<bean id="equipInstallReviewService" class="com.knight.emms.service.impl.EquipInstallReviewServiceImpl">
+		<constructor-arg index="0" ref="equipInstallReviewDao" />
+	</bean>
+	<bean id="logisticsTransportService" class="com.knight.emms.service.impl.LogisticsTransportServiceImpl">
+		<constructor-arg index="0" ref="logisticsTransportDao" />
+	</bean>
+	<bean id="verifySelfService" class="com.knight.emms.service.impl.VerifySelfServiceImpl">
+		<constructor-arg index="0" ref="verifySelfDao" />
+	</bean>
+	<bean id="equipWarehouseService" class="com.knight.emms.service.impl.EquipWarehouseServiceImpl">
+		<constructor-arg index="0" ref="equipWarehouseDao" />
+	</bean>
+	<bean id="equipHitchService" class="com.knight.emms.service.impl.EquipHitchServiceImpl">
+		<constructor-arg index="0" ref="equipHitchDao" />
+	</bean>
+	<bean id="equipInspectSchemaService" class="com.knight.emms.service.impl.EquipInspectSchemaServiceImpl">
+		<constructor-arg index="0" ref="equipInspectSchemaDao" />
+	</bean>
+	<bean id="equipMaintSchemaService" class="com.knight.emms.service.impl.EquipMaintSchemaServiceImpl">
+		<constructor-arg index="0" ref="equipMaintSchemaDao" />
+	</bean>
+	<bean id="installManageService" class="com.knight.emms.service.impl.InstallManageServiceImpl">
+		<constructor-arg index="0" ref="installManageDao" />
+	</bean>
+	<bean id="equipRepairService" class="com.knight.emms.service.impl.EquipRepairServiceImpl">
+		<constructor-arg index="0" ref="equipRepairDao" />
+	</bean>
+	<bean id="equipBlockupService" class="com.knight.emms.service.impl.EquipBlockupServiceImpl">
+		<constructor-arg index="0" ref="equipBlockupDao" />
+	</bean>
+	<bean id="logisticsBacksportService" class="com.knight.emms.service.impl.LogisticsBacksportServiceImpl">
+		<constructor-arg index="0" ref="logisticsBacksportDao" />
+	</bean>
+	<bean id="praiseService" class="com.knight.emms.service.impl.PraiseServiceImpl">
+		<constructor-arg index="0" ref="praiseDao" />
+	</bean>
+	<bean id="reviewService" class="com.knight.emms.service.impl.ReviewServiceImpl">
+		<constructor-arg index="0" ref="reviewDao" />
+	</bean>
+	<bean id="dismantleManageService" class="com.knight.emms.service.impl.DismantleManageServiceImpl">
+		<constructor-arg index="0" ref="dismantleManageDao" />
+	</bean>
+	<bean id="teamsAccountService" class="com.knight.emms.service.impl.TeamsAccountServiceImpl">
+		<constructor-arg index="0" ref="teamsAccountDao" />
+	</bean>
+	<bean id="contractArrangeService" class="com.knight.emms.service.impl.ContractArrangeServiceImpl">
+		<constructor-arg index="0" ref="contractArrangeDao" />
+	</bean>
+	<bean id="materialsPlanService" class="com.knight.emms.service.impl.MaterialsPlanServiceImpl">
+		<constructor-arg index="0" ref="materialsPlanDao" />
+	</bean>
+	<bean id="truckPlanService" class="com.knight.emms.service.impl.TruckPlanServiceImpl">
+		<constructor-arg index="0" ref="truckPlanDao" />
+	</bean>
+	<bean id="exeuntPlanService" class="com.knight.emms.service.impl.ExeuntPlanServiceImpl">
+		<constructor-arg index="0" ref="exeuntPlanDao" />
+	</bean>
+	<bean id="demandDetailForExeuntPlanService" class="com.knight.emms.service.impl.DemandDetailForExeuntPlanServiceImpl">
+		<constructor-arg index="0" ref="demandDetailForExeuntPlanDao" />
+	</bean>
+	<bean id="contractArrangeSituationService" class="com.knight.emms.service.impl.ContractArrangeSituationServiceImpl">
+		<constructor-arg index="0" ref="contractArrangeSituationDao" />
+	</bean>
+	<bean id="componIntoStoreService" class="com.knight.emms.service.impl.ComponIntoStoreServiceImpl">
+		<constructor-arg index="0" ref="componIntoStoreDao" />
+	</bean>
+	<bean id="componIntoStoreDetailService" class="com.knight.emms.service.impl.ComponIntoStoreDetailServiceImpl">
+		<constructor-arg index="0" ref="componIntoStoreDetailDao" />
+	</bean>
+	<bean id="lostHandleService" class="com.knight.emms.service.impl.LostHandleServiceImpl">
+		<constructor-arg index="0" ref="lostHandleDao" />
+	</bean>
+	<bean id="dispatchAllocateInitService" class="com.knight.emms.service.impl.DispatchAllocateInitServiceImpl">
+		<constructor-arg index="0" ref="dispatchAllocateInitDao" />
+	</bean>
+	<bean id="indexWarnService" class="com.knight.emms.service.impl.IndexWarnServiceImpl">
+	</bean>
+	<bean id="enterFactoryNoticeService" class="com.knight.emms.service.impl.EnterFactoryNoticeServiceImpl">
+		<constructor-arg index="0" ref="enterFactoryNoticeDao" />
+	</bean>
+	<bean id="enterFactoryEquipService" class="com.knight.emms.service.impl.EnterFactoryEquipServiceImpl">
+		<constructor-arg index="0" ref="enterFactoryEquipDao" />
+	</bean>
+	<bean id="exitFactoryNoticeService" class="com.knight.emms.service.impl.ExitFactoryNoticeServiceImpl">
+		<constructor-arg index="0" ref="exitFactoryNoticeDao" />
+	</bean>
+	<bean id="exitFactoryEquipService" class="com.knight.emms.service.impl.ExitFactoryEquipServiceImpl">
+		<constructor-arg index="0" ref="exitFactoryEquipDao" />
+	</bean>
+	<bean id="basicPreEmbeddingNoticeService" class="com.knight.emms.service.impl.BasicPreEmbeddingNoticeServiceImpl">
+		<constructor-arg index="0" ref="basicPreEmbeddingNoticeDao" />
+	</bean>
+	<bean id="basicPreEmbeddingEquipService" class="com.knight.emms.service.impl.BasicPreEmbeddingEquipServiceImpl">
+		<constructor-arg index="0" ref="basicPreEmbeddingEquipDao" />
+	</bean>
+	<bean id="indisNoticeService" class="com.knight.emms.service.impl.IndisNoticeServiceImpl">
+		<constructor-arg index="0" ref="indisNoticeDao" />
+	</bean>
+	<bean id="printDataService" class="com.knight.emms.service.impl.PrintDataServiceImpl">
+		<constructor-arg index="0" ref="printDataDao" />
+	</bean>
+	<bean id="safeCheckService" class="com.knight.emms.service.impl.SafeCheckServiceImpl">
+		<constructor-arg index="0" ref="safeCheckDao"/>
+	</bean>
+	<bean id="elevatorMonitorService" class="com.knight.emms.service.impl.ElevatorMonitorServiceImpl">
+		<constructor-arg index="0" ref="elevatorMonitorDao"/>
+	</bean>
+	<bean id="sideStationService" class="com.knight.emms.service.impl.SideStationServiceImpl">
+		<constructor-arg index="0" ref="sideStationDao"/>
+	</bean>
+	<bean id="tFlowDefineReviewService" class="com.knight.emms.service.impl.TFlowDefineReviewServiceImpl">
+		<constructor-arg index="0" ref="tFlowDefineReviewDao"/>
+	</bean>
+	<bean id="advanceReceiveService" class="com.knight.emms.service.impl.AdvanceReceiveServiceImpl">
+		<constructor-arg index="0" ref="advanceReceiveDao" />
+		<property name="fundReceiveVoucherServices" ref="fundReceiveVoucherServices" />
+	</bean>
+	<bean id="closeSettleLogService" class="com.knight.emms.service.impl.CloseSettleLogServiceImpl">
+		<constructor-arg index="0" ref="closeSettleLogDao" />
+	</bean>
+	<bean id="closedSettleInfoService" class="com.knight.emms.service.impl.ClosedSettleInfoServiceImpl">
+		<constructor-arg index="0" ref="closedSettleInfoDao" />
+	</bean>
+	
+	
+	<!-- 周材子系统 -->
+	<bean id="materialsCommodityService" class="com.knight.emms.service.impl.MaterialsCommodityServiceImpl">
+		<constructor-arg index="0" ref="materialsCommodityDao"/>
+	</bean>
+	<bean id="materialsSpecificationsService" class="com.knight.emms.service.impl.MaterialsSpecificationsServiceImpl">
+		<constructor-arg index="0" ref="materialsSpecificationsDao"/>
+	</bean>
+	<bean id="materialsDamageService" class="com.knight.emms.service.impl.MaterialsDamageServiceImpl">
+		<constructor-arg index="0" ref="materialsDamageDao"/>
+	</bean>
+	<bean id="materialsScrapService" class="com.knight.emms.service.impl.MaterialsScrapServiceImpl">
+		<constructor-arg index="0" ref="materialsScrapDao"/>
+	</bean>
+	<bean id="scrapContractService" class="com.knight.emms.service.impl.ScrapContractServiceImpl">
+		<constructor-arg index="0" ref="scrapContractDao"/>
+	</bean>
+	<bean id="scrapApplyService" class="com.knight.emms.service.impl.ScrapApplyServiceImpl">
+		<constructor-arg index="0" ref="scrapApplyDao"/>
+	</bean>
+	<bean id="scrapHandleService" class="com.knight.emms.service.impl.ScrapHandleServiceImpl">
+		<constructor-arg index="0" ref="scrapHandleDao"/>
+	</bean>
+	<bean id="assembleAndDisassembleFeeService" class="com.knight.emms.service.impl.AssembleAndDisassembleFeeServiceImpl">
+		<constructor-arg index="0" ref="assembleAndDisassembleFeeDao"/>
+	</bean>
+	<bean id="materialsAmortizationService" class="com.knight.emms.service.impl.MaterialsAmortizationServiceImpl">
+		<constructor-arg index="0" ref="materialsAmortizationDao"/>
+	</bean>
+	<bean id="amortizationInitializationService" class="com.knight.emms.service.impl.AmortizationInitializationServiceImpl">
+		<constructor-arg index="0" ref="amortizationInitializationDao"/>
+	</bean>
+	<bean id="materialsDispatchService" class="com.knight.emms.service.impl.MaterialsDispatchServiceImpl">
+		<constructor-arg index="0" ref="materialsDispatchDao"/>
+	</bean>
+	<bean id="materialsPackageService" class="com.knight.emms.service.impl.MaterialsPackageServiceImpl">
+		<constructor-arg index="0" ref="materialsPackageDao"/>
+	</bean>
+	<bean id="baseDepotService" class="com.knight.emms.service.impl.BaseDepotServiceImpl">
+		<constructor-arg index="0" ref="baseDepotDao"/>
+	</bean>
+	<bean id="baseDepotPermissionService" class="com.knight.emms.service.impl.BaseDepotPermissionServiceImpl">
+		<constructor-arg index="0" ref="baseDepotPermissionDao"/>
+	</bean>
+	<bean id="baseLocationService" class="com.knight.emms.service.impl.BaseLocationServiceImpl">
+		<constructor-arg index="0" ref="baseLocationDao"/>
+	</bean>
+	<bean id="baseDepotInitService" class="com.knight.emms.service.impl.BaseDepotInitServiceImpl">
+		<constructor-arg index="0" ref="baseDepotInitDao"/>
+	</bean>
+	<bean id="projectDepotInitService" class="com.knight.emms.service.impl.ProjectDepotInitServiceImpl">
+		<constructor-arg index="0" ref="projectDepotInitDao"/>
+	</bean>	
+	<bean id="projectDepotInitDetailService" class="com.knight.emms.service.impl.ProjectDepotInitDetailServiceImpl">
+		<constructor-arg index="0" ref="projectDepotInitDetailDao"/>
+	</bean>
+	<bean id="receiveManageService" class="com.knight.emms.service.impl.ReceiveManageServiceImpl">
+		<constructor-arg index="0" ref="receiveManageDao"/>
+	</bean>	
+	<bean id="ceaseReportService" class="com.knight.emms.service.impl.CeaseReportServiceImpl">
+		<constructor-arg index="0" ref="ceaseReportDao"/>
+	</bean>	
+	<bean id="takeStockService" class="com.knight.emms.service.impl.TakeStockServiceImpl">
+		<constructor-arg index="0" ref="takeStockDao"/>
+	</bean>
+	<bean id="installDismantlePriceService" class="com.knight.emms.service.impl.InstallDismantlePriceServiceImpl">
+		<constructor-arg index="0" ref="installDismantlePriceDao"/>
+	</bean>
+	<bean id="lostCompensationService" class="com.knight.emms.service.impl.LostCompensationServiceImpl">
+		<constructor-arg index="0" ref="lostCompensationDao"/>
+	</bean>
+	<bean id="allocationProjectService" class="com.knight.emms.service.impl.AllocationProjectServiceImpl">
+		<constructor-arg index="0" ref="allocationProjectDao"/>
+	</bean>
+	<bean id="allocationDepotService" class="com.knight.emms.service.impl.AllocationDepotServiceImpl">
+		<constructor-arg index="0" ref="allocationDepotDao"/>
+	</bean>
+	<bean id="otherBusinessService" class="com.knight.emms.service.impl.OtherBusinessServiceImpl">
+		<constructor-arg index="0" ref="otherBusinessDao"/>
+	</bean>
+	<bean id="otherBetsService" class="com.knight.emms.service.impl.OtherBetsServiceImpl">
+		<constructor-arg index="0" ref="otherBetsDao"/>
+	</bean>
+	<bean id="truckCranePriceService" class="com.knight.emms.service.impl.TruckCranePriceServiceImpl">
+		<constructor-arg index="0" ref="truckCranePriceDao"/>
+	</bean>
+	<bean id="recycleManageService" class="com.knight.emms.service.impl.RecycleManageServiceImpl">
+		<constructor-arg index="0" ref="recycleManageDao"/>
+	</bean>
+	<bean id="annexDetailsService" class="com.knight.emms.service.impl.AnnexDetailsServiceImpl">
+		<constructor-arg index="0" ref="annexDetailsDao"/>
+	</bean>
+	<bean id="materialsRepairService" class="com.knight.emms.service.impl.MaterialsRepairServiceImpl">
+		<constructor-arg index="0" ref="materialsRepairDao"/>
+	</bean>
+	<bean id="storeJoinComponentService" class="com.knight.emms.service.impl.StoreJoinComponentServiceImpl">
+		<constructor-arg index="0" ref="storeJoinComponentDao"/>
+	</bean>
+	<bean id="projectJoinAnnexService" class="com.knight.emms.service.impl.ProjectJoinAnnexServiceImpl">
+		<constructor-arg index="0" ref="projectJoinAnnexDao"/>
+	</bean>
+	<bean id="applyMakeService" class="com.knight.emms.service.impl.ApplyMakeServiceImpl">
+		<constructor-arg index="0" ref="applyMakeDao"/>
+	</bean>
+	<bean id="storeJoinUserService" class="com.knight.emms.service.impl.StoreJoinUserServiceImpl">
+		<constructor-arg index="0" ref="storeJoinUserDao"/>
+	</bean>
+	<bean id="installPriceSetService" class="com.knight.emms.service.impl.InstallPriceSetServiceImpl">
+		<constructor-arg index="0" ref="installPriceSetDao"/>
+	</bean>
+	<bean id="truckCranePriceSetService" class="com.knight.emms.service.impl.TruckCranePriceSetServiceImpl">
+		<constructor-arg index="0" ref="truckCranePriceSetDao"/>
+	</bean>	
+	<bean id="installFeeService" class="com.knight.emms.service.impl.InstallFeeServiceImpl">
+		<constructor-arg index="0" ref="installFeeDao"/>
+	</bean>	
+	<bean id="installDismantelTeamService" class="com.knight.emms.service.impl.InstallDismantelTeamServiceImpl">
+		<constructor-arg index="0" ref="installDismantelTeamDao"/>
+	</bean>
+	<bean id="autocraneFeeService" class="com.knight.emms.service.impl.AutocraneFeeServiceImpl">
+		<constructor-arg index="0" ref="autocraneFeeDao"/>
+	</bean>
+	<bean id="autocraneUnitService" class="com.knight.emms.service.impl.AutocraneUnitServiceImpl">
+		<constructor-arg index="0" ref="autocraneUnitDao"/>
+	</bean>
+	<bean id="settleProjectService" class="com.knight.emms.service.impl.SettleProjectServiceImpl">
+		<constructor-arg index="0" ref="settleProjectDao"/>
+	</bean>
+	<bean id="settleMaterialsService" class="com.knight.emms.service.impl.SettleMaterialsServiceImpl">
+		<constructor-arg index="0" ref="settleMaterialsDao"/>
+	</bean>
+	<bean id="basedepotJoinMaterialsService" class="com.knight.emms.service.impl.BasedepotJoinMaterialsServiceImpl">
+		<constructor-arg index="0" ref="basedepotJoinMaterialsDao"/>
+	</bean>
+	<bean id="baseDepotJoinUserService" class="com.knight.emms.service.impl.BaseDepotJoinUserServiceImpl">
+		<constructor-arg index="0" ref="baseDepotJoinUserDao"/>
+	</bean>
+	<bean id="materialsStoreService" class="com.knight.emms.service.impl.MaterialsStoreServiceImpl">
+		<constructor-arg index="0" ref="materialsStoreDao"/>
+	</bean>
+	<bean id="projectMaterialsStoreService" class="com.knight.emms.service.impl.ProjectMaterialsStoreServiceImpl">
+		<constructor-arg index="0" ref="projectMaterialsStoreDao"/>
+	</bean>
+	<bean id="otherMaterialStockService" class="com.knight.emms.service.impl.OtherMaterialStockServiceImpl">
+		<constructor-arg index="0" ref="otherMaterialStockDao"/>
+	</bean>
+	<bean id="handleMakeService" class="com.knight.emms.service.impl.HandleMakeServiceImpl">
+		<constructor-arg index="0" ref="handleMakeDao"/>
+	</bean>
+	<bean id="materialsRemodelService" class="com.knight.emms.service.impl.MaterialsRemodelServiceImpl">
+		<constructor-arg index="0" ref="materialsRemodelDao"/>
+	</bean>
+	<bean id="leasedLostCompensationService" class="com.knight.emms.service.impl.LeasedLostCompensationServiceImpl">
+		<constructor-arg index="0" ref="leasedLostCompensationDao"/>
+	</bean>
+	<bean id="temporaryReturnService" class="com.knight.emms.service.impl.TemporaryReturnServiceImpl">
+		<constructor-arg index="0" ref="temporaryReturnDao"/>
+	</bean>
+	<bean id="returnTempStoreService" class="com.knight.emms.service.impl.ReturnTempStoreServiceImpl">
+		<constructor-arg index="0" ref="returnTempStoreDao"/>
+	</bean>
+	<bean id="contractJoinUserService" class="com.knight.emms.service.impl.ContractJoinUserServiceImpl">
+		<constructor-arg index="0" ref="contractJoinUserDao"/>
+	</bean>
+	<bean id="leaseBlockUpService" class="com.knight.emms.service.impl.LeaseBlockUpServiceImpl">
+		<constructor-arg index="0" ref="leaseBlockUpDao"/>
+	</bean> 
+	<bean id="projectDepotInOutService" class="com.knight.emms.service.impl.ProjectDepotInOutServiceImpl">
+		<constructor-arg index="0" ref="projectDepotInOutDao"/>
+	</bean>
+	<bean id="otherLeaseBusinessService" class="com.knight.emms.service.impl.OtherLeaseBusinessServiceImpl">
+		<constructor-arg index="0" ref="otherLeaseBusinessDao"/>
+	</bean>
+	<bean id="permissionManagerService" class="com.knight.emms.service.impl.PermissionManagerServiceImpl">
+		<constructor-arg index="0" ref="permissionManagerDao"/>
+	</bean>
+	<bean id="safeClarificationService" class="com.knight.emms.service.impl.SafeClarificationServiceImpl">
+		<constructor-arg index="0" ref="safeClarificationDao"/>
+	</bean>
+	<bean id="practiDispatchService" class="com.knight.emms.service.impl.PractiDispatchServiceImpl">
+		<constructor-arg index="0" ref="practiDispatchDao"/>
+	</bean>
+	<bean id="inspectSelfInitService" class="com.knight.emms.service.impl.InspectSelfInitServiceImpl">
+		<constructor-arg index="0" ref="inspectSelfInitDao"/>
+	</bean>
+	<bean id="inspectSelfInitDetailService" class="com.knight.emms.service.impl.InspectSelfInitDetailServiceImpl">
+		<constructor-arg index="0" ref="inspectSelfInitDetailDao"/>
+	</bean>
+	<bean id="inspectSelfChooseService" class="com.knight.emms.service.impl.InspectSelfChooseServiceImpl">
+		<constructor-arg index="0" ref="inspectSelfChooseDao"/>
+	</bean>
+	<bean id="inspectSelfChooseDetailService" class="com.knight.emms.service.impl.InspectSelfChooseDetailServiceImpl">
+		<constructor-arg index="0" ref="inspectSelfChooseDetailDao"/>
+	</bean>
+	<bean id="practiLeaveService" class="com.knight.emms.service.impl.PractiLeaveServiceImpl">
+		<constructor-arg index="0" ref="practiLeaveDao"/>
+	</bean>
+	
+	<!--泵车系统 -->
+	<bean id="pumpTruckService" class="com.knight.emms.service.impl.PumpTruckServiceImpl">
+		<constructor-arg index="0" ref="pumpTruckDao"/>
+	</bean>
+	<bean id="equipAddReduceDetailService" class="com.knight.emms.service.impl.EquipAddReduceDetailServiceImpl">
+		<constructor-arg index="0" ref="equipAddReduceDetailDao"/>
+	</bean>
+	<!--劳务支付 -->
+	<bean id="laborPayService" class="com.knight.emms.service.impl.LaborPayServiceImpl">
+		<constructor-arg index="0" ref="laborPayDao" />
+	</bean>
+	<!--劳务结算 -->
+	<bean id="laborSettleService" class="com.knight.emms.service.impl.LaborSettleServiceImpl">
+		<constructor-arg index="0" ref="laborSettleDao" />
+	</bean>
+	<bean id="weChatMessageService" class="com.knight.emms.service.impl.WeChatMessageServiceImpl">
+		<constructor-arg index="0" ref="weChatMessageDao" />
+	</bean>
+	<bean id="depotTransfersService" class="com.knight.emms.service.impl.DepotTransfersServiceImpl">
+		<constructor-arg index="0" ref="depotTransfersDao"/>
+	</bean>
+</beans>

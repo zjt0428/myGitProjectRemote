@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ProjectCompon" table="T_PROJECT_COMPON" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="projectComponId" column="PROJECT_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />
+		<property name="componDiaryId" type="java.lang.Long" column="COMPON_DIARY_ID" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="projectName" type="java.lang.String" formula="(SELECT T.PROJECT_NAME FROM T_PROJECT T WHERE T.PROJECT_ID=PROJECT_ID)" />
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

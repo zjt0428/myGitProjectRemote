@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DeductPracti" table="T_DEDUCT_PRACTI" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="deductPractiId" column="DEDUCT_PRACTI_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="deductId" type="java.lang.Long" column="DEDUCT_ID" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="proportion" type="java.math.BigDecimal" column="PROPORTION" />
+		<property name="reward" type="java.math.BigDecimal" column="REWARD" />
+		<property name="pickupStatus" type="java.lang.String" column="PICKUP_STATUS" />
+	</class>
+</hibernate-mapping>

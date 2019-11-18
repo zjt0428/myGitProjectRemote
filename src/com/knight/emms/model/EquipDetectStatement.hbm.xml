@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipDetectStatement" table="T_EQUIPMENT_DETECT_STATEMENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="detectStatementId" column="DETECT_STATEMENT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="detectId" type="java.lang.Long" column="DETECT_ID" />
+		<property name="detectType" type="java.lang.String" column="DETECT_TYPE" />
+		<property name="detectResult" type="java.lang.String" column="DETECT_RESULT" />
+		<property name="detectDate" type="java.lang.String" column="DETECT_DATE" />
+		<property name="detector" type="java.lang.String" column="DETECTOR" />
+		<property name="statementAmount" type="java.math.BigDecimal" column="STATEMENT_AMOUNT" />
+	</class>
+</hibernate-mapping>

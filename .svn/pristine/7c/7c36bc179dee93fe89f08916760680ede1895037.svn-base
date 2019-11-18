@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ReceiveManageDetail" table="T_RECEIVE_MANAGE_DETAIL"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long"
+			length="19">
+			<generator class="native" />
+		</id>
+		<property name="receiveId" type="java.lang.Long" column="RECEIVE_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="locationCounts" type="java.lang.String" column ="LOCATION_COUNTS" ></property>
+		<property name="receiveCounts" type="java.lang.String" column="RECEIVE_COUNTS" />
+		<property name="price" type="java.lang.String" column="PRICE" />
+		<property name="amount" type="java.lang.String" column="AMOUNT" />
+		<property name="returnCounts" type="java.lang.String" column="RETURN_COUNTS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="returnDate" type="java.lang.String" column="RETURN_DATE" ></property>
+	</class>
+</hibernate-mapping>

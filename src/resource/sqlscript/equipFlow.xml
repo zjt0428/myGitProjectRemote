@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="equipFlow">
+	<!--获取合同中是否还有其他设备启用 -->
+	<select id="contract_equip_is_activate">
+	<![CDATA[
+		DECLARE @activateId BIGINT
+		SET @activateId = ?
+		SELECT EA.ACTIVATE_ID FROM T_EQUIPMENT_ACTIVATE EA WHERE EA.ACTIVATE_ID IN (
+			SELECT T.ACTIVATE_ID FROM T_EQUIPMENT_FLOW T 
+				WHERE EXISTS(SELECT * FROM T_EQUIPMENT_FLOW EF WHERE EF.ACTIVATE_ID = @activateId AND T.CONTRACT_ID = EF.CONTRACT_ID) 
+						AND T.ACTIVATE_ID <> @activateId
+		) AND EA.DEL_FLAG = '1' AND EA.EFFECTIVE = '1'
+	]]>
+	</select>
+	<!--获取上个月最后一条报停信息 -->
+	<select id="lastMonth_blockup">
+	<![CDATA[
+		DECLARE @flowId BIGINT
+		DECLARE @firstDay_lastMonth VARCHAR(20)
+		DECLARE @firstDay_currMonth VARCHAR(20)
+		SET @flowId = ?
+		SET @firstDay_lastMonth = ?
+		SET @firstDay_currMonth = ?
+		SELECT TOP
+				1 CONVERT ( VARCHAR ( 100 ), EB.BLOCKUP_DATE, 23 ) lastBlockDate,
+				EB.REACTIVATE_DATE lastReactivateDate 
+			FROM
+				T_EQUIPMENT_BLOCKUP EB 
+			WHERE
+				EB.FLOW_ID = @flowId 
+				AND EB.BLOCKUP_DATE >= @firstDay_lastMonth
+				AND EB.BLOCKUP_DATE < @firstDay_currMonth
+			ORDER BY
+				EB.BLOCKUP_DATE DESC
+	]]>
+	</select>
+	<!--获取本月所有报停信息 -->
+	<select id="currMonth_blockup">
+	<![CDATA[
+		DECLARE @flowId BIGINT
+		DECLARE @firstDay_currMonth VARCHAR(20)
+		DECLARE @firstDay_nextMonth VARCHAR(20)
+		SET @flowId = ?
+		SET @firstDay_currMonth = ?
+		SET @firstDay_nextMonth = ?
+		SELECT TOP
+				1 CONVERT ( VARCHAR ( 100 ), EB1.BLOCKUP_DATE, 23 ) currBlockDate,
+				EB1.REACTIVATE_DATE currReactivateDate 
+			FROM
+				T_EQUIPMENT_BLOCKUP EB1 
+			WHERE
+				EB1.FLOW_ID = @flowId 
+				AND EB1.BLOCKUP_DATE >= @firstDay_currMonth 
+			AND EB1.BLOCKUP_DATE < @firstDay_nextMonth
+			ORDER BY
+				EB1.BLOCKUP_DATE DESC
+	]]>
+	</select>
+</mapper>

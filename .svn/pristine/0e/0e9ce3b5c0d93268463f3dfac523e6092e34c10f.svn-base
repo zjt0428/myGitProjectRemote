@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>施工升降机设备出货清单</title>
+<link href="css/style_table.css" rel="stylesheet" type="text/css" />
+<style media="print">
+.Noprint {
+	display: none;
+	
+}
+.PageNext {
+	page-break-after: always;
+}
+</style>
+</head>
+
+<body>
+<center class="Noprint">
+	<p align="right" class="mar_15">
+		<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+		<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+	</p>
+</center>
+<center>
+<div class="main_detail">
+<p style='text-align:center'><span class="wrod_title">上海宁鑫起重设备安装有限公司</span></p>
+<p style='text-align:center'><span class="wrod_title">设备出货清单</span></p>
+<p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-bottom:5px;padding-top:10px;">
+  <tr>
+    <td width="200" height="30" align="left">施工升降机：</td>
+	<td width="330" align="left">产权单位：</td>
+	<td width="120" align="left">编号：</td>
+</table>
+</p>
+ 
+<p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"  class="listtable">
+  <tr>
+    <td width="80" height="30">出货单位</td>
+    <td width="248">&nbsp;</td>
+    <td width="80" align="center">项目名称</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">出货地址</td>
+    <td>&nbsp;</td>
+    <td align="center">项目地址</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="center">项目负责人</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="chqdtable" style="border-top-style:none;">
+  <tr>
+    <td width="35" align="center" bgcolor="#e0e0e0"><strong>序</strong></td>
+    <td width="105" align="center" bgcolor="#e0e0e0"><strong>配件名称</strong></td>
+    <td width="60" align="center" bgcolor="#e0e0e0"><strong>单位</strong></td>
+    <td width="55" align="center" bgcolor="#e0e0e0"><strong>数量</strong></td>
+    <td width="80" align="center" bgcolor="#e0e0e0"><strong>备注</strong></td>
+   <td width="35" align="center" bgcolor="#e0e0e0"><strong>序</strong></td>
+    <td width="105" align="center" bgcolor="#e0e0e0"><strong>配件名称</strong></td>
+    <td width="50" align="center" bgcolor="#e0e0e0"><strong>单位</strong></td>
+    <td width="50" align="center" bgcolor="#e0e0e0"><strong>数量</strong></td>
+    <td align="center" bgcolor="#e0e0e0"><strong>备注</strong></td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>电梯标准节</td>
+    <td>节</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>21</td>
+    <td>穿墙螺丝</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>标准节螺丝</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>22</td>
+    <td>垫片</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>梯笼</td>
+    <td>件</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>23</td>
+    <td>围栏螺丝</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>爬梯</td>
+    <td>件</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>24</td>
+    <td>K字架螺丝</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>外围栏</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>25</td>
+    <td>地脚螺丝</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>上围栏</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>26</td>
+    <td>短管子</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>门撑杆</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>27</td>
+    <td>转卡</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>直接大平撑</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>28</td>
+    <td>平撑螺丝</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>直接小平撑</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>29</td>
+    <td>限位档位</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>大小平撑销子</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>30</td>
+    <td>绳卡</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>电缆线</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>31</td>
+    <td>钢丝绳</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>地簧</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>32</td>
+    <td>配重</td>
+    <td>块</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>拉杆</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>33</td>
+    <td>偏心绳具</td>
+    <td>件</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>调节丝杆</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>34</td>
+    <td>护线架</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td>斜撑杆</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>35</td>
+    <td>天轮</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>16</td>
+    <td>小连接杆</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>36</td>
+    <td>天轮长螺丝</td>
+    <td>套</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>17</td>
+    <td>两传动板</td>
+    <td>件</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>37</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>18</td>
+    <td>引进线</td>
+    <td>根</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>38</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>19</td>
+    <td>V型卡</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>39</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>20</td>
+    <td>U型卡</td>
+    <td>个</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>40</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="140" colspan="10">&nbsp;</td>
+    </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="30" align="left" width="33%">配货人：</td>
+    <td align="left" width="34%">发货人：  </td>
+    <td align="left" width="33%"><p>主管： </p></td>
+  </tr>
+  <tr>
+    <td height="30" align="left">项目负责人：</td>
+    <td colspan="2" align="right">  日期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+</table>
+</p>
+</div>
+</center>
+</body>
+</html>

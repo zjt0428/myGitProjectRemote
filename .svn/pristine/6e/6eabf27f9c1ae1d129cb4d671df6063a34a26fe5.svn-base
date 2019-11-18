@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>封面</title>
+<style media="print">
+.Noprint {
+	display: none;
+}
+.PageNext {
+	page-break-after: always;
+}
+</style>
+
+<style type="text/css" >
+<!--
+body,td,th {
+	color: #000000;
+
+}
+
+.wrod_title{font-size:18px;}
+.botton_line{border-bottom:#000000 1px solid; padding-left:15px; font-size:18px;}
+.word_bottom{vertical-align:text-bottom;height:22px;}
+.STYLE1 {vertical-align: text-bottom; height: 22px; font-weight: bold; }
+.mar_15{margin-top:15px; margin-right:20px; width:660px; text-align:right;}
+-->
+</style>
+</head>
+
+<body>
+	<center class="Noprint">
+		<p align="right" class="mar_15">
+			<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+			<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+			<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+		</p>
+	</center>
+
+<center>
+<table width="500" border="0" cellspacing="0" cellpadding="0"  class="wrod_title">
+
+  <tr><td colspan="2" align="center" style="padding-top:50px; font-size:32px; font-family:'黑体';">XXXXX(产权单位) </td>
+  <tr><td colspan="2" style="padding-top:10px; font-size:32px; font-family:'黑体'; line-height:48px;" align="center">建筑起重机械技术管理档案</td>
+  </tr>
+  </tr>
+  <tr><td colspan="2"  style="font-size:32px; font-family:'黑体'; line-height:48px;" align="center">【一机一档】</td></tr>
+  <tr><td colspan="2" height="50">&nbsp;</td></tr> 
+  </table>
+
+
+
+<table width="500" border="0" cellspacing="0" cellpadding="0"  class="wrod_title">
+  <tr>
+    <td width="120" height="0" align="right"><div style="margin-top:20px; font-weight:bold;">项目名称</div></td>
+    <td align="left" class="botton_line">上海明达建筑工程有限公司厦门分公司息科技有限公司达建筑工程有限公司</td>
+  </tr>
+  <tr>
+    <td align="right"><div style="margin-top:20px; font-weight:bold;">设备名称</div></td>
+    <td align="left" class="botton_line"><div style="margin-top:20px;">666666</div></td>
+  </tr>
+  <tr>
+    <td align="right"><div style="margin-top:20px;font-weight:bold;">备案编号</div></td>
+    <td align="left" class="botton_line"><div style="margin-top:20px;">666666</div></td>
+  </tr>
+  <tr>
+    <td align="right"><div style="margin-top:20px;font-weight:bold;">出厂编号</div></td>
+    <td align="left" class="botton_line"><div style="margin-top:20px;">666666</div></td>
+  </tr>
+  <tr>
+    <td align="right"><div style="margin-top:20px;font-weight:bold;">规格型号</div></td>
+    <td align="left" class="botton_line"><div style="margin-top:20px;">666666</div></td>
+  </tr>
+  <tr>
+    <td align="right"><div style="margin-top:20px;font-weight:bold;">出厂日期</div></td>
+    <td align="left" class="botton_line"><div style="margin-top:20px;">666666</div></td>
+  </tr>
+  <tr>
+    <td align="right"><div style="margin-top:20px;font-weight:bold;">制造厂家</div></td>
+    <td align="left" class="botton_line"><div style="margin-top:20px;">666666</div></td>
+  </tr>
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td align="center" class="botton_line"><div style="margin-top:20px;">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</div></td>
+  </tr>
+</table>
+
+
+
+</center>
+</body>
+</html>

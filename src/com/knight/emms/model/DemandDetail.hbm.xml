@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DemandDetail" table="T_DEMAND_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="demandId" column="DEMAND_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="materialsPlanId" type="java.lang.Long" column="MATERIALSPLAN_ID" />
+		<property name="mnemonicCode" type="java.lang.String" column="MNEMONIC_CODE" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="demandSerial" type="java.lang.String" column="DEMAND_SERIAL" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="brand" type="java.lang.String" column="BRAND" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="demandNum" type="java.lang.String" column="DEMAND_NUM" />
+		<property name="auxiliaryUnit" type="java.lang.String" column="AUXILIARY_UNIT" />
+		<property name="auxiliaryNum" type="java.lang.String" column="AUXILIARY_NUM" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+	</class>
+</hibernate-mapping>

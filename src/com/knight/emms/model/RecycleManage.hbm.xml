@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.RecycleManage" table="T_RECYCLE_MANAGE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="recycleId" column="RECYCLE_ID" type="java.lang.Long" length="19">
+			<generator class="native"/>
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="recycleSerial" type="java.lang.String" column="RECYCLE_SERIAL" />
+		<property name="leaseID" type="java.lang.Long" column="LEASE_ID" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="applyDate" type="java.lang.String" column="APPLY_DATE" />
+		<property name="recycleDate" type="java.lang.String" column="RECYCLE_DATE" />
+		<property name="recycleType" type="java.lang.String" column="RECYCLE_TYPE" />
+		<property name="affiliatedSerial" type="java.lang.String" column="AFFILIATED_SERIAL" />
+		<property name="transportNumber" type="java.lang.String" column="TRANSPORT_NUMBER" />
+		<property name="transportMan" type="java.lang.String" column="TRANSPORT_MAN" />
+		<property name="handingCharge" type="java.lang.String" column="HANDING_CHARGE" />
+		<property name="packageCharge" type="java.lang.String" column="PACKAGE_CHARGE" />
+		<property name="damage" type="java.lang.String" column="DAMAGE" />
+		<property name="receivePeople" type="java.lang.String" column="RECEIVE_PEOPLE" />
+		<property name="sendReceiveMan" type="java.lang.String" column="SEND_RECEIVE_MAN" />
+		<property name="sendReceiveDate" type="java.lang.String" column="SEND_RECEIVE_DATE" />
+		<property name="invoiceCheckMan" type="java.lang.String" column="INVOICE_CHECK_MAN" />
+		<property name="invoiceCheckDate" type="java.lang.String" column="INVOICE_CHECK_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="baseDepot" column="DEPOT_ID" class="com.knight.emms.model.BaseDepot" fetch="join" />
+		<many-to-one name="contractMaterials" column="CONTRACT_ID" class="com.knight.emms.model.ContractMaterials" fetch="join" />
+		<set name="recycleManageDetailSet" lazy="true" cascade="all" inverse="false" order-by="COMMODITY_ID DESC,SPECIFICATIONS_ID ASC">
+			<key column="RECYCLE_ID"></key>
+			<one-to-many class="com.knight.emms.model.RecycleManageDetail"></one-to-many>
+		</set>
+		<set name="recycleManageFeeSet" lazy="true" cascade="all" inverse="false">
+			<key column="RECYCLE_ID"></key>
+			<one-to-many class="com.knight.emms.model.RecycleManageFee"></one-to-many>
+		</set>
+		<set name="materialsRecycleCountTempSet" lazy="true" cascade="all" inverse="false">
+			<key column="RECYCLE_ID"></key>
+			<one-to-many class="com.knight.emms.model.MaterialsRecycleCountTemp"></one-to-many>
+		</set>
+		<set name="compensationDamageSet" lazy="true" cascade="all" inverse="false">
+			<key column="RECYCLE_ID"></key>
+			<one-to-many class="com.knight.emms.model.CompensationDamage"></one-to-many>
+		</set>
+		<set name="temporaryStorageSet" lazy="true" cascade="all" inverse="false">
+			<key column="RECYCLE_ID"></key>
+			<one-to-many class="com.knight.emms.model.TemporaryStorage"></one-to-many>
+		</set>
+	</class>
+</hibernate-mapping>

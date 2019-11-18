@@ -1,0 +1,11 @@
+package com.knight.emms.service.impl;
+
+import com.knight.core.service.ExportService;
+import com.knight.emms.model.EquipInsurance;
+import com.knight.system.service.BusinessLongPKService;
+
+public interface EquipInsuranceService extends BusinessLongPKService<EquipInsurance>, ExportService {
+
+
+}
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.RecycleManageDetail" table="T_RECYCLE_MANAGE_DETAIL"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long"
+			length="19">
+			<generator class="native" />
+		</id>
+		<property name="recycleId" type="java.lang.Long" column="RECYCLE_ID" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="inputCount" type="java.lang.String" column ="INPUT_COUNT" />
+		<property name="truckLoadingCount" type="java.lang.String" column="TRUCK_LOADING_COUNT" />
+		<property name="packageCount" type="java.lang.String" column="PACKAGE_COUNT" />
+		<property name="supplementUnit" type="java.lang.String" column="SUPPLEMENT_UNIT" />
+		<property name="supplementQuantity" type="java.lang.String" column="SUPPLEMENT_QUANTITY" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="conversionNum" type="java.lang.String" column="CONVERSION_NUM" />
+	</class>
+</hibernate-mapping>

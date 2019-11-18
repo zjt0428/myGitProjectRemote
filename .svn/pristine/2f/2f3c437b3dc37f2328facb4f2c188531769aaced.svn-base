@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.app.model.AttendamceSet" table="T_ATTENDAMCE_SET"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="sid" column="SID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="workDays" type="java.lang.String" column="WORK_DAYS" />
+		<property name="workSt" type="java.lang.String" column="WORK_ST" />
+		<property name="workEd" type="java.lang.String" column="WORK_ED" />
+		<property name="execDt" type="java.lang.String" column="EXEC_DT" />
+		<property name="state" type="java.lang.String" column="STATE" />
+		<property name="createDt" type="java.lang.String" column="CREATE_DT" />
+	</class>
+</hibernate-mapping>

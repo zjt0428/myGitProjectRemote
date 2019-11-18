@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MemoDeputy" table="T_MEMO_DEPUTY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="memoDeputyId" column="MEMO_DEPUTY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="memoId" type="java.lang.Long" column="MEMO_ID" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+	</class>
+</hibernate-mapping>

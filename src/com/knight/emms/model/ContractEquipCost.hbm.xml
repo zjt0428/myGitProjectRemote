@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractEquipCost" table="T_CONTRACT_EQUIP_COST" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="contractEquipcostId" column="CONTRACT_EQUIPCOST_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="embeddedCost" type="java.math.BigDecimal" column="EMBEDDED_COST" />
+		<property name="liftingCost" type="java.math.BigDecimal" column="LIFTING_COST" />
+		<property name="anchorCost" type="java.math.BigDecimal" column="ANCHOR_COST" />
+		<property name="extraCost" type="java.math.BigDecimal" column="EXTRA_COST" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+	</class>
+</hibernate-mapping>

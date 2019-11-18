@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LogisticsTranDestribution" table="T_LOGISTICS_TRANDESTRIBUTION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="destributionId" column="DESTRIBUTION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="transportId" type="java.lang.Long" column="TRANSPORT_ID" />
+		<property name="logiId" type="java.lang.Long" column="LOGI_ID"/>
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="commSpecificName" type="java.lang.String" column="COMM_SPECIFIC_NAME" />
+		<property name="quantity" type="java.math.BigDecimal" column="QUANTITY" />
+		<property name="fillCounts" type="java.math.BigDecimal" column="FILL_COUNTS" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="disAllInitId" type="java.lang.Long" column="DIS_ALL_INIT_ID" />
+		<property name="chargeNum" type="java.math.BigDecimal" column="CHARGE_NUM" />
+		<property name="price" type="java.math.BigDecimal" column="PRICE" />
+		<property name="amount" type="java.math.BigDecimal" column="AMOUNT" />
+	</class>
+</hibernate-mapping>

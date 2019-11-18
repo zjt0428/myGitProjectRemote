@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AmountEquipShare" table="T_AMOUNT_EQUIP_SHARE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="amountEquipShareId" column="AMOUNT_EQUIP_SHARE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="amountDate" type="java.lang.String" column="AMOUNT_DATE" />
+		<property name="presentAmount" type="java.math.BigDecimal" column="PRESENT_AMOUNT" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="recordSerial" type="java.lang.String" column="RECORD_SERIAL" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="propertyEnt" type="java.lang.Long" column="PROPERTY_ENT" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+	</class>
+</hibernate-mapping>

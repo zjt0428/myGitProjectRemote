@@ -1,0 +1,446 @@
+/**
+ *====================================================
+ * 文件名称: SettleContractAction.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2013-9-24			chenxy(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.web.action;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import com.knight.core.exception.BusinessException;
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.log.ActionLog;
+import com.knight.core.model.ExportField;
+import com.knight.core.model.ExportModel;
+import com.knight.core.util.BigDecimalUtil;
+import com.knight.core.util.DateUtil;
+import com.knight.core.util.GsonUtil;
+import com.knight.core.web.action.ExportBaseAction;
+import com.knight.emms.constant.Constant;
+import com.knight.emms.constant.Status;
+import com.knight.emms.constant.Type;
+import com.knight.emms.model.ContractCostitem;
+import com.knight.emms.model.ContractLease;
+import com.knight.emms.model.OperatorSalaryStatement;
+import com.knight.emms.model.OtherExpenseStatement;
+import com.knight.emms.model.SafetyMonitorSettleStatement;
+import com.knight.emms.model.SettleComponBrief;
+import com.knight.emms.model.SettleContract;
+import com.knight.emms.model.SettleEquipBrief;
+import com.knight.emms.model.SettleItemBrief;
+import com.knight.emms.service.ContractLeaseService;
+import com.knight.emms.service.SettleContractService;
+import com.knight.emms.support.SettleContractMath;
+import com.knight.emms.web.model.SettleBuildingNumItem;
+import com.knight.emms.web.model.SettleSpecificItem;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @ClassName: SettleContractAction
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2013-9-24 下午5:12:07
+ */
+public class SettleContractAction extends ExportBaseAction<SettleContract> {
+
+	private static final long serialVersionUID = 1L;
+
+	@Getter
+	@Setter
+	private SettleContract settleContract;
+
+	@Setter
+	@Getter
+	private Long settleId;
+
+	@Resource
+	private SettleContractService settleContractService;
+	
+	@Resource
+	private ContractLeaseService contractLeaseService;
+
+	protected String getUnBaseTypeValue(ExportModel model, Object value, ExportField exportField, int headerIndex) throws Exception {
+		switch (headerIndex) {
+		case 10:
+			SettleContract settle = (SettleContract) model;
+			return settle.getSettleAmount().subtract(settle.getFinishedAmount()).toString();
+		case 11:
+			if (Constant.ENABLED.equals(value)) {
+				return "已生效";
+			}
+			return "未生效";
+		}
+		return super.getUnBaseTypeValue(model, value, exportField, headerIndex);
+	}
+
+	public String list() {
+		QueryFilter filter = new QueryFilter(getRequest());
+		List<SettleContract> list = settleContractService.queryTranslateAll(filter);
+		StringBuffer buff = new StringBuffer("{success:true,'totalCounts':").append(filter.getPagingBean().getTotalItems()).append(",result:");
+		buff.append(GsonUtil.toJson(list));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+
+	public String load() {
+		SettleContract c = settleContractService.getTranslateAll(settleId);
+		c.getSettleComponBriefSet();
+		c.getSettleEquipBriefSet();
+		c.setArrearsAmount(c.getSettleAmount().subtract(c.getFinishedAmount()));
+		StringBuffer sb = new StringBuffer("{success:true,data:[");
+		sb.append(GsonUtil.toJson(c, GsonUtil.SINCE_VERSION_20, false));
+		sb.append("]}");
+		setJsonString(sb.toString());
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "新增或更新结算信息")
+	public String save() {
+		if (settleContract.getSettleId() == null) {
+			if (Type.Fund.receive.equals(settleContract.getFundType())) { // 收款
+				settleContract.setFundStatus(Status.Fund.receive);
+			} else if (Type.Fund.payment.equals(settleContract.getFundType())) { // 付款
+				settleContract.setFundStatus(Status.Fund.payment);
+			}
+			settleContract.setFinishedAmount(BigDecimal.ZERO);
+			settleContract.setBalanceAmount(settleContract.getSettleAmount().subtract(settleContract.getFinishedAmount()));
+			settleContract.setEffective(Constant.DISENABLED);
+			settleContract.setDelFlag(Constant.ENABLED);
+			super.isCreateFileAttach = true;
+		} else {
+			SettleContract p = settleContractService.get(settleContract.getSettleId());
+			if (!Constant.DISENABLED.equals(p.getEffective())) {
+				throw new BusinessException("结算单已经打印,无法修改!");
+			}
+			settleContract.setFinishedAmount(p.getFinishedAmount());
+			settleContract.setBalanceAmount(settleContract.getSettleAmount().subtract(settleContract.getFinishedAmount()));
+			settleContract.setSettleSerial(p.getSettleSerial());
+			settleContract.setFundStatus(p.getFundStatus());
+			settleContract.setEffective(p.getEffective());
+			settleContract.setDelFlag(p.getDelFlag());
+		}
+		settleContractService.saveOrMergeEdit(settleContract);
+		createFileAttach(settleContract.getSettleId());
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "删除结算设备信息")
+	public String multiDelEquipBrief() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			settleContractService.deleteEquipBrief(new Long(id));
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "删除结算零配件信息")
+	public String multiDelComponBrief() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			settleContractService.deleteComponBrief(new Long(id));
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "删除结算其他费用信息")
+	public String multiDelItemBrief() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			settleContractService.deleteItemBrief(new Long(id));
+		}
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "删除结算其他费用信息")
+	public String multiDelOperatorSalary() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			settleContractService.deleteOperatorSalary(new Long(id));
+		}
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "删除结算其他费用信息")
+	public String multiDelSafetyMonitor() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			settleContractService.deleteSafetyMonitor(new Long(id));
+		}
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "删除结算其他费用信息")
+	public String multiDelOtherExpense() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			settleContractService.deleteOtherExpense(new Long(id));
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "删除结算信息")
+	public String multiDel() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			SettleContract p = settleContractService.get(new Long(id));
+			if (Constant.DISENABLED.equals(p.getEffective())) {
+				p.setDelFlag(Constant.DISENABLED);
+				settleContractService.save(p);
+			}
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "结算生效")
+	public String multiEffective() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			SettleContract p = settleContractService.get(new Long(id));
+			if (Constant.DISENABLED.equals(p.getEffective())) {
+				settleContractService.effective(p);
+			}
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "结算失效")
+	public String multiLoseEffective() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			SettleContract p = settleContractService.get(new Long(id));
+			if (Constant.ENABLED.equals(p.getEffective())) {
+				settleContractService.loseEffective(p);
+			}
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "打印结算信息")
+	public String print() {
+		settleContract = settleContractService.getTranslate(settleId);
+		String type = getRequest().getParameter("type");
+		if ("one".equals(type)) { // 日期拆分
+			// 设备清单分组
+			Map<String, List<SettleEquipBrief>> sebsm = SettleContractMath.groupSettleResource(settleContract.getSettleEquipBriefSet());
+			getRequest().setAttribute("settleEquipBrief", sebsm);
+			// 零配件清单分组
+			Map<String, List<SettleComponBrief>> scbsm = SettleContractMath.groupSettleResource(settleContract.getSettleComponBriefSet());
+			getRequest().setAttribute("settleComponBrief", scbsm);
+			getRequest().setAttribute("settleItemBrief", settleContract.getSettleItemBriefSet());
+			return "SettleContractPageOne";
+		} else if ("two".equals(type)) { // 规格分组
+			Map<String, SettleSpecificItem> settleSpecificItemMap = new HashMap<String, SettleSpecificItem>();
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			for (SettleEquipBrief brief : settleContract.getSettleEquipBriefSet()) {
+				totalAmount = totalAmount.add(brief.getSummary());
+				SettleSpecificItem item = null;
+				if (settleSpecificItemMap.containsKey(brief.getSpecificKey())) {
+					item = settleSpecificItemMap.get(brief.getSpecificKey());
+				} else {
+					item = new SettleSpecificItem();
+					settleSpecificItemMap.put(brief.getSpecificKey(), item);
+				}
+				item.addSettleEquipBrief(brief);
+			}
+			for (SettleComponBrief brief : settleContract.getSettleComponBriefSet()) {
+				totalAmount = totalAmount.add(brief.getSummary());
+				SettleSpecificItem item = null;
+				if (settleSpecificItemMap.containsKey(brief.getSpecificKey())) {
+					item = settleSpecificItemMap.get(brief.getSpecificKey());
+				} else {
+					item = new SettleSpecificItem();
+					settleSpecificItemMap.put(brief.getSpecificKey(), item);
+				}
+				item.addSettleComponBrief(brief);
+			}
+			getRequest().setAttribute("settleSpecificItems", settleSpecificItemMap.values());
+			BigDecimal itemAmount = BigDecimal.ZERO;
+			BigDecimal itemDeductAmount = BigDecimal.ZERO;
+			for (SettleItemBrief brief : settleContract.getSettleItemBriefSet()) {
+				totalAmount = totalAmount.add(brief.getSummary());
+				itemAmount = itemAmount.add(brief.getSummary());
+				itemDeductAmount = itemDeductAmount.add(brief.getDeductRent());
+			}
+			getRequest().setAttribute("itemAmount", itemAmount);
+			getRequest().setAttribute("itemDeductAmount", itemDeductAmount);
+			getRequest().setAttribute("totalAmount", totalAmount);
+			getRequest().setAttribute("bigTotalAmount", BigDecimalUtil.parserDigAmount(totalAmount));
+			return "SettleContractPageTwo";
+		} else { // 设备分组
+			Map<String, SettleBuildingNumItem> settleBuildingNumItemMap = new HashMap<String, SettleBuildingNumItem>();
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			for (SettleEquipBrief brief : settleContract.getSettleEquipBriefSet()) {
+				totalAmount = totalAmount.add(brief.getSummary());
+				SettleBuildingNumItem item = settleBuildingNumItemMap.get(brief.getBuildingNum());
+				if (item == null) {
+					item = new SettleBuildingNumItem();
+					settleBuildingNumItemMap.put(brief.getBuildingNum(), item);
+				}
+				item.addSettleEquipBrief(brief);
+			}
+			for (SettleComponBrief brief : settleContract.getSettleComponBriefSet()) {
+				totalAmount = totalAmount.add(brief.getSummary());
+				SettleBuildingNumItem item = settleBuildingNumItemMap.get(brief.getBuildingNum());
+				if (item == null) {
+					item = new SettleBuildingNumItem();
+					settleBuildingNumItemMap.put(brief.getBuildingNum(), item);
+				}
+				item.addSettleComponBrief(brief);
+			}
+			for (SettleItemBrief brief : settleContract.getSettleItemBriefSet()) {
+				totalAmount = totalAmount.add(brief.getSummary());
+				SettleBuildingNumItem item = settleBuildingNumItemMap.get(brief.getBuildingNum());
+				if (item == null) {
+					item = new SettleBuildingNumItem();
+					settleBuildingNumItemMap.put(brief.getBuildingNum(), item);
+				}
+				item.addSettleItemBrief(brief);
+			}
+			getRequest().setAttribute("totalAmount", totalAmount);
+			getRequest().setAttribute("digTotalAmount", BigDecimalUtil.parserDigAmount(totalAmount));
+			getRequest().setAttribute("settleBuildingNumItems", settleBuildingNumItemMap.values());
+			if ("four".equals(type)){
+				getRequest().setAttribute("currentTime", DateUtil.getCurrentLinkDateStr());
+				return "SettleContractPageFour";
+			}
+			return "SettleContractPageThree";
+		}
+	}
+
+	public String display() {
+		List<Map<String, Object>> settleList = settleContractService.queryByScript("fund.settle_portlet");
+		getRequest().setAttribute("displayList", settleList);
+		return "display";
+	}
+
+	public String getContractCostitems(){
+        Set<ContractCostitem> contractCostitems = settleContractService.getContractCostitems(new Long(getRequest().getParameter("contractId")));
+        StringBuffer sb = new StringBuffer("{success:true,data:[");
+        sb.append(GsonUtil.toJson(contractCostitems, false));
+        sb.append("]}");
+        setJsonString(sb.toString());
+        return SUCCESS;
+    }
+
+	public String getAccumulatedAmount() {
+		Long contractId = new Long(getRequest().getParameter("contractId"));
+		List<Map<String, Object>> list = settleContractService.queryByScript("fund.get_accumulated_amount", contractId);
+		StringBuffer buff = new StringBuffer("{success:true,'result':");
+		buff.append(GsonUtil.toJson(list));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+	
+	public String prints() {
+		settleContract = settleContractService.getTranslate(settleId);
+		ContractLease cl = contractLeaseService.get(settleContract.getContractId());
+		String titleDate = (DateUtil.changeObj2DateStr(settleContract.getEndSettleDate(), DateUtil.CN_DISPLAY_DATE_MONTH));
+		Set<Map<String, Object>> set = new HashSet<Map<String,Object>>();
+		BigDecimal totalSummaryEquip = BigDecimal.ZERO;
+		BigDecimal totalSummaryItem = BigDecimal.ZERO;
+		BigDecimal totalSalary = BigDecimal.ZERO;
+		BigDecimal totalSummarySafety = BigDecimal.ZERO;
+		BigDecimal totalSummaryCompon = BigDecimal.ZERO;
+		BigDecimal totalSummaryOther = BigDecimal.ZERO;
+		BigDecimal totalFoodAllowance = BigDecimal.ZERO;
+		//月租金（设备结算）
+		for(SettleEquipBrief seb : settleContract.getSettleEquipBriefSet()) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("equipId", seb.getEquipId());
+			map.put("buildingNum", seb.getBuildingNum());
+			map.put("equipCategoryName", seb.getEquipCategoryName());
+			map.put("equipSpecificName", seb.getEquipSpecificName());
+			map.put("contractNo", cl.getContractNo());
+			map.put("interval", seb.getStartSettleDate()+"至"+seb.getEndSettleDate());
+			map.put("quantityEquip",seb.getQuantity());
+			map.put("rentStandard",seb.getRentStandard());
+			map.put("summaryEquip",seb.getSummary());
+			set.add(map);
+			totalSummaryEquip = totalSummaryEquip.add(seb.getSummary());
+		}
+		for(Map<String, Object> map : set) {
+			//进出场等费用
+			for(SettleItemBrief sib : settleContract.getSettleItemBriefSet()) {
+				if(map.get("equipId").equals(sib.getEquipId())) {
+					map.put("quantityItem", sib.getQuantity());
+					map.put("unitpriceItem", sib.getUnitprice());
+					map.put("summaryItem", sib.getSummary());
+					totalSummaryItem = totalSummaryItem.add(sib.getSummary());
+				}
+			}
+			//操作人员
+			for(OperatorSalaryStatement oss : settleContract.getOperatorSalaryStatementSet()) {
+				if(map.get("equipId").equals(oss.getEquipId())) {
+					map.put("quantityOperator", 1);
+					map.put("unitpriceOperator", oss.getSalary());
+					map.put("salary", oss.getSalary());
+					map.put("foodAllowance", oss.getFoodAllowance());
+					totalSalary = totalSalary.add(new BigDecimal(oss.getSalary()));
+					totalFoodAllowance = totalFoodAllowance.add(new BigDecimal(oss.getFoodAllowance()));
+				}
+			}
+			//安全监控
+			for(SafetyMonitorSettleStatement sss : settleContract.getSafetyMonitorSettleStatementSet()) {
+				if(map.get("equipId").equals(sss.getEquipId())) {
+					map.put("quantitySafety", sss.getQuantity());
+					map.put("unitpriceSafety", sss.getRentStandard());
+					map.put("summarySafety", sss.getSummary());
+					totalSummarySafety = totalSummarySafety.add(sss.getSummary());
+				}
+			}
+			//加节
+			for(SettleComponBrief scb : settleContract.getSettleComponBriefSet()) {
+				if(map.get("equipId").equals(scb.getEquipId())) {
+					map.put("quantityCompon", scb.getQuantity());
+					map.put("unitpriceCompon", scb.getRentStandard());
+					map.put("summaryCompon", scb.getSummary());
+					totalSummaryCompon = totalSummaryCompon.add(scb.getSummary());
+				}
+			}
+			//其他费用
+			for(OtherExpenseStatement oes : settleContract.getOtherExpenseStatementSet()) {
+				if(map.get("equipId").equals(oes.getEquipId())) {
+					map.put("quantityOther", oes.getNumber());
+					map.put("unitpriceOther", oes.getPrice());
+					map.put("summaryOther", oes.getAmount());
+					totalSummaryOther = totalSummaryOther.add(oes.getAmount());
+				}
+			}
+		}
+		getRequest().setAttribute("titleDate", titleDate);
+		getRequest().setAttribute("settleEquipBrief", set);
+		getRequest().setAttribute("totalSummaryEquip", totalSummaryEquip);
+		getRequest().setAttribute("totalSummaryItem", totalSummaryItem);
+		getRequest().setAttribute("totalSalary", totalSalary);
+		getRequest().setAttribute("totalSummarySafety", totalSummarySafety);
+		getRequest().setAttribute("totalSummaryCompon", totalSummaryCompon);
+		getRequest().setAttribute("totalSummaryOther", totalSummaryOther);
+		getRequest().setAttribute("totalFoodAllowance", totalFoodAllowance);
+		return "statementForm";
+	}
+	
+	public String getAlreadyAmount() {
+		Long contractId = new Long(getRequest().getParameter("contractId"));
+		List<Map<String, Object>> list = settleContractService.queryByScript("fund.get_already_amount", contractId);
+		StringBuffer buff = new StringBuffer("{success:true,'result':");
+		buff.append(GsonUtil.toJson(list));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+}

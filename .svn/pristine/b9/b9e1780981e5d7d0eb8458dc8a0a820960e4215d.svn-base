@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipActivate" table="T_EQUIPMENT_ACTIVATE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="activateId" column="ACTIVATE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="activateSerial" type="java.lang.String" column="ACTIVATE_SERIAL" />
+		<property name="activateDate" type="java.lang.String" column="ACTIVATE_DATE" />
+		<property name="emEnt" type="java.lang.Long" column="EM_ENT" />
+		<property name="emEntName" type="java.lang.String" column="EM_ENT_NAME" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="appointmentDate" type="java.lang.String" column="APPOINTMENT_DATE" />
+		<property name="acceptanceDate" type="java.lang.String" column="ACCEPTANCE_DATE" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="measurement" type="java.lang.String" column="MEASUREMENT" />
+		<property name="rentStandard" type="java.lang.String" column="RENT_STANDARD" />
+		<property name="deliveryEntName" type="java.lang.String" column="DELIVERY_ENT_NAME"/>
+		<property name="verifyDate" type="java.lang.String" column="VERIFY_DATE"/>
+		<property name="effectiveDate" type="java.lang.String" column="EFFECTIVE_DATE"/>
+		<many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

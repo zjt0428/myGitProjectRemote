@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-28 17:11:39 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TFlowNode" table="T_FLOW_NODE">
+		<id name="nid" type="java.lang.Long">
+			<column name="NID" />
+			<generator class="native" />
+		</id>
+		<property name="flowId" type="java.lang.Long">
+			<column name="FLOWID" />
+		</property>
+		<property name="seq" type="java.lang.Long">
+			<column name="SEQ" />
+		</property>
+		<property name="nodeName" type="string">
+			<column name="NODE_NAME" length="100" />
+		</property>
+		<property name="chkRoleid" type="java.lang.Long">
+			<column name="CHK_ROLEID" />
+		</property>
+		<property name="chkRoleName" type="java.lang.String"
+			formula="(SELECT A.ROLENAME FROM APP_ROLE A WHERE A.ROLEID=CHK_ROLEID)">
+		</property>
+		<property name="chkUserid" type="java.lang.Long">
+			<column name="CHK_USERID" />
+		</property>
+		<property name="chkName" type="string">
+			<column name="CHK_NAME" length="100" />
+		</property>
+	</class>
+</hibernate-mapping>

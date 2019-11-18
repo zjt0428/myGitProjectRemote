@@ -1,0 +1,361 @@
+/**
+ *====================================================
+ * 文件名称: Request.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2014年10月23日			Administrator(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.terminal;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.google.gson.annotations.Expose;
+import com.knight.app.model.*;
+import com.knight.emms.model.*;
+
+import lombok.Data;
+
+/**
+ * @ClassName: Request
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author Administrator
+ * @date 2014年10月23日 下午3:18:28
+ */
+@Data
+public class Tequest {
+
+	private Query query;
+
+	private Long dispatchEquipId;
+
+	private Date startinDate;
+
+	private Date endinDate;
+
+	private BigDecimal installHeight;
+
+	private BigDecimal brachium;
+
+	private Integer wallAttacheQty;
+
+	private String fileAttaches;
+
+	private String content;
+	
+	private String title;
+
+	private Long reviewId;
+
+	private Long score;
+	
+	private String longitude;
+
+	private String latitude;
+
+	private String recordId;
+
+	private Long projId;
+
+	private String projectName;
+
+	private String address;
+
+	private Set<ComponDiary> componDiarySet = new HashSet<ComponDiary>();
+
+	private Set<PractiDiary> practiDiarySet = new HashSet<PractiDiary>();
+	
+	private String practiId;
+
+	// =========================================================================================//
+	private String username;
+	
+	private String password;
+
+	private String oldpassword;
+
+	private String newpassword;
+
+	private String fullname;
+
+	private String mobile;
+
+	// =========================================================================================//安全巡检
+	private Long inspectId;
+
+	private String inspectResult;
+
+	private Date inspectDate;
+
+	private String inspectPepoles;
+	
+	private String rectification;
+
+//	private String remark;
+	
+	private String rectifyIntroduce;
+	
+	private String rectifyResult;
+	
+	private Date rectifyDate;
+	
+	private String rectifyUsername;
+	
+	private Long inspectRectifyId;
+	// =========================================================================================//物流签收
+//	private Long transportId;
+/*	private String signDate;
+	
+	private String signMan;
+	
+	private String signResult;*/
+
+	// =========================================================================================//
+	private Long dismantleId;
+
+	private Long flowId;
+
+	private Date startdisDate;
+
+	private Date enddisDate;
+
+	private String dismantleHeight;
+	
+	//*******************APPadd*********
+	private Long userId;
+	
+	private String depId;
+	
+	private String uId;
+	
+	private String type;
+	
+	private String sgDate;
+	
+	private String sgTime;
+	
+	private String location;
+	
+	private Long aid;
+	
+	private String upTime;
+	
+	private String disMode;
+	
+	private String projName;
+	
+	private String disType;
+	
+	private String disDate;
+	
+	private String dispatcher;
+	
+//	private String Remark;
+	
+	private Set<TAppComponDispatchDetail> dispComponDetailSet = new HashSet<TAppComponDispatchDetail>();
+
+	private Set<TAppEquipDispatchDetail> dispEquipDetailSet = new HashSet<TAppEquipDispatchDetail>();
+
+    private Set<LogisticsTranDestribution> logisticsTranDistributionSet = new HashSet<LogisticsTranDestribution>();
+	
+	private Long repId;
+	
+	private Long equipId;
+	
+	private String recordSerial;
+	
+	private String equipSpec;
+	
+	private String exwSerial;
+	
+	private String buildingNum;
+	
+	private String equipSpecific;
+	
+	private String equipSerial;
+	
+	private String equipSpecificName;
+	
+	private String reportDt;
+	
+	private String faultLevel;
+	
+	private String faultDesc;
+	
+	private String procMan;
+	
+	private String disMan;
+	
+	private String arriveTime;
+	
+	private String repairType;
+	
+	private String repairDt;
+	
+	private String repScheme;
+	
+	private String procResult;
+	
+	private String repMan;
+	
+	private String repManId;
+	
+	private String repTimes;	
+	
+	private String repFee;
+	
+	private String repReason;
+
+	private String repImage;
+
+	
+	private String state;	
+	
+	private String createDt;
+	
+	private Long createBy;
+	
+	private String fileattaches;
+	
+	private String hasview;	
+	
+	private String createByname;
+	
+	private Set<TAppRepairCompon> repairComponSet = new HashSet<TAppRepairCompon>();
+	
+	private String applyDt;
+	
+	private String flowType;
+	
+	private Long chkUserId;
+	
+	private String copyUserIds;
+	
+	private String chkDate;
+	
+	private String chkResult;
+	
+	private String chkOpinion;
+	
+	private Long insId;
+	
+	private Long nextChkUserId;	
+	
+	private String flowName;
+	
+	private Long seq;
+	
+	private Long nextSeq;
+	
+	private String days;
+	
+	private int fileId;
+	
+	private String installtype;
+	
+	private String dismantleType;
+
+	private Long contractId;
+
+    private String sedan;
+    
+	//------------调度物流-------------//
+    private String sendWarehouseAddress;
+	private Long logiId;
+	private Long disid;
+	private String deliveryDate;
+	private String deliveryMan;
+	private String propertyName;
+	private Long sendId;
+	private Long receiveId;
+	private String sendWarehouseName;
+	private String receiveWarehouseName;
+	private String sendWarehouseType;
+	private String receWarehouseType;
+	private String receWarehouseAddress;
+	private String summary;
+	private Long carId;
+	private String licensePlate;
+	private String status;
+	private String fileAttachesReceived;
+	private String signMan;
+	private String signResult;
+	private String signDate;
+	private String signAddress;
+	private String remark;
+	private String remarkRece;
+	private String receNum;
+	private Set<TAppLogisticsComp> tAppLogisticsCompSet = new HashSet<TAppLogisticsComp>();
+	private Set<TAppLogisticsEquip> tAppLogisticsEquipSet = new HashSet<TAppLogisticsEquip>();
+	//-----------施工作业--------------//
+    private String constructTheme;
+	private Equipment equipment;
+    private String constructOperationRealTasks = "";
+    private String constructOperationPlanTasks = "";
+	private String constructPlanPractis = "";
+	private String constructRealPractis = "";
+    private String teams;
+	private String constructDate;
+	private Project project;
+    private String practiNames;
+    private Long constructId;
+    private String receiveDate;
+    private BigDecimal mileage;
+	private String confimDate;
+	private String actualDate;
+	private String closedDate;
+	private String constructStartDate;
+	private String enterPlanDate;
+	private String actualPractiNames;
+	private String constructSerial;
+    private String practiNamesId;
+	//----------受理审批-----------------//
+	private Long relateId;
+	private String relateModule;
+	private String acceptUsername;
+	private String acceptDep;
+	private Date acceptTime;
+	private String acceptOpinion;
+	private String acceptRemark;
+
+    //----------现场安装------------------//
+	private Long installId;
+    private String jjCompons = "";
+    private Integer knotCounts;
+    private String jackFileAttaches;
+    private String dropFileAttaches;
+	private Set<InstallJjCompon> jjComponSet = new HashSet<InstallJjCompon>();
+	
+	//----------设备------------------//
+	private int businessStatus;
+	
+	/*派工上传的故障信息*/
+	 private String stateName;
+     private String weightOfFailure;
+     private String inputVoltage;
+     private String breakdownVoltage;
+ 	 private String switchFault1; 		//开关故障1
+ 	 private String switchFault2; 		//开关故障2
+ 	 private String switchFault3; 		//开关故障3
+ 	 
+ 	private Integer start;
+
+	private Integer pageSize;
+ 	 
+	//----------设备详情------------------//
+	
+ 	public Integer getStart() {
+		return this.start == null ? 0 : this.start;
+	}
+
+	public Integer getPageSize() {
+		return this.pageSize == null ? 10 : this.pageSize;
+	}
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Salary" table="T_SALARY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="salaryId" column="SALARY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="salarySerial" type="java.lang.String" column="SALARY_SERIAL" />
+		<property name="salaryTheme" type="java.lang.String" column="SALARY_THEME" />
+		<property name="monthId" type="java.lang.Integer" column="MONTH_ID" />
+		<property name="salaryMonth" type="java.lang.String" column="SALARY_MONTH" />
+		<property name="salaryDate" type="java.lang.String" column="SALARY_DATE" />
+		<property name="entId" type="java.lang.Long" column="ENT_ID" />
+		<property name="entName" type="java.lang.String" column="ENT_NAME" />
+		<property name="entAccountId" type="java.lang.Long" column="ENT_ACCOUNT_ID" />
+		<property name="bank" type="java.lang.String" column="BANK" />
+		<property name="account" type="java.lang.String" column="ACCOUNT" />
+		<property name="salaryAmount" type="java.math.BigDecimal" column="SALARY_AMOUNT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="deductPassDate" type="java.util.Date" column="DEDUCT_PASS_DATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="salaryPractiSet" cascade="all" inverse="false" lazy="true">
+			<key column="SALARY_ID" />
+			<one-to-many class="com.knight.emms.model.SalaryPracti" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.AppUserKey" table="APP_USER_KEY" optimistic-lock="version">
+		<id name="keyId" column="KEY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="keyStatus" type="java.lang.Short" column="KEY_STATUS" />
+		<property name="keySerial" type="java.lang.String" column="KEY_SERIAL" />
+		<property name="distributeTime" type="java.util.Date" column="DISTRIBUTE_TIME" not-null="true" />
+		<property name="validPeriodTime" type="java.lang.String" column="VALID_PERIOD_TIME" not-null="true" />
+		<property name="expirationTime" type="java.lang.String" column="EXPIRATION_TIME" not-null="true" />
+		<property name="updateTime" type="java.util.Date" column="UPDATE_TIME" not-null="true" />
+		<property name="userId" type="java.lang.Long" column="USERID" length="19" insert="false" update="false" />
+		<many-to-one name="appUser" column="USERID" class="com.knight.system.model.AppUser" fetch="join" />
+		<set name="appUserKeyExtendSet" inverse="true" lazy="extra">
+			<key column="KEY_ID"></key>
+			<one-to-many class="com.knight.system.model.AppUserKeyExtend" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ProjectJoinAnnex" table="T_PROJECT_JOIN_ANNEX" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="joinId" column="JOIN_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+		<many-to-one name="dispatchAllocateInit" column="DISPATCH_ALLOCATE_INIT_ID" class="com.knight.emms.model.DispatchAllocateInit" fetch="join" />
+		
+	</class>
+</hibernate-mapping>

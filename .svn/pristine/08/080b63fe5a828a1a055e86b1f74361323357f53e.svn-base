@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-28 17:11:39 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TFlowInstanceProcess" table="T_FLOW_INSTANCE_PROCESS"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="pid" type="long">
+			<column name="PID" />
+			<generator class="native" />
+		</id>
+		<property name="insid" type="java.lang.Long">
+			<column name="INSID" />
+		</property>
+		<property name="nodeid" type="java.lang.Long">
+			<column name="NODEID" />
+		</property>
+		<property name="chkUserid" type="java.lang.Long">
+			<column name="CHK_USERID" />
+		</property>
+		<property name="chkUserName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=CHK_USERID)"></property>
+		<property name="chkDate" type="string">
+			<column name="CHK_DATE" length="10" />
+		</property>
+		<property name="chkResult" type="string">
+			<column name="CHK_RESULT" length="100" />
+		</property>
+		<property name="chkOpinion" type="string">
+			<column name="CHK_OPINION" length="200" />
+		</property>
+		<many-to-one name="instance" column="INSID"
+			class="com.knight.app.model.TFlowInstance" insert="false" update="false"
+			fetch="join" />
+	</class>
+</hibernate-mapping>

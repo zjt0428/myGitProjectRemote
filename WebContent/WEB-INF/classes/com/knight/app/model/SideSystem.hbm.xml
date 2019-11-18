@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.app.model.SideSystem" table="T_SIDE_SYSTEM" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="sideId" column="SIDE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="operationDate" type="java.lang.String" column="OPERATION_DATE" />
+		<property name="operationDetail" type="java.lang.String" column="OPERATION_DETAIL" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="operationPersonnel" type="java.lang.String" column="OPERATION_PERSONNEL" />
+		<property name="reportingPersonnel" type="java.lang.String" column="REPORTING_PERSONNEL" />
+		<property name="measure" type="java.lang.String" column="MEASURE" />
+		<set name="sideReportingSet" cascade="all" inverse="false" lazy="true">
+			<key column="REPORTING_ID"/>
+			<one-to-many class="com.knight.app.model.SideReporting"/>
+		</set>
+	</class>
+</hibernate-mapping>

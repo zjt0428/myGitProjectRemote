@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Pickup" table="T_PICKUP"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="pickupId" column="PICKUP_ID" type="java.lang.Long"
+			length="19">
+			<generator class="native" />
+		</id>
+		<property name="pickupSerial" type="java.lang.String" column="PICKUP_SERIAL" />
+		<!-- <property name="equipId" type="java.lang.String" column="EQUIP_ID" insert="false" update="false"/> -->
+		<property name="pickupTheme" type="java.lang.String" column="PICKUP_THEME" />
+		<property name="pickupPurpose" type="java.lang.String" column="PICKUP_PURPOSE" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="recipients" type="java.lang.String" column="RECIPIENTS" />
+		<property name="recipientsDepName" type="java.lang.String" column="RECIPIENTS_DEPNAME" />
+		<property name="pickupDate" type="java.lang.String" column="PICKUP_DATE" />
+		<property name="pickupAmount" type="java.math.BigDecimal" column="PICKUP_AMOUNT" />
+		<property name="paidAmount" type="java.math.BigDecimal" column="PAID_AMOUNT" />
+		<property name="totalAmount" type="java.math.BigDecimal" column="TOTAL_AMOUNT" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="pickupStatus" type="java.lang.String" column="PICKUP_STATUS" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="projectName" type="java.lang.String"
+			formula="(CASE WHEN RELATE_MODULE = 'CONTRACT_LEASE' THEN (SELECT CL.PROJECT_NAME FROM T_CONTRACT_LEASE CL WHERE CL.CONTRACT_ID = RELATE_ID)
+             WHEN RELATE_MODULE = 'EQUIP_INSTALL' THEN (SELECT E.PROJECT_NAME FROM T_EQUIPMENT E WHERE E.EQUIP_ID = EQUIP_ID)
+             WHEN RELATE_MODULE = 'EQUIPMENT' THEN (SELECT E.PROJECT_NAME FROM T_EQUIPMENT E WHERE E.EQUIP_ID = RELATE_ID)
+             WHEN RELATE_MODULE = 'EQUIP_EMPLOY' THEN (SELECT E.PROJECT_NAME FROM T_EQUIPMENT E WHERE E.EQUIP_ID = EQUIP_ID)
+             WHEN RELATE_MODULE = 'EQUIP_DETECT' THEN (SELECT E.PROJECT_NAME FROM T_EQUIPMENT E WHERE E.EQUIP_ID = EQUIP_ID)
+             ELSE (SELECT ED.PROJECT_NAME FROM T_EQUIPMENT_DIARY ED WHERE ED.EQUIP_DIARY_ID = RELATE_ID)
+             END)" />
+		<many-to-one name="equipment" column="EQUIP_ID"	class="com.knight.emms.model.Equipment" fetch="join" not-found="ignore"/>
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="pickupComponentSet" cascade="all" inverse="false" lazy="true">
+			<key column="PICKUP_ID" />
+			<one-to-many class="com.knight.emms.model.PickupComponent" />
+		</set>
+	</class>
+</hibernate-mapping>

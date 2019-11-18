@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.CostDetail" table="T_COST_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="costId" column="COST_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="packageId" type="java.lang.Long" column="PACKAGE_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="feesType" type="java.lang.String" column="FEES_TYPE" />
+		<property name="feesTypeName" type="java.lang.String" column="FEES_TYPE_NAME" />
+		<property name="chargeUnitPrice" type="java.lang.String" column="CHARGE_UNIT_PRICE" />
+		<property name="chargeQuantity" type="java.lang.String" column="CHARGE_QUANTITY" />
+		<property name="chargeAmount" type="java.lang.String" column="CHARGE_AMOUNT" />
+		<property name="chargeMode" type="java.lang.String" column="CHARGE_MODE" />
+		<property name="leaseAmount" type="java.lang.String" column="LEASE_AMOUNT" />
+		<property name="feeCategory" type="java.lang.String" column="FEE_CATEGORY" />
+	</class>
+</hibernate-mapping>

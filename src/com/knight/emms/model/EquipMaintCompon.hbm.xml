@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.knight.emms.model.EquipMaintCompon" table="T_EQUIPMENT_MAINT_COMPON" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="maintComponId" column="MAINT_COMPON_ID" type="java.lang.Long" length="19">
+            <generator class="native" />
+        </id>
+        <property name="maintId" type="java.lang.Long" column="MAINT_ID" />
+        <property name="counts" type="java.lang.Integer" column="COUNTS" />
+        <property name="unitPrice" type="java.math.BigDecimal" column="UNIT_PRICE" />
+        <property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+        <property name="remark" type="java.lang.String" column="REMARK" />
+        <many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" fetch="join" />
+    </class>
+</hibernate-mapping>

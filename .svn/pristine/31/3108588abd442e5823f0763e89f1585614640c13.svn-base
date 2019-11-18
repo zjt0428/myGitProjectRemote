@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.SystemLog" table="SYSTEM_LOG" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="logId" column="LOGID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="username" type="java.lang.String" column="USERNAME" length="128" />
+		<property name="userId" type="java.lang.Long" column="USERID" length="19" />
+		<property name="userIp" type="java.lang.String" column="USER_IP" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="operatPath" type="java.lang.String" column="OPERAT_PATH" />
+		<property name="createTime" type="java.util.Date" column="CREATE_TIME" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

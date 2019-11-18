@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DispatchPracti" table="T_DISPATCH_PRACTI" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="dispatchPractiId" column="DISPATCH_PRACTI_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<many-to-one name="practitioner" column="PRACTI_ID" class="com.knight.emms.model.Practitioner" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

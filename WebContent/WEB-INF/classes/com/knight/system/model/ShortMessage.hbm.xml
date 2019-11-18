@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.ShortMessage" table="SHORT_MESSAGE">
+		<id name="messageId" column="MESSAGEID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="content" type="java.lang.String" column="CONTENT" />
+		<property name="sender" type="java.lang.String" column="SENDER" />
+		<property name="msgType" type="java.lang.Short" column="MSGTYPE" />
+		<property name="sendTime" type="java.util.Date" column="SENDTIME" />
+		<property name="senderId" type="java.lang.Long" column="SENDERID" />
+	</class>
+</hibernate-mapping>

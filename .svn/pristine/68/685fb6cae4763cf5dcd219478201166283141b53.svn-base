@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.knight.app.model.TAppLogisticsComp" table="T_APP_LOGISTICS_COMP" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="logiCompId" type="java.lang.Long">
+            <column name="LOGI_COMP_ID" />
+            <generator class="native" />
+        </id>
+        <property name="logiId" column="LOGI_ID" />
+        <property name="logiNum" column="LOGI_NUM" />
+        <property name="receNum" column="RECE_NUM" />
+        <many-to-one name="TAppComponDispatchDetail" column="COMP_DEID" class="com.knight.app.model.TAppComponDispatchDetail" fetch="join" />
+    </class>
+</hibernate-mapping>

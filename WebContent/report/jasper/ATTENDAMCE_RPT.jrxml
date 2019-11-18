@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ATTENDAMCE_RPT" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="fc311284-78be-40ee-a1f7-1d60923785ed">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FULL_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ATTENDANCE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DEP_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="START_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="END_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @ym CHAR(6)
+DECLARE @ymds DATE
+DECLARE @ymde DATE
+DECLARE @depName VARCHAR(64)
+DECLARE @fullName VARCHAR(32)
+DECLARE @attendance VARCHAR(32)
+
+SET @ymds = $P{START_DATE}
+SET @ymde = $P{END_DATE}
+SET @depName = $P{DEP_NAME}
+SET @fullName = $P{FULL_NAME}
+SET @attendance = $P{ATTENDANCE}
+
+;WITH QUERY AS(SELECT u.USERID, U.FULLNAME,D.DEP_NAME,
+(SELECT COUNT(*) from T_ATTENDAMCE a where a.SG_DATE >=@ymds and a.SG_DATE <= @ymde
+	and a.USERID=u.USERID) as days,
+(SELECT COUNT(*)
+	from T_ATTENDAMCE a
+	where a.SG_DATE >=@ymds and a.SG_DATE <= @ymde
+	and cast('2009-01-01 '+a.SGIN_TIME as datetime) >
+	(SELECT top 1 cast('2009-01-01 '+WORK_ST as datetime)
+	FROM dbo.T_ATTENDAMCE_SET
+	where STATE=1 order by sid DESC) and a.USERID=u.USERID ) as lates,
+(SELECT COUNT(*) from
+	T_ATTENDAMCE a
+	where a.SG_DATE >=@ymds and a.SG_DATE <= @ymde
+	and cast('2009-01-01 '+a.SGOU_TIME as datetime) <
+	(SELECT top 1 cast('2009-01-01 '+WORK_ED as datetime) FROM dbo.T_ATTENDAMCE_SET where STATE=1 order by SID DESC)
+	and a.USERID=u.USERID) as leaveEarly,
+(dbo.F_GETWORKDAYS(@ymds,@ymde)*2-
+	(SELECT ISNULL(SUM(ISNULL(sg_sum,0)),0) from T_ATTENDAMCE a
+	where a.SG_DATE >=@ymds and a.SG_DATE <= @ymde
+	and exists(SELECT 1 FROM dbo.T_ATTENDAMCE_SET where STATE=1 and WORK_DAYS like '%'
+				+(case datepart(weekday,a.SG_DATE)
+					when 1 then 'sun'
+					when 2 then 'mon'
+					when 3 then 'tue'
+					when 4 then 'web'
+					when 5 then 'thu'
+					when 6 then 'fri'
+					when 7 then 'sat'
+					end)
+				+'%')
+	and a.USERID=u.USERID)) as nocard
+FROM DBO.APP_USER U,DBO.DEPARTMENT D
+	WHERE U.DEP_ID=D.DEP_ID AND U.DELFLAG=0 and U.USERNAME NOT IN('system','admin')
+	AND (D.DEP_NAME LIKE '%'+@depName+'%' OR @depName IS NULL OR @depName='')
+	AND (U.FULLNAME LIKE '%'+@fullName+'%' OR @fullName IS NULL OR @fullName=''))
+SELECT * FROM QUERY WHERE (@attendance='迟到' AND lates>0) OR (@attendance='早退' AND leaveEarly>0) OR (@attendance='缺卡' AND nocard>0) OR (@attendance='') OR (@attendance IS NULL) ORDER BY DEP_NAME]]>
+	</queryString>
+	<field name="USERID" class="java.lang.Long"/>
+	<field name="FULLNAME" class="java.lang.String"/>
+	<field name="DEP_NAME" class="java.lang.String"/>
+	<field name="days" class="java.lang.Integer"/>
+	<field name="lates" class="java.lang.Integer"/>
+	<field name="leaveEarly" class="java.lang.Integer"/>
+	<field name="nocard" class="java.lang.Long"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf( 1 )]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="120" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="50" uuid="0377ae99-1f68-45ef-853a-5dbe785967a0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="32" isBold="true"/>
+				</textElement>
+				<text><![CDATA[考勤统计]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="55" width="800" height="61" uuid="4dabe0bd-21a5-4190-af48-f666080d6357"/>
+				<subreportParameter name="START_DATE">
+					<subreportParameterExpression><![CDATA[$P{START_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="END_DATE">
+					<subreportParameterExpression><![CDATA[$P{END_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "subAttendamce.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="36" y="1" width="100" height="30" uuid="8d2736ad-2dc9-4892-bc90-c3506624b6fc"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[姓名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="1" width="36" height="30" uuid="bc88fd96-f53c-4b66-a109-abaffb4751a4"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="136" y="1" width="132" height="30" uuid="d00231c5-cb11-46ec-82bd-f70688822554"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[所属部门]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="368" y="1" width="100" height="30" uuid="a1a33e6d-52e3-4da8-845d-855f0e357ce0"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[迟到(次)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="268" y="1" width="100" height="30" uuid="64dce185-dcfe-4ce8-a173-1d2ee07f995b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[实际出勤(天)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="468" y="1" width="100" height="30" uuid="bd5ef325-a406-4bca-9e9e-4abbb371eab6"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[早退(次)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="568" y="1" width="100" height="30" uuid="eb4f84d4-d116-42cf-bf04-d22d414f106b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[缺卡]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="36" y="0" width="100" height="20" uuid="a07cad96-d795-4cba-9151-22942de6044a"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FULLNAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="136" y="0" width="132" height="20" uuid="791b5e82-3027-4888-b54c-af9d776ed56e"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEP_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="268" y="0" width="100" height="20" uuid="e8cd953f-5721-4083-a574-653956dc2132"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{days}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="368" y="0" width="100" height="20" uuid="f10cb902-5312-4e1a-95d3-8ce707aaaa9e"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lates}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="0" width="100" height="20" uuid="f7ccb733-47cb-4587-80e0-7ec5dd0ee029"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{leaveEarly}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="36" height="20" uuid="86f41b77-92d9-4de2-8043-48222727fcd9"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="568" y="0" width="100" height="20" uuid="ef8bf130-97df-4d96-956e-ef12798fef54"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nocard}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="5" width="60" height="20" uuid="a933128f-e134-43a9-9a18-293238714f4f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ 记录数：]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="62" y="5" width="100" height="20" uuid="9b660f6c-b508-4178-82d4-191e5cf58ae5"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch">
+			<staticText>
+				<reportElement x="546" y="-25" width="50" height="20" uuid="eef45aae-c0de-427c-8d17-a108c6ab59d8"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="11" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[当前页：]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="596" y="-25" width="20" height="20" uuid="6905e6e4-ad77-4ac4-8067-2d7808e6837c"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="11" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="626" y="-25" width="20" height="20" uuid="3010bdd4-47cc-46ce-99f7-e93b018ce862"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="11" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="616" y="-25" width="10" height="20" uuid="5b435230-d619-463b-b1bf-58d8dc772277"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="11" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[/]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

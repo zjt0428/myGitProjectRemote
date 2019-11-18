@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AccidentReport" table="T_ACCIDENT_REPORT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="accidentReportId" column="ACCIDENT_REPORT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="reportSerial" type="java.lang.String" column="REPORT_SERIAL" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="providedUnit" type="java.lang.String" column="PROVIDED_UNIT" />
+		<property name="prevent" type="java.lang.String" column="PREVENT" />
+		<property name="participants" type="java.lang.String" column="PARTICIPANTS" />
+		<many-to-one name="accident" column="ACCIDENT_ID" class="com.knight.emms.model.Accident" fetch="join" />
+	</class>
+</hibernate-mapping>

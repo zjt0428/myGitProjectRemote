@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractPractiBrief" table="T_CONTRACT_PRACTI_BRIEF" select-before-update="false" dynamic-update="false"
+		dynamic-insert="false" optimistic-lock="version">
+		<id name="cpBriefId" column="CP_BRIEF_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="kindWork" type="java.lang.String" column="KIND_WORK" />
+		<property name="quantity" type="java.lang.Short" column="QUANTITY" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="expense" type="java.math.BigDecimal" column="EXPENSE" />
+		<property name="measurement" type="java.lang.String" column="MEASUREMENT" />
+		<property name="endDate" type="java.lang.String" column="END_DATE" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

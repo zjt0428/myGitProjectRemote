@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.action.extension" value="do" />
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.ui.theme" value="xhtml" />
+	<constant name="struts.i18n.encoding" value="utf-8" />
+	
+	<!-- 指定由spring负责action对象的创建 -->
+	<constant name="struts.objectFactory" value="spring"/>
+	
+	<!-- convention-plugin配置 -->
+	<!--设置Convention插件定位视图资源的根路径，默认为/WEB-INF/content -->
+	<constant name="struts.convention.result.path" value="/WEB-INF/classes/"/>  
+    
+    <!--如果设置为false，则可以将视图页面放置Action对应的目录（无需放入WEB-INF/content） -->  
+    <constant name="struts.convention.result.flatLayout" value="false"/>  
+    
+    <!--Convention搜索Action类的类名后缀，默认为Action -->  
+    <constant name="struts.convention.action.suffix" value="Action"/>  
+    
+    <!--是否禁止通过包扫描Action，默认是false -->  
+    <constant name="struts.convention.action.disableScanning" value="false"/>
+	
+	<!--设置即使没有@Action注释，是否依然创建Action映射。默认值为false -->
+	<constant name="struts.convention.action.mapAllMatches" value="false"/>  
+    
+    <!--设置是否所有实现com.opensymphony.xwork2.Action的Action都创建Action映射，默认是true -->  
+    <constant name="struts.convention.action.checkImplementsAction" value="true"/>  
+    
+    <!--设置Convention映射的Action所在包的默认父包。默认值是convention-default -->  
+    <constant name="struts.convention.default.parent.package" value="convention-default"/>  
+    
+    <!--设置映射Action时，是否将Action的name属性值转换为所有字母小写，默认值是true -->  
+    <constant name="struts.convention.action.name.lowercase" value="false"/>  
+    
+    <!--设置映射Action时指定name属性值各单词之间的分隔符。默认值为中画线（“-”） -->  
+    <!-- <constant name="struts.convention.action.name.separator" value="-"/>   -->  
+    
+    <!--默认包路径包含action,actions,struts,struts2的所有包都会被struts作为含有Action类的路径来搜索 -->  
+    <constant name="struts.convention.package.locators" value="action"/>  
+    
+    <!--指定禁止从Action的根包里搜索Action。默认值为false -->  
+    <constant name="struts.convention.package.locators.disable" value="false"/>  
+    
+    <!--如果指定了该常量，Convention只会以该常量值开始的包中搜索Action类 -->  
+    <constant name="struts.convention.package.locators.basePackage" value=""/>  
+    
+    <!--指定排除在搜索Action之外的包。默认值为org.hibernate.* ... -->  
+    <constant name="struts.convention.exclude.packages" value="org.apache.struts.*,org.apache.struts2.*,org.springframework.web.struts.*,org.springframework.web.struts2.*,org.hibernate.*"/>  
+    
+    <!--指定Convention映射的Result时默认支持的结果类型。默认值为dispatcher,velocity,freemarker -->  
+    <constant name="struts.convention.relative.result.types" value="dispatcher,velocity,freemarker"/> 
+     
+    <!--设置是否重定向到斜线（/）。例如用户请求/foo，但/foo不存在时，如果设置该常量为可重定向到/foo/。默认值是true -->  
+    <constant name="struts.convention.redirect.to.slash" value="false"/>
+    
+	<package name="knight-default" extends="struts-default">
+		<interceptors>
+			<interceptor name="knightException" class="com.knight.core.exception.ErrorHandlingInterceptor" />
+			<!-- 异常拦截器的拦截栈 -->
+			<interceptor-stack name="knightStack">
+				<interceptor-ref name="knightException" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<!-- 设置默认拦截器 -->
+		<default-interceptor-ref name="knightStack" />
+		<global-results>
+		    <result name="accessException">/403.jsp</result>
+			<result name="error">/jsonXml.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${filename}.${extension}"</param>
+				<param name="bufferSize">2048</param>
+			</result>
+		</global-results>
+		<!-- 捕获AccessDeniedException，并转到相应的页面 -->
+		<global-exception-mappings>
+			<exception-mapping result="accessException" exception="org.springframework.security.AccessDeniedException" name="accessException"></exception-mapping>
+		</global-exception-mappings>
+	</package>
+
+	<include file="resource/struts-src.xml"></include>
+	<include file="resource/struts-system.xml"></include>
+	<include file="resource/struts-terminal.xml"></include>
+	<include file="resource/struts-app.xml"></include>
+</struts>

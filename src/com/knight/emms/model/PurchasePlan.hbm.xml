@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PurchasePlan" table="T_PURCHASE_PLAN" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="purchasePlanId" column="PURCHASE_PLAN_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="personName" type="java.lang.String" column="PERSON_NAME" />
+		<property name="fillDate" type="java.lang.String" column="FILL_DATE" />
+		<property name="applicantName" type="java.lang.String" column="APPLICANT_NAME" />
+		<property name="applicantDept" type="java.lang.String" column="APPLICANT_DEPT" />
+		<property name="inquiryName" type="java.lang.String" column="INQUIRY_NAME" />
+		<property name="inquiryDate" type="java.lang.String" column="INQUIRY_DATE" />
+		<property name="totalCost" type="java.lang.Long" column="TOTAL_COST" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="applyforStateName" type="java.lang.String" column="APPLYFOR_STATE_NAME" />
+		<property name="delflag" type="java.lang.String" column="DELFLAG" />
+		<set name="purchasePlanInquirySet" cascade="all" inverse="false" lazy="true">
+			<key column="PURCHASE_PLAN_ID" />
+			<one-to-many class="com.knight.emms.model.PurchasePlanInquiry" />
+		</set>
+	</class>
+</hibernate-mapping>

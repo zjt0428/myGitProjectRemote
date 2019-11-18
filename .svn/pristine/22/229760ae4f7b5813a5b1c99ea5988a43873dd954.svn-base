@@ -1,0 +1,895 @@
+var SettleContractListView = function(a) {
+	Ext.apply(this, a || {});
+	this.params = {};
+	this.params.Q_delFlag_S_EQ = "1";
+	if(!isGranted("__ALL")) {
+		this.params.QVO_permissionFlag_S_LK = curUserInfo.dataPermission;
+	}
+	Ext.apply(this.params, (a && a.params) || {});
+	Ext.apply(this, {
+		practiDepartmentId : Ext.id()
+	});
+	// =====================================================================//
+	if (!this.searchDisenable) {
+		var fundStatusCombo = $initComboBoxField("款项状态", "Q_fundStatus_S_EQ", "FUND_PLAN_STATUS", {
+			width : 80,
+			lable : "款项状态",
+			allowBlank : true
+		});
+		var generalItems = [{
+			xtype : "datacombo",
+			width : 75,
+			lable : "是否生效",
+			name : "Q_effective_S_EQ",
+			store : [ [ "0", "否" ], [ "1", "是" ] ]
+		}, fundStatusCombo,{
+			id : Ext.id(),
+			xtype : "treecombo",
+			valId : this.practiDepartmentId,
+			width : 130,
+			lable : "所属部门",
+			url : __ctxPath + "/system/listDepartment.do?opt=appUser",
+//			name : "department.depName"
+		}, {
+			xtype : "hidden",
+			id : this.practiDepartmentId,
+			name : "Q_competentDepartmentId_L_EQ"
+		}, {
+			lable : "合同编号",
+			name : "Q_contractNo_S_LK"
+		}, {
+			lable : "项目名称",
+			name : "Q_projectName_S_LK",
+			value : this.projectName ? this.projectName : ""
+		}, {
+			lable : "承租方",
+			name : "Q_paEntName_S_LK",
+			value : this.paEntName ? this.paEntName : ""
+		}, {
+			lable : "结算周期",
+			editable : false,
+			xtype : "datefield",
+			format : "Y-m-d",
+			name : "Q_startSettleDate_S_GE"
+		}, {
+			lable : "至",
+			editable : false,
+			xtype : "datefield",
+			format : "Y-m-d",
+			name : "Q_endSettleDate_S_LE"
+		} ];
+	}
+	
+	var advancedItems = [ {
+		fieldType : "CHAR_FIELD",
+		fieldLabel : "制单人",
+		name : "Q_userName_S_LK"
+	}, {
+		fieldType : "CHAR_FIELD",
+		fieldLabel : "项目经理",
+		name : "Q_materialPractiName_S_LK"
+	} ];
+	
+	var actionItems = [ {
+		iconCls : "btn-grid-read",
+		qtip : "明细",
+		handler : this.loadSettleContract
+	}, {
+		iconCls : "btn-package_go",
+		qtip : "查看",
+		handler : this.readSettleContractEquip
+	},{
+		iconCls : "btn-package_go",
+		qtip : "打印记录",
+		handler : this.readsettleContractRecord
+	}];
+	if (!this.actionDisenable) {
+		this.initRowActionItems(actionItems);
+	}
+	if (!this.tbarDisenable) {
+		var tbarItems = this.initTopBarActionItems();
+	}
+	var datagrid_config = {
+		delayed_load : this.delayed_load,
+		store : {
+			fields : SettleContractListViewField
+		},
+		rowAction : {
+			width : 75,
+			actionItems : actionItems
+		},
+		tbarItems : tbarItems,
+		columns : [ {
+			width : 60,
+			header : "账单状态",
+			dataIndex : "closedStatus",
+			renderer : function(n) {
+				if(n==1){
+					return "<font face='宋体' color='red'>关账</font>";
+				}else{
+					return null;
+				}
+				
+			}
+		},{
+			width : 60,
+			header : "款项状态",
+			dataIndex : "fundStatusName"
+		}, {
+			width : 60,
+			header : "制单人",
+			dataIndex : "userName"
+		}, {
+			hidden :true,
+			width : 60,
+			header : "结算类别",
+			dataIndex : "fundCategoryName"
+		}, {
+			header : ContractLeaseFormConfigure.contractSerialHeader,
+			dataIndex : "contractSerial"
+		}, {
+			header : ContractLeaseFormConfigure.contractSerialHeader,
+			dataIndex : "contractNo"
+		}, {
+			header : "承租方",
+			dataIndex : "paEntName"
+		}, {
+			header : "结算类型",
+			dataIndex : "settleType"
+		}, {
+			header : "项目名称",
+			dataIndex : "projectName"
+		}, {
+			header : "结算开始时间",
+			dataIndex : "startSettleDate"
+		}, {
+			header : "截止时间",
+			dataIndex : "endSettleDate"
+		}, {
+			header : "本期租金合计",
+			dataIndex : "settleAmount",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number(c.data.settleAmount, "0.00");
+			}
+		}, {
+			header : "本期已收",
+			dataIndex : "finishedAmount",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number(c.data.finishedAmount, "0.00");
+			}
+		}, {
+			header : "累计应收租金",
+			dataIndex : "summaryReceivable",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number((c.data.summaryReceivable), "0.00");
+			}
+		}, {
+			header : "累计已收租金",
+			dataIndex : "receivedAmount",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number((c.data.receivedAmount), "0.00");
+			}
+		},{
+			hidden : true,
+			header : "累计已收租金2",
+			dataIndex : "summaryReceived",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number((c.data.summaryReceived), "0.00");
+			}
+		}, {
+			header : "尚欠款",
+			dataIndex : "arrears",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number((c.data.arrears), "0.00");
+			}
+		}, {
+			header : "工地项目经理",
+			dataIndex : "materialPractiName"
+		}, {
+			width : 50,
+			header : "结算单",
+			dataIndex : "effective",
+			renderer : function(n) {
+				if (n == "0") {
+					return "<font face='宋体' color='red'>未生效</font>";
+				}
+				return "已生效";
+			}
+		}, {
+			header : "填报时间",
+			dataIndex : "providedDate"
+		} ]
+	};
+	this.settleContractEquipView = new SettleContractEquipListView({
+	});
+	this.settleContractEquipTabPanel = new Ext.TabPanel({
+		activeTab : 0,
+		enableTabScroll : true,
+		autoHeight : false,
+		height : 150,
+		maxSize : 600,
+		region : "south",
+		split : true,
+		collapsed : true,
+		collapseMode : "mini",
+		items : [ this.settleContractEquipView]
+	});
+	this.settleContractRecordEastView = new SettleContractRecordListView({
+	});
+	this.settleContractRecordEastTabPanel = new Ext.TabPanel({
+		activeTab : 0,
+		enableTabScroll : true,
+		autoHeight : false,
+		width : 800,
+		maxSize : 600,
+		region : "east",
+		split : true,
+		collapsed : true,
+		collapseMode : "mini",
+		items : [ this.settleContractRecordEastView]
+	});
+	SettleContractListView.superclass.constructor.call(this, Ext.apply({
+		id : "SettleContractListView",
+		title : TabTitle.SETTLE_CONTRACT_LIST,
+		iconCls : "menu-business-settle",
+		url : __ctxPath + "/dispatch/listSettleContract.do",
+		base_params : this.params,
+		search_config : {
+			generalItems : generalItems,
+			advancedItems : advancedItems
+		},
+		datagrid_config : datagrid_config,
+		items : [  this.settleContractEquipTabPanel,this.settleContractRecordEastTabPanel]
+	}, a));
+};
+Ext.extend(SettleContractListView, Knight.ux.SearchGridPanel, {
+	initRowActionItems : function(actionItems) {
+	},
+	readSettleContractEquip : function(a,rowIndex,colIndex,key) {
+		this.dataGridPanel.selModel.selectRow(key,false);
+		this.settleContractEquipTabPanel.expand();
+		var settleContractEquip = this.settleContractEquipView.getDataGridPanel().getStore();
+		Ext.apply(settleContractEquip.baseParams, {
+			"Q_settleId_L_EQ" : a.settleId,
+		});
+		settleContractEquip.load();
+	},
+	readsettleContractRecord : function(a) {
+		this.settleContractRecordEastTabPanel.expand();
+		var settleContractRecordEastListView = this.settleContractRecordEastView.getDataGridPanel().getStore();
+		Ext.apply(settleContractRecordEastListView.baseParams, {
+			"Q_settle_L_EQ" : a.settleId,
+
+		});
+		settleContractRecordEastListView.load();
+	},
+	initTopBarActionItems : function() {
+		var tbarItems = [];
+		if (isGranted("_SettleContractAdd")) {
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "新增",
+				handler : this.addSettleContract.createDelegate(this)
+			});
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "复制",
+				handler : this.copySettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractEdit")) {
+			tbarItems.push({
+				iconCls : "btn-head-edit",
+				text : "修改",
+				handler : this.editSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractMultiEffective")) {
+			tbarItems.push({
+				iconCls : "btn-head-lock",
+				text : "生效",
+				handler : this.effectiveSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractMultiLoseEffective")) {
+			tbarItems.push({
+				iconCls : "btn-head-lock",
+				text : "失效",
+				handler : this.loseEffectiveSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractMultiDel")) {
+			tbarItems.push({
+				iconCls : "btn-head-del",
+				text : "删除",
+				handler : this.delSettleContract.createDelegate(this)
+			});
+		}
+		tbarItems.push({
+			iconCls : "btn-head-del",
+			text : "合计",
+			handler : this.combinedSelectedSettleContract.createDelegate(this)
+		});
+		if (isGranted("_SettleContractAuto")) {
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "生成收款单",
+				handler : this.autoSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractConsolidated")) {
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "合并结算",
+				handler : this.combineSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractClosed")) {
+			tbarItems.push({
+				iconCls : "btn-close",
+				text : "关账",
+				handler : this.closedSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractOpen")) {
+			tbarItems.push({
+				iconCls : "btn-open",
+				text : "反关账",
+				handler : this.openSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractMonthSettle")) {
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "每月待结算的合同",
+				handler : this.addSettleMonthContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractEditAmount")){
+			tbarItems.push({
+				iconCls : "btn-head-edit",
+				text : "修改结算金额",
+				handler : this.editsSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractRefreshSum")){
+			tbarItems.push({
+				iconCls : "x-tbar-loading",
+				text : "刷新累计",
+				handler : this.refreshSumSettleContract.createDelegate(this)
+			});
+		}
+//		if (isGranted("_SubTenantAdd")) {
+//			tbarItems.push({
+//				iconCls : "btn-head-add",
+//				text : "转租结算",
+//				handler : this.subTenantSettlement.createDelegate(this)
+//			});
+//		}
+		tbarItems.push("->");
+		if (isGranted("_SettleContractPrinter1")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "通用",
+				handler : this.printsSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractPrinter3")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "五建南分",
+				handler : this.printsSettleContract2.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractPrinter3")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "安全监控",
+				handler : this.printsSettleContract3.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractPrinter3")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "通用（有税率）",
+				handler : this.printsSettleContract4.createDelegate(this)
+			});
+		}
+//		if (isGranted("_SettleContractPrinter2")) {
+//			tbarItems.push({
+//				iconCls : "btn-head-print",
+//				text : "模板2",
+//				handler : this.printSettleContract.createDelegate(this, [ "two" ])
+//			});
+//		}
+//		if (isGranted("_SettleContractPrinter3")) {
+//			tbarItems.push({
+//				iconCls : "btn-head-print",
+//				text : "模板3",
+//				handler : this.printSettleContract.createDelegate(this, [ "three" ])
+//			});
+//		}
+//		if (isGranted("_SettleContractPrinter4")) {
+//			tbarItems.push({
+//				iconCls : "btn-head-print",
+//				text : "模板4",
+//				handler : this.printSettleContract.createDelegate(this, [ "four" ])
+//			});
+//		}
+		if (isGranted("_SettleContractExporter")) {
+			tbarItems.push({
+				iconCls : "btn-head-exporter",
+				text : "导出",
+				handler : this.exportSettleContract.createDelegate(this)
+			});
+		}
+		return tbarItems;
+	},
+	speciallyGridAction : function(g, id, url, op, va, pa, cmm) {
+		var msg1 = "请选择要【" + op + "】的结算信息！";
+		var msg2 = cmm ? cmm : "您确认要【" + op + "】所选的结算信息吗？";
+		var msg3 = "成功【" + op + "】所选的结算信息！";
+		$baseGridAction(g, msg1, id, msg2, url, msg3, null, va);
+	},
+	loadSettleContract : function(a) {
+		new SettleContractForm(a).show();
+	},
+	addSettleContract : function() {
+		new ContractLeaseSelector({
+			single : true,
+			params : {
+//				Q_applyforState_S_GE : "3",
+//				Q_applyforState_S_LE : "6",
+//				Q_effective_S_EQ : "1"
+				Q_applyforState_S_GE : "3",
+				Q_applyforState_S_LE : "8"
+			},
+			callback : function(d) {
+				var data = d[0].data;
+				$request({
+					url : __ctxPath + "/dispatch/loadContractLease.do",
+					params : {
+						contractId : data.contractId
+					},
+					success : function(g, h) {
+						var resp = Ext.util.JSON.decode(g.responseText);
+						var data = resp.data[0];
+						new SettleContractForm({
+							fundType : data.fundType,
+							contractId : data.contractId,
+							contract : data
+						}, {
+							animateTarget : this.el,
+							saveable : true,
+							callback : function() {
+								this.dataGridPanel.getStore().reload();
+							}.createDelegate(this)
+						}).show();
+
+					}.createDelegate(this)
+				});
+			}.createDelegate(this)
+		}).show();
+	},
+	subTenantSettlement : function() {
+		new ContractLeaseSelector({
+			single : true,
+			params : {
+				Q_applyforState_S_GE : "3",
+				Q_applyforState_S_LE : "6",
+			},
+			callback : function(d) {
+				var data = d[0].data.contractLease;
+				$request({
+					url : __ctxPath + "/dispatch/loadContractLease.do",
+					params : {
+						contractId : data.contractId
+					},
+					success : function(g, h) {
+						var resp = Ext.util.JSON.decode(g.responseText);
+						var data = resp.data[0];
+						new SettleContractForm({
+							fundType : data.fundType,
+							contractId : data.contractId,
+							contract : data
+						}, {
+							animateTarget : this.el,
+							saveable : true,
+							callback : function() {
+								this.dataGridPanel.getStore().reload();
+							}.createDelegate(this)
+						}).show();
+
+					}.createDelegate(this)
+				});
+			}.createDelegate(this)
+		}).show();
+	},
+	copySettleContract : function() {
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("请选择要【复制】的记录！");
+			return;
+		}
+		new SettleContractForm(a[0].data,{
+//			fundType : a[0].data.fundType,
+//			contractId : a[0].data.contractId,
+//			contract : a[0].data,
+//			animateTarget : this.el,
+//			settleId : a[0].data.settleId,
+			copyable : true,
+			saveable : true,
+			callback : function() {
+				this.dataGridPanel.getStore().reload();
+			}.createDelegate(this)
+		}).show();
+	},
+	editSettleContract : function() {
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("请选择要【修改】的记录！");
+			return;
+		}
+		if ("0" != a[0].data.effective) {
+			$toast("【已生效】的结算信息无法进行【修改】！");
+			return;
+		}
+		if ("1" == a[0].data.closedStatus) {
+			$toast("【已关账】的结算信息无法进行【修改】！");
+			return;
+		}
+		new SettleContractForm(a[0].data, {
+			saveable : true,
+			callback : function() {
+				this.dataGridPanel.getStore().reload();
+			}.createDelegate(this)
+		}).show();
+	},
+	effectiveSettleContract : function() {
+		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/multiEffectiveSettleContract.do", "生效", function(a) {
+			if ("0" == a.effective && "1" != a.closedStatus) {
+				return true;
+			}
+			$toast("该结算信息已经【生效】或【关账】！");
+			return false;
+		}.createDelegate(this), "是否确认生效，生效后数据将不能进行修改");
+	},
+	delSettleContract : function() {
+		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/multiDelSettleContract.do", "删除", function(a) {
+			if ("0" == a.effective && "1" != a.closedStatus) {
+				return true;
+			}
+			$toast("【已生效或关账】的结算信息无法进行【删除】！");
+			return false;
+		}.createDelegate(this));
+	},
+	jointSettleId : function(a) {
+		if(a.length ==0 ) {
+			return "";
+		}
+		var settleIds = "";
+		for(var i=0; i<a.length; i++) {
+			settleIds += a[i].data.settleId;
+			if(i<a.length-1) {
+				settleIds += ",";
+			}
+		}
+		return settleIds;
+	},
+	preparePrint : function() {
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("请选择要【打印】的记录！");
+			return;
+		}
+		var allEffective  = true;
+		for(var i =0; i<a.length;i++){
+			if(a[i].data.effective == "0"){
+				allEffective = false;
+			}
+		}
+		if(!allEffective){
+			$toast("所选记录中存在未生效记录，请重新选择！");
+			return;
+		}
+		return this.jointSettleId(a);
+	},
+	printSettleContract : function(type) {
+		$print(this.dataGridPanel, function(a) {
+			return __ctxPath + "/dispatch/printSettleContract.do?type=" + type + "&settleId=" + a[0].data["settleId"];
+		});
+	},
+	printsSettleContract : function(type) {
+		var settleIds = this.preparePrint();
+		if(settleIds){
+			$print(this.dataGridPanel, function(a) {
+				return __ctxPath + "/dispatch/printsSettleContract.do?settleIds=" + settleIds;
+			}, null, 1000, 600);
+		}
+	},
+	loseEffectiveSettleContract : function() {
+		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/multiLoseEffectiveSettleContract.do", "失效", function(a) {
+			if ("1" != a.closedStatus) {
+				return true;
+			}
+			$toast("该结算信息已经【关账】！");
+			return false;
+		}.createDelegate(this), "是否确认失效");
+	},
+	closedSettleContract : function() {
+//		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/closeSettleContract.do", "关账", function(a) {
+//			if (a.closedStatus != 1) {
+//				return true;
+//			}
+//			return false;
+//		}.createDelegate(this), "是否确认关账");
+//		var closeDate;
+//		$request({
+//			url : __ctxPath + "/dispatch/maxValueCloseSettleContract.do",
+//			success : function(g,h){
+//				var resp = Ext.util.JSON.decode(g.responseText);
+//				closeDate = resp.data[0].months;
+				new ClosedSettleInfoView({
+//					closeDate : closeDate,
+					saveable : true,
+					callback : function() {
+						this.dataGridPanel.getStore().reload();
+					}.createDelegate(this)
+				}).show();
+//			}.createDelegate(this)
+//		})
+		
+	},
+	combinedSelectedSettleContract : function() {
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("还未选择结算信息！");
+			return;
+		}
+		var arrearsAmount = 0;
+		for (var i = 0; i < a.length; i++) {
+			arrearsAmount += Number(a[i].data.settleAmount) - Number(a[i].data.finishedAmount);
+		}
+		Ext.MessageBox.alert("合计情况", "剩余金额累计" + arrearsAmount + "元，计数为" + a.length + "条。");
+	},
+	exportSettleContract : function() {
+		$exportFormSubmit(this.currentSearchPanel.getForm(), __ctxPath + "/dispatch/exportSettleContract.do", this.dataGridPanel);
+	},
+	autoSettleContract : function(){
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if(a.length == 0 || a.length>1){
+			$toast("请最多选择一个进行生成收款单！");
+			return ;
+		}
+		if(a[0].data.closedStatus == '1') {
+			$toast("请选择【未关账】的结算单！");
+			return;
+		}
+//		var resp = $ajaxSyncCall(__ctxPath + "/dispatch/judgeOldestSettleContract.do",{
+//			contractId : a[0].data.contractId,
+//			settleId : a[0].data.settleId
+//		});
+//		if(resp.result) {
+//			$toast(resp.result);
+//			return;
+//		}
+		for(var c = 0;c<a.length;c++){
+			$request({
+				url : __ctxPath + "/dispatch/loadSettleContract.do",
+				params : {
+                    settleId : a[c].data.settleId
+				},
+				success : function(g, h) {
+					var resp = Ext.util.JSON.decode(g.responseText);
+					var data = resp.data[0];
+                    var mount = {
+                        relateId : data.settleId,
+                        relateSerial : data.settleSerial,
+                        relateTheme : data.settleTheme,
+                        relateModule : RelationModule.settleContract.relateModule,
+                        relateModuleName : RelationModule.settleContract.relateModuleName,
+                        relationData : data
+                    }
+					if (mount && mount.relateId && mount.relateModule) {
+						mount.relation = {};
+						Ext.apply(mount.relation, {
+							relateId : mount.relateId,
+							relateTheme : mount.relateTheme,
+							relateModule : mount.relateModule,
+							relateModuleName : mount.relateModuleName,
+							projectName : mount.projectName
+						});
+					}
+					new AmountReceiveForm(mount, {
+						saveable : true,
+						auto:true,
+						callback : function() {
+							this.dataGridPanel.getStore().reload();
+						}.createDelegate(this)
+					}).show();
+				}.createDelegate(this)
+			});
+        }
+	},
+	combineSettleContract : function() {
+		new ContractLeaseSelector({
+			collectEnable : true,
+			params : {
+				Q_applyforState_S_GE : "3",
+				Q_applyforState_S_LE : "8"
+			},
+			callback : function(d) {
+				var data = d[0].data;
+				var contractIds = '';
+				if(d.length<2) {
+					$toast("请选择两条及以上的合同进行合并结算！");
+					return;
+				}
+				for(var k=0; k<d.length; k++) {
+					if(k!=0 && d[0].data.contractNo != d[k].data.contractNo) {
+						$toast("合同编号不一致，无法合并结算");
+						return;
+					}
+					if(k!=0 && d[0].data.projectName != d[k].data.projectName) {
+						$toast("项目名称不一致，无法合并结算");
+						return;
+					}
+					if(k!=0 && d[0].data.paEntName != d[k].data.paEntName) {
+						$toast("承租方不一致，无法合并结算");
+						return;
+					}
+					contractIds = contractIds.concat(d[k].data.contractId)
+					if(k<d.length-1) {
+						contractIds = contractIds.concat(',')
+					}
+				}
+				$request({
+					url : __ctxPath + "/dispatch/loadContractLease.do",
+					params : {
+						contractId : data.contractId
+					},
+					success : function(g, h) {
+						var resp = Ext.util.JSON.decode(g.responseText);
+						var data = resp.data[0];
+						new SettleContractForm({
+							fundType : data.fundType,
+							contractId : data.contractId,
+							contract : data,
+							contractIds : contractIds
+						}, {
+							animateTarget : this.el,
+							saveable : true,
+							callback : function() {
+								this.dataGridPanel.getStore().reload();
+							}.createDelegate(this)
+						}).show();
+
+					}.createDelegate(this)
+				});
+			}.createDelegate(this)
+		}).show();
+	},
+//	printsSettleContract2 : function(){
+//		$print(this.dataGridPanel, function(a) {
+//			return __ctxPath + "/dispatch/printFiveSettleContract.do?settleId=" + a[0].data["settleId"];
+//		}, null, 1000, 600);
+//	},
+	printsSettleContract2 : function(){
+		var settleIds = this.preparePrint();
+		if(settleIds){
+			$print(this.dataGridPanel, function(a) {
+				return __ctxPath + "/dispatch/printFiveSettleContract.do?settleIds=" + settleIds;
+			}, null, 1000, 600);
+		}
+	},
+	printsSettleContract3 : function(){
+		var settleIds = this.preparePrint();
+		if(settleIds){
+			$print(this.dataGridPanel, function(a) {
+				return __ctxPath + "/dispatch/printSixSettleContract.do?settleIds=" + settleIds;
+			}, null, 1000, 600);
+		}
+	},
+	printsSettleContract4 : function(){
+		var settleIds = this.preparePrint();
+		if(settleIds){
+			$print(this.dataGridPanel, function(a) {
+				return __ctxPath + "/dispatch/printSevenSettleContract.do?settleIds=" +settleIds;
+			}, null, 1000, 600);
+		}
+	},
+	addSettleMonthContract : function() {
+		//获取当前年月
+		var date = new Date();
+		var year = date.getFullYear();
+		var month = date.getMonth() + 1;
+		if (month >= 1 && month <= 9) {
+			month = "0" + month;
+		}
+		var nowDate = date.getFullYear() + month;
+		new ContractLeaseSelector({
+			single : true,
+			params : {
+				Q_effective_S_EQ : "1",			//有设备启用的合同
+				Q_applyforState_S_GE : "4",
+				Q_applyforState_S_LT : "6",
+				Q_settleMonthDate_S_NEQ : nowDate,
+				//查询 equipAllDismantleMonth IS NULL 或等于当前月。 当月停机未结算的合同，需要出现在待结算清单里
+				"QFVO_[equipAllDismantleMonth-S-NULL|equipAllDismantleMonth-S-EQ]" : "ABC,"+nowDate
+			},
+			callback : function(d) {
+				var data = d[0].data;
+				$request({
+					url : __ctxPath + "/dispatch/loadContractLease.do",
+					params : {
+						contractId : data.contractId
+					},
+					success : function(g, h) {
+						var resp = Ext.util.JSON.decode(g.responseText);
+						var data = resp.data[0];
+						new SettleContractForm({
+							fundType : data.fundType,
+							contractId : data.contractId,
+							contract : data
+						}, {
+							animateTarget : this.el,
+							saveable : true,
+							callback : function() {
+								this.dataGridPanel.getStore().reload();
+							}.createDelegate(this)
+						}).show();
+					}.createDelegate(this)
+				});
+			}.createDelegate(this)
+		}).show();
+	},
+	openSettleContract : function() {
+		new OpenSettleInfoView({
+			saveable : true,
+			callback : function() {
+				this.dataGridPanel.getStore().reload();
+			}.createDelegate(this)
+		}).show();
+	},
+	editsSettleContract : function(){
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("请选择要【修改】的记录！");
+			return;
+		}
+		if ("1" != a[0].data.effective) {
+			$toast("【未生效】的结算信息无法进行【修改】！");
+			return;
+		}
+		if ("1" == a[0].data.closedStatus) {
+			$toast("【已关账】的结算信息无法进行【修改】！");
+			return;
+		}
+		new SettleContractsForm(a[0].data,{
+			saveable : true,
+			callback : function(){
+				this.dataGridPanel.getStore().reload();
+			}.createDelegate(this)
+		}).show();
+	},
+	refreshSumSettleContract : function(){
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("请选择要【刷新】的记录！");
+			return;
+		}
+		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/refreshSumSettleContract.do", "刷新", function(a) {
+			if ("0" == a.effective && "1" != a.closedStatus) {
+				return true;
+			}
+			$toast("该结算信息已经【生效】或【关账】！");
+			return false;
+		}.createDelegate(this), "是否确认刷新？");
+	}
+});

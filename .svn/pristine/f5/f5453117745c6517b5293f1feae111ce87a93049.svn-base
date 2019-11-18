@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ProductMake" table="T_PRODUCT_MAKE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="productMakeId" column="PRODUCT_MAKE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyMakeId" type="java.lang.Long" column="APPLY_MAKE_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="makeQuanity" type="java.lang.String" column="MAKE_QUANTITY" />
+		<property name="secondUnitConversion" type="java.lang.String" column="SECOND_UNIT_CONVERSION" />
+		<property name="auxiliaryQuantity" type="java.lang.String" column="AUXILIARY_QUANTITY" />
+		<property name="auxiliaryNum" type="java.lang.String" column="AUXILIARY_NUM" />
+	</class>
+</hibernate-mapping>

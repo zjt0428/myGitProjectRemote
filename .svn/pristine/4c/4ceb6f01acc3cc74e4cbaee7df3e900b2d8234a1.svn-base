@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Rental_Fee_Rpt" language="groovy" pageWidth="1008" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d1b9c4a9-afb1-4f25-bad0-aa8d00c5e629">
+	<property name="ireport.zoom" value="1.2100000000000024"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="columnHead" forecolor="#333333" backcolor="#AAD7FE" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontName="宋体" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5"/>
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" pattern="" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<style name="title" hAlign="Center" vAlign="Middle" fontName="宋体" fontSize="18" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+	<style name="pageFooterLable" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="12" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<style name="pageFooter" mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="12" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<parameter name="START_DATE" class="java.lang.String"/>
+	<parameter name="END_DATE" class="java.lang.String"/>
+	<parameter name="PROJECT_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PA_ENT_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NEXT_DATE" class="java.lang.String"/>
+	<parameter name="LEASE_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @START_DATE smalldatetime
+DECLARE @END_DATE smalldatetime
+DECLARE @PROJECT_NAME VARCHAR(64);
+DECLARE @PA_ENT_NAME VARCHAR(64);
+
+SET @PROJECT_NAME = $P{PROJECT_NAME}
+SET @START_DATE = CONVERT(VARCHAR(24),$P{START_DATE},102);
+SET @END_DATE = CONVERT(VARCHAR(24),$P{END_DATE},102);
+
+SELECT SE.BUILDING_NUM BUILDING_NUM,@START_DATE START_DATE,@END_DATE END_DATE,SC.PROJECT_NAME
+FROM T_SETTLE_EQUIP_BRIEF SE
+LEFT JOIN T_SETTLE_CONTRACT SC ON SC.SETTLE_ID = SE.SETTLE_ID
+WHERE SE.MONTH_TAG IS NOT NULL
+AND SC.PROJECT_NAME = @PROJECT_NAME]]>
+	</queryString>
+	<field name="BUILDING_NUM" class="java.lang.String"/>
+	<field name="START_DATE" class="java.lang.String"/>
+	<field name="END_DATE" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf( 1 )]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement style="title" x="0" y="0" width="968" height="45" uuid="99f3e7d9-8213-44db-ae6c-9fbe2e32ce38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="24" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["机械设备租赁费用申请单（"+$P{NEXT_DATE}.substring( 0,7 )+"）"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="70">
+			<textField>
+				<reportElement x="0" y="0" width="968" height="20" uuid="3fa2fbd5-40a7-4ecd-ac94-c1e887c9333a"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["承租单位："+$P{PA_ENT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="29" width="968" height="20" uuid="fa07b85d-0c63-4e9e-910a-caf0ee595995"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["出租单位："+$P{LEASE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="49" width="284" height="21" uuid="e8821290-741c-451b-8edc-5792b47dbba5"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["项目名称："+$P{PROJECT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="676" y="49" width="292" height="21" uuid="aa47e984-e8d4-4e4c-9c66-3d6aae565a48"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["申请日期："+$P{START_DATE}+"至"+$P{END_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="34" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="b0fdbee0-c69f-4614-ba30-4329ce1c1592"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[类别明细]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="100" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="1c0b160b-0a8a-44ed-b14d-1c1c8915a86e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[型号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="166" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="c9545429-c6e0-4759-9c50-2468b7f321e3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[楼号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="232" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="8b99819d-46f4-435b-a350-2121ad7149e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[起始日期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="298" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="5a84de0d-8206-45ec-92f3-ccc53061df57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[截止日期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="364" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="469c817d-9ba6-4ebe-96fa-1cbac5fc6ea7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[计量单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="430" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="3a00e727-c04d-47c5-9a7d-323c34fdb30f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[合同单价]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="496" y="0" width="58" height="46" backcolor="#AAD7FE" uuid="24323512-c6ed-4787-b471-c6bb6d710f33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[上期累计工程量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="554" y="0" width="58" height="46" backcolor="#AAD7FE" uuid="0fefe2bf-71d4-4f24-80b7-37da7c03dbda"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[上期累计结算金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="612" y="0" width="58" height="46" backcolor="#AAD7FE" uuid="cfbd7566-9d8d-49e0-9931-e36dc393c8b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[本期结算工程量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="670" y="0" width="58" height="46" backcolor="#AAD7FE" uuid="848cc5e9-eb4c-47e5-b3fd-6d729b90026a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[本期结算金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="728" y="0" width="58" height="46" backcolor="#AAD7FE" uuid="b8b73ad2-e318-4cc5-b0ad-d1254aedf699"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[本期累计结算金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="786" y="0" width="58" height="46" backcolor="#AAD7FE" uuid="0c4452eb-1190-4912-a6ac-c346188ac70e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[启用日期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="844" y="0" width="58" height="46" backcolor="#AAD7FE" uuid="36e6f25d-3163-49fe-8aac-853354a3f220"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[报停日期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="902" y="0" width="66" height="46" backcolor="#AAD7FE" uuid="e59fd7de-695e-4b32-ac6b-3c1a0da9c1fa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[备注]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="0" y="0" width="34" height="46" uuid="7dc0e857-675e-4a36-a58b-c56aeb79f0e3"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="34" height="35" uuid="37c32cc8-7852-4d7c-89ab-a0ec6226f766"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="34" y="0" width="934" height="36" uuid="11ddb7e8-0553-4e27-aaa5-c0ec2e9862e0"/>
+				<subreportParameter name="START_DATE">
+					<subreportParameterExpression><![CDATA[$F{START_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="END_DATE">
+					<subreportParameterExpression><![CDATA[$F{END_DATE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="BUILDING_NUM">
+					<subreportParameterExpression><![CDATA[$F{BUILDING_NUM}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Rental_Fee_Rpt_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="968" height="20" uuid="90709610-a5d3-40d0-a440-87cc943e8215"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["以上费用请审核并按合同规定及时确认转赴我公司!"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="34" width="968" height="20" uuid="e9f9a081-ba97-4012-99a6-4c43831043a7"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["审批：                                                审核：                                                  编制："]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

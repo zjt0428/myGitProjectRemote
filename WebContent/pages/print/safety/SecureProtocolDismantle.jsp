@@ -1,0 +1,137 @@
+<%@ page pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="kfn" uri="http://www.knight.com/jsp/jstl/functions"%>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>拆卸安全协议</title>
+<link rel="stylesheet" type="text/css" href="../pages/print/css/style_word.css" />
+<style media="print">
+.Noprint {
+	display: none;
+	
+}
+.PageNext {
+	page-break-after: always;
+}
+
+</style>
+</head>
+
+<body>
+<center class="Noprint">
+	<p align="right" class="mar_15">
+		<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+		<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+	</p>
+</center>
+<center>
+<DIV class="main_detail">
+<p style="font-size:32px;text-align:center; padding-top:10px; font-weight:bold;">安 全 协 议</p>
+<p style="font-size:16px;text-align:right; padding-top:15px; padding-right:15px;">合同编号:&nbsp;<strong><u>&nbsp;${secureProtocol.protocolSerial}</u></strong></p>
+<p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="line-height:28px; font-size:14px;">
+  <tr>
+    <td class="indt2">总承包单位（简称甲方）：<u><strong>&nbsp;&nbsp;${secureProtocol.emEntName}&nbsp;&nbsp;</strong></u></td>
+    </tr>
+  <tr>
+    <td class="indt2">机械设备拆卸单位（简称乙方）：<u><strong>&nbsp;${secureProtocol.inEntName}&nbsp;&nbsp;</strong></u></td>
+    </tr>
+  <tr>
+    <td class="indt2">拆卸单位拆卸资质证书号<u><strong>：&nbsp;${secureProtocol.inEntCertNum}&nbsp;&nbsp;</strong></u>&nbsp;&nbsp;资质等级:<u><strong>&nbsp;&nbsp;${secureProtocol.inEntTitleLevel}&nbsp;&nbsp;</strong></u></td>
+    </tr>
+</table>
+</p>
+<p class="indt2" style="font-size:14px;">依照《中华人民共和国合同法》及相关法律、法规和《建筑起重机械安全监督管理规定》(原建设部令第166号)的规定，遵循平等、自愿、公平和诚实信用的原则，双方协商就建筑起重机械的安装/拆卸（以下简称安拆）相关事宜达成协议如下：</p>
+<p><strong>第一条  项目名称、机械拆卸地点和拆卸高度</strong></p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="line-height:28px; font-size:14px;">
+  <tr>
+    <td class="indt2">项目名称：<u><strong>&nbsp;&nbsp;${secureProtocol.project.projectName}&nbsp;&nbsp;</strong></u></td>
+  </tr>
+    <tr>
+    <td class="indt2">机械拆卸地点：<u><strong>&nbsp;&nbsp;${secureProtocol.project.address}&nbsp;&nbsp;</strong></u></td>
+  </tr>
+  <tr>
+  <td class="indt2">拆卸高度：拆卸高度<u><strong>&nbsp;&nbsp;${secureProtocol.finalHeight}&nbsp;&nbsp;</strong></u>米，附着<u><strong>&nbsp;&nbsp;${secureProtocol.wallAttacheQty}&nbsp;&nbsp;</strong></u>道。</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="line-height:28px;">
+  <tr>
+    <td><p><strong>第二条&nbsp;&nbsp;双方权利义务 </strong></p> 
+     <p> 一、甲方权利义务 </p> 
+      <p class="indt2">1.机械设备拆卸前，负责为机械设备提供足够的电源（380V±5%）。负责提供由配电箱（房）至机械设备基础处的专用开关箱与电源线，电源线应采用“三相五线”制，专用开关箱内应符合“一机一闸一漏一箱  ”。 
+        </p>
+      <p class="indt2"> 2.机械设备拆卸退场前，负责做好退场道路压实，作业场地的平整，周边障碍物（含外架）的清除等工作。</p> 
+      <p>二、乙方权利义务</p>
+      <p class="indt2">1.负责根据工程及机械设备情况编制拆卸专项施工方案，经本单位技术负责人审批签字，报施工及监理单位审核并告知当地机械设备备案机关后方可进行作业。  </p>  
+      <p class="indt2">2.负责组织人员进行机械设备的拆卸工作，并在双方约定的时间内完成。</p>
+	  <p class="indt2"> 3. 负责提供的内业技术资料包括：相应拆卸资质、安全生产许可证、拆卸管理人员证书、拆卸作业人员上岗证、拆卸专项施工方案、拆卸前检查表、拆卸安全技术交底记录等。
+	  </p>
+	  
+      <p><strong>第三条&nbsp;&nbsp;双方安全责任 </strong></p>
+      <p> 一、甲方安全责任 </p>
+      <p class="indt2">1．甲方应向乙方提供确保建筑起重机械设备进场安装所需的施工条件，并设置安全警戒区。</p> 
+      <p class="indt2">2．甲方应跟据不同施工阶段、周围环境以及季节、气候的变化，对建筑起重机械采取相应的安全防护措施。 </p>
+      <p class="indt2">3．甲方应指定专职机械设备管理人员、专职安全员进行现场监督检查。 </p>
+      <p> 二、乙方安全责任 </p>
+      <p class="indt2">1.乙方组织的拆卸作业人员须持证上岗并按规定穿戴好安全防护用品，严格遵守拆卸程序和安全操作规程，严格按照经审批的拆卸专项施工方案进行作业。</p> 
+      <p class="indt2">2.乙方组织机械设备拆卸、降节、拆除附着作业必须在白天或照明良好的夜间进行，不得在大风（12m/s以上）、浓雾和雨雪天气进行作业。 </p>
+      <p class="indt2">3.乙方在拆卸前应对吊具索具以及机械设备各部件进行检查，同时对辅助起重设备进行检查，确认正常后方可开始拆卸。 </p>
+      <p class="indt2">4.乙方每次作业前，须对参与作业人员进行安全技术交底并签字确认。在作业条件符合要求的前提下，乙方对机械设备拆卸、降节、拆除附着等作业过程的安全生产负责。</p>
+       <p><strong>第四条&nbsp;&nbsp;争议解决 </strong></p>
+      <p class="indt2">本协议项下发生的争议，由双方协商解决，也可由行业主管部门调解，协商或者调解不成的，按下列第壹种方式解决。 </p>
+      <p class="indt2">1．向武夷山市人民法院提起诉讼；</p>
+      <p class="indt2">2．向武夷山市仲裁委员会申请仲裁。</p> 
+      <p> <strong>第五条&nbsp;&nbsp;其他条款 </strong></p>
+      <p class="indt2">1．本协议自双方签字并盖章之日起生效。本合同一式叁份，具有同等法律效力，其中甲方壹份，乙方壹份、建设局壹份。</p> 
+      <p class="indt2">2．本协义附件以及合同履行过程中形成的各种书面文件，经双方签署确认后为本合同的组成部分，与本协义具有同等法律效力。 </p>
+      <p class="indt2">3．本协义未尽事宜，双方可协商签订补充协议，补充协议与本协义具有同等法律效力。 </p>
+      <p class="indt2">4．协义签订地：<u>&nbsp;&nbsp;<strong>福建省武夷山市天和街18-20号 </strong>&nbsp;&nbsp;</u></p>
+      <p class="indt2">5．其他约定：机械设备需拆卸、降节、拆除附着甲方必须通知乙方并核对人员（在拆卸告知资料中的人员）到位拆卸操作，若不是乙方人员操作，出现任何问题均与乙方无关。 </p></td>
+  </tr>
+</table>
+<br />
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="line-height:28px; font-size:14px;">
+  <tr>
+    <td width="50%">总承包单位：（盖章 ） </td>
+    <td>拆卸单位：（盖章） </td>
+  </tr>
+  <tr>
+    <td>地    址：</td>
+    <td>地    址：</td>
+  </tr>
+  <tr>
+    <td>法定代表人：</td>
+    <td>法定代表人：</td>
+  </tr>
+  <tr>
+    <td>法定代表人或委托人：</td>
+    <td>法定代表人或委托人：</td>
+  </tr>
+  <tr>
+    <td>电      话：</td>
+    <td>电      话：</td>
+  </tr>
+  <tr>
+    <td>传      真：</td>
+    <td>传      真：</td>
+  </tr>
+  <tr>
+    <td>邮 政 编 码：</td>
+    <td>邮 政 编 码：</td>
+  </tr>
+  <tr>
+    <td>年  月   日 : </td>
+    <td>年  月   日 : </td>
+  </tr>
+</table>
+</p>
+</DIV>
+</center>
+</body>
+</html>

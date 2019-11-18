@@ -1,0 +1,1174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MaterialsStoreReport" language="groovy" pageWidth="2050" pageHeight="1190" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1990" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="83bf7fad-c335-4e5d-899b-484780229a46">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="DATE_BEG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_END" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DEPOT_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SPECIFICATIONS" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMMODITY" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @depotId BIGINT
+DECLARE	@startDate VARCHAR(24)
+DECLARE @endDate VARCHAR(24)
+DECLARE @commodity VARCHAR(24)
+DECLARE @specifications VARCHAR(32)
+
+
+SET @depotId = $P{DEPOT_ID}
+SET @startDate = CONVERT(VARCHAR(10),$P{DATE_BEG},20)
+SET @endDate = CONVERT(VARCHAR(10),$P{DATE_END},20)+1
+SET @commodity = $P{COMMODITY}
+SET @specifications = $P{SPECIFICATIONS}
+
+SELECT * FROM(
+
+SELECT
+A.*,
+ISNULL(B.CPK_IN,0) [CPK_IN],
+ISNULL(B.DXK_IN,0) [DXK_IN],
+ISNULL(B.BFK_IN,0) [BFK_IN],
+ISNULL(B.QUANTITY_IN,0) [QUANTITY_IN],
+ISNULL(B.QUANTITY_IN,0)*CONVERT(DECIMAL(20,2),A.CONVERSION_NUM) [SUPPLEMENT_QUANTITY_IN],
+ISNULL(C.CPK_OUT,0) [CPK_OUT],
+ISNULL(C.DXK_OUT,0) [DXK_OUT],
+ISNULL(C.BFK_OUT,0) [BFK_OUT],
+ISNULL(C.QUANTITY_OUT,0) [QUANTITY_OUT],
+ISNULL(C.QUANTITY_OUT,0)*CONVERT(DECIMAL(20,2),A.CONVERSION_NUM) [SUPPLEMENT_QUANTITY_OUT]
+FROM
+	(SELECT
+	CSH.COMMODITY,
+	CSH.SPECIFICATIONS,
+	CSH.UNIT,
+	CSH.DEPOT_ID,
+	CSH.DEPOT_NAME,
+	CONVERT(DECIMAL(20,2),CSH.CONVERSION_NUM) [CONVERSION_NUM],
+	SUM (CASE CSH.LOCATION_NAME WHEN '成品库' THEN ISNULL(CSH.QUANTITY, 0)+ISNULL(RK.QUANTITY, 0)-ISNULL(CK.QUANTITY, 0) ELSE 0 END ) AS [CPK],
+	SUM (CASE CSH.LOCATION_NAME WHEN '待修库' THEN ISNULL(CSH.QUANTITY, 0)+ISNULL(RK.QUANTITY, 0)-ISNULL(CK.QUANTITY, 0) ELSE 0 END ) AS [DXK],
+	SUM (CASE CSH.LOCATION_NAME WHEN '报废库' THEN ISNULL(CSH.QUANTITY, 0)+ISNULL(RK.QUANTITY, 0)-ISNULL(CK.QUANTITY, 0) ELSE 0 END ) AS [BFK],
+	SUM((ISNULL(CSH.QUANTITY, 0)+ISNULL(RK.QUANTITY, 0)-ISNULL(CK.QUANTITY, 0))) [QUANTITY],
+	SUM((ISNULL(CSH.QUANTITY, 0)+ISNULL(RK.QUANTITY, 0)-ISNULL(CK.QUANTITY, 0))*CONVERT(DECIMAL(20,2),CSH.CONVERSION_NUM)) [SUPPLEMENT_QUANTITY]
+	FROM
+	(
+		SELECT
+		E.COMMODITY,
+		E.SPECIFICATIONS,
+		E.UNIT,
+		E.CONVERSION_NUM,
+		E.DEPOT_ID,
+		E.DEPOT_NAME,
+		E.LOCATION_ID,
+		E.LOCATION_NAME,
+		ISNULL(F.QUANTITY,0) [QUANTITY],
+		ISNULL(F.SUPPLEMENT_QUANTITY,0) [SUPPLEMENT_QUANTITY]
+		FROM
+			(SELECT
+				C.COMMODITY,
+				S.SPECIFICATIONS,
+				S.FIRST_UNIT_CONVERSION [UNIT],
+				S.SECOND_CONVERTED_QUANTITY [CONVERSION_NUM],
+				BD.DEPOT_ID,
+				BD.DEPOT_NAME,
+				BL.LOCATION_ID,
+				BL.LOCATION_NAME,
+				0 [QUANTITY],
+				0 [SUPPLEMENT_QUANTITY]
+			FROM
+				T_MATERIALS_SPECIFICATIONS S,
+				T_MATERIALS_COMMODITY C,
+				T_MATERIALS_STORE MS,
+				T_BASE_DEPOT BD,
+				T_BASE_LOCATION BL
+			WHERE
+				S.COMMODITY_ID = C.COMMODITY_ID
+			AND S.SPECIFICATIONS_ID = MS.SPECIFICATIONS_ID
+			AND MS.DEPOT_ID=BD.DEPOT_ID
+			AND MS.LOCATION_ID=BL.LOCATION_ID
+			AND BD.DEPOT_ID = @depotId
+			AND (S.SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+			AND (C.COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')) E
+			LEFT JOIN
+			(SELECT
+				A.COMMODITY,
+				A.SPECIFICATIONS,
+				A.UNIT,
+				A.DEPOT_ID,
+				A.DEPOT_NAME,
+				B.LOCATION_ID,
+				B.LOCATION_NAME,
+				SUM (CONVERT(INT, B.QUANTITY)) [QUANTITY],
+				SUM (CONVERT(DECIMAL (10, 2),B.SUPPLEMENT_QUANTITY)) [SUPPLEMENT_QUANTITY]
+			FROM
+				T_BASE_DEPOT_INIT A,
+				T_BASE_DEPOT_INIT_DETAIL B
+			WHERE
+				A.DEPOT_INIT_ID = B.DEPOT_INIT_ID
+			AND DEL_FLAG = '1'
+			AND EFFECTIVE = '1'
+			AND DEPOT_ID = @depotId
+			AND (A.SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+			AND (A.COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')
+			GROUP BY
+				A.SPECIFICATIONS,
+				A.COMMODITY,
+				A.UNIT,
+				DEPOT_ID,
+				DEPOT_NAME,
+				LOCATION_ID,
+				LOCATION_NAME) F ON E.COMMODITY=F.COMMODITY
+		AND E.SPECIFICATIONS=F.SPECIFICATIONS
+		AND E.UNIT=F.UNIT
+		AND E.DEPOT_ID=F.DEPOT_ID
+		AND E.LOCATION_ID=F.LOCATION_ID) CSH
+		LEFT JOIN
+		(SELECT
+		COMMODITY,
+		SPECIFICATIONS,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,
+		LOCATION_ID,
+		LOCATION_NAME,
+		SUM(CONVERT(INT,QUANTITY)) [QUANTITY],
+		SUM(CONVERT(DECIMAL(10,2),AUXILIARY_QUANTITY)) [SUPPLEMENT_QUANTITY]
+		FROM
+			T_MATERIALS_IN_STOCK
+		WHERE DEPOT_ID = @depotId
+		AND (SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+		AND (COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')
+		AND (IN_DATE<@startDate OR @startDate IS NULL OR @startDate='')
+		GROUP BY
+		SPECIFICATIONS,
+		COMMODITY,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,
+		LOCATION_ID,
+		LOCATION_NAME)RK ON CSH.SPECIFICATIONS=RK.SPECIFICATIONS AND CSH.COMMODITY=RK.COMMODITY AND CSH.UNIT=RK.UNIT AND CSH.DEPOT_ID=RK.DEPOT_ID AND CSH.LOCATION_ID=RK.LOCATION_ID
+		LEFT JOIN
+		(SELECT
+		COMMODITY,
+		SPECIFICATIONS,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,
+		LOCATION_ID,
+		LOCATION_NAME,
+		SUM(CONVERT(INT,QUANTITY)) [QUANTITY],
+		SUM(CONVERT(DECIMAL(10,2),AUXILIARY_QUANTITY)) [SUPPLEMENT_QUANTITY]
+		FROM
+			T_MATERIALS_OUT_STOCK
+		WHERE DEPOT_ID = @depotId
+		AND (SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+		AND (COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')
+		AND (OUT_DATE<@startDate OR @startDate IS NULL OR @startDate='')
+		GROUP BY
+		SPECIFICATIONS,
+		COMMODITY,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,
+		LOCATION_ID,
+		LOCATION_NAME)CK ON CSH.SPECIFICATIONS=CK.SPECIFICATIONS AND CSH.COMMODITY=CK.COMMODITY AND CSH.UNIT=CK.UNIT AND CSH.DEPOT_ID=CK.DEPOT_ID AND CSH.LOCATION_ID=CK.LOCATION_ID
+	GROUP BY
+	CSH.SPECIFICATIONS,
+	CSH.COMMODITY,
+	CSH.UNIT,
+	CSH.CONVERSION_NUM,
+	CSH.DEPOT_ID,
+	CSH.DEPOT_NAME) A LEFT JOIN
+	(SELECT
+	COMMODITY,
+	SPECIFICATIONS,
+	UNIT,
+	DEPOT_ID,
+	DEPOT_NAME,
+	SUM (CASE LOCATION_NAME WHEN '成品库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [CPK_IN],
+	SUM (CASE LOCATION_NAME WHEN '待修库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [DXK_IN],
+	SUM (CASE LOCATION_NAME WHEN '报废库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [BFK_IN],
+	SUM(CONVERT(INT,ISNULL(QUANTITY,0))) [QUANTITY_IN],
+	SUM(CONVERT(DECIMAL(10,2),ISNULL(AUXILIARY_QUANTITY,0))) [SUPPLEMENT_QUANTITY_IN]
+	FROM
+		T_MATERIALS_IN_STOCK
+	WHERE DEPOT_ID = @depotId
+	AND (SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+	AND (COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')
+	AND (IN_DATE>@startDate OR @startDate IS NULL OR @startDate='')
+	AND (IN_DATE<@endDate OR @endDate IS NULL OR @endDate='')
+	GROUP BY
+	SPECIFICATIONS,
+	COMMODITY,
+	UNIT,
+	DEPOT_ID,
+	DEPOT_NAME) B ON A.SPECIFICATIONS=B.SPECIFICATIONS AND A.COMMODITY=B.COMMODITY AND A.UNIT=B.UNIT AND A.DEPOT_ID=B.DEPOT_ID LEFT JOIN
+	(SELECT
+	COMMODITY,
+	SPECIFICATIONS,
+	UNIT,
+	DEPOT_ID,
+	DEPOT_NAME,
+	SUM (CASE LOCATION_NAME WHEN '成品库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [CPK_OUT],
+	SUM (CASE LOCATION_NAME WHEN '待修库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [DXK_OUT],
+	SUM (CASE LOCATION_NAME WHEN '报废库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [BFK_OUT],
+	SUM(CONVERT(INT,ISNULL(QUANTITY,0))) [QUANTITY_OUT],
+	SUM(CONVERT(DECIMAL(10,2),ISNULL(AUXILIARY_QUANTITY,0))) [SUPPLEMENT_QUANTITY_OUT]
+	FROM
+		T_MATERIALS_OUT_STOCK
+	WHERE DEPOT_ID = @depotId
+	AND (SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+	AND (COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')
+	AND (OUT_DATE>@startDate OR @startDate IS NULL OR @startDate='')
+	AND (OUT_DATE<@endDate OR @endDate IS NULL OR @endDate='')
+	GROUP BY
+	SPECIFICATIONS,
+	COMMODITY,
+	UNIT,
+	DEPOT_ID,
+	DEPOT_NAME) C ON A.SPECIFICATIONS=C.SPECIFICATIONS AND A.COMMODITY=C.COMMODITY AND A.UNIT=C.UNIT AND A.DEPOT_ID=C.DEPOT_ID
+
+UNION ALL
+SELECT
+J.COMMODITY,
+J.SPECIFICATIONS,
+J.UNIT,
+J.DEPOT_ID,
+J.DEPOT_NAME,
+0 [CONVERSION_NUM],
+0 [CPK],
+0 [DXK],
+0 [BFK],
+0 [QUANTITY],
+0 [SUPPLEMENT_QUANTITY],
+J.CPK_IN,
+J.DXK_IN,
+J.BFK_IN,
+J.QUANTITY_IN,
+J.SUPPLEMENT_QUANTITY_IN,
+J.CPK_OUT,
+J.DXK_OUT,
+J.BFK_OUT,
+J.QUANTITY_OUT,
+J.SUPPLEMENT_QUANTITY_OUT
+FROM
+	(SELECT M.*,
+	ISNULL(N.CPK_OUT,0) [CPK_OUT],
+	ISNULL(N.DXK_OUT,0) [DXK_OUT],
+	ISNULL(N.BFK_OUT,0) [BFK_OUT],
+	ISNULL(N.QUANTITY_OUT,0) [QUANTITY_OUT],
+	ISNULL(N.SUPPLEMENT_QUANTITY_OUT,0) [SUPPLEMENT_QUANTITY_OUT]
+	FROM
+	(SELECT
+		COMMODITY,
+		SPECIFICATIONS,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,
+		SERIAL,
+		SUM (CASE LOCATION_NAME WHEN '成品库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [CPK_IN],
+		SUM (CASE LOCATION_NAME WHEN '待修库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [DXK_IN],
+		SUM (CASE LOCATION_NAME WHEN '报废库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [BFK_IN],
+		SUM(CONVERT(INT,ISNULL(QUANTITY,0))) [QUANTITY_IN],
+		SUM(CONVERT(DECIMAL(10,2),ISNULL(AUXILIARY_QUANTITY,0))) [SUPPLEMENT_QUANTITY_IN]
+		FROM
+			T_MATERIALS_IN_STOCK
+		WHERE DEPOT_NAME = '租借仓库'
+		AND (SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+		AND (COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')
+		AND (IN_DATE>@startDate OR @startDate IS NULL OR @startDate='')
+		AND (IN_DATE<@endDate OR @endDate IS NULL OR @endDate='')
+		AND 1=@depotId
+		GROUP BY
+		SPECIFICATIONS,
+		COMMODITY,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,SERIAL) M LEFT JOIN
+		(SELECT
+		COMMODITY,
+		SPECIFICATIONS,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,
+		SERIAL,
+		SUM (CASE LOCATION_NAME WHEN '成品库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [CPK_OUT],
+		SUM (CASE LOCATION_NAME WHEN '待修库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [DXK_OUT],
+		SUM (CASE LOCATION_NAME WHEN '报废库' THEN ISNULL(QUANTITY,0) ELSE 0 END ) AS [BFK_OUT],
+		SUM(CONVERT(INT,ISNULL(QUANTITY,0))) [QUANTITY_OUT],
+		SUM(CONVERT(DECIMAL(10,2),ISNULL(AUXILIARY_QUANTITY,0))) [SUPPLEMENT_QUANTITY_OUT]
+		FROM
+			T_MATERIALS_OUT_STOCK
+		WHERE DEPOT_NAME = '租借仓库'
+		AND (SPECIFICATIONS LIKE '%'+@specifications+'%' OR @specifications IS NULL OR @specifications='')
+		AND (COMMODITY LIKE '%'+@commodity+'%' OR @commodity IS NULL OR @commodity='')
+		AND (OUT_DATE>@startDate OR @startDate IS NULL OR @startDate='')
+		AND (OUT_DATE<@endDate OR @endDate IS NULL OR @endDate='')
+		AND 1=@depotId
+		GROUP BY
+		SPECIFICATIONS,
+		COMMODITY,
+		UNIT,
+		DEPOT_ID,
+		DEPOT_NAME,SERIAL) N ON M.SPECIFICATIONS=N.SPECIFICATIONS AND M.COMMODITY=N.COMMODITY AND M.UNIT=N.UNIT AND M.DEPOT_ID=N.DEPOT_ID AND M.SERIAL=N.SERIAL) J
+) TOTAL
+	LEFT JOIN
+	(SELECT
+	MS.SPECIFICATIONS_ID,
+	MS.COMMODITY_ID,
+	MS.SPECIFICATIONS,
+	MC.COMMODITY,
+	MS.FIRST_UNIT_CONVERSION AS 'UNIT'
+	FROM T_MATERIALS_COMMODITY MC,T_MATERIALS_SPECIFICATIONS MS
+	WHERE MC.COMMODITY_ID=MS.COMMODITY_ID) MSC ON MSC.COMMODITY = TOTAL.COMMODITY AND MSC.SPECIFICATIONS=TOTAL.SPECIFICATIONS AND MSC.UNIT=TOTAL.UNIT
+	ORDER BY MSC.COMMODITY_ID DESC,MSC.SPECIFICATIONS_ID DESC]]>
+	</queryString>
+	<field name="COMMODITY" class="java.lang.String"/>
+	<field name="SPECIFICATIONS" class="java.lang.String"/>
+	<field name="UNIT" class="java.lang.String"/>
+	<field name="DEPOT_ID" class="java.lang.Long"/>
+	<field name="DEPOT_NAME" class="java.lang.String"/>
+	<field name="CONVERSION_NUM" class="java.math.BigDecimal"/>
+	<field name="CPK" class="java.lang.Integer"/>
+	<field name="DXK" class="java.lang.Integer"/>
+	<field name="BFK" class="java.lang.Integer"/>
+	<field name="QUANTITY" class="java.lang.Integer"/>
+	<field name="SUPPLEMENT_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="CPK_IN" class="java.lang.Integer"/>
+	<field name="DXK_IN" class="java.lang.Integer"/>
+	<field name="BFK_IN" class="java.lang.Integer"/>
+	<field name="QUANTITY_IN" class="java.lang.Integer"/>
+	<field name="SUPPLEMENT_QUANTITY_IN" class="java.math.BigDecimal"/>
+	<field name="CPK_OUT" class="java.lang.Integer"/>
+	<field name="DXK_OUT" class="java.lang.Integer"/>
+	<field name="BFK_OUT" class="java.lang.Integer"/>
+	<field name="QUANTITY_OUT" class="java.lang.Integer"/>
+	<field name="SUPPLEMENT_QUANTITY_OUT" class="java.math.BigDecimal"/>
+	<field name="SPECIFICATIONS_ID" class="java.lang.Long"/>
+	<field name="COMMODITY_ID" class="java.lang.Long"/>
+	<variable name="index" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{index}.valueOf( 1 )]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" x="0" y="0" width="1980" height="50" uuid="e6160d0b-c903-4792-aec4-7dc38b9662ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="36"/>
+				</textElement>
+				<text><![CDATA[周转材料库存查询表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="70" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-2" mode="Opaque" x="0" y="0" width="80" height="70" backcolor="#99CCFF" uuid="8b77d076-eff8-4228-9191-34886b97a2ed"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" mode="Opaque" x="80" y="0" width="100" height="70" backcolor="#99CCFF" uuid="639edf8a-43ff-4a81-86a7-55003df93b5e"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[品名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" mode="Opaque" x="180" y="0" width="100" height="70" backcolor="#99CCFF" uuid="ae36cd16-8413-4968-ad7e-c9f85c0f193f"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[规格]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-5" mode="Opaque" x="280" y="0" width="100" height="70" backcolor="#99CCFF" uuid="b3aaebe6-baf1-4252-b00a-0e6553ed3b63"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="380" y="30" width="80" height="40" backcolor="#99CCFF" uuid="38a94b08-b4c6-4fdf-be3c-e086b43fdc74"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[成品]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-7" mode="Opaque" x="460" y="30" width="80" height="40" backcolor="#99CCFF" uuid="7a10237b-5224-4d32-bb4b-cc5757cbc42f"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[待修]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" mode="Opaque" x="540" y="30" width="80" height="40" backcolor="#99CCFF" uuid="b61af55c-ad6a-45d8-8e40-5709a4ad60ae"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[报废]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" mode="Opaque" x="700" y="50" width="80" height="20" backcolor="#99CCFF" uuid="8ab0c9e2-ef18-4912-9f1e-8ca17243b92e"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[辅助数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" mode="Opaque" x="620" y="50" width="80" height="20" backcolor="#99CCFF" uuid="ed527160-cbd3-4a2f-9bcc-da30a08594d2"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="380" y="0" width="400" height="30" backcolor="#99CCFF" uuid="cb4804d7-6e91-4ce3-892c-5be1c7c85905"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[期初库存]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="620" y="30" width="160" height="20" backcolor="#99CCFF" uuid="b7a06f48-dc14-4b6a-8fd8-72e2e7fdcc92"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[合计]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="1020" y="30" width="160" height="20" backcolor="#99CCFF" uuid="fc6287cd-5490-482d-8b78-0380d084faba"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[合计]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" mode="Opaque" x="1100" y="50" width="80" height="20" backcolor="#99CCFF" uuid="2c8cdc91-77c5-4414-86b4-02cea4477c56"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[辅助数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" mode="Opaque" x="1020" y="50" width="80" height="20" backcolor="#99CCFF" uuid="49a9e0d5-c748-47d1-ad6d-2602e3645df2"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-7" mode="Opaque" x="860" y="30" width="80" height="40" backcolor="#99CCFF" uuid="00bf55d7-a037-418f-beb6-52865367d434"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[待修]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="780" y="0" width="400" height="30" backcolor="#99CCFF" uuid="507b8021-75c3-4c89-9c02-616e94f1ba40"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[本期入库]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" mode="Opaque" x="940" y="30" width="80" height="40" backcolor="#99CCFF" uuid="18b09050-6c8e-4816-8e56-e8a7016172b4"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[报废]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="780" y="30" width="80" height="40" backcolor="#99CCFF" uuid="40620eba-e1e2-485a-affb-2e20702671db"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[成品]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="1180" y="30" width="80" height="40" backcolor="#99CCFF" uuid="eeb73551-e455-4097-a67f-50f81211ffe9"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[成品]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-7" mode="Opaque" x="1260" y="30" width="80" height="40" backcolor="#99CCFF" uuid="404832e3-7665-4922-9d1f-eab06a925603"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[待修]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="1180" y="0" width="400" height="30" backcolor="#99CCFF" uuid="006d27c2-382d-4bfa-8035-48c7c8f4a29c"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[本期出库]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="1420" y="30" width="160" height="20" backcolor="#99CCFF" uuid="6eb7339c-49e2-4c10-8ce9-9e4736f441ac"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[合计]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" mode="Opaque" x="1420" y="50" width="80" height="20" backcolor="#99CCFF" uuid="5ee8b844-69b1-41fa-8d0b-20b68615a468"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" mode="Opaque" x="1340" y="30" width="80" height="40" backcolor="#99CCFF" uuid="759f1615-4f39-4efc-8633-e2e737480bf0"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[报废]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="1580" y="30" width="80" height="40" backcolor="#99CCFF" uuid="ff870090-f0c7-40e6-9ed8-12989d26b195"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[成品]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-7" mode="Opaque" x="1660" y="30" width="80" height="40" backcolor="#99CCFF" uuid="48bb2ad1-1988-4fcb-8baf-acf90d3522b8"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[待修]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="1580" y="0" width="400" height="30" backcolor="#99CCFF" uuid="bcf6ff60-8f36-4be5-81c2-38793faa1d5a"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[期末库存]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" mode="Opaque" x="1820" y="30" width="160" height="20" backcolor="#99CCFF" uuid="cd279f76-2965-4660-848c-a79f33dade05"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[合计]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" mode="Opaque" x="1820" y="50" width="80" height="20" backcolor="#99CCFF" uuid="64ea3f97-4dbc-4c62-a8be-2a185b3d67cb"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" mode="Opaque" x="1740" y="30" width="80" height="40" backcolor="#99CCFF" uuid="53ba23a0-8f3a-4a74-bcb3-30e35b4d6f1f"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[报废]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" mode="Opaque" x="1500" y="50" width="80" height="20" backcolor="#99CCFF" uuid="fdcf2c9e-0694-4388-a0ad-ae5e8273de1a"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[辅助数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" mode="Opaque" x="1900" y="50" width="80" height="20" backcolor="#99CCFF" uuid="3ca15bd2-63ee-4f23-8d83-69ef62fba5c2"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" size="14"/>
+				</textElement>
+				<text><![CDATA[辅助数量]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" x="0" y="0" width="80" height="25" uuid="a73212b5-f6a5-4c9f-8b2a-b4de58622cc9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{index}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="0" width="100" height="25" uuid="c53040ec-abcc-472a-addf-b5ee3ca72f19"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMMODITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="180" y="0" width="100" height="25" uuid="a108bda0-3b90-4281-a86d-49207f642c80"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SPECIFICATIONS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="280" y="0" width="100" height="25" uuid="1bbd4c6e-0ab4-4e39-83d4-a5f37c0c342e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UNIT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="380" y="0" width="80" height="25" uuid="10f40971-31df-4527-81ab-9ade66cbb5eb"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPK}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="460" y="0" width="80" height="25" uuid="b2316abe-2de7-4592-9a1b-e21b42a16b9c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DXK}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="540" y="0" width="80" height="25" uuid="9a472ae2-9f13-4c67-adc0-08ff24b1a541"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BFK}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="620" y="0" width="80" height="25" uuid="e1a022c5-1942-490f-9ec9-91492c01602f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="700" y="0" width="80" height="25" uuid="7656bb4f-5aff-48e1-a3d7-eda7163b1123"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUPPLEMENT_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="780" y="0" width="80" height="25" uuid="9e3888c2-edb7-4b90-a9fc-71c66c1cdb60"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPK_IN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="860" y="0" width="80" height="25" uuid="24c28826-8618-41b9-ac7b-985d0b968d08"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DXK_IN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="940" y="0" width="80" height="25" uuid="87d349af-b6b2-46e3-8450-ed498304dc1c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BFK_IN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1020" y="0" width="80" height="25" uuid="0b4c0f2f-2c1c-415a-b6e3-d3b59c2a225f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QUANTITY_IN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1100" y="0" width="80" height="25" uuid="9b152ed1-9f6b-4f57-837a-a5984d055ba0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUPPLEMENT_QUANTITY_IN}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1180" y="0" width="80" height="25" uuid="3b50cd1e-1ce8-416c-b0a5-9f67828fd34c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPK_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1260" y="0" width="80" height="25" uuid="8144cabc-5146-4856-adf9-c4ef798327b5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DXK_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1340" y="0" width="80" height="25" uuid="190cad16-e865-4ed5-ae3b-f26efa6c14ab"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BFK_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1420" y="0" width="80" height="25" uuid="6494c960-0e54-4b5a-a682-039f413cc3cf"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QUANTITY_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1500" y="0" width="80" height="25" uuid="748265e7-5be7-465d-9620-614a3d1aa2ca"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUPPLEMENT_QUANTITY_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1580" y="0" width="80" height="25" uuid="b4bda88d-a63a-455a-a067-f7389307dc0b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPK}+$F{CPK_IN}-$F{CPK_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1660" y="0" width="80" height="25" uuid="ecfe8ccb-a56d-456e-9800-c5bba753f6eb"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DXK}+$F{DXK_IN}-$F{DXK_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1740" y="0" width="80" height="25" uuid="b60fe29a-f944-49d5-bef9-646dedbd6b6a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BFK}+$F{BFK_IN}-$F{BFK_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1820" y="0" width="80" height="25" uuid="81bb8073-f076-4f88-bf37-f029da51a7be"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QUANTITY}+$F{QUANTITY_IN}-$F{QUANTITY_OUT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1900" y="0" width="80" height="25" uuid="df4dda6a-2c47-44ef-9a93-d70061c5ecad"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{SUPPLEMENT_QUANTITY}.add($F{SUPPLEMENT_QUANTITY_IN})).subtract($F{SUPPLEMENT_QUANTITY_OUT})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

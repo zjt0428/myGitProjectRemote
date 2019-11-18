@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DispatchMaterials" table="T_DISPATCH_MATERIALS" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="dispatchId" column="DISPATCH_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="materialsId" type="java.lang.Long" column="MATERIALS_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="dispatchCounts" type="java.lang.String" column="DISPATCH_COUNTS" />
+		<property name="secondUnitConversion" type="java.lang.String" column="SECOND_UNIT_CONVERSION" />
+		<property name="secondConvertedQuantity" type="java.lang.String" column="SECOND_CONVERTED_QUANTITY" />
+		<property name="auxiliaryQuantity" type="java.lang.String" column="AUXILIARY_QUANTITY" />
+		<property name="counts" type="java.lang.String" column="COUNTS" />
+		<property name="materialsStoreId" type="java.lang.Long" column="MATERIALS_STORE_ID" />
+	</class>
+</hibernate-mapping>

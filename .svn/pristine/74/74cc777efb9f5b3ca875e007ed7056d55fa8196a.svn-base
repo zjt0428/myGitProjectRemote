@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.FormAccept" table="T_FORM_ACCEPT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="acceptId" column="ACCEPT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="acceptUserid" type="java.lang.Long" column="ACCEPT_USERID" />
+		<property name="acceptUsername" type="java.lang.String" column="ACCEPT_USERNAME" />
+		<property name="acceptDep" type="java.lang.String" column="ACCEPT_DEP" />
+		<property name="acceptTime" type="java.util.Date" column="ACCEPT_TIME" />
+		<property name="acceptOpinion" type="java.lang.String" column="ACCEPT_OPINION" />
+		<property name="acceptRemark" type="java.lang.String" column="ACCEPT_REMARK" />
+	</class>
+</hibernate-mapping>

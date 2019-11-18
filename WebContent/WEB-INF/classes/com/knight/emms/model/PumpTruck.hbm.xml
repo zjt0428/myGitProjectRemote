@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PumpTruck" table="T_PUMP_TRUCK" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="pumpId" column="PUMP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="pumpType" type="java.lang.String" column="PUMP_TYPE" />
+		<property name="pumpNumber" type="java.lang.String" column="PUMP_NUMBER" />
+		<property name="releaseDate" type="java.lang.String" column="RELEASE_DATE" />
+		<property name="issuingAuthority" type="java.lang.String" column="ISSUING_AUTHORITY" />
+		<property name="vehiclePermit" type="java.lang.String" column="VEHICLE_PERMIT" />
+		<property name="expirationDate" type="java.lang.String" column="EXPIRATION_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+	</class>
+</hibernate-mapping>

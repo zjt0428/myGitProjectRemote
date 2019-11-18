@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TruckPlan" table="T_TRUCK_PLAN" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="truckPlanId" column="TRUCKPLAN_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="truckPlanSerial" type="java.lang.String" column="TRUCKPLAN_SERIAL" />
+		<property name="truckPlanTheme" type="java.lang.String" column="TRUCK_PLAN_THEME" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="customerId" type="java.lang.Long" column="CUSTOMER_ID" />
+		<property name="customerName" type="java.lang.String" column="CUSTOMER_NAME" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="sigingTime" type="java.lang.String" column="SIGNING_TIME" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="projectManger" type="java.lang.String" column="PROJECT_MANAGER" />
+		<property name="tel" type="java.lang.String" column="TEL" />
+		<property name="pbEnt" type="java.lang.Long" column="PB_ENT" />
+		<property name="pbModule" type="java.lang.String" column="PB_MODULE" />
+		<property name="pbEntName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="pbEntLinkMan" type="java.lang.String" column="PB_ENT_LINK_MAN" />
+		<property name="pbEntLinkTel" type="java.lang.String" column="PB_ENT_LINK_TEL" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="projectAdress" type="java.lang.String" column="PROJECT_ADRESS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<!-- <set name="contractArrangeEquipmentSet" cascade="all" inverse="false" lazy="true">
+			<key column="ARRANGE_ID" />
+			<one-to-many class="com.knight.emms.model.ContractArrangeEquipment" />
+		</set>
+		<set name="contractArrangeSituationSet" cascade="all" inverse="false" lazy="true">
+			<key column="ARRANGE_ID" />
+			<one-to-many class="com.knight.emms.model.ContractArrangeSituation" />
+		</set> -->
+	</class>
+</hibernate-mapping>

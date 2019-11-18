@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="verify">
+	<!-- ===========================查询检测要求========================== -->
+	<!-- 查询检测要求 -->
+	<select id="vefify_demand">
+	<![CDATA[
+		SELECT D.DEMAND_ID,
+		       I.VITEM_TYPE,
+		       (SELECT VT.VALUE FROM BM_VITEM_TYPE VT WHERE VT.CODE = I.VITEM_TYPE) VITEM_TYPE_NAME,
+		       (SELECT P.ITEM_NAME FROM T_VERIFY_ITEM P WHERE I.ITEM_PARENT = P.ITEM_ID) PARENT_ITEM_NAME,
+		       I.ITEM_NAME,
+		       I.LEVEL,
+		       D.DEMAND_DES
+		  FROM T_VERIFY_ITEM_DEMAND D, T_VERIFY_ITEM I
+		 WHERE D.ITEM_ID = I.ITEM_ID
+	]]>
+	</select>
+</mapper>

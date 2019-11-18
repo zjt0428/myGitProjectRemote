@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInstallReview" table="T_INSTALL_REVIEW" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="reviewId" column="REVIEW_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="reviewCheckAttach" type="java.lang.String" column="REVIW_CHECK_ATTACH" />
+		<property name="reviewConclusion" type="java.lang.String" column="REVIEW_CONCLUSION" />
+		<property name="installId" type="java.lang.Long" column="INSTALL_ID" />
+		<property name="reviewStatus" type="java.lang.String" column="REVIE_STATUS" />
+		<property name="rejectReason" type="java.lang.String" column="REJECT_REASON" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+	</class>
+</hibernate-mapping>

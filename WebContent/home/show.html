@@ -1,0 +1,364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<title>待办事项</title>
+	<link href="css/style.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/emms/js/jquery/jquery.min.js"></script>
+	<style>
+		a {
+			cursor:pointer;
+			text-decoration:underline;
+			color:blue;
+		}
+		a:hover
+		{
+			color:red;
+		}
+	</style>
+</head>
+
+<body>
+<!--头部开始-->
+<!--头部结束-->
+
+<div class="zt_db_box">
+	<ul>
+
+		<!--待审业务开始-->
+		<li>
+			<div class="zt_db_titlebg">
+				<div class="zt_db_title_word">待审业务</div>
+				<div class="zt_tix_title_right"></div>
+			</div>
+			<div class="zt_list_table_box" style=" height:188px;overflow-y:auto">
+				<table id="show_check" width="100%" border="0" cellspacing="0" cellpadding="0" class="zt_list">
+					<tr>
+						<th width="10%">序号</th>
+						<th>提醒模块</th>
+						<th width="15%">待提交 </th>
+						<th width="15%">待审核 </th>
+						<th width="15%"> 待审批</th>
+						<th width="15%">通过</th>
+					</tr>
+				</table>
+			</div>
+		</li>
+
+		<!--待审业务结束-->
+		<!--通知公告开始-->
+		<li>
+			<div class="zt_zl_title">
+				<div class="zt_db_title_word">通知公告</div>
+				<div class="zt_tix_title_right"></div>
+			</div>
+			<div  class="zt_new_table">
+				<table id="listAnnounceUser" width="100%" border="0" cellspacing="0" cellpadding="0">
+				</table>
+			</div>
+		</li>
+		<!--通知公告结束-->
+
+
+		<!--周期件提醒-->
+		<li>
+			<div class="zt_db_titlebg">
+				<div class="zt_db_title_word">周期件提醒</div>
+				<div class="zt_tix_title_right"></div>
+			</div>
+			<div class="zt_list_table_box">
+				<table id="perReminListIndexWarn" width="100%" border="0" cellspacing="0" cellpadding="0" class="zt_list">
+					<tr>
+						<th>序号</th>
+						<th>配件编号</th>
+						<th>配件名称</th>
+						<th>配件规格</th>
+						<th>防坠器编号</th>
+						<th>检测日期</th>
+					</tr>
+
+				</table>
+			</div>
+		</li>
+
+		<!--待维保/更换件结束-->
+
+		<!--将到期资质开始-->
+		<li>
+			<div class="zt_db_titlebg">
+				<div class="zt_db_title_word">将到期企业资质</div>
+				<div class="zt_tix_title_right"></div>
+			</div>
+			<div class="zt_list_table_box">
+				<table id="enterQulListIndexWarn" width="100%" border="0" cellspacing="0" cellpadding="0" class="zt_list">
+					<tr>
+						<th>序号</th>
+						<th>企业名称</th>
+						<th>证书编号</th>
+						<th>发证单位</th>
+						<th>发证日期</th>
+						<th>有效截止日期</th>
+					</tr>
+
+				</table>
+			</div>
+		</li>
+
+		<!--将到期资质结束-->
+
+		<!--将到期岗位证开始-->
+		<li>
+			<div class="zt_db_titlebg">
+				<div class="zt_db_title_word">将到期岗位证</div>
+				<div class="zt_tix_title_right"></div>
+			</div>
+			<div class="zt_list_table_box">
+				<table id="postQulListIndexWarn" width="100%" border="0" cellspacing="0" cellpadding="0" class="zt_list">
+					<tr>
+						<th>序号</th>
+						<th>所属人员</th>
+						<th>证书编号</th>
+						<th>从业工种</th>
+						<th>发证单位</th>
+						<th>有效截止日期</th>
+					</tr>
+
+				</table>
+			</div>
+		</li>
+
+		<!--将到期岗位证结束-->
+
+		<!--将到期保单开始-->
+		<li>
+			<div class="zt_db_titlebg">
+				<div class="zt_db_title_word">将到期保单</div>
+				<div class="zt_tix_title_right"></div>
+			</div>
+			<div class="zt_list_table_box">
+				<table id="policyQulListIndexWarn" width="100%" border="0" cellspacing="0" cellpadding="0" class="zt_list">
+					<tr>
+						<th>序号</th>
+						<th>保险单号</th>
+						<th>出厂编号</th>
+						<th>备案编号</th>
+						<th>终止日期</th>
+						<th>项目名称</th>
+					</tr>
+
+
+				</table>
+			</div>
+		</li>
+
+		<!--将到期保单结束-->
+		<!--待维保开始-->
+		<li>
+			<div class="zt_db_titlebg">
+				<div class="zt_db_title_word">待维保</div>
+				<div class="zt_tix_title_right"></div>
+			</div>
+			<div class="zt_list_table_box">
+				<table id="maiteQulListIndexWarn" width="100%" border="0" cellspacing="0" cellpadding="0" class="zt_list">
+					<tr>
+						<th>序号</th>
+						<th>楼号</th>
+						<th>出厂编号</th>
+						<th>备案编号</th>
+						<th>规格型号</th>
+						<th>项目名称</th>
+						<th>故障描述</th>
+						<th>故障日期</th>
+					</tr>
+
+				</table>
+			</div>
+		</li>
+
+		<!--待维保结束-->
+	</ul>
+</div>
+
+
+
+<!--尾部开始-->
+
+
+
+</body>
+</html>
+<script type="text/javascript">
+	var tabTitle1='<tr><th width="10%">序号</th><th>提醒模块</th> <th width="15%">待提交 </th><th width="15%">待审核 </th><th width="15%"> 待审批</th><th width="15%">通过</th></tr>';
+	var tabTitle2=' <tr><th>序号</th><th>配件编号</th><th>配件名称</th><th>配件规格</th><th>防坠器编号</th><th>检测日期</th></tr>';
+	var tabTitle3=' <tr> <th>序号</th><th>企业名称</th><th>证书编号</th><th>发证单位</th><th>发证日期</th><th>有效截止日期</th></tr>';
+	var tabTitle4=' <tr><th>序号</th><th>所属人员</th> <th>证书编号</th> <th>从业工种</th> <th>发证单位</th><th>有效截止日期</th></tr>';
+	var tabTitle5=' <tr><th>序号</th>  <th>保险单号</th><th>出厂编号</th><th>备案编号</th><th>终止日期</th><th>项目名称</th></tr>';
+	var tabTitle6=' <tr><th>序号</th><th>楼号</th> <th>出厂编号</th><th>备案编号</th><th>规格型号</th><th>项目名称</th><th>故障描述</th><th>故障日期</th></tr>';
+	var showTr='<tr bgcolor="#FFFFFF" class="text1"  onmouseover="this.style.backgroundColor=\'#F1F1F1\';return true;" onmouseout="this.style.backgroundColor=\'#FFFFFF\';">';
+	$(function () {
+		$.post("/emms/form/getShowIndexWarn.do", {}, function(res){
+			var obj =JSON.parse(res);
+			var html="";
+			if(obj.success){
+				var list=obj.info.result;
+				for(var i=0;i<12;i++){
+					if(list[i]!=null){
+						var curNode=list[i];
+						var sor=i+1;
+						var tr='<td>'+sor+'</td><td>'+curNode.mudel+'</td>'+
+								'<td><a onclick="showTab('+sor+',0)">'+curNode.t0+'</a></td>'+
+								'<td><a onclick="showTab('+sor+',1)">'+curNode.t1+'</a></td>'+
+								'<td><a onclick="showTab('+sor+',2)">'+curNode.t2+'</a></td>'+
+								'<td><a onclick="showTab('+sor+',3)">'+curNode.t3+' </a></td>';
+						html=html+tr+'</tr>';
+					}
+				}
+				$("#show_check").empty().append(tabTitle1+showTr+html);
+			}
+		});
+		$.post("/emms/form/perReminListIndexWarn.do", {}, function(res){
+			//周期件提醒
+			var obj =JSON.parse(res);
+			var html="";
+			if(obj.success){
+				var list=obj.info.result;
+				for(var i=0;i<5;i++){
+					if(list[i]!=null){
+						var curNode=list[i];
+						var sor=i+1;
+						var tr='<td>'+sor+'</td><td>'+curNode.componSerial+'</td><td>'+curNode.componName+'</td><td>'+curNode.specificName+'</td><td>'+curNode.leftcageSerial+'</td><td>'+curNode.checkDate+'</td>';
+						html=html+tr+'</tr>';
+					}
+					else{
+						var tr='<td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td>';
+						html=html+tr+'</tr>';
+					}
+				}
+				$("#perReminListIndexWarn").empty().append(tabTitle2+showTr+html);
+			}
+
+		});
+		$.post("/emms/form/enterQulListIndexWarn.do", {}, function(res){
+			//将到期企业资质
+			var obj =JSON.parse(res);
+			var html="";
+			if(obj.success){
+				var list=obj.info.result;
+				for(var i=0;i<5;i++){
+					if(list[i]!=null){
+						var curNode=list[i];
+						var sor=i+1;
+						var tr='<td>'+sor+'</td><td>'+curNode.corpName+'</td><td>'+curNode.certNum+'</td><td>'+curNode.organName+'</td><td>'+curNode.organDate+'</td><td>'+curNode.endDate+'</td>';
+						html=html+tr+'</tr>';
+					}else{
+						var tr='<td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td>';
+						html=html+tr+'</tr>';
+					}
+				}
+				$("#enterQulListIndexWarn").empty().append(tabTitle3+showTr+html);
+			}
+
+		});
+		$.post("/emms/form/postQulListIndexWarn.do", {}, function(res){
+			//将到期岗位证
+			var obj =JSON.parse(res);
+			var html="";
+			if(obj.success){
+				var list=obj.info.result;
+				for(var i=0;i<5;i++){
+					if(list[i]!=null){
+						var curNode=list[i];
+						var sor=i+1;
+						var tr='<td>'+sor+'</td><td>'+curNode.practiName+'</td><td>'+curNode.certNum+'</td><td>'+curNode.practiKindwork+'</td><td>'+curNode.awardDepart+'</td><td>'+curNode.effectDate+'</td>';
+						html=html+tr+'</tr>';
+					}else{
+						var tr='<td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td>';
+						html=html+tr+'</tr>';
+					}
+				}
+				$("#postQulListIndexWarn").empty().append(tabTitle4+showTr+html);
+			}
+
+		});
+		$.post("/emms/form/policyQulListIndexWarn.do", {}, function(res){
+			//将到期保单
+			var obj =JSON.parse(res);
+			var html="";
+			if(obj.success){
+				var list=obj.info.result;
+				for(var i=0;i<5;i++){
+					if(list[i]!=null){
+						var curNode=list[i];
+						var sor=i+1;
+						var tr='<td>'+sor+'</td><td>'+curNode.insureId+'</td><td>'+curNode.exwSearial+'</td><td>'+curNode.recordId+'</td><td>'+curNode.stopInsureDate+'</td><td>'+curNode.practiName+'</td>';
+						html=html+tr+'</tr>';
+					}else{
+						var tr='<td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td>';
+						html=html+tr+'</tr>';
+					}
+				}
+				$("#policyQulListIndexWarn").empty().append(tabTitle5+showTr+html);
+			}
+		});
+		$.post("/emms/form/maiteQulListIndexWarn.do", {}, function(res){
+			//待维保
+			var obj =JSON.parse(res);
+			var html="";
+			if(obj.success){
+				var list=obj.info.result;
+				for(var i=0;i<5;i++){
+					if(list[i]!=null){
+						var curNode=list[i];
+						var sor=i+1;
+						var tr='<td>'+sor+'</td><td>'+curNode.buildingNum+'</td><td>'+curNode.exwSerial+'</td><td>'+curNode.recordId+
+								'</td><td>'+curNode.specificName+'</td><td>'+curNode.projectName+
+								'</td><td>'+curNode.phenomenon+'</td><td>'+curNode.damageDate+'</td>';
+						html=html+tr+'</tr>';
+					}else{
+						var tr='<td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>';
+						html=html+tr+'</tr>';
+					}
+				}
+				$("#maiteQulListIndexWarn").empty().append(tabTitle6+showTr+html);
+			}
+
+		});
+		//通知公告
+		$.post("/form/listAnnounceUser.do",{Q_delFlag_S_EQ:1,Q_userId_L_EQ:parent.curUserInfo.userId},function(res){
+			var obj =eval('(' + res + ')');
+			var html="";
+			if(obj.success){
+				for(var i=0;i<obj.totalCounts;i++){
+					var cur=obj.result[i];
+					var v2='<tr><td><div class="new_table_long"><a href="#" target="_blank">'+cur.announce.announceTitle+'</a></div></td>'
+							+'<td width="100" class="time">'+cur.publishTime+'</td></tr>'
+					html=html+v2;
+				}
+				$("#indexWarn_personList").empty().append(html);
+			}
+		})
+	});
+	function showTab(mudel,status){
+		if(mudel==1){//租赁合同
+			parent.App.clickTopTab("ContractLeaseListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==2){//调度管理
+			parent.App.clickTopTab("DispatchListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==3){//物流管理
+			parent.App.clickTopTab("LogisticsTransportListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==4){//现场安装
+			parent.App.clickTopTab("EquipInstallListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==5){//维修管理
+			parent.App.clickTopTab("EquipRepairListView", {params:{Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==6){//现场拆卸
+			parent.App.clickTopTab("EquipDismantleListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==7){//转厂维保
+			parent.App.clickTopTab("EquipWarehouseListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==8){//配件领用
+			parent.App.clickTopTab("PickupListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==9){//采购管理
+			parent.App.clickTopTab("PurchaseListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}else if(mudel==10){//借用管理
+			parent.App.clickTopTab("BorrowListView", {params:{Q_delFlag_S_EQ :'1',Q_applyforState_S_EQ:status,fill_status_name :'待提交'}});
+		}
+	};
+</script>

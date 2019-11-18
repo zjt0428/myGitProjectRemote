@@ -1,0 +1,218 @@
+/**
+ *====================================================
+ * 文件名称: EquipActivateAction.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2013-9-23			chenxy(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.web.action;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import com.knight.core.exception.BusinessException;
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.log.ActionLog;
+import com.knight.core.util.GsonUtil;
+import com.knight.core.web.action.BaseAction;
+import com.knight.emms.constant.Constant;
+import com.knight.emms.constant.ExclusionStrategyConstant;
+import com.knight.emms.model.EquipActivate;
+import com.knight.emms.model.EquipContractLease;
+import com.knight.emms.model.EquipFlow;
+import com.knight.emms.service.EquipActivateService;
+import com.knight.emms.service.EquipContractLeaseService;
+import com.knight.emms.service.EquipFlowService;
+import com.knight.emms.service.EquipmentService;
+import com.knight.emms.support.EmmsApplicationSupport;
+import com.knight.system.service.impl.CodeServiceImpl;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @ClassName: EquipActivateAction
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2013-9-23 下午8:10:24
+ */
+public class EquipActivateAction extends BaseAction {
+
+	private static final long serialVersionUID = 1L;
+
+	@Getter
+	@Setter
+	private EquipActivate equipActivate;
+	
+	@Getter
+	@Setter
+	private EquipContractLease equipContractLease;
+
+	@Getter
+	@Setter
+	private Long activateId;
+
+	@Resource
+	private EquipActivateService equipActivateService;
+	
+	@Resource
+	private EquipContractLeaseService equipContractLeaseService;
+
+	@Resource
+	private EquipFlowService equipFlowService;
+	
+	@Resource
+	private EquipmentService equipmentService;
+
+	public String list() {
+		QueryFilter filter = new QueryFilter(getRequest());
+		List<EquipActivate> list = equipActivateService.queryTranslateAllFull(filter);
+		StringBuffer buff = new StringBuffer("{success:true,'totalCounts':").append(filter.getPagingBean().getTotalItems()).append(",result:");
+		buff.append(GsonUtil.toJson(list, ExclusionStrategyConstant.equipActivateStrategy));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+	
+	public String listContract() {
+		QueryFilter filter = new QueryFilter(getRequest());
+		List<EquipContractLease> list = equipContractLeaseService.queryTranslateAllFull(filter);
+		StringBuffer buff = new StringBuffer("{success:true,'totalCounts':").append(filter.getPagingBean().getTotalItems()).append(",result:");
+		buff.append(GsonUtil.toJson(list, ExclusionStrategyConstant.equipActivateStrategy));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+
+	public String load() {
+		EquipActivate p = equipActivateService.getTranslateFull(activateId);
+		StringBuffer sb = new StringBuffer("{success:true,data:[");
+		sb.append(GsonUtil.toJson(p, GsonUtil.SINCE_VERSION_20, false, ExclusionStrategyConstant.equipActivateStrategy));
+		sb.append("]}");
+		setJsonString(sb.toString());
+		return SUCCESS;
+	}
+	
+	public String loadContract() {
+		EquipContractLease p = equipContractLeaseService.get(activateId);
+		StringBuffer sb = new StringBuffer("{success:true,data:[");
+		sb.append(GsonUtil.toJson(p, GsonUtil.SINCE_VERSION_20, false, ExclusionStrategyConstant.equipActivateStrategy));
+		sb.append("]}");
+		setJsonString(sb.toString());
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "新增或更新启用信息")
+	public String save() {
+		if (equipActivate.getActivateId() == null) {			
+			equipActivate.setEffective(Constant.DISENABLED);
+			equipActivate.setDelFlag(Constant.ENABLED);
+			equipActivateService.saveSerialModel(equipActivate);
+//			if(equipActivate.getEquipFlow() == null){
+				EquipFlow equipFlow = equipFlowService.get(equipActivate.getEquipFlow().getFlowId());
+				equipFlow.setActivateId(equipActivate.getActivateId());
+				equipFlowService.save(equipFlow);
+//			}
+			super.isCreateFileAttach = true;
+			createFileAttach(equipActivate.getActivateId());
+		} else {
+			EquipActivate p = equipActivateService.get(equipActivate.getActivateId());
+			if (!Constant.DISENABLED.equals(p.getEffective())) {
+				throw new BusinessException("启用单已经生效,无法修改!");
+			}
+			equipActivate.setActivateSerial(p.getActivateSerial());
+			equipActivate.setEffective(p.getEffective());
+			equipActivate.setEquipFlow(p.getEquipFlow());
+			equipActivate.setDelFlag(p.getDelFlag());
+			equipActivateService.merge(equipActivate);
+		}
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "新增或更新启用信息")
+	public String saveContractLease() {
+		equipContractLease.setDelFlag(Constant.ENABLED);
+		if(equipContractLease.getActivateId() ==null){
+			equipContractLeaseService.saveSerialModel(equipContractLease);
+			super.isCreateFileAttach = true;
+			createFileAttach(equipContractLease.getActivateId());
+		}else{
+			equipContractLeaseService.merge(equipContractLease);
+		}
+			
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "删除启用信息")
+	public String multiDel() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			EquipActivate p = equipActivateService.get(new Long(id));
+			if (Constant.DISENABLED.equals(p.getEffective())) {
+				p.setDelFlag(Constant.DISENABLED);
+				equipActivateService.save(p);
+				EquipFlow equipFlow = equipFlowService.get(p.getEquipFlow().getFlowId());
+				equipFlow.setActivateId(null);
+				equipFlowService.save(equipFlow);
+			}
+		}
+		return SUCCESS;
+	}
+	public String multiDelContract() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			EquipContractLease p = equipContractLeaseService.get(new Long(id));
+				p.setDelFlag(Constant.DISENABLED);
+				equipContractLeaseService.save(p);
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "启用生效")
+	public String multiEffective() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			EquipActivate p = equipActivateService.get(new Long(id));
+			if (Constant.DISENABLED.equals(p.getEffective())) {
+				equipActivateService.effective(p);
+			}
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "启用失效")
+	public String multiLoseEffective() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			EquipActivate p = equipActivateService.get(new Long(id));
+			if (Constant.ENABLED.equals(p.getEffective())) {
+				equipActivateService.loseEffective(p);
+			}
+		}
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "打印启用信息")
+	public String print() {
+		equipActivate = equipActivateService.get(activateId);
+		CodeServiceImpl.translate(equipActivate.getEquipFlow().getEquipDiary());
+		String activateDate = equipActivate.getActivateDate();
+		getRequest().setAttribute("activateDate", activateDate);
+		getRequest().setAttribute("companyName", EmmsApplicationSupport.getAppuserCorpName());
+		return getRequest().getParameter("formpage");
+	}
+
+	public String querydispatch() {
+		String flowId = getRequest().getParameter("flowId");
+		List<Map<String,Object>> list = equipActivateService.queryByScript("store.deliveryEntName_list", flowId);
+		StringBuffer sb = new StringBuffer("{success:true,data:[");
+		sb.append(GsonUtil.toJson(list, false));
+		sb.append("]}");
+		setJsonString(sb.toString());
+		return SUCCESS;
+	}
+}

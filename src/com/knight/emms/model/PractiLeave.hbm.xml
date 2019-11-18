@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PractiLeave" table="T_PRACTI_LEAVE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="leaveId" column="LEAVE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="leaveTime" type="java.lang.String" column="LEAVE_TIME" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="createTime" type="java.lang.String" column="CREATE_TIME" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.USERID = USER_ID)" />
+		<many-to-one name="practitioner" column="PRACTI_ID" class="com.knight.emms.model.Practitioner" fetch="join" insert="false" update="false"/>
+	</class>
+</hibernate-mapping>

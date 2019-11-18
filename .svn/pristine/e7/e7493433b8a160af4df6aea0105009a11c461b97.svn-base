@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<bean id="APIAnnounceMessageAction" class="com.knight.emms.terminal.action.AnnounceMessageAction" scope="prototype" />
+	<bean id="APIUserAction" class="com.knight.emms.terminal.action.UserAction" scope="prototype" />
+	<bean id="APIEquipmentAction" class="com.knight.emms.terminal.action.EquipmentAction" scope="prototype" />
+	<bean id="APIFileAttachAction" class="com.knight.emms.terminal.action.FileAttachAction" scope="prototype" />
+	<bean id="APIPraiseAction" class="com.knight.emms.terminal.action.PraiseAction" scope="prototype" />
+	<bean id="APIReviewAction" class="com.knight.emms.terminal.action.ReviewAction" scope="prototype" />
+	<bean id="APIAttendamce" class="com.knight.emms.terminal.action.AttendamceAction" scope="prototype" />
+	<bean id="APIDispatch" class="com.knight.emms.terminal.action.AppDispatchAction" scope="prototype" />
+	<bean id="APIFlow" class="com.knight.emms.terminal.action.AppFlowAction" scope="prototype" />
+	<bean id="APIRepair" class="com.knight.emms.terminal.action.AppRepairAction" scope="prototype" />
+	<bean id="APILogistics" class="com.knight.emms.terminal.action.AppLogisticsAction" scope="prototype" />
+	<bean id="APIRemindAction" class="com.knight.emms.terminal.action.AppRemindAction" scope="prototype" />
+	<bean id="APIConstructAction" class="com.knight.emms.terminal.action.AppConstructAction" scope="prototype" />
+	<bean id="APIDicCodeAction" class="com.knight.emms.terminal.action.DicCodeAction" scope="prototype" />
+	<bean id="APIConfimAction" class="com.knight.emms.terminal.action.AppConfimAction" scope="prototype" />
+	<bean id="AppProjectAction" class="com.knight.emms.terminal.action.AppProjectAction" scope="prototype"></bean>
+	<bean id="AppPractitionerAction" class="com.knight.emms.terminal.action.PractitionerAction" scope="prototype"></bean>
+	<bean id="WeChatMessageAction" class="com.knight.emms.terminal.action.WeChatMessageAction" scope="prototype"></bean>
+</beans>

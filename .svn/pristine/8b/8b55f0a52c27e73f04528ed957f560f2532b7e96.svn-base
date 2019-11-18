@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContingencyPlan" table="T_CONTINGENCY_PLAN" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="contingencyId" column="CONTINGENCY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contingencySerial" type="java.lang.String" column="CONTINGENCY_SERIAL" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="emEnt" type="java.lang.Long" column="EM_ENT" />
+		<property name="emEntModule" type="java.lang.String" column="EM_ENT_MODULE" />
+		<property name="emEntName" type="java.lang.String" column="EM_ENT_NAME" />
+		<property name="inEnt" type="java.lang.Long" column="IN_ENT" />
+		<property name="inEntModule" type="java.lang.String" column="IN_ENT_MODULE" />
+		<property name="inEntName" type="java.lang.String" column="IN_ENT_NAME" />
+		<property name="inEntCertNum" type="java.lang.String" column="IN_ENT_CERT_NUM" />
+		<property name="inEntTitleLevel" type="java.lang.String" column="IN_ENT_TITLE_LEVEL" />
+		<property name="overallHeight" type="java.math.BigDecimal" column="OVERALL_HEIGHT" />
+		<property name="finalHeight" type="java.lang.String" column="FINAL_HEIGHT" />
+		<property name="contingencyPhone" type="java.lang.String" column="CONTINGENCY_PHONE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<many-to-one name="contractLease" column="CONTRACT_ID" class="com.knight.emms.model.ContractLease" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+		<set name="contingencyWorkerSet" lazy="true" cascade="all" inverse="false">
+			<key column="CONTINGENCY_ID"></key>
+			<one-to-many class="com.knight.emms.model.ContingencyWorker" />
+		</set>
+	</class>
+</hibernate-mapping>

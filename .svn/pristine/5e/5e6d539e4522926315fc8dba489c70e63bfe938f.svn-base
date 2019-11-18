@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BorrowComponent" table="T_BORROW_COMPONENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="borrowComponId" column="BORROW_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="borrowId" type="java.lang.Long" column="BORROW_ID" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />
+		<property name="componSerial" type="java.lang.String" column="COMPON_SERIAL" />
+		<property name="componCategory" type="java.lang.String" column="COMPON_CATEGORY" />
+		<property name="componGeneric" type="java.lang.String" column="COMPON_GENERIC" />
+		<property name="borrowDate" type="java.lang.String" column="BORROW_DATE" />
+		<property name="borrowCounts" type="java.lang.Integer" column="BORROW_COUNTS" />
+		<property name="consumeCounts" type="java.lang.Integer" column="CONSUME_COUNTS" />
+		<property name="returnCounts" type="java.lang.Integer" column="RETURN_COUNTS" />
+		<property name="returnDate" type="java.lang.String" column="RETURN_DATE" />
+		<property name="returnStoreId" type="java.lang.Long" column="RETURN_STORE_ID" />
+		<property name="returnStoreName" type="java.lang.String" formula="(SELECT SH.STORE_NAME FROM T_STORE_HOUSE SH WHERE SH.STORE_ID = RETURN_STORE_ID)" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+	</class>
+</hibernate-mapping>

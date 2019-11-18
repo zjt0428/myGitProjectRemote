@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ExeuntPlan" table="T_EXEUNT_PLAN" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="exeuntPlanId" column="EXEUNT_PLAN_ID" type="java.lang.Long" length="64">
+			<generator class="native" />
+		</id>
+		<property name="exeuntPlanSerial" type="java.lang.String" column="EXEUNT_PLAN_SERIAL" />
+		<property name="declareDate" type="java.lang.String" column="DECLARE_DATE" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="projectType" type="java.lang.String" column="PROJECT_TYPE" />
+		<property name="planApplicant" type="java.lang.String" column="PLAN_APPLICANT" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="planType" type="java.lang.String" column="PLAN_TYPE" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="backStoreId" type="java.lang.Long" column="BACK_STORE_ID" />
+		<property name="backStoreName" type="java.lang.String" column="BACK_STORE_NAME" />
+		<property name="workFlow" type="java.lang.String" column="WORK_FLOW" />
+		<property name="title" type="java.lang.String" column="TITLE" />
+		<property name="projectSchedule" type="java.lang.String" column="PROJECT_SCHEDULE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="applyforState" type="java.lang.String" column="APPLY_FOR_STATE" />
+		
+		<set name="demandDetailForExeuntPlanSet" cascade="all" inverse="false" lazy="true">
+			<key column="EXEUNT_PLAN_ID" />
+			<one-to-many class="com.knight.emms.model.DemandDetailForExeuntPlan" />
+		</set>
+	</class>
+</hibernate-mapping>

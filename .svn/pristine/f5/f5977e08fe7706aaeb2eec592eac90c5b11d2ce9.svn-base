@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <bean id="scheduler" class="com.knight.core.scheduling.quartz.SchedulerSimpleFactoryBean">
+        <property name="scheduljobs">
+            <map>
+                  <entry key-ref="schedularArchiveDomain">
+                    <map>
+                       <!-- 企业资质到期验证及预警信息 -->
+<!--                         <entry key="corpCertDueToRemind" value="0 30 0 * * ?"/> -->
+                       <!--  人员资质到期验证及预警信息 -->
+<!--                         <entry key="practiCertDueToRemind" value="0 0 12 * * ?"/> -->
+                        <!-- 检测管理-下次检测时间提醒 -->
+<!--                         <entry key="detectDateRemind" value="0 0 12 * * ?"/> -->
+                        <!-- 设备到期预警信息及设备/零配件报废-->
+                        <entry key="equipScrapToRemind" value="0 40 0 * * ?"/>
+                        <!--设备/零配件 折旧率设置
+                        <entry key="setDepreciateRate" value="0 45 0 * * ?"/>
+                        客户/供应商 联系人生日提醒
+                        <entry key="birthdayRemind" value="0 50 0 * * ?"/>
+                        设备保险逾期提醒
+                        <entry key="equipInsureOvertimeRemind" value="0 55 0 * * ?"/>
+                        每月配件库存
+                        <entry key="componentMthStocks" value="0 0 0 01 * ?"/>-->
+                    </map>
+                </entry>
+               <!-- <entry key-ref="schedularDispatchDomain">
+                    <map>
+                        合同设备租期到期提醒
+                        <entry key="contractExpireEquipRemaind" value="0 0 1 * * ?"/>
+                        合同设备租期超过提醒
+                        <entry key="contractOvertimeEquipRemaind" value="0 5 1 * * ?"/>
+                        采购到货时间逾期提醒
+                        <entry key="purchaseOvertimeRemaind" value="0 10 1 * * ?"/>
+                        借用归还到期提醒
+                        <entry key="borrowExpireRemaind" value="0 15 1 * * ?"/>
+                        借用归还逾期提醒
+                        <entry key="borrowOvertimeRemaind" value="0 20 1 * * ?"/>
+                        结算合同结算类别新老款更新
+                        <entry key="contractFundCategorySwitch" value="0 0 0 1 1 ? *"/>
+                    </map>
+                </entry>
+                <entry key-ref="schedularFundDomain">
+                    <map>
+                        付款/还款 到期提醒(设备按揭/合同付款/合同收款)
+                        <entry key="amountPayDueToRemind" value="0 25 1 * * ?"/>
+                        借款超期归还提醒
+                        <entry key="moneyLendOvertimeRemind" value="0 30 1 * * ?"/>
+                    </map>
+                </entry>
+                <entry key-ref="schedularSmsDomain">
+                    <map>
+                        短信发送
+                        <entry key="sendsmsBusinessMessage" value="0 0 8 * * ?"/>
+                        <entry key="inspectRemainMessage" value="0 0 8 * * ?"/>
+                        <entry key="oneRemainsendsmsBusinessMessage" value="0 0 8 * * ?"></entry>
+                        <entry key="twoRemainsendsmsBusinessMessage" value="0 0 8 * * ?"></entry>
+                        <entry key="thrRemainsendsmsBusinessMessage" value="0 0 8 * * ?"></entry>
+                        <entry key="antiFallRemindMessage" value="0 0 8 * * ?"></entry>
+                    </map>
+                </entry>
+                <entry key-ref="schedularRepairDomain">
+                    <map>
+                        短信发送
+                        <entry key="listenApply" value="0 0/1 * * * ?"/>
+                    </map>
+                </entry>
+                <entry key-ref="SchedularConstructDomain">
+                    <map>
+                        即将到期提醒
+                        <entry key="expiringSMSMessage" value="0 0 8 * * ?"/>
+                        超期提醒
+                        <entry key="overTimeSMSMessage" value="0 0 8 * * ?"/>
+                    </map>
+                </entry> -->
+                <entry key-ref="EquipInsuranceDomain">
+                    <map>
+                        <entry key="autoCreateWaitEquipInsurance" value="0 0 7 ? * MON"/>
+                        <entry key="autoCreateWaitEquipInsuranceDay" value="0 0 5 * * ?"/>
+                        <entry key="autoCreateWaitPractiInsurance" value="0 0 7 ? * MON"/>
+                        <entry key="autoCreateWaitPractiInsuranceDay" value="0 0 5 * * ?"/>
+                        <entry key="autoCheckAttendamceSgonDay" value="0 1 * * * ?"/>
+                    </map>
+                </entry>
+                <entry key-ref="SchedularInspectDomain">
+                    <map>
+                    	<!-- 自动生成巡检单 -->
+                        <entry key="autoCreateWaitEquipInspect" value="0 0 5 * * ?"/>
+                        <!-- 自动封存巡检单 -->
+                        <entry key="sealEquipInspect" value="0 0 1 1 * ?"/>
+                    </map>
+                </entry>
+            </map>
+        </property>
+        <property name="configLocation" value="classpath:resource/emmsQuartz.properties"/>
+    </bean>
+
+</beans>

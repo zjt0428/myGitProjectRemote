@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AmountReceive" table="T_AMOUNT_RECEIVE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="amountReceiveId" column="AMOUNT_RECEIVE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractSerial" type="java.lang.String" formula="(SELECT CL.CONTRACT_SERIAL
+                  FROM T_CONTRACT_LEASE CL WHERE CL.CONTRACT_ID=CONTRACT_ID AND (RELATE_MODULE = 'SETTLE_CONTRACT' OR RELATE_MODULE = 'CONTRACT_LEASE'))" /> 
+        <property name="contractNo" type="java.lang.String" formula=" (SELECT CL.CONSTRACT_NO FROM T_CONTRACT_LEASE CL WHERE CL.CONTRACT_ID=CONTRACT_ID AND (RELATE_MODULE = 'SETTLE_CONTRACT' OR RELATE_MODULE = 'CONTRACT_LEASE'))" /> 
+		<property name="amountSerial" type="java.lang.String" column="AMOUNT_SERIAL" />
+		<property name="amountTheme" type="java.lang.String" column="AMOUNT_THEME" />
+		<property name="voucher" type="java.lang.String" column="VOUCHER" />
+		<property name="receiveEntId" type="java.lang.Long" column="RECEIVE_ENT_ID" />
+		<property name="receiveModule" type="java.lang.String" column="RECEIVE_MODULE" />
+		<property name="receiveEntName" type="java.lang.String" column="RECEIVE_ENT_NAME" />
+		<property name="receiveEntAccountId" type="java.lang.Long" column="RECEIVE_ENT_ACCOUNT_ID" />
+		<property name="receiveBank" type="java.lang.String" column="RECEIVE_BANK" />
+		<property name="receiveAccount" type="java.lang.String" column="RECEIVE_ACCOUNT" />
+		<property name="receiveAmount" type="java.math.BigDecimal" column="RECEIVE_AMOUNT" />
+		<property name="paymentId" type="java.lang.Long" column="PAYMENT_ID" />
+		<property name="paymentModule" type="java.lang.String" column="PAYMENT_MODULE" />
+		<property name="paymentName" type="java.lang.String" column="PAYMENT_NAME" />
+		<property name="paymentAccountId" type="java.lang.Long" column="PAYMENT_ACCOUNT_ID" />
+		<property name="paymentBank" type="java.lang.String" column="PAYMENT_BANK" />
+		<property name="paymentAccount" type="java.lang.String" column="PAYMENT_ACCOUNT" />
+		<property name="paymentType" type="java.lang.String" column="PAYMENT_TYPE" />
+		<property name="receiveDate" type="java.lang.String" column="RECEIVE_DATE" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="reimburseType" type="java.lang.String" column="REIMBURSE_TYPE" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="relateAmount" type="java.math.BigDecimal" column="RELATE_AMOUNT" />
+		<property name="hasReceiveAmount" type="java.math.BigDecimal" column="HAS_RECEIVE_AMOUNT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="receiveStatus" type="java.lang.String" column="RECEIVE_STATUS" />
+		<property name="receivableDebit" type="java.math.BigDecimal" column="RECEIVABLE_DEBIT" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" insert="false" update="false" />
+		<property name="competentDepartmentId" type="java.lang.Long" formula="(SELECT TOP 1 CL.COMPETENT_DEPARTMET_ID FROM T_CONTRACT_LEASE CL 
+										WHERE  CL.CONTRACT_ID=CONTRACT_ID AND (RELATE_MODULE = 'SETTLE_CONTRACT' OR RELATE_MODULE = 'CONTRACT_LEASE'))" />
+		<property name="approveTime" type="java.util.Date" formula="(SELECT TOP 1 T.APPROVE_TIME FROM T_FORM_APPROVE T WHERE T.RELATE_MODULE = 'AMOUNT_RECEIVE' AND T.RELATE_ID =AMOUNT_RECEIVE_ID )" />
+		<property name="permissionFlag" type="java.lang.String" formula="( SELECT CL.PERMISSION_FLAG FROM T_CONTRACT_LEASE CL WHERE CL.CONTRACT_ID = CONTRACT_ID AND (RELATE_MODULE = 'SETTLE_CONTRACT' OR RELATE_MODULE = 'CONTRACT_LEASE'))" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="contractLease" column="CONTRACT_ID" class="com.knight.emms.model.ContractLease" fetch="join" />
+		<set name="amountReceiveShareSet" cascade="all" inverse="false" lazy="true">
+			<key column="AMOUNT_RECEIVE_ID" />
+			<one-to-many class="com.knight.emms.model.AmountReceiveShare" />
+		</set>
+		<set name="amountEquipShareSet" cascade="all" inverse="false" lazy="true" where=" RELATE_MODULE = 'AMOUNT_RECEIVE'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.AmountEquipShare" />
+		</set>
+	</class>
+</hibernate-mapping>

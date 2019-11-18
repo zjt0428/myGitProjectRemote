@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- 为缺省的Action处理 -->
+	<bean id="BaseAction" class="com.knight.core.web.action.BaseAction" />
+
+	<!-- System -->
+	<bean id="LoginAction" class="com.knight.system.web.action.LoginAction" scope="prototype" />
+	<bean id="MenuAction" class="com.knight.system.web.action.MenuAction" scope="prototype" />
+	<bean id="FileDetailAction" class="com.knight.system.web.action.FileDetailAction" scope="prototype" />
+	<bean id="FileAttachAction" class="com.knight.system.web.action.FileAttachAction" scope="prototype" />
+	<bean id="AppUserAction" class="com.knight.system.web.action.AppUserAction" scope="prototype" />
+	<bean id="AppRoleAction" class="com.knight.system.web.action.AppRoleAction" scope="prototype" />
+	<bean id="DepartmentAction" class="com.knight.system.web.action.DepartmentAction" scope="prototype" />
+	<bean id="IndexDisplayAction" class="com.knight.system.web.action.IndexDisplayAction" scope="prototype" />
+	<bean id="InMessageAction" class="com.knight.system.web.action.InMessageAction" scope="prototype" />
+	<bean id="ShortMessageAction" class="com.knight.system.web.action.ShortMessageAction" scope="prototype" />
+	<bean id="CodeAction" class="com.knight.system.web.action.CodeAction" scope="prototype" />
+	<bean id="SysConfigAction" class="com.knight.system.web.action.SysConfigAction" scope="prototype" />
+	<bean id="AppTipsAction" class="com.knight.system.web.action.AppTipsAction" scope="prototype" />
+	<bean id="SystemLogAction" class="com.knight.system.web.action.SystemLogAction" scope="prototype" />
+	<bean id="AppUserKeyAction" class="com.knight.system.web.action.AppUserKeyAction" scope="prototype" />
+	<bean id="GlobalTypeAction" class="com.knight.system.web.action.GlobalTypeAction" scope="prototype" />
+	<bean id="SystemSqlAction" class="com.knight.system.web.action.SystemSqlAction" scope="prototype" />
+	<bean id="MiniProgramAction" class="com.knight.system.web.action.MiniProgramAction" scope="prototype" />
+</beans>

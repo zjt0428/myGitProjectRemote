@@ -1,0 +1,85 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>隐患整改通知单</title>
+<link href="css/style_table.css" rel="stylesheet" type="text/css" />
+<style media="print">
+.Noprint {
+	display: none;
+	
+}
+.PageNext {
+	page-break-after: always;
+}
+</style>
+</head>
+
+<body>
+<center class="Noprint">
+	<p align="right" class="mar_15">
+		<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+		<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+	</p>
+</center>
+<center>
+<div class="main_detail">
+ <div class="wrod_title">
+   <p><strong>隐患整改通知单</strong></p>
+ </div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="32" align="right">通知单号：</td>
+    <td width="150" align="left">&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="zgtable">
+  <tr>
+    <td width="15%" height="32" align="center"><strong>工程名称</strong></td>
+    <td width="35%" align="left"> 明溪县箭岗地块保障性住房建设项目（二期限价商品房） </td>
+    <td width="15%" align="center"><strong>施工单位</strong></td>
+    <td align="left" >&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="32" align="center"><strong>检查日期</strong></td>
+    <td align="left">&nbsp;</td>
+    <td align="center"><strong>设备名称</strong></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="32" align="center"><strong>检查部门</strong></td>
+    <td align="left">&nbsp;</td>
+    <td align="center"><strong>型号规格</strong></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+    <tr>
+    <td height="32" align="center"><strong>参加检查人：</strong></td>
+    <td colspan="3" align="left">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="350" colspan="4" align="left" valign="top">&nbsp;&nbsp;现场存在问题：</td>
+    </tr>
+  <tr>
+    <td height="100" colspan="2" align="left" valign="top">&nbsp;&nbsp;落实整改负责人（签字）：
+	<p style="padding-left:150px; padding-top:50px;">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</p></td>
+	<td colspan="2" align="left" valign="top">&nbsp;&nbsp;&nbsp;&nbsp;检查负责人（签字）：
+     <p style="padding-left:150px;padding-top:50px;">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</p></td>
+   </tr>
+  <tr>
+    <td align="center" style="line-height:24px;">复查<br />意见
+    <td colspan="3" valign="bottom" align="right" height="160">复查人（签字）： &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日&nbsp;&nbsp;</td>
+    </tr>
+</table>
+
+
+
+</p>
+
+
+</div>
+</center>
+</body>
+</html>

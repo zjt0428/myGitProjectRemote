@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.FunUrl" table="FUN_URL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="urlId" column="urlId" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="urlPath" type="java.lang.String" update="true" insert="true" access="property" column="urlPath" length="128"
+			not-null="true" unique="false" />
+		<many-to-one name="appFunction" class="com.knight.system.model.AppFunction" not-null="false" fetch="join">
+			<column name="functionId" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>

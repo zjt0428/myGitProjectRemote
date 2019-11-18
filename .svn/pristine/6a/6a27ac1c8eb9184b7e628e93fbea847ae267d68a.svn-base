@@ -1,0 +1,438 @@
+var SettleContractListView = function(a) {
+	Ext.apply(this, a || {});
+	this.params = {};
+	this.params.Q_delFlag_S_EQ = "1";
+	Ext.apply(this.params, (a && a.params) || {});
+	// =====================================================================//
+	if (!this.searchDisenable) {
+		var fundStatusCombo = $initComboBoxField("款项状态", "Q_fundStatus_S_EQ", "FUND_PLAN_STATUS", {
+			width : 80,
+			lable : "款项状态",
+			allowBlank : true
+		});
+		var generalItems = [ {
+			xtype : "datacombo",
+			width : 75,
+			lable : "是否生效",
+			name : "Q_effective_S_EQ",
+			store : [ [ "0", "否" ], [ "1", "是" ] ]
+		}, fundStatusCombo, {
+			lable : "项目名称",
+			name : "Q_projectName_S_LK",
+			value : this.projectName ? this.projectName : ""
+		}, {
+			lable : "承租方",
+			name : "Q_paEntName_S_LK",
+			value : this.paEntName ? this.paEntName : ""
+		}, {
+			lable : "结算周期",
+			editable : false,
+			xtype : "datefield",
+			format : "Y-m-d",
+			name : "Q_endSettleDate_S_GE"
+		}, {
+			lable : "至",
+			editable : false,
+			xtype : "datefield",
+			format : "Y-m-d",
+			name : "Q_startSettleDate_S_LE"
+		} ];
+	}
+	var actionItems = [ {
+		iconCls : "btn-grid-read",
+		qtip : "明细",
+		handler : this.loadSettleContract
+	} ];
+	if (!this.actionDisenable) {
+		this.initRowActionItems(actionItems);
+	}
+	if (!this.tbarDisenable) {
+		var tbarItems = this.initTopBarActionItems();
+	}
+	var datagrid_config = {
+		delayed_load : this.delayed_load,
+		store : {
+			fields : SettleContractListViewField
+		},
+		rowAction : {
+			width : 75,
+			actionItems : actionItems
+		},
+		tbarItems : tbarItems,
+		columns : [ {
+			width : 60,
+			header : "款项状态",
+			dataIndex : "fundStatusName"
+		}, {
+			width : 60,
+			header : "结算类别",
+			dataIndex : "fundCategoryName"
+		}, {
+			header : ContractLeaseFormConfigure.contractSerialHeader,
+			dataIndex : "contractSerial"
+		}, {
+			header : "承租方",
+			dataIndex : "paEntName"
+		}, {
+			header : "项目名称",
+			dataIndex : "projectName"
+		}, {
+			header : "结算开始时间",
+			dataIndex : "startSettleDate"
+		}, {
+			header : "截止时间",
+			dataIndex : "endSettleDate"
+		}, {
+			header : "租金总计",
+			dataIndex : "settleAmount",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number(c.data.settleAmount, "0.00");
+			}
+		}, {
+			header : "已收金额",
+			dataIndex : "finishedAmount",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number(c.data.finishedAmount, "0.00");
+			}
+		}, {
+			header : "剩余金额",
+			dataIndex : "balanceAmount",
+			align : "right",
+			renderer : function(a, b, c) {
+				return Ext.util.Format.number((c.data.balanceAmount), "0.00");
+			}
+		}, {
+			header : "工地负责人",
+			dataIndex : "sitesPrincipal"
+		}, {
+			width : 50,
+			header : "结算单",
+			dataIndex : "effective",
+			renderer : function(n) {
+				if (n == "0") {
+					return "<font face='宋体' color='red'>未生效</font>";
+				}
+				return "已生效";
+			}
+		}, {
+			header : "填报时间",
+			dataIndex : "providedDate"
+		} ]
+	};
+	SettleContractListView.superclass.constructor.call(this, Ext.apply({
+		id : "SettleContractListView",
+		title : TabTitle.SETTLE_CONTRACT_LIST,
+		iconCls : "menu-business-settle",
+		url : __ctxPath + "/dispatch/listSettleContract.do",
+		base_params : this.params,
+		search_config : {
+			generalItems : generalItems
+		},
+		datagrid_config : datagrid_config
+	}, a));
+};
+Ext.extend(SettleContractListView, Knight.ux.SearchGridPanel, {
+	initRowActionItems : function(actionItems) {
+	},
+	initTopBarActionItems : function() {
+		var tbarItems = [];
+		if (isGranted("_SettleContractAdd")) {
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "新增",
+				handler : this.addSettleContract.createDelegate(this)
+			});
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "复制",
+				handler : this.copySettleContract.createDelegate(this)
+			});
+			
+		}
+		if (isGranted("_SettleContractEdit")) {
+			tbarItems.push({
+				iconCls : "btn-head-edit",
+				text : "修改",
+				handler : this.editSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractMultiEffective")) {
+			tbarItems.push({
+				iconCls : "btn-head-lock",
+				text : "生效",
+				handler : this.effectiveSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractMultiLoseEffective")) {
+			tbarItems.push({
+				iconCls : "btn-head-lock",
+				text : "失效",
+				handler : this.loseEffectiveSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SettleContractMultiDel")) {
+			tbarItems.push({
+				iconCls : "btn-head-del",
+				text : "删除",
+				handler : this.delSettleContract.createDelegate(this)
+			});
+		}
+		tbarItems.push({
+			iconCls : "btn-head-del",
+			text : "合计",
+			handler : this.combinedSelectedSettleContract.createDelegate(this)
+		});
+		if (isGranted("_SettleContractAuto")) {
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "生成收款单",
+				handler : this.autoSettleContract.createDelegate(this)
+			});
+		}
+		if (isGranted("_SubTenantAdd")) {
+			tbarItems.push({
+				iconCls : "btn-head-add",
+				text : "转租结算",
+				handler : this.subTenantSettlement.createDelegate(this)
+			});
+		}
+		tbarItems.push("->");
+		if (isGranted("_SettleContractPrinter1")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "模板1",
+				handler : this.printSettleContract.createDelegate(this, [ "one" ])
+			});
+		}
+		if (isGranted("_SettleContractPrinter2")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "模板2",
+				handler : this.printSettleContract.createDelegate(this, [ "two" ])
+			});
+		}
+		if (isGranted("_SettleContractPrinter3")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "模板3",
+				handler : this.printSettleContract.createDelegate(this, [ "three" ])
+			});
+		}
+		if (isGranted("_SettleContractPrinter4")) {
+			tbarItems.push({
+				iconCls : "btn-head-print",
+				text : "模板4",
+				handler : this.printSettleContract.createDelegate(this, [ "four" ])
+			});
+		}
+		if (isGranted("_SettleContractExporter")) {
+			tbarItems.push({
+				iconCls : "btn-head-exporter",
+				text : "导出",
+				handler : this.exportSettleContract.createDelegate(this)
+			});
+		}
+		return tbarItems;
+	},
+	speciallyGridAction : function(g, id, url, op, va, pa, cmm) {
+		var msg1 = "请选择要【" + op + "】的结算信息！";
+		var msg2 = cmm ? cmm : "您确认要【" + op + "】所选的结算信息吗？";
+		var msg3 = "成功【" + op + "】所选的结算信息！";
+		$baseGridAction(g, msg1, id, msg2, url, msg3, null, va);
+	},
+	loadSettleContract : function(a) {
+		new SettleContractForm(a).show();
+	},
+	addSettleContract : function() {
+		new ContractLeaseSelector({
+			single : true,
+			params : {
+//				Q_applyforState_S_GE : "3",
+//				Q_applyforState_S_LE : "6",
+//				Q_effective_S_EQ : "1"
+			},
+			callback : function(d) {
+				var data = d[0].data;
+				$request({
+					url : __ctxPath + "/dispatch/loadContractLease.do",
+					params : {
+						contractId : data.contractId
+					},
+					success : function(g, h) {
+						var resp = Ext.util.JSON.decode(g.responseText);
+						var data = resp.data[0];
+						new SettleContractForm({
+							fundType : data.fundType,
+							contractId : data.contractId,
+							contract : data
+						}, {
+							animateTarget : this.el,
+							saveable : true,
+							callback : function() {
+								this.dataGridPanel.getStore().reload();
+							}.createDelegate(this)
+						}).show();
+
+					}.createDelegate(this)
+				});
+			}.createDelegate(this)
+		}).show();
+	},
+	subTenantSettlement : function() {
+		new ContractLeaseSelector({
+			single : true,
+			params : {
+				Q_applyforState_S_GE : "3",
+				Q_applyforState_S_LE : "6",
+			},
+			callback : function(d) {
+				var data = d[0].data;
+				$request({
+					url : __ctxPath + "/dispatch/loadContractLease.do",
+					params : {
+						contractId : data.contractId
+					},
+					success : function(g, h) {
+						var resp = Ext.util.JSON.decode(g.responseText);
+						var data = resp.data[0];
+						new SettleContractForm({
+							fundType : data.fundType,
+							contractId : data.contractId,
+							contract : data
+						}, {
+							animateTarget : this.el,
+							saveable : true,
+							callback : function() {
+								this.dataGridPanel.getStore().reload();
+							}.createDelegate(this)
+						}).show();
+
+					}.createDelegate(this)
+				});
+			}.createDelegate(this)
+		}).show();
+	},
+	copySettleContract : function() {
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("请选择要【复制】的记录！");
+			return;
+		}
+		new SettleContractForm(a[0].data,{
+//			fundType : a[0].data.fundType,
+//			contractId : a[0].data.contractId,
+//			contract : a[0].data,
+//			animateTarget : this.el,
+//			settleId : a[0].data.settleId,
+			copyable : true,
+			saveable : true,
+			callback : function() {
+				this.dataGridPanel.getStore().reload();
+			}.createDelegate(this)
+		}).show();
+	},
+	editSettleContract : function() {
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("请选择要【修改】的记录！");
+			return;
+		}
+		if ("0" != a[0].data.effective) {
+			$toast("【已生效】的结算信息无法进行【修改】！");
+			return;
+		}
+		new SettleContractForm(a[0].data, {
+			saveable : true,
+			callback : function() {
+				this.dataGridPanel.getStore().reload();
+			}.createDelegate(this)
+		}).show();
+	},
+	effectiveSettleContract : function() {
+		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/multiEffectiveSettleContract.do", "生效", function(a) {
+			if ("0" == a.effective) {
+				return true;
+			}
+			$toast("该结算信息已经【生效】！");
+			return false;
+		}.createDelegate(this), "是否确认生效，生效后数据将不能进行修改");
+	},
+	delSettleContract : function() {
+		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/multiDelSettleContract.do", "删除", function(a) {
+			if ("0" == a.effective) {
+				return true;
+			}
+			$toast("【已生效】的结算信息无法进行【删除】！");
+			return false;
+		}.createDelegate(this));
+	},
+	printSettleContract : function(type) {
+		$print(this.dataGridPanel, function(a) {
+			return __ctxPath + "/dispatch/printSettleContract.do?type=" + type + "&settleId=" + a[0].data["settleId"];
+		});
+	},
+	loseEffectiveSettleContract : function() {
+		this.speciallyGridAction(this.dataGridPanel, "settleId", __ctxPath + "/dispatch/multiLoseEffectiveSettleContract.do", "失效", null, "是否确认失效");
+	},
+	combinedSelectedSettleContract : function() {
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if (a.length == 0) {
+			$toast("还未选择结算信息！");
+			return;
+		}
+		var arrearsAmount = 0;
+		for (var i = 0; i < a.length; i++) {
+			arrearsAmount += Number(a[i].data.settleAmount) - Number(a[i].data.finishedAmount);
+		}
+		Ext.MessageBox.alert("合计情况", "剩余金额累计" + arrearsAmount + "元，计数为" + a.length + "条。");
+	},
+	exportSettleContract : function() {
+		$exportFormSubmit(this.currentSearchPanel.getForm(), __ctxPath + "/dispatch/exportSettleContract.do", this.dataGridPanel);
+	},
+	autoSettleContract : function(){
+		var a = this.dataGridPanel.getSelectionModel().getSelections();
+		if(a.length>1){
+			$toast("请最多选择一个进行生成收款单！");
+			return ;
+		}
+		for(var c = 0;c<length;c++){
+			$request({
+				url : __ctxPath + "/dispatch/loadSettleContract.do",
+				params : {
+                    settleId : a[c].data.settleId
+				},
+				success : function(g, h) {
+					var resp = Ext.util.JSON.decode(g.responseText);
+					var data = resp.data[0];
+                    var mount = {
+                        relateId : data.settleId,
+                        relateSerial : data.settleSerial,
+                        relateTheme : data.settleTheme,
+                        relateModule : RelationModule.settleContract.relateModule,
+                        relateModuleName : RelationModule.settleContract.relateModuleName,
+                        relationData : data
+                    }
+					if (mount && mount.relateId && mount.relateModule) {
+						mount.relation = {};
+						Ext.apply(mount.relation, {
+							relateId : mount.relateId,
+							relateTheme : mount.relateTheme,
+							relateModule : mount.relateModule,
+							relateModuleName : mount.relateModuleName,
+							projectName : mount.projectName
+						});
+					}
+					new AmountReceiveForm(mount, {
+						saveable : true,
+						auto:true,
+						callback : function() {
+							this.dataGridPanel.getStore().reload();
+						}.createDelegate(this)
+					}).show();
+				}.createDelegate(this)
+			});
+        }
+	}
+});

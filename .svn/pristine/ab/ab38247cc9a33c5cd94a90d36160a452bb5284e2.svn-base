@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TemporaryReturnDetail" table="T_TEMPORARY_RETURN_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="returnId" type="java.lang.Long" column="RETURN_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="returnQuantity" type="java.lang.String" column="RETURN_QUANTITY" />
+		<property name="temporaryQuantity" type="java.lang.String" column="TEMPORARY_QUANTITY" />
+		<property name="supplementUnit" type="java.lang.String" column="SUPPLEMENT_UNIT" />
+		<property name="supplementQuantity" type="java.lang.String" column="SUPPLEMENT_QUANTITY" />
+		<property name="conversionNum" type="java.lang.String" column="CONVERSION_NUM"></property>
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

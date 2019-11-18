@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TransfersDetail" table="T_TRANSFERS_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="tdetailId" column="TDETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="depottId" type="java.lang.Long" column="DEPOTT_ID" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="transfersCounts" type="java.lang.String" column="TRANSFERS_COUNTS" />
+		<property name="surplusCounts" type="java.lang.String" column="SURPLUS_COUNTS" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+	</class>
+</hibernate-mapping>

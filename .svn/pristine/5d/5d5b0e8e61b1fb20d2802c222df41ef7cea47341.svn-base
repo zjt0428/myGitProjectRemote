@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ProjectDepotInitDetail" table="T_PROJECT_DEPOT_INIT_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="projectInitId" type="java.lang.Long" column="PROJECT_INIT_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="supplementQuantity" type="java.lang.String" column="SUPPLEMENT_QUANTITY" />
+		<property name="supplementUnit" type="java.lang.String" column="SUPPLEMENT_UNIT" />
+		<property name="convertedQuantity" type="java.lang.String" column="CONVERTED_QUANTITY" />
+	</class>
+</hibernate-mapping>

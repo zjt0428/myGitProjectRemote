@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.CombineSettleContract" table="T_COMBINE_SETTLE_CONTRACT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="combineId" column="COMBINE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<many-to-one name="settleContract" column="SETTLE_ID" class="com.knight.emms.model.SettleContract" fetch="join" />
+		<many-to-one name="contractLease" column="CONTRACT_ID" class="com.knight.emms.model.ContractLease" fetch="join" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipAddReduceDetail" table="T_EQUIP_ADD_REDUCE_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="addReduceId" column="ADD_REDUCE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="executerId" type="java.lang.Long" column="EXECUTER_ID" />
+		<property name="installId" type="java.lang.Long" column="INSTALL_ID" />
+		<property name="addReduceSerial" type="java.lang.String" column="ADD_REDUCE_SERIAL" />
+		<property name="executerName" type="java.lang.String" column="EXECUTER_NAME" />
+		<property name="executeDate" type="java.lang.String" column="EXECUTE_DATE" />
+		<property name="startinDate" type="java.util.Date" column="STARTIN_DATE" />
+		<property name="endinDate" type="java.util.Date" column="ENDIN_DATE" />
+		<property name="spendTime" type="java.lang.Long" column="SPEND_TIME" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="knotNum" type="java.lang.Integer" column="KNOT_NUM" />
+		<property name="wallAttacheNum" type="java.lang.Integer" column="WALL_ATTACHE_NUM" />
+		<property name="wallAttachePoleNum" type="java.lang.Integer" column="WALL_ATTACHE_POLE_NUM" />
+		<property name="wallAttacheFrameNum" type="java.lang.Integer" column="WALL_ATTACHE_FRAME_NUM" />
+		<property name="wallAttacheDisQty" type="java.lang.Integer" column="WALL_ATTACHE_DIS_QTY" />
+		<property name="knotDisQty" type="java.lang.Integer" column="KNOT_DIS_QTY" />
+		<property name="wallAttachePoleQty" type="java.lang.Integer" column="WALL_ATTACHE_POLE_QTY" />
+		<property name="wallAttacheFrameQty" type="java.lang.Integer" column="WALL_ATTACHE_FRAME_QTY" />
+		<property name="disclosureId" type="java.lang.Long" column="DISCLOSURE_ID" />
+	    <property name="appInstallState" type="java.lang.String" column="APP_INSTALL_STATE" />
+	    <property name="appDismantleState" type="java.lang.String" column="APP_DISMANTLE_STATE" />
+	    <many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+	    <property name="knotCounts" type="java.lang.Integer" formula="(SELECT B.KNOT_COUNTS FROM T_EQUIPMENT_INSTALL B WHERE B.INSTALL_ID=RELATE_ID)" />
+		<property name="wallAttacheQty" type="java.lang.Integer" formula="(SELECT B.WALL_ATTACHE_QTY FROM T_EQUIPMENT_INSTALL B WHERE B.INSTALL_ID=RELATE_ID)" />
+		<property name="wallAttachePoleCount" type="java.lang.Integer" formula="(SELECT B.WALL_ATTACHE_POLE_COUNT FROM T_EQUIPMENT_INSTALL B WHERE B.INSTALL_ID=RELATE_ID)"/>
+	    <property name="wallAttacheFrameCount" type="java.lang.Integer" formula="(SELECT B.WALL_ATTACHE_FRAME_COUNT FROM T_EQUIPMENT_INSTALL B WHERE B.INSTALL_ID=RELATE_ID)"/>
+		<property name="installHeight" type="java.math.BigDecimal" column="INSTALL_HEIGHT"  />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="checkAttach" type="java.lang.String" column="CHECK_ATTACH" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="partake" type="java.lang.String" column="PARTAKE" />
+<!-- 		<property name="dismantleHeight" type="java.math.BigDecimal" formula="(SELECT B.DISMANTLE_HEIGHT FROM T_EQUIPMENT_DISMANTLE B WHERE B.INSTALL_ID=RELATE_ID)" />
+ -->	<property name="brachium" type="java.math.BigDecimal" formula="(SELECT B.BRACHIUM FROM T_EQUIPMENT_INSTALL B WHERE B.INSTALL_ID=RELATE_ID)" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.OverduePayment" table="T_OVERDUE_PAYMENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="overduePaymentId" column="OVERDUE_PAYMENT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="overduePaymentSerial" type="java.lang.String" column="OVERDUE_PAYMENT_SERIAL" />
+		<property name="customerId" type="java.lang.Long" column="CUSTOMER_ID" />
+		<property name="customerName" type="java.lang.String" column="CUSTOMER_NAME" />
+		<property name="corpId" type="java.lang.Long" column="CORP_ID" />
+		<property name="corpName" type="java.lang.String" column="CORP_NAME" />
+		<property name="contents" type="java.lang.String" column="CONTENTS" />
+	</class>
+</hibernate-mapping>

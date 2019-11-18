@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="contract">
+	<!-- ===========================新增合同时:验证合同设备/人员清单数量是否符合要求========================== -->
+	<!-- 合同设备分配余量统计 -->
+	<select id="set_equip_margin">
+	<![CDATA[
+		DECLARE @CONTRACT_ID BIGINT
+		SET @CONTRACT_ID = ?
+		SELECT B.QUANTITY, B.EQUIP_CATEGORY, C.VALUE EQUIP_CATEGORY_NAME
+		  FROM (SELECT SUM(A.QUANTITY) QUANTITY, A.EQUIP_CATEGORY
+		          FROM (SELECT COUNT(*) QUANTITY, EQUIP_CATEGORY
+		                  FROM T_CONTRACT_EQUIP
+		                 WHERE CONTRACT_ID = @CONTRACT_ID
+		                 GROUP BY EQUIP_CATEGORY
+		                UNION ALL
+		                SELECT SUM(QUANTITY) QUANTITY, EQUIP_CATEGORY
+		                  FROM T_CONTRACT_EQUIP_BRIEF
+		                 WHERE CONTRACT_ID = @CONTRACT_ID
+		                 GROUP BY EQUIP_CATEGORY
+		                UNION ALL
+		                SELECT -COUNT(*) QUANTITY, EQUIP_CATEGORY
+		                  FROM T_EQUIPMENT
+		                 WHERE STATUS = '1'
+		                   AND DEL_FLAG = '1'
+		                 GROUP BY EQUIP_CATEGORY) AS A
+		         GROUP BY A.EQUIP_CATEGORY) B
+		  LEFT JOIN BM_REPERTORY_CATEGORY C ON B.EQUIP_CATEGORY = C.CODE
+		 WHERE B.QUANTITY > 0;
+	]]>
+	</select>
+	<!-- 合同工种余量统计 -->
+	<select id="set_practi_margin">
+	<![CDATA[
+		DECLARE @CONTRACT_ID BIGINT
+		SET @CONTRACT_ID = ?
+		SELECT B.KIND_WORK, B.QUANTITY, BM.VALUE KIND_WORK_NAME
+		  FROM (SELECT A.KIND_WORK, SUM(A.QUANTITY) QUANTITY
+		          FROM (SELECT PB.KIND_WORK KIND_WORK, SUM(PB.QUANTITY) QUANTITY
+		                  FROM T_CONTRACT_PRACTI_BRIEF PB
+		                 WHERE PB.CONTRACT_ID = @CONTRACT_ID
+		                 GROUP BY PB.KIND_WORK
+		                UNION ALL
+		                SELECT P.KIND_WORK KIND_WORK, -COUNT(*) QUANTITY
+		                  FROM T_PRACTITIONER P
+		                 WHERE P.PRACTI_STATUS = '1'
+		                   AND P.DEL_FLAG = '1'
+		                 GROUP BY P.KIND_WORK) AS A
+		         GROUP BY A.KIND_WORK) AS B
+		  LEFT JOIN BM_KIND_WORK BM ON BM.CODE = B.KIND_WORK
+		 WHERE B.QUANTITY > 0;
+	]]>
+	</select>
+	<select id="get_PaymentRecord">
+	<!-- 代租结算-已付款记录  -->
+	<![CDATA[
+		DECLARE @RENT_ID BIGINT
+		SET @RENT_ID = ?
+		SELECT AP.PAYMENT_AMOUNT,AP.PAYMENT_DATE,AP.PRACTI_NAME FROM T_AMOUNT_PAYMENT AP
+		WHERE AP.RELATE_MODULE = 'RENT_CONTRACT'
+		AND AP.RELATE_ID = @RENT_ID;
+	]]>
+	</select>
+	<select id="switch_FundCategory">
+	<!-- 结算合同结算类别新老款更新  -->
+	<![CDATA[
+		UPDATE T_SETTLE_CONTRACT SET FUND_CATEGORY = '1';
+	]]>
+	</select>
+	<!-- 查询合同版本编号  -->
+	<select id="lease_serial_list">
+	<![CDATA[
+		SELECT LEASE_VERSION_ID code,LEASE_SERIAL value FROM T_CONTRACT_LEASE_VERSION WHERE CONTRACT_ID = ?
+	]]>
+	</select>
+</mapper>

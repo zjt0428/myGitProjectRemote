@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractEquip" table="T_CONTRACT_EQUIP" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="contractEquipId" column="CONTRACT_EQUIP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="recordSerial" type="java.lang.String" column="RECORD_SERIAL" />
+		<property name="propertyEnt" type="java.lang.Long" column="PROPERTY_ENT" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="endDate" type="java.lang.String" column="END_DATE" />
+		<property name="initialHeight" type="java.lang.String" column="INITIAL_HEIGHT" />
+		<property name="finalHeight" type="java.lang.String" column="FINAL_HEIGHT" />
+		<property name="rentStandard" type="java.math.BigDecimal" column="RENT_STANDARD" />
+		<property name="measurement" type="java.lang.String" column="MEASUREMENT" />
+		<property name="tenancy" type="java.lang.Short" column="TENANCY" />
+		<property name="wallAttacheQty" type="java.lang.Integer" column="WALL_ATTACHE_QTY" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

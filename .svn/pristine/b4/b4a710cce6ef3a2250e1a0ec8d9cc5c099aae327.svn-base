@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.InMessage" table="IN_MESSAGE">
+		<id name="receiveId" column="RECEIVEID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="USERID" />
+		<property name="userFullname" type="java.lang.String" column="USERFULLNAME" />
+		<property name="readFlag" type="java.lang.Short" column="READFLAG" />
+		<property name="delFlag" type="java.lang.Short" column="DELFLAG" />
+		<many-to-one name="shortMessage" column="MESSAGEID" class="com.knight.system.model.ShortMessage" fetch="join" />
+	</class>
+</hibernate-mapping>

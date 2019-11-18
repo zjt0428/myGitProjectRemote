@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- FORM -->
+	<bean id="autocraneDao" class="com.knight.emms.dao.impl.AutocraneDaoImpl" parent="baseLongPKDao" />
+	<bean id="autocraneExpenseDao" class="com.knight.emms.dao.impl.AutocraneExpenseDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipRepairVehicleDao" class="com.knight.emms.dao.impl.EquipRepairVehicleDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipWarehouseAbnormalDao" class="com.knight.emms.dao.impl.EquipWarehouseAbnormalDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipWarehouseAbnormalComponDao" class="com.knight.emms.dao.impl.EquipWarehouseAbnormalComponDaoImpl" parent="baseLongPKDao" />
+	<bean id="constructOperationDao" class="com.knight.emms.dao.impl.ConstructOperationDaoImpl" parent="baseLongPKDao" />
+	<bean id="constructOperationTaskDao" class="com.knight.emms.dao.impl.ConstructOperationTaskDaoImpl" parent="baseLongPKDao" />
+	<bean id="logisticsBackcarfeeDao" class="com.knight.emms.dao.impl.LogisticsBackcarfeeDaoImpl" parent="baseLongPKDao" />
+	<bean id="logisticsTrancarfeeDao" class="com.knight.emms.dao.impl.LogisticsTrancarfeeDaoImpl" parent="baseLongPKDao" />
+	<bean id="LogisticsTranDestributionDao" class="com.knight.emms.dao.impl.LogisticsTranDestributionDaoImpl" parent="baseLongPKDao" />
+	<bean id="componentHoldDao" class="com.knight.emms.dao.impl.ComponentHoldDaoImpl" parent="baseLongPKDao" />
+	<bean id="dispatchAllocateDao" class="com.knight.emms.dao.impl.DispatchAllocateDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipmentAffiliatedDao" class="com.knight.emms.dao.impl.EquipmentAffiliatedDaoImpl" parent="baseLongPKDao" />
+	<bean id="formAcceptDao" class="com.knight.emms.dao.impl.FormAcceptDaoImpl" parent="baseLongPKDao" />
+	<bean id="formApproveDao" class="com.knight.emms.dao.impl.FormApproveDaoImpl" parent="baseLongPKDao" />
+	<bean id="formReviewDao" class="com.knight.emms.dao.impl.FormReviewDaoImpl" parent="baseLongPKDao" />
+	<bean id="businessMessageDao" class="com.knight.emms.dao.impl.BusinessMessageDaoImpl" parent="baseLongPKDao" />
+	<bean id="announceDao" class="com.knight.emms.dao.impl.AnnounceDaoImpl" parent="baseLongPKDao" />
+	<bean id="announceCategoryDao" class="com.knight.emms.dao.impl.AnnounceCategoryDaoImpl" parent="baseLongPKDao" />
+	<bean id="announceUserDao" class="com.knight.emms.dao.impl.AnnounceUserDaoImpl" parent="baseLongPKDao" />
+	<bean id="inventoryDao" class="com.knight.emms.dao.impl.InventoryDaoImpl" parent="baseLongPKDao" />
+	<bean id="inventoryCategoryDao" class="com.knight.emms.dao.impl.InventoryCategoryDaoImpl" parent="baseLongPKDao" />
+	<bean id="incomeExpenseDao" class="com.knight.emms.dao.impl.IncomeExpenseDaoImpl" />
+	<bean id="overduePaymentDao" class="com.knight.emms.dao.impl.OverduePaymentDaoImpl" parent="baseLongPKDao" />
+	<bean id="corpInfoDao" class="com.knight.emms.dao.impl.CorpInfoDaoImpl" parent="baseLongPKDao" />
+	<bean id="corpCertDao" class="com.knight.emms.dao.impl.CorpCertDaoImpl" parent="baseLongPKDao" />
+	<bean id="practitionerDao" class="com.knight.emms.dao.impl.PractitionerDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiCertDao" class="com.knight.emms.dao.impl.PractiCertDaoImpl" parent="baseLongPKDao" />
+	<bean id="supplierDao" class="com.knight.emms.dao.impl.SupplierDaoImpl" parent="baseLongPKDao" />
+	<bean id="supplierAccountDao" class="com.knight.emms.dao.impl.SupplierAccountDaoImpl" parent="baseLongPKDao" />
+	<bean id="supplierLinkerDao" class="com.knight.emms.dao.impl.SupplierLinkerDaoImpl" parent="baseLongPKDao" />
+	<bean id="customerDao" class="com.knight.emms.dao.impl.CustomerDaoImpl" parent="baseLongPKDao" />
+	<bean id="changeRecordDao" class="com.knight.emms.dao.impl.ChangeRecordDaoImpl" parent="baseLongPKDao" />
+	<bean id="customerAccountDao" class="com.knight.emms.dao.impl.CustomerAccountDaoImpl" parent="baseLongPKDao" />
+	<bean id="customerLinkerDao" class="com.knight.emms.dao.impl.CustomerLinkerDaoImpl" parent="baseLongPKDao" />
+	<bean id="projectDao" class="com.knight.emms.dao.impl.ProjectDaoImpl" parent="baseLongPKDao" />
+	<bean id="projectComponDao" class="com.knight.emms.dao.impl.ProjectComponDaoImpl" parent="baseLongPKDao" />
+	<bean id="projectExpenseDao" class="com.knight.emms.dao.impl.ProjectExpenseDaoImpl" parent="baseLongPKDao" />
+	<bean id="componentDao" class="com.knight.emms.dao.impl.ComponentDaoImpl" parent="baseLongPKDao" />
+	<bean id="elevatorMonitorDao" class="com.knight.emms.dao.impl.ElevatorMonitorDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInsuranceDao" class="com.knight.emms.dao.impl.EquipInsuranceDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInsuranceDetailDao" class="com.knight.emms.dao.impl.EquipInsuranceDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInsuranceClaimDao" class="com.knight.emms.dao.impl.EquipInsuranceClaimDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiInsuranceDao" class="com.knight.emms.dao.impl.PractiInsuranceDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiInsuranceDetailDao" class="com.knight.emms.dao.impl.PractiInsuranceDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiInsuranceClaimRecordDao" class="com.knight.emms.dao.impl.PractiInsuranceClaimRecordDaoImpl" parent="baseLongPKDao" />
+	<bean id="safetyEducationDao" class="com.knight.emms.dao.impl.SafetyEducationDaoImpl" parent="baseLongPKDao" />
+	<bean id="inspectProjectRecordDao" class="com.knight.emms.dao.impl.InspectProjectRecordDaoImpl" parent="baseLongPKDao" />
+	<bean id="safeClarificationDao" class="com.knight.emms.dao.impl.SafeClarificationDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiEvaluationDao" class="com.knight.emms.dao.impl.PractiEvaluationDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipmentDao" class="com.knight.emms.dao.impl.EquipmentDaoImpl" parent="baseLongPKDao">
+		<property name="querys">
+			<map>
+				<entry key="relation_project">
+					<value>select vo from Equipment vo, DispatchEquip de, Dispatch d where d.applyforState = '3' and d.dispatchId = de.dispatchId and de.equipId = vo.equipId
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="instalmentDao" class="com.knight.emms.dao.impl.InstalmentDaoImpl" parent="baseLongPKDao" />
+	<bean id="receivementDao" class="com.knight.emms.dao.impl.ReceivementDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiCreditDao" class="com.knight.emms.dao.impl.PractiCreditDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiResumeDao" class="com.knight.emms.dao.impl.PractiResumeDaoImpl" parent="baseLongPKDao" />
+	<bean id="laborPayDao" class="com.knight.emms.dao.impl.LaborPayDaoImpl" parent="baseLongPKDao" />
+
+	<bean id="laborSettleDao" class="com.knight.emms.dao.impl.LaborSettleDaoImpl" parent="baseLongPKDao" />
+
+	<bean id="contractEquipBriefDao" class="com.knight.emms.dao.impl.ContractEquipBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractEquipDao" class="com.knight.emms.dao.impl.ContractEquipDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractLeaseDao" class="com.knight.emms.dao.impl.ContractLeaseDaoImpl" parent="baseLongPKDao">
+		<property name="querys">
+			<map>
+				<entry key="equipcontract">
+					<value>select vo from ContractLease as vo join vo.contractEquipSet as ce where vo.delFlag = '1'</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="contractLeaseVersionDao" class="com.knight.emms.dao.impl.ContractLeaseVersionDaoImpl" parent="baseLongPKDao"/>
+	<bean id="contractMaterialsDao" class="com.knight.emms.dao.impl.ContractMaterialsDaoImpl" parent="baseLongPKDao" />
+	<bean id="materialsDetailDao" class="com.knight.emms.dao.impl.MaterialsDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="priceSettingDao" class="com.knight.emms.dao.impl.PriceSettingDaoImpl" parent="baseLongPKDao" />
+	<bean id="matDamageDao" class="com.knight.emms.dao.impl.MatDamageDaoImpl" parent="baseLongPKDao" />
+	<bean id="costHandleDao" class="com.knight.emms.dao.impl.CostHandleDaoImpl" parent="baseLongPKDao" />
+	<bean id="compensationScrapDao" class="com.knight.emms.dao.impl.CompensationScrapDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractPractiBriefDao" class="com.knight.emms.dao.impl.ContractPractiBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractCostitemDao" class="com.knight.emms.dao.impl.ContractCostitemDaoImpl" parent="baseLongPKDao" />
+	<bean id="settleComponBriefDao" class="com.knight.emms.dao.impl.SettleComponBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="laborPayDetailDao" class="com.knight.emms.dao.impl.LaborPayDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="settleContractDao" class="com.knight.emms.dao.impl.SettleContractDaoImpl" parent="baseLongPKDao" >
+		<property name="querys">
+			<map>
+				<entry key="settle_contract_list">
+					<value>select vo from SettleContract vo where 
+						vo.settleId in (select min(sc.settleId) as settleId from SettleContract sc  
+							where sc.delFlag=1 and sc.fundType=1 and sc.effective=1 and sc.fundStatus in (5,6)  and  
+								sc.settleAmount!=sc.finishedAmount group by sc.contractNo,sc.projectName,sc.paEnt,sc.pbEnt)
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="settleContractRecordDao" class="com.knight.emms.dao.impl.SettleContractRecordDaoImpl" parent="baseLongPKDao" />
+	<bean id="settleEquipBriefDao" class="com.knight.emms.dao.impl.SettleEquipBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="settleItemBriefDao" class="com.knight.emms.dao.impl.SettleItemBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="settleProjectDao" class="com.knight.emms.dao.impl.SettleProjectDaoImpl" parent="baseLongPKDao" />
+	<bean id="dispatchDao" class="com.knight.emms.dao.impl.DispatchDaoImpl" parent="baseLongPKDao" >
+		<property name="querys">
+			<map>
+				<entry key="dispatch_un_logisticTran">
+					<value>select vo from Dispatch vo where vo.delFlag='1' and vo.effective='1' and vo.applyforState='3' 
+										and (vo.dispatchId in (select distinct dc.dispatchId from DispatchCompon dc where dc.counts != dc.iniCounts) 
+											or vo.dispatchId not in (select dispatchId from DispatchCompon)) order by vo.providedDate desc
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="dispatchEquipDao" class="com.knight.emms.dao.impl.DispatchEquipDaoImpl" parent="baseLongPKDao">
+		<property name="querys">
+			<map>
+				<entry key="relate_dispatch">
+					<value>select vo from DispatchEquip vo, Dispatch d where vo.dispatchId = d.dispatchId
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="dispatchComponDao" class="com.knight.emms.dao.impl.DispatchComponDaoImpl" parent="baseLongPKDao" />
+	<bean id="dispatchPractiDao" class="com.knight.emms.dao.impl.DispatchPractiDaoImpl" parent="baseLongPKDao" />
+	<bean id="dispatchAutocraneDao" class="com.knight.emms.dao.impl.DispatchAutocraneDaoImpl" parent="baseLongPKDao" />
+	<bean id="pickupDao" class="com.knight.emms.dao.impl.PickupDaoImpl" parent="baseLongPKDao" />
+	<bean id="pickupComponentDao" class="com.knight.emms.dao.impl.PickupComponentDaoImpl" parent="baseLongPKDao" />
+	<bean id="purchaseDao" class="com.knight.emms.dao.impl.PurchaseDaoImpl" parent="baseLongPKDao" />
+	<bean id="purchaseAcceptanceDao" class="com.knight.emms.dao.impl.PurchaseAcceptanceDaoImpl" parent="baseLongPKDao" />
+	<bean id="purchaseBriefDao" class="com.knight.emms.dao.impl.PurchaseBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="purchasePlanDao" class="com.knight.emms.dao.impl.PurchasePlanDaoImpl" parent="baseLongPKDao" />
+	<bean id="purchasePlanInquiryDao" class="com.knight.emms.dao.impl.PurchasePlanInquiryDaoImpl" parent="baseLongPKDao" />
+	<bean id="borrowDao" class="com.knight.emms.dao.impl.BorrowDaoImpl" parent="baseLongPKDao" />
+	<bean id="borrowAcceptanceDao" class="com.knight.emms.dao.impl.BorrowAcceptanceDaoImpl" parent="baseLongPKDao" />
+	<bean id="borrowComponentDao" class="com.knight.emms.dao.impl.BorrowComponentDaoImpl" parent="baseLongPKDao" />
+	<bean id="borrowEquipDao" class="com.knight.emms.dao.impl.BorrowEquipDaoImpl" parent="baseLongPKDao" />
+	<bean id="componDiaryDao" class="com.knight.emms.dao.impl.ComponDiaryDaoImpl" parent="baseLongPKDao" />
+	<bean id="practiDiaryDao" class="com.knight.emms.dao.impl.PractiDiaryDaoImpl" parent="baseLongPKDao" />
+	<bean id="insureEquipDao" class="com.knight.emms.dao.impl.InsureEquipDaoImpl" parent="baseLongPKDao" />
+	<bean id="insureClaimDao" class="com.knight.emms.dao.impl.InsureClaimDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipVerifyDao" class="com.knight.emms.dao.impl.EquipVerifyDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipDiaryDao" class="com.knight.emms.dao.impl.EquipDiaryDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipMaintDao" class="com.knight.emms.dao.impl.EquipMaintDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipDetectDao" class="com.knight.emms.dao.impl.EquipDetectDaoImpl" parent="baseLongPKDao" />
+	<bean id="antiFallDetectionDao" class="com.knight.emms.dao.impl.AntiFallDetectionDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipDismantleDao" class="com.knight.emms.dao.impl.EquipDismantleDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipEmployDao" class="com.knight.emms.dao.impl.EquipEmployDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInspectDao" class="com.knight.emms.dao.impl.EquipInspectDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInstallReviewDao" class="com.knight.emms.dao.impl.EquipInstallReviewDaoImpl" parent="baseLongPKDao" />
+	<bean id="rectificationRecordDao" class="com.knight.emms.dao.impl.RectificationRecordDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInstallDao" class="com.knight.emms.dao.impl.EquipInstallDaoImpl" parent="baseLongPKDao" >
+		<property name="querys">
+			<map>
+				<entry key="unActivateInstall">
+					<value>select vo from EquipInstall as vo where not exists (select ea from EquipActivate as ea where ea.installId = vo.installId and
+						ea.delFlag = '1')
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="equipFlowDao" class="com.knight.emms.dao.impl.EquipFlowDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipActivateDao" class="com.knight.emms.dao.impl.EquipActivateDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipContractLeaseDao" class="com.knight.emms.dao.impl.EquipContractLeaseDaoImpl" parent="baseLongPKDao" />
+	<bean id="productPlanDao" class="com.knight.emms.dao.impl.ProductPlanDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipBlockupDao" class="com.knight.emms.dao.impl.EquipBlockupDaoImpl" parent="baseLongPKDao" />
+	<bean id="moneyBackDao" class="com.knight.emms.dao.impl.MoneyBackDaoImpl" parent="baseLongPKDao" />
+	<bean id="moneyLendDao" class="com.knight.emms.dao.impl.MoneyLendDaoImpl" parent="baseLongPKDao" />
+	<bean id="amountPaymentDao" class="com.knight.emms.dao.impl.AmountPaymentDaoImpl" parent="baseLongPKDao">
+		<property name="querys">
+			<map>
+				<entry key="equipPayment">
+					<value>select vo from AmountPayment as vo join vo.amountEquipShareSet as ae where vo.delFlag = '1'
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="amountPaymentShareDao" class="com.knight.emms.dao.impl.AmountPaymentShareDaoImpl" parent="baseLongPKDao" />
+	<bean id="amountReceiveDao" class="com.knight.emms.dao.impl.AmountReceiveDaoImpl" parent="baseLongPKDao">
+		<property name="querys">
+			<map>
+				<entry key="equipReceive">
+					<value>select vo from AmountReceive as vo join vo.amountEquipShareSet as ae where vo.delFlag = '1'
+					</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="amountReceiveShareDao" class="com.knight.emms.dao.impl.AmountReceiveShareDaoImpl" parent="baseLongPKDao" />
+	<bean id="corpAccountDao" class="com.knight.emms.dao.impl.CorpAccountDaoImpl" parent="baseLongPKDao" />
+	<bean id="deductScaleDao" class="com.knight.emms.dao.impl.DeductScaleDaoImpl" parent="baseLongPKDao" />
+	<bean id="deductDao" class="com.knight.emms.dao.impl.DeductDaoImpl" parent="baseLongPKDao" />
+	<bean id="deductPractiDao" class="com.knight.emms.dao.impl.DeductPractiDaoImpl" parent="baseLongPKDao" />
+	<bean id="invoiceCollectDao" class="com.knight.emms.dao.impl.InvoiceCollectDaoImpl" parent="baseLongPKDao" />
+	<bean id="invoiceIssueDao" class="com.knight.emms.dao.impl.InvoiceIssueDaoImpl" parent="baseLongPKDao" />
+	<bean id="reimburseDao" class="com.knight.emms.dao.impl.ReimburseDaoImpl" parent="baseLongPKDao" />
+	<bean id="reimburseTicketDao" class="com.knight.emms.dao.impl.ReimburseTicketDaoImpl" parent="baseLongPKDao" />
+	<bean id="salaryDao" class="com.knight.emms.dao.impl.SalaryDaoImpl" parent="baseLongPKDao" />
+	<bean id="salaryPractiDao" class="com.knight.emms.dao.impl.SalaryPractiDaoImpl" parent="baseLongPKDao" />
+	<bean id="amountEquipShareDao" class="com.knight.emms.dao.impl.AmountEquipShareDaoImpl" parent="baseLongPKDao" />
+	<bean id="storeHouseDao" class="com.knight.emms.dao.impl.StoreHouseDaoImpl" parent="baseLongPKDao" />
+	<bean id="storeEquipStockDao" class="com.knight.emms.dao.impl.StoreEquipStockDaoImpl" parent="baseLongPKDao" />
+	<bean id="storeComponStockDao" class="com.knight.emms.dao.impl.StoreComponStockDaoImpl" parent="baseLongPKDao" />
+	<bean id="verifyItemDao" class="com.knight.emms.dao.impl.VerifyItemDaoImpl" parent="baseLongPKDao" />
+	<bean id="verifyItemDemandDao" class="com.knight.emms.dao.impl.VerifyItemDemandDaoImpl" parent="baseLongPKDao" />
+	<bean id="verifyStandardDao" class="com.knight.emms.dao.impl.VerifyStandardDaoImpl" parent="baseLongPKDao" />
+	<bean id="rentComponBriefDao" class="com.knight.emms.dao.impl.RentComponBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="rentContractDao" class="com.knight.emms.dao.impl.RentContractDaoImpl" parent="baseLongPKDao" />
+	<bean id="rentDeductBriefDao" class="com.knight.emms.dao.impl.RentDeductBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="rentEquipBriefDao" class="com.knight.emms.dao.impl.RentEquipBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="rentItemBriefDao" class="com.knight.emms.dao.impl.RentItemBriefDaoImpl" parent="baseLongPKDao" />
+	<bean id="carDao" class="com.knight.emms.dao.impl.CarDaoImpl" parent="baseLongPKDao" />
+	<bean id="carExpenseDao" class="com.knight.emms.dao.impl.CarExpenseDaoImpl" parent="baseLongPKDao" />
+	<bean id="accidentDao" class="com.knight.emms.dao.impl.AccidentDaoImpl" parent="baseLongPKDao" />
+	<bean id="accidentReportDao" class="com.knight.emms.dao.impl.AccidentReportDaoImpl" parent="baseLongPKDao" />
+	<bean id="riskDao" class="com.knight.emms.dao.impl.RiskDaoImpl" parent="baseLongPKDao" />
+	<bean id="riskReportDao" class="com.knight.emms.dao.impl.RiskReportDaoImpl" parent="baseLongPKDao" />
+	<bean id="contingencyPlanDao" class="com.knight.emms.dao.impl.ContingencyPlanDaoImpl" parent="baseLongPKDao" />
+	<bean id="contingencyWorkerDao" class="com.knight.emms.dao.impl.ContingencyWorkerDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractEquipCostDao" class="com.knight.emms.dao.impl.ContractEquipCostDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractEquipOutlayDao" class="com.knight.emms.dao.impl.ContractEquipOutlayDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisBasecheckDao" class="com.knight.emms.dao.impl.IndisBasecheckDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisPrecheckDao" class="com.knight.emms.dao.impl.IndisPrecheckDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisProtocolDao" class="com.knight.emms.dao.impl.IndisProtocolDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisProtocolEquipDao" class="com.knight.emms.dao.impl.IndisProtocolEquipDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisSchemaDao" class="com.knight.emms.dao.impl.IndisSchemaDaoImpl" parent="baseLongPKDao" />
+	<bean id="memoDao" class="com.knight.emms.dao.impl.MemoDaoImpl" parent="baseLongPKDao">
+		<property name="querys">
+			<map>
+				<entry key="allPractiRelate">
+					<value>select vo from Memo as vo join vo.memoDeputySet as md </value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="memoDeputyDao" class="com.knight.emms.dao.impl.MemoDeputyDaoImpl" parent="baseLongPKDao" />
+	<bean id="memoDetailDao" class="com.knight.emms.dao.impl.MemoDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="secureProtocolDao" class="com.knight.emms.dao.impl.SecureProtocolDaoImpl" parent="baseLongPKDao" />
+	<bean id="technicalDisclosureDao" class="com.knight.emms.dao.impl.TechnicalDisclosureDaoImpl" parent="baseLongPKDao" />
+	<bean id="logisticsTrandetailDao" class="com.knight.emms.dao.impl.LogisticsTrandetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="logisticsTransportDao" class="com.knight.emms.dao.impl.LogisticsTransportDaoImpl" parent="baseLongPKDao" />
+	<bean id="logisticsBackdetailDao" class="com.knight.emms.dao.impl.LogisticsBackdetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="logisticsBacksportDao" class="com.knight.emms.dao.impl.LogisticsBacksportDaoImpl" parent="baseLongPKDao" />
+	<bean id="verifySelfDao" class="com.knight.emms.dao.impl.VerifySelfDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipWarehouseDao" class="com.knight.emms.dao.impl.EquipWarehouseDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipWarehouseComponDao" class="com.knight.emms.dao.impl.EquipWarehouseComponDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipHitchDao" class="com.knight.emms.dao.impl.EquipHitchDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInspectDetailDao" class="com.knight.emms.dao.impl.EquipInspectDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="costInspectDao" class="com.knight.emms.dao.impl.CostInspectDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipInspectSchemaDao" class="com.knight.emms.dao.impl.EquipInspectSchemaDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipMaintDetailDao" class="com.knight.emms.dao.impl.EquipMaintDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipMaintSchemaDao" class="com.knight.emms.dao.impl.EquipMaintSchemaDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipRepairDao" class="com.knight.emms.dao.impl.EquipRepairDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipRepairComponDao" class="com.knight.emms.dao.impl.EquipRepairComponDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipRepairLocationDao" class="com.knight.emms.dao.impl.EquipRepairLocationDaoImpl" parent="baseLongPKDao" />
+	<bean id="praiseDao" class="com.knight.emms.dao.impl.PraiseDaoImpl" parent="baseLongPKDao" />
+	<bean id="reviewDao" class="com.knight.emms.dao.impl.ReviewDaoImpl" parent="baseLongPKDao" />
+	<bean id="dismantleManageDao" class="com.knight.emms.dao.impl.DismantleManageDaoImpl" parent="baseLongPKDao" />
+	<bean id="installManageDao" class="com.knight.emms.dao.impl.InstallManageDaoImpl" parent="baseLongPKDao" />
+	<bean id="inspectManageDao" class="com.knight.emms.dao.impl.InspectManageDaoImpl" parent="baseLongPKDao" />
+	<bean id="equipDetectStatementDao" class="com.knight.emms.dao.impl.EquipDetectStatementDaoImpl" parent="baseLongPKDao" />
+	<bean id="teamsAccountDao" class="com.knight.emms.dao.impl.TeamsAccountDaoImpl" parent="baseLongPKDao" />
+	<bean id="teamsAccountAutocraneDao" class="com.knight.emms.dao.impl.TeamsAccountAutocraneDaoImpl" parent="baseLongPKDao" />
+	<bean id="teamsAccountKnotDao" class="com.knight.emms.dao.impl.TeamsAccountKnotDaoImpl" parent="baseLongPKDao" />
+	<bean id="teamsAccountLogisticsDao" class="com.knight.emms.dao.impl.TeamsAccountLogisticsDaoImpl" parent="baseLongPKDao" />
+	<bean id="teamsAccountOtherDao" class="com.knight.emms.dao.impl.TeamsAccountOtherDaoImpl" parent="baseLongPKDao" />
+	<bean id="teamsAccountPractiDao" class="com.knight.emms.dao.impl.TeamsAccountPractiDaoImpl" parent="baseLongPKDao" />
+	<bean id="teamsAccountWallDao" class="com.knight.emms.dao.impl.TeamsAccountWallDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisNoticeDao" class="com.knight.emms.dao.impl.IndisNoticeDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisNoticePractiDao" class="com.knight.emms.dao.impl.IndisNoticePractiDaoImpl" parent="baseLongPKDao" />
+	<bean id="indisSchemaPractiDao" class="com.knight.emms.dao.impl.IndisSchemaPractiDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractArrangeDao" class="com.knight.emms.dao.impl.ContractArrangeDaoImpl" parent="baseLongPKDao" />
+	<bean id="materialsPlanDao" class="com.knight.emms.dao.impl.MaterialsPlanDaoImpl" parent="baseLongPKDao" />
+	<bean id="demandDetailDao" class="com.knight.emms.dao.impl.DemandDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="truckPlanDao" class="com.knight.emms.dao.impl.TruckPlanDaoImpl" parent="baseLongPKDao" />
+	<bean id="exeuntPlanDao" class="com.knight.emms.dao.impl.ExeuntPlanDaoImpl" parent="baseLongPKDao" />
+	<bean id="demandDetailForExeuntPlanDao" class="com.knight.emms.dao.impl.DemandDetailForExeuntPlanDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractArrangeEquipmentDao" class="com.knight.emms.dao.impl.ContractArrangeEquipmentDaoImpl" parent="baseLongPKDao" />
+	<bean id="contractArrangeSituationDao" class="com.knight.emms.dao.impl.ContractArrangeSituationDaoImpl" parent="baseLongPKDao" />
+	<bean id="installJjComponDao" class="com.knight.emms.dao.impl.InstallJjComponDaoImpl" parent="baseLongPKDao" />
+	<bean id="componIntoStoreDao" class="com.knight.emms.dao.impl.ComponIntoStoreDaoImpl" parent="baseLongPKDao"/>
+	<bean id="componIntoStoreDetailDao" class="com.knight.emms.dao.impl.ComponIntoStoreDetailDaoImpl" parent="baseLongPKDao" />
+	<bean id="attachmentStorageDao" class="com.knight.emms.dao.impl.AttachmentStorageDaoImpl" parent="baseLongPKDao" />
+	<bean id="lostHandleDao" class="com.knight.emms.dao.impl.LostHandleDaoImpl" parent="baseLongPKDao"/>
+	<bean id="lostDetailDao" class="com.knight.emms.dao.impl.LostDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="dispatchAllocateInitDao" class="com.knight.emms.dao.impl.DispatchAllocateInitDaoImpl" parent="baseLongPKDao" />
+	<bean id="enterFactoryNoticeDao" class="com.knight.emms.dao.impl.EnterFactoryNoticeDaoImpl" parent="baseLongPKDao" />
+	<bean id="enterFactoryEquipDao" class="com.knight.emms.dao.impl.EnterFactoryEquipDaoImpl" parent="baseLongPKDao" />
+	<bean id="exitFactoryNoticeDao" class="com.knight.emms.dao.impl.ExitFactoryNoticeDaoImpl" parent="baseLongPKDao" />
+	<bean id="exitFactoryEquipDao" class="com.knight.emms.dao.impl.ExitFactoryEquipDaoImpl" parent="baseLongPKDao" />
+	<bean id="basicPreEmbeddingNoticeDao" class="com.knight.emms.dao.impl.BasicPreEmbeddingNoticeDaoImpl" parent="baseLongPKDao" />
+	<bean id="basicPreEmbeddingEquipDao" class="com.knight.emms.dao.impl.BasicPreEmbeddingEquipDaoImpl" parent="baseLongPKDao" />
+	<bean id="formOpinionDao" class="com.knight.emms.dao.impl.FormOpinionDaoImpl" parent="baseLongPKDao" />
+	<bean id="printDataDao" class="com.knight.emms.dao.impl.PrintDataDaoImpl" parent="baseLongPKDao" />
+	<bean id="safeCheckDao" class="com.knight.emms.dao.impl.SafeCheckDaoImpl" parent="baseLongPKDao"/>
+	<bean id="safeCheckContentDao" class="com.knight.emms.dao.impl.SafeCheckContentDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="sideStationDao" class="com.knight.emms.dao.impl.SideStationDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="tFlowDefineReviewDao" class="com.knight.emms.dao.impl.TFlowDefineReviewDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="permissionManagerDao" class="com.knight.emms.dao.impl.PermissionManagerDaoImpl" parent="baseLongPKDao"/>
+	<bean id="advanceReceiveDao" class="com.knight.emms.dao.impl.AdvanceReceiveDaoImpl" parent="baseLongPKDao" />
+	<bean id="combineSettleContractDao" class="com.knight.emms.dao.impl.CombineSettleContractDaoImpl" parent="baseLongPKDao" />
+	<bean id="closeSettleLogDao" class="com.knight.emms.dao.impl.CloseSettleLogDaoImpl" parent="baseLongPKDao"></bean>
+	<bean id="closedSettleInfoDao" class="com.knight.emms.dao.impl.ClosedSettleInfoDaoImpl" parent="baseLongPKDao"></bean>
+	
+	<!-- 周材子系统 -->
+	<bean id="materialsCommodityDao" class="com.knight.emms.dao.impl.MaterialsCommodityDaoImpl" parent="baseLongPKDao"/>
+	<bean id="materialsSpecificationsDao" class="com.knight.emms.dao.impl.MaterialsSpecificationsDaoImpl" parent="baseLongPKDao"/>
+	<bean id="materialsDamageDao" class="com.knight.emms.dao.impl.MaterialsDamageDaoImpl" parent="baseLongPKDao"/>
+	<bean id="materialsScrapDao" class="com.knight.emms.dao.impl.MaterialsScrapDaoImpl" parent="baseLongPKDao"/>
+	<bean id="assembleAndDisassembleFeeDao" class="com.knight.emms.dao.impl.AssembleAndDisassembleFeeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="scrapContractDao" class="com.knight.emms.dao.impl.ScrapContractDaoImpl" parent="baseLongPKDao"/>
+	<bean id="scrapApplyDao" class="com.knight.emms.dao.impl.ScrapApplyDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="scrapHandleDao" class="com.knight.emms.dao.impl.ScrapHandleDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="materialsAmortizationDao" class="com.knight.emms.dao.impl.MaterialsAmortizationDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="amortizationInitializationDao" class="com.knight.emms.dao.impl.AmortizationInitializationDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="materialsDispatchDao" class="com.knight.emms.dao.impl.MaterialsDispatchDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="dispatchMaterialsDao" class="com.knight.emms.dao.impl.DispatchMaterialsDaoImpl" parent="baseLongPKDao"/>
+	<bean id="materialsPackageDao" class="com.knight.emms.dao.impl.MaterialsPackageDaoImpl" parent="baseLongPKDao"/>	
+	<bean id="packageDetailDao" class="com.knight.emms.dao.impl.PackageDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="costDetailDao" class="com.knight.emms.dao.impl.CostDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baseDepotDao" class="com.knight.emms.dao.impl.BaseDepotDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baseDepotPermissionDao" class="com.knight.emms.dao.impl.BaseDepotPermissionDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baseLocationDao" class="com.knight.emms.dao.impl.BaseLocationDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baseLocationPermissionDao" class="com.knight.emms.dao.impl.BaseLocationPermissionDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baseDepotInitDao" class="com.knight.emms.dao.impl.BaseDepotInitDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baseDepotInitDetailDao" class="com.knight.emms.dao.impl.BaseDepotInitDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="projectDepotInitDao" class="com.knight.emms.dao.impl.ProjectDepotInitDaoImpl" parent="baseLongPKDao"/>
+	<bean id="projectDepotInitDetailDao" class="com.knight.emms.dao.impl.ProjectDepotInitDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="receiveManageDao" class="com.knight.emms.dao.impl.ReceiveManageDaoImpl" parent="baseLongPKDao"/>
+	<bean id="receiveManageDetailDao" class="com.knight.emms.dao.impl.ReceiveManageDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="ceaseReportDao" class="com.knight.emms.dao.impl.CeaseReportDaoImpl" parent="baseLongPKDao"/>
+	<bean id="takeStockDao" class="com.knight.emms.dao.impl.TakeStockDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baldetailDao" class="com.knight.emms.dao.impl.BaldetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="installDismantlePriceDao" class="com.knight.emms.dao.impl.InstallDismantlePriceDaoImpl" parent="baseLongPKDao"/>
+	<bean id="lostCompensationDao" class="com.knight.emms.dao.impl.LostCompensationDaoImpl" parent="baseLongPKDao"/>
+	<bean id="lostCompensationDetailDao" class="com.knight.emms.dao.impl.LostCompensationDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="allocationProjectDao" class="com.knight.emms.dao.impl.AllocationProjectDaoImpl" parent="baseLongPKDao"/>
+	<bean id="allocationDetailDao" class="com.knight.emms.dao.impl.AllocationDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="allocationDepotDao" class="com.knight.emms.dao.impl.AllocationDepotDaoImpl" parent="baseLongPKDao"/>
+	<bean id="allocationDepotDetailDao" class="com.knight.emms.dao.impl.AllocationDepotDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherBusinessDao" class="com.knight.emms.dao.impl.OtherBusinessDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherBusinessDetailDao" class="com.knight.emms.dao.impl.OtherBusinessDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherBetsDao" class="com.knight.emms.dao.impl.OtherBetsDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherBetsDetailDao" class="com.knight.emms.dao.impl.OtherBetsDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="truckCranePriceDao" class="com.knight.emms.dao.impl.TruckCranePriceDaoImpl" parent="baseLongPKDao"/>
+	<bean id="recycleManageDao" class="com.knight.emms.dao.impl.RecycleManageDaoImpl" parent="baseLongPKDao"/>
+	<bean id="annexDetailsDao" class="com.knight.emms.dao.impl.AnnexDetailsDaoImpl" parent="baseLongPKDao"/>
+	<bean id="materialsRepairDao" class="com.knight.emms.dao.impl.MaterialsRepairDaoImpl" parent="baseLongPKDao"/>
+	<bean id="storeJoinComponentDao" class="com.knight.emms.dao.impl.StoreJoinComponentDaoImpl" parent="baseLongPKDao"/>
+	<bean id="projectJoinAnnexDao" class="com.knight.emms.dao.impl.ProjectJoinAnnexDaoImpl" parent="baseLongPKDao"/>
+	<bean id="applyMakeDao" class="com.knight.emms.dao.impl.ApplyMakeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="productMakeDao" class="com.knight.emms.dao.impl.ProductMakeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="storeJoinUserDao" class="com.knight.emms.dao.impl.StoreJoinUserDaoImpl" parent="baseLongPKDao"/>
+	<bean id="installPriceSetDao" class="com.knight.emms.dao.impl.InstallPriceSetDaoImpl" parent="baseLongPKDao"/>
+	<bean id="truckCranePriceSetDao" class="com.knight.emms.dao.impl.TruckCranePriceSetDaoImpl" parent="baseLongPKDao"/>
+	<bean id="autocraneUnitDao" class="com.knight.emms.dao.impl.AutocraneUnitDaoImpl" parent="baseLongPKDao"/>
+	<bean id="autocraneFeeDao" class="com.knight.emms.dao.impl.AutocraneFeeDaoImpl" parent="baseLongPKDao"/>
+    <bean id="installDismantelTeamDao" class="com.knight.emms.dao.impl.InstallDismantelTeamDaoImpl" parent="baseLongPKDao"/>
+	<bean id="installFeeDao" class="com.knight.emms.dao.impl.InstallFeeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="settleFeeDao" class="com.knight.emms.dao.impl.SettleFeeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="settleMaterialsDao" class="com.knight.emms.dao.impl.SettleMaterialsDaoImpl" parent="baseLongPKDao"/>
+	<bean id="basedepotJoinMaterialsDao" class="com.knight.emms.dao.impl.BasedepotJoinMaterialsDaoImpl" parent="baseLongPKDao"/>
+	<bean id="baseDepotJoinUserDao" class="com.knight.emms.dao.impl.BaseDepotJoinUserDaoImpl" parent="baseLongPKDao"/>
+	<bean id="materialsStoreDao" class="com.knight.emms.dao.impl.MaterialsStoreDaoImpl" parent="baseLongPKDao"/>
+	<bean id="contractInoutFreeDao" class="com.knight.emms.dao.impl.ContractInoutFreeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="contractOperatorFreeDao" class="com.knight.emms.dao.impl.ContractOperatorFreeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="projectMaterialsStoreDao" class="com.knight.emms.dao.impl.ProjectMaterialsStoreDaoImpl" parent="baseLongPKDao">
+		<property name="querys">
+			<map>
+				<entry key="projectMaterialsStoreASC">
+					<value>select vo from ProjectMaterialsStore vo order by vo.materialsSpecifications.materialsCommodity.commodityId asc</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="materialsRecycleCountTempDao" class="com.knight.emms.dao.impl.MaterialsRecycleCountTempDaoImpl" parent="baseLongPKDao"/>
+	<bean id="recycleManageDetailDao" class="com.knight.emms.dao.impl.RecycleManageDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherMaterialStockDao" class="com.knight.emms.dao.impl.OtherMaterialStockDaoImpl" parent="baseLongPKDao"/>
+	<bean id="applicationDetailDao" class="com.knight.emms.dao.impl.ApplicationDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="handleMakeDao" class="com.knight.emms.dao.impl.HandleMakeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="makeProductDao" class="com.knight.emms.dao.impl.MakeProductDaoImpl" parent="baseLongPKDao"/>
+	<bean id="consumeProductDao" class="com.knight.emms.dao.impl.ConsumeProductDaoImpl" parent="baseLongPKDao"/>
+	<bean id="recycleManageFeeDao" class="com.knight.emms.dao.impl.RecycleManageFeeDaoImpl" parent="baseLongPKDao"/>
+	<bean id="compensationDamageDao" class="com.knight.emms.dao.impl.CompensationDamageDaoImpl" parent="baseLongPKDao"/>
+	<bean id="materialsRemodelDao" class="com.knight.emms.dao.impl.MaterialsRemodelDaoImpl" parent="baseLongPKDao"/>
+	<bean id="beforeRemodelDao" class="com.knight.emms.dao.impl.BeforeRemodelDaoImpl" parent="baseLongPKDao"/>
+	<bean id="afterRemodelDao" class="com.knight.emms.dao.impl.AfterRemodelDaoImpl" parent="baseLongPKDao"/>
+	<bean id="scrapDetailDao" class="com.knight.emms.dao.impl.ScrapDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="projectDepotInOutDao" class="com.knight.emms.dao.impl.ProjectDepotInOutDaoImpl" parent="baseLongPKDao"/>
+	<bean id="leasedLostCompensationDao" class="com.knight.emms.dao.impl.LeasedLostCompensationDaoImpl" parent="baseLongPKDao"/>
+	<bean id="leasedLostCompensationDetailDao" class="com.knight.emms.dao.impl.LeasedLostCompensationDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="temporaryStorageDao" class="com.knight.emms.dao.impl.TemporaryStorageDaoImpl" parent="baseLongPKDao"/>
+	<bean id="temporaryReturnDao" class="com.knight.emms.dao.impl.TemporaryReturnDaoImpl" parent="baseLongPKDao"/>
+	<bean id="temporaryReturnDetailDao" class="com.knight.emms.dao.impl.TemporaryReturnDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="chargeHandleDao" class="com.knight.emms.dao.impl.ChargeHandleDaoImpl" parent="baseLongPKDao"/>
+	<bean id="returnTempStoreDao" class="com.knight.emms.dao.impl.ReturnTempStoreDaoImpl" parent="baseLongPKDao"/>
+	<bean id="contractJoinUserDao" class="com.knight.emms.dao.impl.ContractJoinUserDaoImpl" parent="baseLongPKDao"/>
+	<bean id="ceaseReportDetailDao" class="com.knight.emms.dao.impl.CeaseReportDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="leaseBlockUpDao" class="com.knight.emms.dao.impl.LeaseBlockUpDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherLeaseBusinessDao" class="com.knight.emms.dao.impl.OtherLeaseBusinessDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherLeaseDetailDao" class="com.knight.emms.dao.impl.OtherLeaseDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="operatorSalaryStatementDao" class="com.knight.emms.dao.impl.OperatorSalaryStatementDaoImpl" parent="baseLongPKDao"/>
+	<bean id="safetyMonitorSettleStatementDao" class="com.knight.emms.dao.impl.SafetyMonitorSettleStatementDaoImpl" parent="baseLongPKDao"/>
+	<bean id="otherExpenseStatementDao" class="com.knight.emms.dao.impl.OtherExpenseStatementDaoImpl" parent="baseLongPKDao"/>
+	<bean id="practiDispatchDao" class="com.knight.emms.dao.impl.PractiDispatchDaoImpl" parent="baseLongPKDao"/>
+	<bean id="equipAddReduceDetailDao" class="com.knight.emms.dao.impl.EquipAddReduceDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="safetyMonitorSettleListDao" class="com.knight.emms.dao.impl.SafetyMonitorSettleListDaoImpl" parent="baseLongPKDao"/>
+	<bean id="inspectSelfInitDao" class="com.knight.emms.dao.impl.InspectSelfInitDaoImpl" parent="baseLongPKDao"/>
+	<bean id="inspectSelfInitDetailDao" class="com.knight.emms.dao.impl.InspectSelfInitDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="inspectSelfChooseDao" class="com.knight.emms.dao.impl.InspectSelfChooseDaoImpl" parent="baseLongPKDao"/>
+	<bean id="inspectSelfChooseDetailDao" class="com.knight.emms.dao.impl.InspectSelfChooseDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="practiLeaveDao" class="com.knight.emms.dao.impl.PractiLeaveDaoImpl" parent="baseLongPKDao"/>
+	<bean id="weChatMessageDao" class="com.knight.emms.dao.impl.WeChatMessageDaoImpl" parent="baseLongPKDao" />
+	<bean id="depotTransfersDao" class="com.knight.emms.dao.impl.DepotTransfersDaoImpl" parent="baseLongPKDao"/>
+	<bean id="transfersDetailDao" class="com.knight.emms.dao.impl.TransfersDetailDaoImpl" parent="baseLongPKDao"/>
+	<bean id="transfersEquipDetailDao" class="com.knight.emms.dao.impl.TransfersEquipDetailDaoImpl" parent="baseLongPKDao"/>
+	<!--泵车系统 -->
+	<bean id="pumpTruckDao" class="com.knight.emms.dao.impl.PumpTruckDaoImpl" parent="baseLongPKDao"/>
+</beans>

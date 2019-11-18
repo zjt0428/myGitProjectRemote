@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BeforeMaterialsRepair" table="T_BEFORE_MATERIALS_REPAIR" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="beforeRepairId" column="BEFORE_REPAIR_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="materialsRepairId" type="java.lang.Long" column="MATERIALS_REPAIR_ID" />
+		<property name="mnemonicCode" type="java.lang.String" column="MNEMONIC_CODE" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="secondUnitConversion" type="java.lang.String" column="SECOND_UNIT_CONVERSION" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="auxiliaryNum" type="java.lang.String" column="AUXILIARY_NUM" />
+		<property name="storageLocation" type="java.lang.String" column="STORAGE_LOCATION" />
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="storeNum" type="java.lang.String" column="STORE_NUM" />
+		<property name="conversionNum" type="java.lang.String" column="CONVERSION_NUM" />
+	</class>
+</hibernate-mapping>

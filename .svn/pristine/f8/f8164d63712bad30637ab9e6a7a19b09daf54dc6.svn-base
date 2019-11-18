@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.knight.app.model.TAppLogistics" table="T_APP_LOGISTICS" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="logiId" type="java.lang.Long">
+            <column name="LOGI_ID" />
+            <generator class="native" />
+        </id>
+        <property name="disid" column="DISID"/>
+        <!--<property name="dispatchSerial" type="java.lang.String" column="DISPATCH_SERIAL"  formula="(SELECT SH.DISPATCH_SERIAL FROM T_DISPATCH SH WHERE SH.DISPATCH_ID = DISID" />-->
+        <property name="deliveryDate" column="DELIVERY_DATE"/>
+        <property name="deliveryMan" column="DELIVERY_MAN"/>
+        <property name="propertyName" column="PROPERTY_NAME"/>
+        <property name="sendId" column="SEND_ID"/>
+        <property name="receiveId" column="RECEIVE_ID"/>
+        <property name="sendWarehouseName" column="SEND_WAREHOUSE_NAME"/>
+        <property name="receiveWarehouseName" column="RECEIVE_WAREHOUSE_NAME"/>
+        <property name="sendWarehouseType" column="SEND_WAREHOUSE_TYPE"/>
+        <property name="receWarehouseType" column="RECE_WAREHOUSE_TYPE"/>
+        <property name="receWarehouseAddress" column="RECE_WAREHOUSE_ADDRESS"/>
+        <property name="fileAttaches" column="FILE_ATTACHES"/>
+        <property name="carId" column="CAR_ID"/>
+        <property name="licensePlate" column="LICENSE_PLATE"/>
+        <property name="status" column="STATUS"/>
+        <property name="summary" column="SUMMARY"/>
+        <property name="fileAttachesReceived" column="FILE_ATTACHES_RECEIVED"/>
+        <property name="signMan" column="SIGN_MAN"/>
+        <property name="signAddress" column="SIGN_ADDRESS"/>
+        <property name="signDate" column="SIGN_DATE"/>
+        <property name="signResult" column="SIGN_RESULT"/>
+        <property name="remark" column="REMARK"/>
+        <property name="remarkRece" column="REMARK_RECE"/>
+        <set name="TAppLogisticsCompSet" cascade="none" inverse="true" lazy="true">
+            <key column="LOGI_ID"/>
+            <one-to-many class="com.knight.app.model.TAppLogisticsComp"/>
+        </set>
+        <set name="TAppLogisticsEquipSet" cascade="none" inverse="true" lazy="true">
+            <key column="LOGI_ID"/>
+            <one-to-many class="com.knight.app.model.TAppLogisticsEquip"/>
+        </set>
+        <set name="logisticsTranDistributionSet" lazy="true" cascade="none" inverse="true">
+            <key column="LOGI_ID"></key>
+            <one-to-many class="com.knight.emms.model.LogisticsTranDestribution" />
+        </set>
+    </class>
+</hibernate-mapping>

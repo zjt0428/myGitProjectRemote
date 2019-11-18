@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MaterialsScrap" table="T_MATERIALS_SCRAP" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="scrapId" column="SCRAP_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="feesType" type="java.lang.String" column="FEES_TYPE" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="whetherUsing" type="java.lang.String" column="WHETHER_USING" />
+		<property name="scrapUnitPrice" type="java.lang.String" column="SCRAP_UNIT_PRICE" />
+		<property name="scrapType" type="java.lang.String" column="SCRAP_TYPE" />
+		<many-to-one name="materialsCommodity" column="COMMODITY_ID" class="com.knight.emms.model.MaterialsCommodity" fetch="join" />
+	</class>
+</hibernate-mapping>

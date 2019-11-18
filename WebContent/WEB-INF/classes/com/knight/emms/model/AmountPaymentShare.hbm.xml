@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AmountPaymentShare" table="T_AMOUNT_PAYMENT_SHARE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="paymentShareId" column="PAYMENT_SHARE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="amountPaymentId" type="java.lang.Long" column="AMOUNT_PAYMENT_ID" />
+		<property name="instalmentId" type="java.lang.Long" column="INSTALMENT_ID" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="periods" type="java.lang.Short" column="PERIODS" />
+		<property name="payment" type="java.math.BigDecimal" column="PAYMENT" />
+		<property name="payDate" type="java.lang.String" column="PAY_DATE" />
+		<property name="alreadyPayment" type="java.math.BigDecimal" column="ALREADY_PAYMENT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="presentPayment" type="java.math.BigDecimal" column="PRESENT_PAYMENT" />
+	</class>
+</hibernate-mapping>

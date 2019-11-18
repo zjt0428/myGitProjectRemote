@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BaseDepotInit" table="T_BASE_DEPOT_INIT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="depotInitId" column="DEPOT_INIT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="depotName" type="java.lang.String" column="DEPOT_NAME" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="supplementQuantity" type="java.lang.String" column="SUPPLEMENT_QUANTITY" />
+		<property name="conversion" type="java.lang.String" column="CONVERSION" />
+		<property name="supplementUnit" type="java.lang.String" column="SUPPLEMENT_UNIT" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="total" type="java.lang.String" column="TOTAL" />
+		<property name="supplementTotal" type="java.lang.String" column="SUPPLEMENT_TOTAL" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="baseDepot" column="DEPOT_ID" class="com.knight.emms.model.BaseDepot" fetch="join" />
+		<set name="baseDepotInitDetailSet" lazy="true" cascade="all" inverse="true">
+			<key column="DEPOT_INIT_ID"></key>
+			<one-to-many class="com.knight.emms.model.BaseDepotInitDetail"></one-to-many>
+		</set>
+	</class>
+</hibernate-mapping>

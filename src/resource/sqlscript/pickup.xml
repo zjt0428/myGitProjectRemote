@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="pickup">
+	<!-- 领用零配件非闲置状态情况;零配件领用审批通过前验证:领用配件是否闲置 -->
+	<select id="component_not_unused">
+	<![CDATA[
+		SELECT C.COMPON_SERIAL
+		  FROM T_PICKUP_COMPONENT P, T_COMPONENT C
+		 WHERE P.PICKUP_ID = ?
+		   AND P.COMPON_ID = C.COMPON_ID
+		   AND C.STATUS <> '1'
+	]]>
+	</select>
+	<select id="count_compon_pickup">
+	<![CDATA[
+		 SELECT PC.COMPON_ID,SUM(ISNULL(PC.QUANTITY,0)) COUNTS
+		 FROM T_PICKUP_COMPONENT PC
+		 WHERE STATUS = '1'
+		 GROUP BY PC.COMPON_ID
+	]]>
+	</select>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-18 13:57:11 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.CeaseReport" table="T_CEASE_REPORT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+        <id name="ceaseId" type="java.lang.Long">
+            <column name="CEASE_ID" />
+            <generator class="native" />
+        </id>
+        <property name="ceaseSerial" type="java.lang.String">
+            <column name="CEASE_SERIAL" length="64" />
+        </property>
+        <property name="userId" type="java.lang.Long">
+            <column name="USER_ID" not-null="true" />
+        </property>
+        <property name="userName" type="java.lang.String">
+            <column name="USER_NAME" length="32" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" length="1" not-null="true" />
+        </property>
+        <property name="ceaseTitle" type="java.lang.String">
+            <column name="CEASE_TITLE" length="64" />
+        </property>
+        <property name="startDate" type="java.lang.String">
+            <column name="START_DATE" length="10" />
+        </property>
+        <property name="endDate" type="java.lang.String">
+            <column name="END_DATE" length="10" />
+        </property>
+        <property name="applyDate" type="java.lang.String">
+            <column name="APPLY_DATE" length="10" />
+        </property>
+        <property name="settledAmount" type="java.lang.String">
+            <column name="SETTLED_AMOUNT" length="20" />
+        </property>
+        <property name="finishAmount" type="java.lang.String">
+            <column name="FINISH_AMOUNT" length="20" />
+        </property>
+        <property name="backOff" type="java.lang.String">
+            <column name="BACK_OFF" length="1" />
+        </property>
+        <property name="tranportCaculateType" type="java.lang.String">
+            <column name="TRANSPORT_CACULATE_TYPE" length="1"/>
+        </property>
+        <property name="caculateRule" type="java.lang.String">
+            <column name="CACULATE_RULE" length="1"/>
+        </property>
+        <property name="delFlag" type="java.lang.String">
+            <column name="DEL_FLAG" length="1" not-null="true" />
+        </property>
+        
+        <many-to-one name="contractMaterials" column="CONTRACT_ID" class="com.knight.emms.model.ContractMaterials" fetch="join"></many-to-one>
+        <set name="ceaseReportDetailSet" lazy="true" cascade="all" inverse="false">
+        	<key column="CEASE_ID"></key>
+        	<one-to-many class="com.knight.emms.model.CeaseReportDetail"/>
+        </set>
+    </class>
+</hibernate-mapping>

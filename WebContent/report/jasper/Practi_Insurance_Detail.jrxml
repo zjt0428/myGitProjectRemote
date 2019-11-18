@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Settle_Account_Receivable" language="groovy" pageWidth="1300" pageHeight="1900" whenNoDataType="AllSectionsNoDetail" columnWidth="1260" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="bd14664a-dbc6-4c54-92f9-e0e62d3df1a5">
+	<property name="ireport.zoom" value="1.0000000000000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="columnHead" forecolor="#333333" backcolor="#AAD7FE" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontName="宋体" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5"/>
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" pattern="" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<style name="title" hAlign="Center" vAlign="Middle" fontName="宋体" fontSize="18" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+	<subDataset name="SettleEquipmentDataset" uuid="caa569e2-abaf-4396-b1f6-dcc1b7a3c98c">
+		<queryString language="SQL">
+			<![CDATA[SELECT * FROM T_SETTLE_EQUIP_BRIEF SE]]>
+		</queryString>
+		<field name="SE_BRIEF_ID" class="java.lang.Long"/>
+		<field name="SETTLE_ID" class="java.lang.Long"/>
+		<field name="EQUIP_DIARY_ID" class="java.lang.Long"/>
+		<field name="EQUIP_ID" class="java.lang.Long"/>
+		<field name="RECORD_SERIAL" class="java.lang.String"/>
+		<field name="RECORD_ID" class="java.lang.String"/>
+		<field name="EXW_SERIAL" class="java.lang.String"/>
+		<field name="EQUIP_CATEGORY_NAME" class="java.lang.String"/>
+		<field name="EQUIP_SPECIFIC_NAME" class="java.lang.String"/>
+		<field name="BUILDING_NUM" class="java.lang.String"/>
+		<field name="UNIT" class="java.lang.String"/>
+		<field name="START_SETTLE_DATE" class="java.lang.String"/>
+		<field name="END_SETTLE_DATE" class="java.lang.String"/>
+		<field name="SETTLE_DAYS" class="java.lang.Short"/>
+		<field name="RENT_STANDARD" class="java.math.BigDecimal"/>
+		<field name="MEASUREMENT" class="java.lang.String"/>
+		<field name="QUANTITY" class="java.lang.Short"/>
+		<field name="DAYS_RENT" class="java.math.BigDecimal"/>
+		<field name="DEDUCT_RENT" class="java.math.BigDecimal"/>
+		<field name="SUMMARY" class="java.math.BigDecimal"/>
+		<field name="REMARK" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="endDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="corpId" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="practiName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idCrad" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="insuranceCompany" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="insureSerial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @startDate VARCHAR(10)
+DECLARE @endDate VARCHAR(10)
+DECLARE @corpId  BIGINT
+DECLARE @practiName VARCHAR(64)
+DECLARE @idCrad VARCHAR(64)
+DECLARE @insuranceCompany VARCHAR(64)
+DECLARE @insureSerial VARCHAR(64)
+DECLARE @projectName VARCHAR(64)
+SET @startDate =$P{startDate}
+SET @endDate = $P{endDate}
+SET @corpId = $P{corpId}
+SET @practiName = $P{practiName}
+SET @idCrad = $P{idCrad}
+SET @insuranceCompany = $P{insuranceCompany}
+SET @insureSerial = $P{insureSerial}
+SET @projectName = $P{projectName}
+SELECT
+	PD.DETAIL_ID AS detailId,
+	PD.PRACTI_ID AS practiId,
+	PI.INSURE_ID AS insureId,
+	P.PRACTI_NAME AS practiName,
+	(CASE WHEN P.SEX = '0' THEN '女' ELSE '男' END) AS sexName,
+	P.ID_CARD AS idCard,
+	P.STATION AS station,
+	KW.VALUE AS kindWorkName,
+	PI.INSURANCE_COMPANY AS insuranceCompany,
+	PI.LINKMAN AS linkman,
+	PI.LINKMAN_PHONE AS linkmanPhone,
+	PI.INSURE_SERIAL AS insureSerial,
+	(CASE WHEN PI.INSURANCE_TYPE = '0' THEN '雇主责任险' ELSE '其他' END) AS insuranceTypeName,
+	PD.START_INSURE_DATE AS startInsureDate,
+	PI.END_INSURE_DATE AS endInsureDate,
+	PD.PROJECT_NAME AS projectName,
+	PI.CORP_NAME AS corpName,
+	PI.CORP_ID AS corpId,
+	PI.CLAIM_PHONE AS claimPhone,
+	PD.PREMIUM AS premium
+FROM T_PRACTI_INSURANCE_DETAIL PD
+LEFT JOIN T_PRACTI_INSURANCE PI ON PD.INSURE_ID = PI.INSURE_ID
+LEFT JOIN T_PRACTITIONER P ON PD.PRACTI_ID = P.PRACTI_ID
+LEFT JOIN BM_KIND_WORK KW ON P.KIND_WORK = KW.CODE
+WHERE PD.START_INSURE_DATE >= @startDate AND PD.START_INSURE_DATE <= @endDate
+AND (P.PRACTI_NAME LIKE '%'+@practiName+'%' OR @practiName = '' OR @practiName IS NULL )
+AND (P.ID_CARD LIKE '%'+@idCrad+'%' OR @idCrad = '' OR @idCrad IS NULL )
+AND (PI.INSURANCE_COMPANY LIKE '%'+@insuranceCompany+'%' OR @insuranceCompany = '' OR @insuranceCompany IS NULL )
+AND (PI.INSURE_SERIAL LIKE '%'+@insureSerial+'%' OR @insureSerial = '' OR @insureSerial IS NULL )
+AND (PD.PROJECT_NAME LIKE '%'+@projectName+'%' OR @projectName = '' OR @projectName IS NULL )
+AND (PI.CORP_ID= @corpId OR @corpId = '' OR @corpId IS NULL)]]>
+	</queryString>
+	<field name="detailId" class="java.lang.Long"/>
+	<field name="practiId" class="java.lang.Long"/>
+	<field name="insureId" class="java.lang.Long"/>
+	<field name="practiName" class="java.lang.String"/>
+	<field name="sexName" class="java.lang.String"/>
+	<field name="idCard" class="java.lang.String"/>
+	<field name="station" class="java.lang.String"/>
+	<field name="kindWorkName" class="java.lang.String"/>
+	<field name="insuranceCompany" class="java.lang.String"/>
+	<field name="linkman" class="java.lang.String"/>
+	<field name="linkmanPhone" class="java.lang.String"/>
+	<field name="insureSerial" class="java.lang.String"/>
+	<field name="insuranceTypeName" class="java.lang.String"/>
+	<field name="startInsureDate" class="java.lang.String"/>
+	<field name="endInsureDate" class="java.lang.String"/>
+	<field name="projectName" class="java.lang.String"/>
+	<field name="corpName" class="java.lang.String"/>
+	<field name="corpId" class="java.lang.Long"/>
+	<field name="claimPhone" class="java.lang.String"/>
+	<field name="premium" class="java.math.BigDecimal"/>
+	<variable name="INDEX" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement style="title" x="0" y="25" width="1260" height="29" uuid="72247c67-3eaf-4038-98a7-6886203e97f6"/>
+				<textElement markup="none">
+					<font fontName="宋体" size="24" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[人员参保情况明细表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35">
+			<textField isBlankWhenNull="false">
+				<reportElement x="0" y="0" width="802" height="35" uuid="490b574a-d016-47e0-bda7-e7741cca0cae"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA["起保日期：" + $P{startDate}+"至"+$P{endDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="0" y="0" width="107" height="40" uuid="f22f1e5d-99ae-4afe-a744-05c8d99e4c09"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[所属公司]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="107" y="0" width="55" height="40" uuid="b9c15a8a-8349-47f8-899b-c4d7a49caaf0"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[姓名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="272" y="0" width="50" height="40" uuid="741deafe-ddb8-4c6a-90d3-cf83a2242f99"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[岗位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="465" y="0" width="55" height="40" uuid="52a88ac9-36e4-4ed6-b070-9a7c9177cc3a"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[理赔电话]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="575" y="0" width="65" height="40" uuid="9e72ff02-457c-4663-b1dd-fe4833ee55a6"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[联系人电话]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="162" y="0" width="110" height="40" uuid="0c1c206f-ba57-48e0-9bc3-93654851b419"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[身份证号	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="520" y="0" width="55" height="40" uuid="35600c24-59da-4008-befc-9a04076f5e8d"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[联系人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="322" y="0" width="55" height="40" uuid="b50ceda8-5ee7-4a37-876c-f3bebac594b4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[工种]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1026" y="0" width="70" height="40" uuid="44ce050d-3dd9-4dc3-ae16-e2b9ce424e18"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[保费]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1096" y="0" width="101" height="40" uuid="9ac109cd-6481-4e6f-bf76-46bc5c9d5a6d"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[理赔时间]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1197" y="0" width="82" height="40" uuid="d5dce1cd-25a9-450b-bb2a-be54089bcf0a"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[理赔金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="640" y="0" width="55" height="40" uuid="761c84d4-ad4b-4262-86bb-7ba0188842dd"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[保单号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="695" y="0" width="55" height="40" uuid="aa574aa0-047a-4125-8f17-451d845b0b19"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[险种]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="750" y="0" width="67" height="40" uuid="a89d75e3-d5d9-4bbf-a0d6-35186d9f6195"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[起保时间]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="882" y="0" width="144" height="40" uuid="8be48136-cda7-4074-b472-4b22dcaacfba"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[项目名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="817" y="0" width="65" height="40" uuid="60fc7a4f-e144-4ca0-9f4f-c401df2611a5"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[停保时间]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="377" y="0" width="88" height="40" uuid="011d34a9-1961-49cc-b1e5-344e4950f531"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[保险公司]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<subreport>
+				<reportElement stretchType="RelativeToTallestObject" x="1096" y="0" width="183" height="20" uuid="4e3d01cc-cc2c-454a-b9c1-c1debc8a4eb7"/>
+				<subreportParameter name="practiId">
+					<subreportParameterExpression><![CDATA[$F{practiId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="insureId">
+					<subreportParameterExpression><![CDATA[$F{insureId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Practi_Insurance_Detail_Body.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="107" height="20" uuid="2d3ad4d0-e796-4fa0-ac4c-94fc129dd0ce"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corpName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="107" y="0" width="55" height="20" uuid="5da6fcab-05e8-44e4-b8bd-3fd6e9ba802a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{practiName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="162" y="0" width="110" height="20" uuid="8dedc3ce-b6ba-4967-9a35-5222c4cdade4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idCard}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="272" y="0" width="50" height="20" uuid="ee57907e-49b1-4e37-aa32-b9128938bc51"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{station}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="465" y="0" width="55" height="20" uuid="c1470881-8820-408e-b008-193fe5caed0b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{claimPhone}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="520" y="0" width="55" height="20" uuid="a48a082b-e932-4793-8ff9-1a661c4a2fe5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{linkman}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="575" y="0" width="65" height="20" uuid="50fdaaa9-7153-429f-8873-ad4d262bf04b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{linkmanPhone}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="322" y="0" width="55" height="20" uuid="4ac64fc9-453e-4261-9425-383121c55a80"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kindWorkName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="55" height="20" uuid="94705892-f243-43b8-b1d7-123515fb6d1e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{insureSerial}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="695" y="0" width="55" height="20" uuid="cb84a0de-d1d1-405f-baa0-2eb2b83819b7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{insuranceTypeName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="750" y="0" width="67" height="20" uuid="a56824e0-5e6b-497a-af01-9b593f3c0d07"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{startInsureDate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="817" y="0" width="65" height="20" uuid="96fde6ec-eefb-4ca9-97a7-3f7acf7f3bb0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{endInsureDate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="882" y="0" width="144" height="20" uuid="57d31e66-aa77-49dc-a0ae-69d0df58e76c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{projectName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1026" y="0" width="70" height="20" uuid="28f9dbe8-db5f-43db-9a86-f5c827a6b872"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{premium}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="377" y="0" width="88" height="20" uuid="b9bf4423-5a4a-461e-816c-029e89f13e04"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{insuranceCompany}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

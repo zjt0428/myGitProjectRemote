@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LaborPay" table="T_LABOR_PAY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="laborPayId" column="LABOR_PAY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="laborPaySerial" type="java.lang.String" column="LABOR_PAY_SERIAL" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO" />
+		<property name="paEnt" type="java.lang.Long" column="PA_ENT" />
+		<property name="paModule" type="java.lang.String" column="PA_MODULE" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="startSettleDate" type="java.lang.String" column="START_SETTLE_DATE" />
+		<property name="endSettleDate" type="java.lang.String" column="END_SETTLE_DATE" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="laborSettId" type="java.lang.Long" column="LABOR_SETT_ID" />
+		<property name="rate" type="java.lang.String" column="RATE" />
+		<property name="createDate" type="java.lang.String" column="CREATE_DATE" />
+		<property name="periodPayDate" type="java.lang.String" column="PERIOD_PAY_DATE" />
+		<property name="endPayDate" type="java.lang.String" column="END_PAY_DATE" />
+		<property name="afterTaxAmount" type="java.math.BigDecimal" column="AFTER_TAX_AMOUNT" />
+		<property name="payState" type="java.lang.String" column="PAY_STATE" />
+		<property name="copeAmount" type="java.math.BigDecimal" column="COPE_AMOUNT" />
+		<property name="paidAmount" type="java.math.BigDecimal" column="PAID_AMOUNT" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="leaseProjectHead" type="java.lang.String" column="LEASE_PROJECT_HEAD" />
+		<property name="pendingAmount" type="java.math.BigDecimal" column="PENDING_AMOUNT" />
+		<many-to-one name="laborSettle" column="LABOR_SETT_ID" class="com.knight.emms.model.LaborSettle" fetch="join" insert="false" update="false"/>
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" insert="false" update="false"/>
+		<set name="laborPayDetailSet" cascade="all" inverse="false" lazy="true" where=" DEL_FLAG = '1'">
+			<key column="LABOR_PAY_ID" />
+			<one-to-many class="com.knight.emms.model.LaborPayDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

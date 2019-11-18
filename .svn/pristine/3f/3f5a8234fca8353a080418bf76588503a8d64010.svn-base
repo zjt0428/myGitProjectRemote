@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInspect" table="T_EQUIPMENT_INSPECT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inspectId" column="INSPECT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="inspectSerial" type="java.lang.String" column="INSPECT_SERIAL" />
+		<property name="cycleTimes" type="java.lang.Integer" column="CYCLE_TIMES" />
+		<property name="thisEndCycleDate" type="java.util.Date" column="THIS_END_CYCLE_DATE" />
+		<property name="inspectDate" type="java.util.Date" column="INSPECT_DATE" />
+		<property name="inspectPepoles" type="java.lang.String" column="INSPECT_PEPOLES" />
+		<property name="inspectResult" type="java.lang.String" column="INSPECT_RESULT" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="rectification" type="java.lang.String" column="RECTIFICATION" />
+		<property name="inspectRectifyId" type="java.lang.Long" column="INSPECT_RECTIFY_ID" />
+		<property name="repairStatus" type="java.lang.String" column="REPAIR_STATUS" />
+		<property name="rectifyResult" type="java.lang.String" formula="(SELECT R.RECTIFY_RESULT FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<property name="rectifyDate" type="java.util.Date" formula="(SELECT R.RECTIFY_DATE FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<property name="rectifyUsername" type="java.lang.String" formula="(SELECT R.RECTIFY_USERNAME FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<property name="rectifyIntroduce" type="java.lang.String" formula="(SELECT R.RECTIFY_INTRODUCE FROM T_INSPECT_RECTIFY R WHERE R.INSPECT_RECTIFY_ID=INSPECT_RECTIFY_ID)" />
+		<many-to-one name="equipInspectSchema" column="INSPECT_SCHEMA_ID" class="com.knight.emms.model.EquipInspectSchema" fetch="join" />
+		<set name="equipInspectDetailSet" lazy="true" cascade="delete" inverse="true">
+			<key column="INSPECT_ID"></key>
+			<one-to-many class="com.knight.emms.model.EquipInspectDetail" />
+		</set>
+		<set name="costInspectSet" lazy="true" cascade="delete" inverse="true">
+			<key column="INSPECT_ID"></key>
+			<one-to-many class="com.knight.emms.model.CostInspect" />
+		</set>
+		<!-- <many-to-one name="inspectRectify" column="INSPECT_RECTIFY_ID" class="com.knight.app.model.InspectRectify" fetch="join" /> -->
+	</class>
+</hibernate-mapping>

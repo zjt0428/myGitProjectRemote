@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InsureClaim" table="T_INSURE_CLAIM" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="insureClaimId" column="INSURE_CLAIM_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="insureId" type="java.lang.Long" column="INSURE_ID" />
+		<property name="insureSerial" type="java.lang.String" column="INSURE_SERIAL" />
+		<property name="bankDeposit" type="java.lang.String" column="BANK_DEPOSIT" />
+		<property name="account" type="java.lang.String" column="ACCOUNT" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="claimDate" type="java.lang.String" column="CLAIM_DATE" />
+		<property name="claimReson" type="java.lang.String" column="CLAIM_RESON" />
+		<property name="wastageAmount" type="java.math.BigDecimal" column="WASTAGE_AMOUNT" />
+		<property name="compensateAmount" type="java.math.BigDecimal" column="COMPENSATE_AMOUNT" />
+	</class>
+</hibernate-mapping>

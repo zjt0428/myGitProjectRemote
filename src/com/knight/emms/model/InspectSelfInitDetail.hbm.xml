@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InspectSelfInitDetail"  table="T_INSPECT_SELF_INIT_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="initDetailId" column="INIT_DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="initId" type="java.lang.Long" column="INIT_ID" />
+		<property name="inspectType" type="java.lang.String" column="INSPECT_TYPE" />
+		<property name="detailContent" type="java.lang.String" column="DETAIL_CONTENT" />
+	</class>
+</hibernate-mapping>

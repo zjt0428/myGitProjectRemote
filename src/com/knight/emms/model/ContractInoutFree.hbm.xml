@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractInoutFree" table="T_CONTRACT_INOUT_FREE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="inoutId" column="INOUT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="rent" type="java.math.BigDecimal" column="RENT" />
+		<property name="rentUnit" type="java.lang.String" column="RENT_UNIT" />
+		<property name="equipGenericName" type="java.lang.String" column="EQUIP_GENERIC_NAME" />
+		<property name="dispatchable" type="java.lang.String" formula="(SELECT COUNT(d.DISPATCH_ID) FROM T_DISPATCH d WHERE d.CONTRACT_ID = CONTRACT_ID 
+			AND EXISTS(SELECT de.* FROM T_DISPATCH_EQUIP de LEFT JOIN T_EQUIPMENT e ON de.EQUIP_ID = E.EQUIP_ID 
+			LEFT JOIN BM_EQUIP_GENERIC eg ON eg.CODE = e.EQUIP_GENERIC 
+			LEFT JOIN BM_EQUIP_SPECIFIC es ON es.CODE = e.EQUIP_SPECIFIC
+ 			WHERE de.DISPATCH_ID = d.DISPATCH_ID AND eg.VALUE = EQUIP_SPECIFIC_NAME AND eg.VALUE = EQUIP_GENERIC_NAME) AND d.APPLYFOR_STATE>2)"/>
+		<property name="approveable" type="java.lang.String" column="APPROVEABLE" />
+	</class>
+</hibernate-mapping>

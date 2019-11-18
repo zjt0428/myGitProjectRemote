@@ -1,0 +1,87 @@
+var AccountsReceivableReport = function(a){
+	this.params = {};
+	Ext.apply(this.params, ( a && a.params )||{} );
+	
+	var generaltems =[ {
+			lable : "日期:",
+			xtype : "datefield",
+			editable : false,
+			format : "Y-m",
+			name : "Q_[START_DATE]_S",
+			value : new Date()
+		}, {
+			lable : "至",
+			xtype : "datefield",
+			editable : false,
+			format : "Y-m",
+			name : "Q_[END_DATE]_S",
+			value : new Date()
+		}, {
+			allowBlank : true,
+			lable : "项目名称",
+			name : "Q_[PROJECT_NAME]_S",
+			
+		}, {
+			lable : "合同编号",
+			width : 80,
+			name : "Q_[CONTRACT_NO]_S"
+		}, {
+			lable : "承租单位",
+			width : 80,
+			name : "Q_[PA_ENT_NAME]_S"
+		}];
+
+	AccountsReceivableReport.superclass.constructor.call(this,{
+		id : "AccountsReceivableReport",
+		title : "应收款汇总表",
+		iconCls : "menu-business-practivacancyrate",
+		jasperFile : "REPORT_ACCOUNTS_RECEIVABLE_REPORT",
+		search_config : {
+			generalItems : generaltems
+		},
+		base_params : this.params
+	});
+};
+Ext.extend(AccountsReceivableReport, Knight.ux.BaseReportView, {
+	importContractId : function(data) {
+		var contractIds = "";
+		var projectNames = "";
+		for(var i=0;i<data.length;i++) {
+			contractIds = contractIds.concat(data[i].data.contractmaId);
+			projectNames = projectNames.concat(data[i].data.projectName);
+			if(i==data.length-1) {
+				break;
+			}
+			contractIds = contractIds.concat(",");
+			projectNames = projectNames.concat(",");
+		}
+		this.searchPanel.getForm().findField("Q_contractIds_S").setValue(contractIds);
+		this.searchPanel.getForm().findField("Q_projectName_S").setValue(projectNames);
+	},
+	queryDetail : function(action) {
+		var jasperFile = null;
+		if(action=="specifications") {
+			jasperFile = "REPORT__LOST_COMPENSATION_BY_SPECIFICATIONS";
+		}
+		if(action=="commodity") {
+			jasperFile = "REPORT_LOST_COMPENSATION_BY_COMMODITY";
+		}
+		if(action=="project") {
+			jasperFile = "REPORT_LOST_COMPENSATION_BY_PROJECT";
+		}
+		var  contractIds = this.searchPanel.getForm().findField("Q_contractIds_S").getValue();
+		var  projectName = this.searchPanel.getForm().findField("Q_projectName_S").getValue();
+		var  startDate = this.searchPanel.getForm().findField("Q_startDate_S").getValue();
+		var  endDate = this.searchPanel.getForm().findField("Q_endDate_S").getValue();
+		
+		new LostCompensationDetailWin({
+			params : {
+				contractIds : contractIds,
+				projectName : projectName,
+				startDate : startDate,
+				endDate : endDate
+			},
+			jasperFile : jasperFile
+		}).show();
+	}
+});

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SupplierAccount" table="T_SUPPLIER_ACCOUNT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="supplierAccountId" column="SUPPLIER_ACCOUNT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="supplierId" type="java.lang.Long" column="SUPPLIER_ID" />
+		<property name="bankDeposit" type="java.lang.String" column="BANK_DEPOSIT" />
+		<property name="account" type="java.lang.String" column="ACCOUNT" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+	</class>
+</hibernate-mapping>

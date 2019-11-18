@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.knight.app.model.TAppLogistics" table="T_APP_LOGISTICS" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="logiId" type="java.lang.Long">
+            <column name="LOGI_ID" />
+            <generator class="native" />
+        </id>
+        <property name="disid" column="DISID"/>
+        <property name="dispatchSerial" type="java.lang.String" column="DISPATCH_SERIAL"  formula="(SELECT SH.DISPATCH_SERIAL FROM T_APP_DISPATCH SH WHERE SH.DISID = DISID)" />
+        <property name="deliveryDate" column="DELIVERY_DATE"/>
+        <property name="deliveryMan" column="DELIVERY_MAN"/>
+        <property name="propertyName" column="PROPERTY_NAME"/>
+        <property name="sendId" column="SEND_ID"/>
+        <property name="receiveId" column="RECEIVE_ID"/>
+        <property name="sendWarehouseName" column="SEND_WAREHOUSE_NAME"/>
+        <property name="receiveWarehouseName" column="RECEIVE_WAREHOUSE_NAME"/>
+        <property name="sendWarehouseType" column="SEND_WAREHOUSE_TYPE"/>
+        <property name="receWarehouseType" column="RECE_WAREHOUSE_TYPE"/>
+        <property name="receWarehouseAddress" column="RECE_WAREHOUSE_ADDRESS"/>
+        <property name="fileAttaches" column="FILE_ATTACHES"/>
+        <property name="carId" column="CAR_ID"/>
+        <property name="licensePlate" column="LICENSE_PLATE"/>
+        <property name="status" column="STATUS"/>
+        <property name="summary" column="SUMMARY"/>
+        <property name="fileAttachesReceived" column="FILE_ATTACHES_RECEIVED"/>
+        <property name="signMan" column="SIGN_MAN"/>
+        <property name="signAddress" column="SIGN_ADDRESS"/>
+        <property name="signDate" column="SIGN_DATE"/>
+        <property name="signResult" column="SIGN_RESULT"/>
+        <property name="remark" column="REMARK"/>
+        <property name="remarkRece" column="REMARK_RECE"/>
+        <property name="transportUnit" type="java.lang.String"  formula="(SELECT TAD.TRANSPORT_UNIT FROM T_APP_DISPATCH TAD WHERE TAD.DISID=DISID)"/>
+         <property name="sedan" type="java.lang.String"
+			formula="(SELECT TOP 1  A.SEDAN FROM T_CAR A WHERE  A.CAR_ID=CAR_ID)" />
+	   <property name="mobile" type="java.lang.String"
+			formula="(SELECT TOP 1  A.MOBILE FROM APP_USER A WHERE  A.FULLNAME=DELIVERY_MAN)" />
+			<property name="phone" type="java.lang.String"
+			formula="(SELECT TOP 1  A.MOBILE FROM APP_USER A WHERE  A.FULLNAME=SIGN_MAN)" />
+	  <property name="driverPhone" type="java.lang.String"
+			formula="(SELECT   A.DRIVER_PHONE FROM T_CAR A WHERE  A.CAR_ID=CAR_ID)" />
+	  <property name="department" type="java.lang.String"
+			formula="(SELECT D.DEP_NAME FROM DEPARTMENT D WHERE (SELECT TOP 1 A.DEP_ID FROM APP_USER A WHERE  A.FULLNAME=SIGN_MAN)=D.DEP_ID)" />			
+	   <property name="isComplete" column="IS_COMPLETE"/>
+       <property name="signPic"  column="SIGN_PIC"/>     
+	   <property name="dispathcher" type="java.lang.String"
+	       formula="(SELECT  TOP  1 A.DISPATCHER  FROM  T_APP_DISPATCH  A  WHERE A.DISID  = DISID  )" />
+      <property name="filePath" type="java.lang.String"
+	       formula="(SELECT  A.FILEPATH  FROM  FILE_ATTACH  A  WHERE A.FILEID  = SIGN_PIC)" />
+        <set name="TAppLogisticsCompSet" cascade="none" inverse="true" lazy="true">
+            <key column="LOGI_ID"/>
+            <one-to-many class="com.knight.app.model.TAppLogisticsComp"/>
+        </set>
+        <set name="TAppLogisticsEquipSet" cascade="none" inverse="true" lazy="true">
+            <key column="LOGI_ID"/>
+            <one-to-many class="com.knight.app.model.TAppLogisticsEquip"/>
+        </set>
+        <set name="logisticsTranDistributionSet" lazy="true" cascade="none" inverse="true">
+            <key column="LOGI_ID"></key>
+            <one-to-many class="com.knight.emms.model.LogisticsTranDestribution" />
+        </set>
+    </class>
+</hibernate-mapping>

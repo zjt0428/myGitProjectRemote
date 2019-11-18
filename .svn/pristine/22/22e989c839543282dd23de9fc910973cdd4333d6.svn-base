@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InventoryCategory" table="T_INVENTORY_CATEGORY" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="invCategoryId" column="INV_CATEGORY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="inventoryId" type="java.lang.Long" column="INVENTORY_ID" />
+		<property name="repertoryCategory" type="java.lang.String" column="REPERTORY_CATEGORY" />
+		<property name="bookQuantity" type="java.lang.Integer" column="BOOK_QUANTITY" />
+		<property name="inventoryQuantity" type="java.lang.Integer" column="INVENTORY_QUANTITY" />
+		<property name="scrapQuantity" type="java.lang.Integer" column="SCRAP_QUANTITY" />
+		<property name="borrowQuantity" type="java.lang.Integer" column="BORROW_QUANTITY" />
+		<property name="pickupQuantity" type="java.lang.Integer" column="PICKUP_QUANTITY" />
+		<property name="missQuantity" type="java.lang.Integer" column="MISS_QUANTITY" />
+	</class>
+</hibernate-mapping>

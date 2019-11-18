@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.StoreComponStock" table="T_STORE_COMPON_STOCK" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="componStockId" column="COMPON_STOCK_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="boundDate" type="java.lang.String" column="BOUND_DATE" />
+		<property name="stockType" type="java.lang.String" column="STOCK_TYPE" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" insert="false" update="false" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" insert="false" update="false" fetch="join" />
+		<many-to-one name="storeHouse" column="STORE_ID" class="com.knight.emms.model.StoreHouse" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

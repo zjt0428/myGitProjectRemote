@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ContractArrange" table="T_CONTRACT_ARRANGE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="arrangeId" column="ARRANGE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="arrangeSerial" type="java.lang.String" column="ARRANGE_SERIAL" />
+		<property name="arrangeType" type="java.lang.String" column="ARRANGE_TYPE" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="province" type="java.lang.String" column="PROVINCE" />
+		<property name="customerId" type="java.lang.Long" column="CUSTOMER_ID" />
+		<property name="customerName" type="java.lang.String" column="CUSTOMER_NAME" />
+		<property name="customerAddress" type="java.lang.String" column="CUSTOMER_ADDRESS" />
+		<property name="linker" type="java.lang.String" column="LINKER" />
+		<property name="linkerTel" type="java.lang.String" column="LINKER_TEL" />
+		<property name="corpId" type="java.lang.Long" column="CORP_ID" />
+		<property name="corpName" type="java.lang.String" column="CORP_NAME" />
+		<property name="dutyman" type="java.lang.String" column="DUTYMAN" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="projectAddress" type="java.lang.String" column="PROJECT_ADDRESS" />
+		<property name="projectTimeLimit" type="java.lang.String" column="PROJECT_time_limit" />
+		<property name="overallHeight" type="java.math.BigDecimal" column="OVERALL_HEIGHT" />
+		<property name="projectStatus" type="java.lang.String" column="PROJECT_STATUS" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="inEnt" type="java.lang.Long" column="IN_ENT" />
+		<property name="inEntModule" type="java.lang.String" column="IN_ENT_MODULE" />
+		<property name="inEntName" type="java.lang.String" column="IN_ENT_NAME" />
+		<property name="inEntCertNum" type="java.lang.String" column="IN_ENT_CERT_NUM" />
+		<property name="inEntTitleLevel" type="java.lang.String" column="IN_ENT_TITLE_LEVEL" />
+		<property name="taxModeName" type="java.lang.String" column="TAX_MODE_NAME" />
+		<property name="inuse" type="java.lang.String" column="INUSE" />
+		<property name="contractType" type="java.lang.String" column="CONTRACT_TYPE" />
+		<property name="cooperationWay" type="java.lang.String" column="COOPERATION_WAY" />
+		<property name="competentDepartment" type="java.lang.String" formula="( SELECT TOP 1 CL.COMPETENT_DEPARTMET  FROM T_CONTRACT_LEASE CL WHERE CL.ARRANGE_ID = ARRANGE_ID  )" /> 
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PROJECT P WHERE P.PROJECT_ID = PROJECT_ID)" /> 
+		<set name="contractArrangeEquipmentSet" cascade="all" inverse="false" lazy="true">
+			<key column="ARRANGE_ID" />
+			<one-to-many class="com.knight.emms.model.ContractArrangeEquipment" />
+		</set>
+		<set name="contractArrangeSituationSet" cascade="all" inverse="false" lazy="true">
+			<key column="ARRANGE_ID" />
+			<one-to-many class="com.knight.emms.model.ContractArrangeSituation" />
+		</set>
+	</class>
+</hibernate-mapping>

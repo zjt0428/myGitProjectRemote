@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ChangeRecord" table="T_CHANGE_RECORD" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="orecordId" column="ORECORD_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="createTime" type="java.lang.String" column="CREATE_TIME" />
+		<property name="executeSql" type="java.lang.String" column="EXECUTE_SQL" />
+		<property name="originalValue" type="java.lang.String" column="ORIGINAL_VALUE" />
+	</class>
+</hibernate-mapping>

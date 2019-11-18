@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Materials_Handing_Charge_Report" language="groovy" pageWidth="1280" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1240" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="77884151-7510-4bb1-8498-10b0be1b3017">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="contractIds" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="contractSerial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="chargeWay" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="feesType" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="depotId" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @contractSerial VARCHAR(64)
+DECLARE @startDate VARCHAR(14)
+DECLARE @endDate VARCHAR(14)
+DECLARE @feesType VARCHAR(14)
+DECLARE @chargeWay VARCHAR(1)
+DECLARE @depotId INT
+
+SET @contractSerial = $P{contractSerial}
+SET @startDate = $P{startDate}
+SET @endDate = $P{endDate}
+SET @feesType = $P{feesType}
+SET @chargeWay = $P{chargeWay}
+SET @depotId=$P{depotId}
+
+SELECT
+BCC.[VALUE] AS 'CONTRACT_CATEGORY_NAME',
+CM.PA_ENT_NAME,
+CM.CONTRACT_SERIAL,
+CM.PROJECT_NAME,
+CM.COMPETENT_DEPARTMET,
+BP.[VALUE]+BC.[VALUE] AS 'ADDRESS',
+BM.[VALUE] AS 'CHARGE_WAY_NAME',
+BD.DEPOT_NAME,
+T.*
+FROM (
+	SELECT
+	CONTRACT_ID,
+	CD.COMMODITY,
+	CD.FEES_TYPE_NAME AS 'CHARGE_TYPE',
+	CD.CHARGE_UNIT_PRICE AS 'CHARGE_PRICE',
+	CD.CHARGE_QUANTITY AS 'CHARGE_QUANTITY',
+	CD.CHARGE_AMOUNT,
+	CD.CHARGE_MODE AS 'CHARGE_WAY',
+	STORE_ID AS 'DEPOT_ID',
+	SUBSTRING(MP.PACKAGE_DATE,0,11) AS 'CHARGE_DATE'
+	FROM T_MATERIALS_PACKAGE MP,T_COST_DETAIL CD WHERE MP.PACKAGE_ID=CD.PACKAGE_ID
+	AND APPLYFOR_STATE=3 AND DEL_FLAG =1
+	AND SUBSTRING(MP.PACKAGE_DATE,0,11)>=@startDate AND SUBSTRING(MP.PACKAGE_DATE,0,11)<=@endDate
+	AND (STORE_ID=@depotId OR @depotId IS NULL)
+	UNION ALL
+	SELECT
+	CONTRACT_ID,
+	RMF.COMMODITY,
+	RMF.CHARGE_TYPE,
+	RMF.CHARGE_PRICE,
+	RMF.CHARGE_QUANTITY,
+	RMF.CHARGE_AMOUNT,
+	RMF.CHARGE_WAY,
+	DEPOT_ID,
+	RM.RECYCLE_DATE AS 'CHARGE_DATE'
+	FROM T_RECYCLE_MANAGE RM,T_RECYCLE_MANAGE_FEE RMF WHERE RM.RECYCLE_ID = RMF.RECYCLE_ID
+	AND APPLYFOR_STATE=3 AND DEL_FLAG =1
+	AND RM.RECYCLE_DATE>=@startDate AND RM.RECYCLE_DATE<=@endDate
+	AND (DEPOT_ID=@depotId OR @depotId IS NULL)
+	UNION ALL
+	SELECT
+	TR.CONTRACT_ID,
+	CH.COMMODITY,
+	CH.FEES_TYPE_NAME AS 'CHARGE_TYPE',
+	CH.CHARGE_UNIT_PRICE AS 'CHARGE_PRICE',
+	CH.CHARGE_QUANTITY AS 'CHARGE_QUANTITY',
+	CH.CHARGE_AMOUNT,
+	CH.CHARGE_MODE AS 'CHARGE_WAY',
+	TR.DEPOT_ID,
+	TR.PACKAGE_DATE AS 'CHARGE_DATE'
+	FROM T_TEMPORARY_RETURN TR,T_CHARGE_HANDLE CH WHERE TR.RETURN_ID=CH.RETURN_ID
+	AND TR.APPLYFOR_STATE=3 AND DEL_FLAG=1
+	AND TR.PACKAGE_DATE>=@startDate AND TR.PACKAGE_DATE<=@endDate
+  AND (TR.DEPOT_ID=@depotId OR @depotId IS NULL)
+	) T
+LEFT JOIN T_CONTRACT_MATERIALS CM ON T.CONTRACT_ID=CM.CONTRACTMA_ID
+LEFT JOIN T_PROJECT TP ON TP.PROJECT_ID = CM.PROJECT_ID
+LEFT JOIN BM_PROVINCE BP ON BP.CODE=TP.PROVINCE
+LEFT JOIN BM_CITY BC ON BC.CODE=TP.CITY
+LEFT JOIN BM_PAYMENT_TYPE BM ON BM.CODE=T.CHARGE_WAY
+LEFT JOIN BM_CONTRACT_CATEGORY BCC ON BCC.CODE=CM.CONTRACT_CATEGORY
+LEFT JOIN T_BASE_DEPOT BD ON BD.DEPOT_ID = T.DEPOT_ID
+WHERE (CM.CONTRACT_SERIAL LIKE '%'+@contractSerial+'%' OR @contractSerial='' OR @contractSerial IS NULL)
+AND ($P{contractIds} IS NULL OR $P{contractIds}='' OR T.CONTRACT_ID IN (SELECT * FROM Split($P{contractIds},',')))
+AND (T.CHARGE_TYPE=@feesType OR @feesType='' OR @feesType IS NULL)
+AND (T.CHARGE_WAY=@chargeWay OR @chargeWay='' OR @chargeWay IS NULL)
+ORDER BY BCC.[VALUE],
+(CASE CM.PA_ENT_NAME
+WHEN '天元集团一公司' THEN 0
+WHEN '天元集团二公司' THEN 1
+WHEN '天元集团三公司' THEN 2
+WHEN '天元集团四公司' THEN 3
+WHEN '天元集团五公司' THEN 4
+WHEN '天元集团六公司' THEN 5
+WHEN '天元集团七公司' THEN 6
+WHEN '天元集团八公司' THEN 7
+WHEN '天元集团九公司' THEN 8
+WHEN '天元集团十公司' THEN 9
+WHEN '天元集团十一公司' THEN 10
+WHEN '天元集团青二公司' THEN 11
+WHEN '天元集团路桥公司' THEN 12
+WHEN '天元集团装饰公司' THEN 13
+WHEN '天元集团安装公司' THEN 14
+WHEN '天元集团北京公司' THEN 15
+WHEN '天元集团六公司济南办事处' THEN 16
+WHEN '外租经营客户' THEN 17
+WHEN '天元集团临港公司' THEN 18
+WHEN '集团内部其他单位' THEN 19
+ELSE 20
+END),CM.CONTRACT_SERIAL]]>
+	</queryString>
+	<field name="CONTRACT_CATEGORY_NAME" class="java.lang.String"/>
+	<field name="PA_ENT_NAME" class="java.lang.String"/>
+	<field name="CONTRACT_SERIAL" class="java.lang.String"/>
+	<field name="PROJECT_NAME" class="java.lang.String"/>
+	<field name="COMPETENT_DEPARTMET" class="java.lang.String"/>
+	<field name="ADDRESS" class="java.lang.String"/>
+	<field name="CHARGE_WAY_NAME" class="java.lang.String"/>
+	<field name="DEPOT_NAME" class="java.lang.String"/>
+	<field name="CONTRACT_ID" class="java.lang.Long"/>
+	<field name="COMMODITY" class="java.lang.String"/>
+	<field name="CHARGE_TYPE" class="java.lang.String"/>
+	<field name="CHARGE_PRICE" class="java.lang.String"/>
+	<field name="CHARGE_QUANTITY" class="java.lang.String"/>
+	<field name="CHARGE_AMOUNT" class="java.lang.String"/>
+	<field name="CHARGE_WAY" class="java.lang.String"/>
+	<field name="DEPOT_ID" class="java.lang.Long"/>
+	<field name="CHARGE_DATE" class="java.lang.String"/>
+	<variable name="PA_ENT_AMOUNT" class="java.lang.Double" resetType="Group" resetGroup="PA_ENT_NAME" calculation="Sum">
+		<variableExpression><![CDATA[java.lang.Double.valueOf($F{CHARGE_AMOUNT})]]></variableExpression>
+	</variable>
+	<variable name="CONTRACT_CATEORY_AMOUNT" class="java.lang.Double" resetType="Group" resetGroup="CONTRACT_CATEORY" calculation="Sum">
+		<variableExpression><![CDATA[java.lang.Double.valueOf($F{CHARGE_AMOUNT})]]></variableExpression>
+	</variable>
+	<variable name="PA_ENT_NAME" class="java.lang.String">
+		<variableExpression><![CDATA[$F{PA_ENT_NAME}+" 合计"]]></variableExpression>
+	</variable>
+	<variable name="CONTRACT_CATEGORY_NAME" class="java.lang.String">
+		<variableExpression><![CDATA[$F{CONTRACT_CATEGORY_NAME}+" 合计"]]></variableExpression>
+	</variable>
+	<group name="CONTRACT_CATEORY">
+		<groupExpression><![CDATA[$F{CONTRACT_CATEGORY_NAME}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<textField pattern="###0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1211" y="0" width="100" height="20" backcolor="#B9B4F8" uuid="e6186d00-d2ea-4b3c-8436-72115fcabfcf"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{CONTRACT_CATEORY_AMOUNT}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="0" width="200" height="20" backcolor="#B9B4F8" uuid="5d0be5bc-11b3-4d49-a8b4-a67ba0494464"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{CONTRACT_CATEGORY_NAME}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="200" y="0" width="1011" height="20" backcolor="#B9B4F8" uuid="32c8aaea-fa13-4c88-b1fa-28151d82afac"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="PA_ENT_NAME">
+		<groupExpression><![CDATA[$F{PA_ENT_NAME}]]></groupExpression>
+		<groupFooter>
+			<band height="20">
+				<textField pattern="###0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="1211" y="0" width="100" height="20" backcolor="#ADDDB7" uuid="816a5d87-368e-43e2-a0a1-f50fbc103974"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{PA_ENT_AMOUNT}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="0" width="200" height="20" backcolor="#ADDDB7" uuid="edc43676-06bc-404f-a86f-76490147a2be"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{PA_ENT_NAME}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="200" y="0" width="1011" height="20" backcolor="#ADDDB7" uuid="8723219b-6b2a-48bd-a754-68dedd42e75b"/>
+					<box>
+						<pen lineWidth="0.5"/>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="1131" height="79" uuid="9b79cd2e-1267-406a-b544-6a2a5170f9ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[周转材料装卸费统计表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="28">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="28" backcolor="#99CCFF" uuid="704fc854-ad79-40da-bc60-a96b533e4e9c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[合同类型]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="100" height="28" backcolor="#99CCFF" uuid="5081c6af-12e4-4d10-bda5-c6f44aed58aa"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[承租单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="200" y="0" width="100" height="28" backcolor="#99CCFF" uuid="21d6f5bf-8830-4fac-86a4-3c90d30101e2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[合同编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="300" y="0" width="201" height="28" backcolor="#99CCFF" uuid="40c1a09e-d7f9-49cc-9b3d-b623a80c786b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[项目名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="501" y="0" width="100" height="28" backcolor="#99CCFF" uuid="2d161dbe-99b1-4c86-af2d-0aff6452486d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[项目主管部门]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="601" y="0" width="100" height="28" backcolor="#99CCFF" uuid="9e350d5c-77e3-45eb-9b61-f3553fda55ff"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[项目地址]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1091" y="0" width="50" height="28" backcolor="#99CCFF" uuid="ae37aad3-3e9f-40bf-b011-1b1a438d9207"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费单价]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1141" y="0" width="70" height="28" backcolor="#99CCFF" uuid="dc08484d-1848-4972-b96c-4f40d4893a87"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1041" y="0" width="50" height="28" backcolor="#99CCFF" uuid="d6a0dc43-25d2-4ea6-afb3-d4d2d98902f6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="881" y="0" width="80" height="28" backcolor="#99CCFF" uuid="9d6e9b94-308d-4ece-b374-e7ac2436d477"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费类型]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="701" y="0" width="100" height="28" backcolor="#99CCFF" uuid="900a411e-59dc-40aa-85f3-e025bf53b582"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费时间]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="801" y="0" width="80" height="28" backcolor="#99CCFF" uuid="c6779130-71a2-4b03-b31b-ce59e57f87c7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费方式]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1211" y="0" width="100" height="28" backcolor="#99CCFF" uuid="16d2d7de-85d2-4c0e-aa7a-aa4bee98f662"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="961" y="0" width="80" height="28" backcolor="#99CCFF" uuid="3f8b51ce-c2f0-42e2-83c2-4db5885ec6bf"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[收费仓库]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="100" height="32" uuid="309d8763-4743-42b5-8f06-5a08a86fe4fc"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CONTRACT_CATEGORY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="100" height="32" uuid="68145c3e-4a02-44e8-b936-69888eccce05"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PA_ENT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="0" width="100" height="32" uuid="ea4e17bf-2270-4f81-9ef7-78b0952d752c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CONTRACT_SERIAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="501" y="0" width="100" height="32" uuid="e5d2c387-1836-403e-bf59-32434b170caa"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{COMPETENT_DEPARTMET}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="201" height="32" uuid="9d2e0a63-a5d6-4ae0-b35a-1dc52795981f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PROJECT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="601" y="0" width="100" height="32" uuid="7a9e2ed0-ef47-4912-a244-8a2189c64494"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="801" y="0" width="80" height="32" uuid="f6462d24-b426-487a-9901-4fbfbba310ea"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CHARGE_WAY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="881" y="0" width="80" height="32" uuid="36379493-1bab-46a9-b68c-334f0928f7d6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CHARGE_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1091" y="0" width="50" height="32" uuid="3797ae8e-9adb-4918-b841-d971c64a01f4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CHARGE_PRICE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1141" y="0" width="70" height="32" uuid="b6fff2b4-a41a-42d0-ad18-7ce81268c060"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CHARGE_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1211" y="0" width="100" height="32" uuid="87c5bb99-a051-42e2-86e0-942973075bb8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CHARGE_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1041" y="0" width="50" height="32" uuid="c20f3c57-4da6-4679-8520-4b1ae7835c80"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[吨]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="701" y="0" width="100" height="32" uuid="2d480003-b253-4e76-b500-4aad5ca55501"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CHARGE_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="961" y="0" width="80" height="32" uuid="43a6ddc8-9c9c-4212-bb73-05471af09f71"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DEPOT_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

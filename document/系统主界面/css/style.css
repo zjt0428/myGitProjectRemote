@@ -1,0 +1,46 @@
+body {
+	font-size:12px;
+	font-family:ËÎÌו,serif,Tahoma, Helvetica, sans-serif;
+	color:#333333;
+	margin:0 auto;
+	background-repeat:repeat-x;
+	background-color:#FFFFFF;
+   }
+   
+div,table,select,input,textarea,form,p,h1,h2,h3,h4,h5,fieldset,p{padding:0; margin:0;}
+ul,li,dl,dt,dd{padding:0; margin:0; list-style:none;}
+img{ border:0; padding:0; margin:0}
+p  { line-height: 24px;}
+.fl{ float: left}
+.fr{ float: right}
+.white14{ font-size:14px; color:#E8F3FE; text-align:right;}
+.pad_bottom_25{padding-bottom:25px;}
+
+a{ text-decoration:none;}
+a:link, a:visited{ color:#333;}
+a:hover{ color:#058FF4; text-decoration:underline; cursor:hand;}
+
+.top_boxbg{float:left; width:100%; height:79px; background-image:url(../images/top_bg.jpg);background-repeat:repeat-x;}
+.top_title{ float:left; width:530px; height:79px;}
+.top_right{ float:right; width:546px;height:79px; background-image:url(../images/top_right.jpg);background-repeat:no-repeat; background-position:right;}
+.top_right_word{ float:right; width:290px; line-height:79px; font-size:13px; color:#ffffff;}
+.top_right_word a:link{ color:#fff; cursor:hand}
+.top_right_word a:hover{ color:#fff; cursor:hand}
+
+.top_span_icon{ float:left; width:18px; padding-top:30px; padding-right:2px;}
+.top_span_word{ float:left; width:62px;}
+
+.bottom{ float:left; width:100%; height:28px; color:#6F6F6F;border-top:1px solid #94B8D2; background-color:#BED7ED;}
+.bottom_user{float:left; line-height:28px;}
+.bottom_user_icon{ float:left; padding-left:27px; padding-top:5px; padding-right:5px;}
+.bottom_user_word{ float:left; width:180px;}
+.bottom_copyright{ float: left; width:70%; text-align:center; line-height:28px; color:#6F6F6F;}
+
+
+.left_box{float:left; width:222px; height:auto;}
+.left_menu{ float:left; width:222px; padding-top:20px; padding-left:20px;}
+.right_title_box{ float:left; width:100%; background-image:url(../images/right_bg.jpg); height:35px;}
+.right_title_wrod{ float:left; width:800px; line-height:35px;}
+.right_box{ float:left; width:100%; height:auto;}
+.home_icon_box{ float:left; padding-top:70px; padding-left:110px; width:850px;}
+.home_icon_box td{ line-height:36px;  padding-right:36px; font-size:14px;}

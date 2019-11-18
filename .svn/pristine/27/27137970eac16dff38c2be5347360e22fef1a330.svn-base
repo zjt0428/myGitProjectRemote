@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>设备维修作业单</title>
+<link href="css/style_table.css" rel="stylesheet" type="text/css" />
+<style media="print">
+.Noprint {
+	display: none;
+	
+}
+.PageNext {
+	page-break-after: always;
+}
+</style>
+</head>
+
+<body>
+<center class="Noprint">
+	<p align="right" class="mar_15">
+		<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+		<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+	</p>
+</center>
+<center>
+<div class="hzbmain_detail">
+<p style='text-align:center'><span class="wrod_title">上海宁鑫起重设备安装有限公司</span></p>
+<p style='text-align:center'><span class="wrod_title">设备维修作业单</span></p><br>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="hzb_table">
+  <tr>
+    <td width="100" height="30">填报人</td>
+    <td width="300">&nbsp;</td>
+    <td width="100">填报日期</td>
+    <td width="300">&nbsp;</td>
+    <td width="100">填报部门</td>
+    <td width="250">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">项目名称</td>
+    <td>&nbsp;</td>
+    <td>设备名称</td>
+    <td>&nbsp;</td>
+    <td>规格型号</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">出厂编号</td>
+    <td>&nbsp;</td>
+    <td>项目地址</td>
+    <td>&nbsp;</td>
+    <td>现场编号</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">备案编号</td>
+    <td>&nbsp;</td>
+    <td>车牌号</td>
+    <td>&nbsp;</td>
+    <td>主修人员</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan="4">故障<br />
+      描述</td>
+    <td colspan="3" rowspan="4">&nbsp;</td>
+    <td height="30">协助人员</td>
+    <td>&nbsp;</td>
+  </tr>
+ <tr>
+    <td height="30">运行状态</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">维修结果</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">维修方法</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="hzb_table" style="border-top-style:none;"> 
+  <tr>
+    <td height="30" colspan="7" style="background-color:#E0E0E0; font-weight:bold; padding-left:5px; text-align:left;">维修内容</td>
+    </tr>
+  <tr>
+    <td height="30" width="15%">故障部位</td>
+    <td width="12%">故障时间</td>
+    <td width="25%">故障原因</td>
+    <td width="10%">修复时间</td>
+    <td width="10%">维修耗时</td>
+    <td width="10%">人工费用</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="hzb_table" style="border-top-style:none;"> 
+  <tr>
+    <td height="30" colspan="7" style="background-color:#E0E0E0; font-weight:bold; padding-left:5px; text-align:left;">更换配件信息</td>
+    </tr>
+  <tr>
+    <td height="30" width="15%">部件名称</td>
+    <td width="12%">配件型号规格</td>
+    <td width="25%">单位</td>
+    <td width="10%">单价</td>
+    <td width="10%">更换数量</td>
+    <td width="10%">小计</td>
+    <td>备注</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+    <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+
+</div>
+</center>
+</body>
+</html>

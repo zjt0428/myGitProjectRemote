@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PriceSetting" table="T_PRICE_SETTING" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="priceId" column="PRICE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractmaId" type="java.lang.Long" column="CONTRACTMA_ID" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="dailyRent" type="java.lang.String" column="DAILY_RENT" />
+		<property name="compensationCost" type="java.lang.String" column="COMPENSATION_COSTS" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+	</class>
+</hibernate-mapping>

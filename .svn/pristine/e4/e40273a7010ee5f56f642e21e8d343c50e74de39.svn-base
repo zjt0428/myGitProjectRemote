@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipRepair" table="T_EQUIPMENT_REPAIR" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="repairId" column="REPAIR_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+	
+		<property name="repairSerial" type="java.lang.String" column="REPAIR_SERIAL" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="damageDate" type="java.lang.String" column="DAMAGE_DATE" />
+		<property name="repairDate" type="java.lang.String" column="REPAIR_DATE" />
+		<property name="repairManId" type="java.lang.Long" column="REPAIR_MAN_ID" />
+		<property name="repairMan" type="java.lang.String" column="REPAIR_MAN" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="schemaName" type="java.lang.String" column="SCHEMA_NAME" />
+		<property name="renewalDescription" type="java.lang.String" column="RENEWAL_DESCRIPTION" />
+		<property name="renewalDate" type="java.lang.String" column="RENEWAL_DATE" />
+		<property name="repairAmount" type="java.math.BigDecimal" column="REPAIR_AMOUNT" />
+		<property name="repairResult" type="java.lang.String" column="REPAIR_RESULT" />
+		<property name="preventiveMeasures" type="java.lang.String" column="PREVENTIVE_MEASURES" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="phenomenon" type="java.lang.String" column="PHENOMENON" />
+		<property name="runningState" type="java.lang.String" column="RUNNING_STATE" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="completionedDate" type="java.lang.String" column="COMPLETIONED_DATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.util.Date" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="teamId" type="java.lang.Long" column="TEAM_ID" />
+		<property name="teamName" type="java.lang.String" column="TEAM_NAME" />
+		<property name="warehouseDate" type="java.lang.String" column="WAREHOUSE_DATE" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />       
+		<set name="equipRepairOldComponSet" cascade="all" lazy="true" where=" TYPE = '0'">
+			<key column="REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.EquipRepairCompon" />
+		</set>
+		<set name="equipRepairNewComponSet" cascade="all" lazy="true" where=" TYPE = '1'">
+			<key column="REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.EquipRepairCompon" />
+		</set>
+		<set name="equipRepairLocationSet" cascade="all" lazy="true">
+			<key column="REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.EquipRepairLocation" />
+		</set>
+		<set name="equipRepairVehicleSet" cascade="all" lazy="true">
+			<key column="REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.EquipRepairVehicle" />
+		</set>
+		<set name="towerCraneDispatchAllocateSet" cascade="all" inverse="false" lazy="true" where=" ALLOCATE_TYPE = 'T'" order-by="DISPATCH_ALLOCATE_ID DESC">
+			<key column="REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchAllocate" />
+		</set>
+		<set name="liftDispatchAllocateSet" cascade="all" inverse="false" lazy="true" where=" ALLOCATE_TYPE = 'S'" order-by="DISPATCH_ALLOCATE_ID DESC">
+			<key column="REPAIR_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchAllocate" />
+		</set>
+	</class>
+</hibernate-mapping>

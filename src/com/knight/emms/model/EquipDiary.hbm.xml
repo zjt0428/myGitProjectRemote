@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipDiary" table="T_EQUIPMENT_DIARY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="equipDiaryId" column="EQUIP_DIARY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="recordSerial" type="java.lang.String" column="RECORD_SERIAL" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="rfidCode" type="java.lang.String" column="RFID_CODE" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="equipSerial" type="java.lang.String" column="EQUIP_SERIAL" />
+		<property name="exwDate" type="java.lang.String" column="EXW_DATE" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="propertyEnt" type="java.lang.Long" column="PROPERTY_ENT" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="storeName" type="java.lang.String" formula="(SELECT SH.STORE_NAME FROM T_STORE_HOUSE SH WHERE SH.STORE_ID = STORE_ID)" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="endDate" type="java.util.Date" column="END_DATE" />
+		<property name="activateDate" type="java.lang.String" column="ACTIVATE_DATE" />
+		<property name="lastSettleDate" type="java.lang.String" column="LAST_SETTLE_DATE" />
+		<property name="lastBlockupDate" type="java.lang.String" column="LAST_BLOCKUP_DATE" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="province" type="java.lang.String" column="PROVINCE" />
+		<property name="city" type="java.lang.String" column="CITY" />
+		<property name="county" type="java.lang.String" column="COUNTY" />
+		<property name="street" type="java.lang.String" column="STREET" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="flowId" type="java.lang.Long" column="FLOW_ID" />
+		<property name="businessId" type="java.lang.Long" column="BUSINESS_ID" />
+		<property name="businessSerial" type="java.lang.String" column="BUSINESS_SERIAL" />
+		<property name="businessTheme" type="java.lang.String" column="BUSINESS_THEME" />
+		<property name="businessModule" type="java.lang.String" column="BUSINESS_MODULE" />
+		<property name="businessEquipId" type="java.lang.Long" column="BUSINESS_EQUIP_ID" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="verifyType" type="java.lang.String" column="VERIFY_TYPE" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="active" type="java.lang.String" column="ACTIVE" />
+		<property name="rentStandard" type="java.lang.String" formula="(SELECT TOP 1 CE.RENT_STANDARD FROM T_CONTRACT_EQUIP CE WHERE CE.CONTRACT_ID = CONTRACT_ID AND CE.EQUIP_ID = EQUIP_ID)"/>
+		<property name="equipSource" type="java.lang.String" formula="(SELECT EM.EQUIP_SOURCE FROM T_EQUIPMENT EM WHERE EM.EQUIP_ID = EQUIP_ID)" /> 
+		<property name="warehouseDate" type="java.lang.String" formula="(SELECT  TOP 1 EW.WAREHOUSE_DATE FROM T_EQUIPMENT_WAREHOUSE EW WHERE EW.FLOW_ID = FLOW_ID)" /> 
+	</class>
+</hibernate-mapping>

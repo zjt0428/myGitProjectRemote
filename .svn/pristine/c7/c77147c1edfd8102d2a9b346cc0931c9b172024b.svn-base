@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AnnexDetails" table="T_ANNEX_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="annexDetalisId" column="ANNEX_DETALIS_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="initStatus" type="java.lang.Long" column="INIT_STATUS" />
+		<property name="componGenricName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="quantity" type="java.lang.String" column="QUANTITY" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC"/>
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="componSpecificName" type="java.lang.String" column="COMPON_SPECIFIC_NAME" />
+		<property name="equipvender" type="java.lang.String" column="EQUIPVENDER" />
+		<property name="componCateGoryName" type="java.lang.String" column="COMPON_CATEGORY_NAME" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LostCompensation" table="T_LOST_COMPENSATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="lostId" column="LOST_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="lostSerial" type="java.lang.String" column="LOST_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="applyDate" type="java.lang.String" column="APPLY_DATE" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL"/>
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="compensationDate" type="java.lang.String" column="COMPENSATION_DATE" />
+		<property name="totalCompensation" type="java.lang.String" column="TOTAL_COMPENSATION" />
+		<property name="lostTheme" type="java.lang.String" column="LOST_THEME" />
+		<property name="recheckDate" type="java.util.Date" formula="(SELECT TOP 1 T.APPROVE_TIME  FROM T_FORM_APPROVE T WHERE T.RELATE_ID = LOST_ID AND T.RELATE_MODULE='LOST_COMPENSATION' ORDER BY T.APPROVE_TIME DESC)" />
+		<property name="recheckMan" type="java.lang.String" formula="(SELECT TOP 1 T.APPROVE_USERNAME  FROM T_FORM_APPROVE T WHERE T.RELATE_ID = LOST_ID AND T.RELATE_MODULE='LOST_COMPENSATION' ORDER BY T.APPROVE_TIME DESC)"  />
+		<property name="checkDate" type="java.util.Date" formula="(SELECT TOP 1 T.ACCEPT_TIME  FROM T_FORM_ACCEPT T WHERE T.RELATE_ID = LOST_ID AND T.RELATE_MODULE='LOST_COMPENSATION' ORDER BY T.ACCEPT_TIME DESC)" />
+		<property name="checkMan" type="java.lang.String"  formula="(SELECT TOP 1 T.ACCEPT_USERNAME  FROM T_FORM_ACCEPT T WHERE T.RELATE_ID = LOST_ID AND T.RELATE_MODULE='LOST_COMPENSATION' ORDER BY T.ACCEPT_TIME DESC)" />
+		<property name="explain" type="java.lang.String" column="EXPLAIN" />
+		<property name="contractNumber" type="java.lang.String" column="CONTRACT_NUMBER" />
+		
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="contractMaterials" column="CONTRACT_ID" class="com.knight.emms.model.ContractMaterials" fetch="join" />
+		<set name="lostCompensationDetailSet" cascade="all" inverse="false" lazy="true" order-by="COMMODITY_ID DESC,SPECIFICATIONS_ID ASC">
+			<key column="LOST_ID" />
+			<one-to-many class="com.knight.emms.model.LostCompensationDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

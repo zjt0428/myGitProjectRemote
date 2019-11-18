@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="corp">
+	<!-- 重置企业资质的默认属性 -->
+	<select id="reset_defautl_cert">
+	<![CDATA[
+		UPDATE T_CORP_CERT SET DEFAULT_CERT = '0' WHERE CORP_ID = ? AND CERT_ID <> ?
+	]]>
+	</select>
+</mapper>

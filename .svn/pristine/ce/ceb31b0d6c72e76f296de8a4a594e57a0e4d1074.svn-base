@@ -1,0 +1,13 @@
+package com.knight.emms.service.impl;
+import com.knight.core.service.impl.BaseLongPKServiceImpl;
+import com.knight.emms.dao.impl.EquipInsuranceClaimDao;
+import com.knight.emms.model.EquipInsuranceClaimRecord;
+public class EquipInsuranceClaimServiceImpl extends BaseLongPKServiceImpl<EquipInsuranceClaimRecord> implements EquipInsuranceClaimService {
+	
+	private EquipInsuranceClaimDao equipInsuranceClaimDao;
+	
+	public EquipInsuranceClaimServiceImpl(EquipInsuranceClaimDao dao) {
+		super(dao);
+		this.equipInsuranceClaimDao = dao;
+	}
+}

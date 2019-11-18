@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PractiInsuranceClaimRecord" table="T_PRACTI_INSURANCE_CLAIM_RECORD" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="claimId" column="CLAIM_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="insureId" type="java.lang.Long" column="INSURE_ID" />
+		<property name="insureSerial" type="java.lang.String" column="INSURE_SERIAL" />
+		<property name="bankDeposit" type="java.lang.String" column="BANK_DEPOSIT" />
+		<property name="depositAccount" type="java.lang.String" column="DEPOSIT_ACCOUNT" />
+		<property name="claimDate" type="java.lang.String" column="CLAIM_DATE" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID " />
+		<property name="costAmount" type="java.math.BigDecimal" column="COST_Amount" />
+		<property name="claimAmount" type="java.math.BigDecimal" column="CLAIM_Amount" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="claimReason" type="java.lang.String" column="CLAIM_REASON" />
+		<property name="claimPhone" type="java.lang.String" column="CLAIM_PHONE" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.PRACTI_ID = PRACTI_ID)" />
+		<many-to-one name="practitioner" column="PRACTI_ID" class="com.knight.emms.model.Practitioner" fetch="join" insert="false" update="false"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MaterialsDetail" table="T_MATERIALS_DETIAL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="madetailId" column="MADETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractmaId" type="java.lang.Long" column="CONTRACTMA_ID" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="caculateUnit" type="java.lang.String" column="CACULATE_UNIT" />
+		<property name="planLease" type="java.lang.String" column="PLAN_LEASE" />
+		<property name="startDate" type="java.lang.String" column="START_DATE" />
+		<property name="exitDate" type="java.lang.String" column="EXIT_DATE" />
+	</class>
+</hibernate-mapping>

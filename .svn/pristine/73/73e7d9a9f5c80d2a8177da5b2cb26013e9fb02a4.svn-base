@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-29 9:21:52 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.knight.app.model.TAppRepairCompon" table="T_APP_REPAIR_COMPON">
+		<id name="rcid" type="java.lang.Long">
+			<column name="RCID" />
+			<generator class="native" />
+		</id>
+		<property name="repid" type="java.lang.Long" column="REPID" />
+		<property name="compName" type="string" column="COMP_NAME" />
+		<property name="compSpec" type="java.lang.String" column="COMP_SPEC" />
+		<property name="compNum" type="java.lang.Long" column="COMP_NUM" />
+		<property name="componSerial" type="java.lang.String" column="COMPON_SERIAL" />
+		<property name="storeCompNum" type="java.lang.Long" column="STORE_COMPNUM" />
+	</class>
+</hibernate-mapping>

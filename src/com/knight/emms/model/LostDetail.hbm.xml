@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LostDetail" table="T_LOST_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="lostDetailId" column="LOST_DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="lostId" type="java.lang.Long" column="LOST_ID" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectComponId" type="java.lang.Long" column="PROJECT_COMPON_ID" />
+		<property name="counts" type="java.lang.String" column="COUNTS" />
+		<property name="lostCounts" type="java.lang.String" column="LOST_COUNTS" />
+		<property name="lostCost" type="java.lang.String" column="LOST_COSTS" />
+		<property name="damageCounts" type="java.lang.String" column="DAMAGE_COUNTS" />
+		<property name="damageCosts" type="java.lang.String" column="DAMAGE_COSTS" />
+		<property name="totals" type="java.lang.String" column="TOTALS" />
+		<property name="describe" type="java.lang.String" column="DESCRIBE" />
+		<property name="loseDescribe" type="java.lang.String" column="LOSE_DESCRIBE" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

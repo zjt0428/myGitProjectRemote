@@ -1,0 +1,86 @@
+body {
+	color:#000000;
+	margin:0 auto;
+	font-size:14px;
+	font-family: "宋体";
+}
+
+div,table,select,textarea,form,p,h1,h2,h3,h4,h5,fieldset,p{padding:0; margin:0;}
+ul,li,dl,dt,dd{padding:0; margin:0; list-style:none;}
+img{ border:0; padding:0; margin:0}
+
+.er_main_detail{width:660px; margin:0 auto;}
+
+.er_heng_main_detail{width:1150px; margin:0 auto;}
+
+.er_w100{ width:100%; float:left;}
+.er_wrod_title{width:100%; float:left;font-size:24px;font-family: "宋体"; font-weight:bold; line-height:32px; text-align:center; padding-bottom:5px; }
+.er_mar_15{margin-top:15px; margin-right:20px; margin-bottom:5px; width:660px;text-align:right;}
+
+/*表格样式*/
+.er_list{
+	width:100%;
+	font-size:14px;
+	border: 1px solid #000000;
+	border-collapse: collapse;}
+
+.er_list td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	line-height:22px;
+	padding:2px;}
+
+/*表格样式*/
+.er_list_18{
+	width:100%;
+	font-size:14px;
+	border: 1px solid #000000;
+	border-collapse: collapse;}
+
+.er_list_18 td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	line-height:18px;
+	padding:2px;}
+
+
+.er_list_20{
+	width:100%;
+	font-size:14px;
+	border: 1px solid #000000;
+	border-collapse: collapse;}
+
+.er_list_20 td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	line-height:18px;
+	padding:2px;}
+
+
+
+.er_list_24{
+	width:100%;
+	font-size:14px;
+	border: 1px solid #000000;
+	border-collapse: collapse;}
+
+.er_list_24 td {
+	border-left:1px solid #000000;
+	border-bottom:1px solid #000000;
+	color:#000000;
+	line-height:24px;
+	padding:2px;}
+
+
+.smhf_wrod_utitle{font-size:20px;font-family: "宋体";line-height:32px; text-align:center; padding-bottom:10px;}
+
+.smhf_botton_line{border-bottom:#000000 1px solid; padding-left:10px;}
+
+
+
+/*合同样式*/
+
+.er_hetong_td{line-height:30px; font-size:16px; text-align:left;}

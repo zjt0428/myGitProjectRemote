@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>设备巡检记录表</title>
+<link href="css/style_table.css" rel="stylesheet" type="text/css" />
+<style media="print">
+.Noprint {
+	display: none;
+	
+}
+.PageNext {
+	page-break-after: always;
+}
+</style>
+</head>
+
+<body>
+<center class="Noprint">
+	<p align="right" class="mar_15">
+		<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" width="0"></object>
+		<input type="button" style="font-size: 12px" value="直接打印" onClick="document.all.WebBrowser.ExecWB(6,6)">
+		<input type="button" style="font-size: 12px" value="打印预览" onClick="document.all.WebBrowser.ExecWB(7,1)">
+	</p>
+</center>
+<center>
+<div class="main_detail">
+<p style='text-align:center'><span class="wrod_title"><font color="#FF0000">XXXX(产权单位名称)</font></span></p>
+<p style='text-align:center'><span class="wrod_title">设备维修记录表</span></p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80" height="36" align="right"><strong>维修单号：</strong></td>
+    <td align="left">（企业简码+故障排除时间+两位流水号）</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="qzj_table">
+  <tr>
+    <td height="28" colspan="4" align="left" bgcolor="#E0E0E0"><strong>基本信息</strong></td>
+    </tr>
+  <tr>
+    <td width="16%" height="28" align="center"><strong>项目名称</strong></td>
+    <td width="34%" align="left"> 明溪县箭岗地块保障性住房建设项目（二期限价商品房） </td>
+    <td width="16%" align="center"><strong>项目所属地</strong></td>
+    <td width="34%" align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="28" align="center"><strong>备案编号</strong></td>
+    <td align="left">&nbsp;</td>
+    <td align="center"><strong>出厂编号</strong></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="28" align="center"><strong>故障部件</strong></td>
+    <td align="left">&nbsp;</td>
+    <td align="center"><strong>故障时间</strong></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="28" align="center"><strong>故障现象</strong></td>
+    <td colspan="3" align="left">&nbsp;</td>
+    </tr>
+	 <tr>
+    <td height="28" align="center"><strong>故障诊断</strong></td>
+    <td colspan="3" align="left">&nbsp;</td>
+    </tr>
+    <tr>
+    <td height="28" colspan="4" align="left" bgcolor="#E0E0E0"><strong>维修情况</strong></td>
+    </tr>
+  <tr>
+    <td height="60" align="center">维修方案</td>
+    <td colspan="3" align="left">&nbsp;</td>
+    </tr>
+    <tr>
+    <td height="28" align="center">维修人员</td>
+    <td align="left">&nbsp;</td>
+    <td align="center">故障排除时间</td>
+    <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日&nbsp;&nbsp;&nbsp;&nbsp;时&nbsp;&nbsp;&nbsp;&nbsp;分</td>
+  </tr>
+  <tr>
+    <td height="28" align="center">实际维修工时</td>
+    <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小时</td>
+    <td align="center">累计停机工时</td>
+    <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小时</td>
+  </tr>
+  <tr>
+    <td height="28" align="center">维修费用(元)</td>
+    <td align="left">&nbsp;</td>
+    <td align="center">维修结果</td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>部件更换<br />
+      说明</td>
+    <td height="150" colspan="3" align="left">&nbsp;</td>
+    </tr>
+  <tr>
+    <td colspan="4" style="padding-left:0px; padding-top:0px;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="8%" height="32" align="center" style="background-color:#E0E0E0; font-weight:bold; border-left-style:none;">序号</td>
+        <td width="30%" align="center" style="background-color:#E0E0E0; font-weight:bold;">更换配件名称</td>
+        <td width="20%" align="center" style="background-color:#E0E0E0; font-weight:bold;">更换配件型号</td>
+        <td width="15%" align="center" style="background-color:#E0E0E0; font-weight:bold;">更换数量</td>
+        <td align="center" style="background-color:#E0E0E0; font-weight:bold;">说明</td>
+      </tr>
+      <tr>
+        <td height="32" style="border-left-style:none;">&nbsp;</td>
+        <td align="left">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td align="left">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="32" style="border-left-style:none;">&nbsp;</td>
+        <td align="left">&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td align="left">&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="32" style="border-left-style:none;border-bottom-style:none;">&nbsp;</td>
+        <td align="left" style="border-bottom-style:none;">&nbsp;</td>
+        <td style="border-bottom-style:none;">&nbsp;</td>
+        <td style="border-bottom-style:none;">&nbsp;</td>
+        <td align="left" style="border-bottom-style:none;">&nbsp;</td>
+      </tr>
+    </table></td>
+    </tr>
+  <tr>
+    <td align="center" height="100">预防措施<br />
+      建议</td>
+    <td colspan="3" align="left">&nbsp;</td>
+    </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="list_none">
+  <tr>
+    <td align="center">维修主管（签字）<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+    <td align="center">经办人员（签字）<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</td>
+    </tr>
+
+</table>
+</div>
+</center>
+</body>
+</html>

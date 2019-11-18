@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DispatchCompon" table="T_DISPATCH_COMPON" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="dispatchComponId" column="DISPATCH_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="workStatus" type="java.lang.String" column="WORK_STATUS" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="storeCounts" type="java.lang.Integer" column="STORE_COUNTS" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="iniCounts" type="java.lang.Integer" column="INI_COUNTS" />
+		<property name="projectComponId" type="java.lang.Long" column="PROJECT_COMPON_ID" />
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,122 @@
+var EquipInsuranceDetailGrid = function(a, b) {
+	Ext.apply(this, a || {});
+	Ext.apply(this, b || {});
+	var columns = [ {
+		header : "状态",
+		dataIndex : "equipment",
+		renderer : function(n) {
+			return n.statusName;
+		}
+	}, {
+		header : "归属仓库",
+		dataIndex : "equipment",
+		renderer : function(n) {
+			return n.storeName;
+		}
+	}, {
+		header : "设备名称",
+		dataIndex : "equipment",
+		renderer : function(n) {
+			return n.equipSpecificName;
+		}
+	}, {
+		header : "规格型号",
+		dataIndex : "equipment",
+		renderer : function(n) {
+			return n.equipVender;
+		}
+	}, {
+		header : "出厂编号",
+		dataIndex : "equipment",
+		renderer : function(n) {
+			return n.exwSerial;
+		}
+	}, {
+		header : "设备自编号",
+		dataIndex : "equipment",
+		renderer : function(n) {
+			return n.equipSerial;
+		}
+	}, {
+		header : "设备价值",
+		dataIndex : "equipWorth",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, {
+		header : "保险种类",
+		dataIndex : "insuranceCategory",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, {
+		header : "保费",
+		dataIndex : "premium",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, {
+		header : "合同编号",
+		dataIndex : "contractNo",
+	}, {
+		header : "当前项目",
+		dataIndex : "projectName",
+	}, {
+		header : "存放地址",
+		dataIndex : "address",
+	}, {
+		header : "备注",
+		dataIndex : "remark",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}];
+	EquipInsuranceDetailGrid.superclass.constructor.call(this, Ext.apply({
+		saveable : this.saveable,
+		selectable : this.selectable,
+		title : "设备明细",
+		option : "设备明细",
+		tbarItems : this.tbarItems,
+		height : this.height,
+		fields : EquipInsuranceDetailListViewField,
+		columns : columns,
+		delurl : __ctxPath + "/dispatch/multiDelEquipInsuranceDetail.do"
+	}, this.grid_config || {}));
+};
+Ext.extend(EquipInsuranceDetailGrid, Knight.ux.SubModuleBaseGrid, {
+	addSubModuleDate : function(data) {
+		var RecordType = this.getStore().recordType;
+		var record = new RecordType();
+		Ext.apply(record.data, {
+			equipment : data,
+			equipId : data.equipId,
+//			statusName : data.statusName,
+//			storeName : data.storeName,
+//			equipSpecificName : data.equipSpecificName,
+//			equipVender : data.equipVender,
+//			exwSerial : data.exwSerial,
+//			equipSerial : data.equipSerial,
+			contractNo : data.contractNo,
+			projectName : data.projectName,
+			address : data.address
+		});
+		this.stopEditing();
+		this.getStore().add(record);
+		this.startEditing(0, 0);
+	},
+	addSubModule : function() {
+		new EquipSelector({
+			single : true,
+			callback : function(d) {
+				for (var i = 0; i < d.length; i++) {
+					var data = d[i].data;
+					this.addSubModuleDate(data);
+				}
+			}.createDelegate(this)
+		}).show();
+	}
+});

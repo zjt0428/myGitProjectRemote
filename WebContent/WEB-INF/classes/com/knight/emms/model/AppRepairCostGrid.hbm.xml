@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AppRepairCostGrid" table="T_APP_REPAIRCOST" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="repaircostId" column="REPAIRCOST_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID"/>
+		<property name="hoursContent" type="java.lang.String" column="HOURSCONTENT" />
+		<property name="maintenanceHours" type="java.lang.Long" column="MAINTENANCEHOURS" />
+		<property name="price" type="java.lang.Long" column="PRICE" />
+		<property name="amount" type="java.lang.Long" column="AMOUNT" />
+		<property name="remarks" type="java.lang.String" column="REMARKS" />		
+	</class>
+</hibernate-mapping>

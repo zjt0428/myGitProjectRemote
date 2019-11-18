@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InstallJjCompon" table="T_INSTALLJJ_COMPON" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="jjComponId" column="JJ_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="installId" type="java.lang.Long" column="INSTALL_ID" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />		
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+
+		<property name="jjUserName" type="java.lang.String" column="JJUSERNAME" />
+		<property name="jjTime" type="java.util.Date" column="JJTIME" />
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

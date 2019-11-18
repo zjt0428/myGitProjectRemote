@@ -1,0 +1,1003 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="kfn" uri="http://www.knight.com/jsp/jstl/functions"%>
+<%@ taglib prefix="aps" uri="http://www.knight.com/taglib/security"%>
+<%@ page import="com.knight.system.application.ApplicationContainer" %>
+<%
+	String basePath=request.getContextPath();
+	//登录成功后，需要把该用户显示至在线用户
+	ApplicationContainer.addOnlineUser(request.getSession().getId(), ApplicationContainer.getCurrentUser());
+	if(ApplicationContainer.getCurrentUser().getRights().contains("__ALL")){
+		request.setAttribute("IS_MANAGER",true);
+	}
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="msthemecompatible" content="no" />
+	<title>建机租赁运营管理平台</title>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/ext3.4/resources/css/ext-all.css" />
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/ext3.4/ux/css/Portal.css" />
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/js/core/ux/uploaddialog/css/UploadDialog.css" />
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/js/core/ux/css/ActionColumn.css" />
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/js/core/ux/css/lovcombo.css" />
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/ext3.4/ux/css/ux-all.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/admin.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/btn.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/menu.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/btn_business.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/menu_business.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/desktop.css" />
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/ext3.4/ux/css/Spinner.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/ext3.4/ux/css/tab-scroller-menu.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/navigations.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/base.css"/>
+
+    <!-- load lodop print libary -->
+    <script type="text/javascript" src="<%=basePath%>/js/print/LodopFuncs.js"></script>
+    <!-- <script type="text/javascript" src="http://Localhost:8000/CLodopfuncs.js"></script> -->
+
+	<!-- load the extjs libary -->
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/adapter/ext/ext-base.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ext-all-debug.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ext-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ext-basex.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/print/Printer-all.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/export/Exporter-all.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/RowEditor.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/XmlTreeLoader.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/CheckColumn.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/Portal.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/PortalColumn.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/Portlet.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/RowExpander.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/MultiSelect.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/ItemSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/Spinner.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/SpinnerField.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/TabCloseMenu.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/TabScrollerMenu.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/DataViewTransition.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/core/ui/ext-ui-combo-pagesize.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/UploadDialog.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/IconCombob.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/Toast.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/ActionColumn.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/SystemCalendar.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/TreeSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/date.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/DynamicCheckboxGroup.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/DynamicRadioGroup.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/TreeCombo.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/TreePanelEditor.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/TreeXmlLoader.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/WebOffice.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/AdvancedQueryWin.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/IndexPagePortlet.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/SearchGridPanel.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/FormPanelWindow.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/DateTimeField.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/RelationModule.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/RelationSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/RelationCompositeMenuButtonField.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/RelationCompositeField.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/SubModuleBaseGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/LovCombo.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/SimpleCombo.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/CheckTreePanel.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/ClearableTextField.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/BaseReportView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/KnightDateMenu.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/BaiduMapPanel.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/uploader/swfupload.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/uploader/SwfUploadPanel.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/AreaCompositeField.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/AppUtil.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/KnightUtil.date.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/KnightUtil.math.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ScrollText.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ScriptMgr.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/TabTitle.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/dynamic.jsp"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/sound/soundmanager2.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/App.import.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/BusinessConfigure.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/ObjectFieldMapping.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/selector/IndexPortletSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/UserSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/DepartmentSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/RoleSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/OnlineUserSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/UserSimpleSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/CorpSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/CorpAccountSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/PractitionerSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/CustomerSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/CustomerLinkerSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/CustomerAccountSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/SupplierSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/SupplierLinkerSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/SupplierAccountSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipTSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipRepairSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ComponentSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ComponentJoinStoreHouseSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipLostHandleSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ProjectSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ProjectComponSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ContractLeaseSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ContractDispatchEquipSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/DispatchSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/DispatchPractiSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/DispatchEquipSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipFlowSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipFlowInstallSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipFlowActivateSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipFlowEmploySelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipFlowDismantleSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipDetectSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipInspectSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipMaintSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/PickupSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/PurchaseSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/BorrowSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MoneyLendSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MoneyBackSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ReceivementSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/InstalmentSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/DispatchComponSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/InsureEquipSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/SettleContractSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/AccidentSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/RiskSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/CarSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/VerifyItemSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipFlowComponDiarySelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/EquipWarehouseSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LogisticsTransportSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LogisticsBacksportSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/TeamsAccountSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/RentContractSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/DispatchAutocraneSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/StoreHouseSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/PractiCertSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/CorpCertSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ConstructOperationSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/AutocraneSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ProjectComponSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ComponIntoSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ComponIntoStoreSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ContractApplicationSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/IndisSchemaSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/AppUserSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsInfoSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ProjectMaterialsStoreSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsInitSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ScrapApplySelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ScrapContractSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsCommoditySelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsAmortizationSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/BaseDepotSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ContractMaterialsSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsPlanSelector.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/BaseDepotSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/BaseLocationSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/DispatchAllocateInitSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsDispatchSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsPackSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/AnnexDetailSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ProjectDepotInitSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ProjectDepotInitDetailSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LeaseApplicationSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LeaseContractSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LeaseSettlementSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsStoreSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/BaseDepotInitSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ApplyMakeSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LeaseStockSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LeaseMaterialsRecordSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/BaseDepotJoinUserSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ReturnTempStoreSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ContractMaterialsSecondSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/LeaseContractMaterialsSelector.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/MaterialsStoreByDateSelector.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InstalmentGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ReceivementGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractEquipGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractEquipOutlayGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractEquipCostGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractEquipBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InstallPriceGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TruckCranePriceGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractPractiBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractCostitemGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MaterialsDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/PriceSettingGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MatDamageGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CostHandleGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CompensationScrapGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DispatchPractiGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DispatchEquipGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DispatchComponGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DispatchAutocraneGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/PickupComponentGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/PurchaseBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/PurchasePlanInquiryGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/PurchaseAcceptanceGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BorrowComponentGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BorrowEquipGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BorrowAcceptanceGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/PractiDiaryGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InsureClaimGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CorpAccountGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CustomerAccountGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CustomerLinkerGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SupplierLinkerGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SupplierAccountGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AmountReceiveShareGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AmountPaymentShareGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DeductPractiGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SalaryPractiGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ReimburseTicketGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ComponDiaryGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DeductScaleGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AnnounceCategoryGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InventoryCategoryGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleEquipBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleComponBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleItemBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AmountEquipShareGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipmentComponGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipmentDiaryGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleFeeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RentFeeDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InstallFeeDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AutoCraneFeeDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LostFeeDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/OtherFeeDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/VerifyItemDemandGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CarExpenseGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ProjectExpenseGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LogisticsTrandetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LogisticsBackdetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/VerifyStandardGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipWarehouseAbnormalComponGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipWarehouseComponGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipInspectDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CostInspectGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipRepairComponGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipRepairLocationGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipDetectStatementGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipMaintDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/IndisProtocolEquipGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContingencyWorkerGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MemoDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MemoDeputyGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipFlowEmployGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TeamsAccountAutocraneGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TeamsAccountKnotGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TeamsAccountLogisticsGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TeamsAccountOtherGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TeamsAccountPractiGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TeamsAccountWallGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractArrangeEquipmentGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ContractArrangeSituationGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RentEquipBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RentComponBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RentItemBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RentDeductBriefGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipmentAffiliatedGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DispatchAllocateGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LogisticsBackcarfeeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LogisticsTrancarfeeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DestributionGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TranDistributionbutionGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ConstructOperationTaskGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipRepairVehicleGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AutocraneExpenseGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ProjectComponGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ComponIntoStoreDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AttachmentStorageGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AmountReceiveGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LogisticsBackdetailGrid2.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AmountPaymentGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EnterFactoryEquipGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ExitFactoryEquipGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BasicPreEmbeddingEquipGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/IndisSchemaPractiGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/IndisNoticePractiGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ConstructManagersGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ConstructPractiGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipMaintComponGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SafeCheckGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DemandDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DemandDetailForExeuntPlanGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BaseDepotInitDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ProjectDepotInitDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ReceiveManageDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LostCompensationDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/OtherBusinessDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/OtherBetsDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AfterMaterialsRepairGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BeforeMaterialsRepairGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RecycleManageDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RecycleManageFeeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CompensationDamageGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ProductMakeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/StoreDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LostDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipBlockUpGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/PackageDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CostDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/DispatchMaterialsGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AllocationDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AllocationDepotDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LostDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipBlockUpGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/EquipActivateSearchFormGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InstallFeeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AutocraneFeeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InstallDismantelTeamGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AutocraneUnitGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseListGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseMaterialsInventoryGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeasePriceSettingGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseSpoiledIndemnityGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseExpenseHandlingGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/RecipientListGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ReturnListGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettlementListGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettlementInfoGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MaterialsInputCountGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MaterialsRecycleCountTempGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ApplicationDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BaldetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MakeProductGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ConsumeProductGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/MaterialsStoreDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseScrapCompensationGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/BeforeRemodelGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/AfterRemodelGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ScrapDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleMaterialsDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseRepairBeforeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseRepairAfterGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ProjectRepairBeforeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ProjectRepairAfterGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleMaterialsDetailSecondGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleMaterialsDetailOtherFeeGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeasedLostCompensationDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InsideSettlementListGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeasedLostDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TemporaryStorageGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/TemporaryReturnDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/ChargeHandleGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/CeaseReportDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/SettleMaterialsDetailCeaseReportGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseBlockUpDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/OtherLeaseDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseOtherBusinessDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseSettlementBlockUpGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/InsideBlockUpDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/grid/LeaseSettlementInsideBlockUpGrid.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/search/SearchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/preview/EquipmentPreview.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/info/MessageWindows.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/info/MessageReplyWindows.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/info/MessageSendListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/info/MessageReceiveListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/info/MessageFormWindows.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/info/MessageDetailWindows.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/info/PersonalTipsView.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/system/FileAttachDetail.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/AppUserKeyListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/AppUserKeyForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/AppUserForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/ResetPasswordForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/AppUserListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/ProfileForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/DepartmentForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/DepartmentView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/AppRoleView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/AppRoleForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/DicCodeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/DicDetailView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/RoleGrantRightView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/SystemLogListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/system/SysConfigView.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/system/PersonnelAuthorizationForm.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/system/PersonnelAuthorization4BasedepotForm.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/system/MaterialsInputCountWindow.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/system/ContractGrantedWin.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/system/ContractGrantedView.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/system/ProjectUserListView.js"></script>
+       
+
+	<script type="text/javascript" src="<%=basePath%>/js/form/HandleForComments.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/BusinessMessageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/AnnounceForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/AnnounceListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/AnnounceUserForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/AnnounceUserListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/InventoryForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/InventoryListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/MemoForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/form/MemoListView.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CorpListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CorpInfoForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CorpCertForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractitionerForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CorpCertListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractitionerListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractiCertForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractiCertListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/SupplierListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/SupplierForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ComponentHoldForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CustomerListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CustomerForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ProjectListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ProjectForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ComponentListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ComponentForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreDetailForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ComponentDetails.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/EquipmentListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/EquipmentForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/EquipmentView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/EquipmentDistributionView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractiResumeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractiCreditListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractiCreditForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CorpInfoView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/PractitionerView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreEquipListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreComponListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreEquipStockListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreComponStockListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreHouseForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreHouseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CarForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/CarListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/FileAttachListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/InfoFileAttachListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreManageView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/StoreProjectListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ProjectComponListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/MaterialsProjectStoreListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ProjectMaterialsStoreListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ComponentExamineForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/EnterFactoryNoticeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/EnterFactoryNoticeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ExitFactoryNoticeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ExitFactoryNoticeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/BasicPreEmbeddingNoticeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/BasicPreEmbeddingNoticeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/AnnexDetailsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ProjectRepairListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/archive/ProjectRepairForm.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractLeaseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractLeaseForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractMaterialsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractMaterialsForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractMaterialsForm2.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractSubcontractForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractSubcontractListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchContractForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchEquipDismantleForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchEquipEmployForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchEquipInstallForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/LogisticsBacksportForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/LogisticsBacksportListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/LogisticsTransportForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/LogisticsTransportListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/PickupListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/PickupForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/PurchaseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/PurchaseForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/PurchasePlanListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/PurchasePlanForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/PurchaseAcceptanceForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/BorrowAcceptanceForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/BorrowForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/BorrowListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/SettleContractForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/SettleContractListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/SettleProjectForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/SettleFeeDetailForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/SettleProjectListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/FinanceSettleContractListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/TeamsAccountListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/TeamsAccountQueryForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/TeamsAccountForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractArrangeDerivedForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractArrangeDerivedListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractArrangeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractArrangeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractArrangeSituationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ContractArrangeSituationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/MaterialsPlanListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/MaterialsPlanForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/TruckPlanListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/TruckPlanForm.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ExeuntPlanListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ExeuntPlanForm.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/OverduePaymentForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/OverduePaymentListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/RentContractForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/RentContractListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ConstructOperationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/ConstructOperationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/AutocraneForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/AutocraneListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchAllocateInitListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/dispatch/DispatchAllocateInitForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/selector/ApplyConstructOperationSelector.js"></script>
+
+<!-- 生产计划 -->
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipActivateForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipContractLeaseForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipActivateListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipContractLeaseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipBlockupActivateForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipBlockupForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipBlockupListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInstallForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInstallListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipEmployForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipEmployListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipEmployDispatchListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipDismantleForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipDismantleListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipWarehouseForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipWarehouseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipWarehouseAbnormalForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipWarehouseAbnormalListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipDetectForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipDetectListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipVerifyForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipVerifyListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectSchemaBatchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectSchemaForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectSchemaListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectSchemaEmployListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectEmployListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInspectSuperviseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintSchemaForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintSchemaListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintSchemaEmployListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintEmployListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintSuperviseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipHitchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipHitchListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipHitchSuperviseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/InsureEquipForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/InsureEquipListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipRepairForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipRepairListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/MaterialGatherPrintPanel.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/InstallManageForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/InstallManageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/DismantleManageForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/DismantleManageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/InspectManageForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/InspectManageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInstallLhForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipInstallJjListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/ComponIntoStoreForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/ComponIntoStoreListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/LostHandleForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/LostHandleListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipMaintSchemaBatchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipBlockupBatchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/equip/EquipActivateSearchForm.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/lease/MaterialsDispatchListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/lease/MaterialsDispatchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/lease/MaterialsPackageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/lease/MaterialsPackageForm.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/scrap/ScrapApplyListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/scrap/ScrapApplyForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/scrap/ScrapContractListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/scrap/ScrapContractForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/scrap/ScrapHandleForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/scrap/ScrapHandleListView.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/verify/VerifyItemListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/verify/VerifySelfForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/verify/LiftVerifySelfForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/verify/TowerCraneVerifySelfForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/verify/VerifySelfListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/verify/InstallVerifySelfListView.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/fund/MoneyLendForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/MoneyLendListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/MoneyBackForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/MoneyBackListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/InvoiceIssueForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/InvoiceIssueListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/InvoiceCollectForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/InvoiceCollectListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/AmountReceiveForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/AmountReceiveListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/AmountPaymentForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/AmountPaymentListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/DeductForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/DeductListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/SalaryForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/SalaryListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/FinanceSalaryListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/ReimburseForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/ReimburseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/fund/DeductScaleForm.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/diary/ComponDiaryListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/diary/EquipDiaryListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/diary/PractiDiaryListView.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/report/FinancialSummary.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/CashFlowStatement.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/IncomeExpenseListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/AccountDue.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/SettleAccountReceivable.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/ConstructionWork.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/AccountReceivable.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/AccountPayable.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/CustomerMargin.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipSummary.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipMargin.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/CollarMaterial.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipVacancyRate.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/RentalFeeApplication.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipRepair.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/PractiVacancyRate.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipmentRate.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/ProjectConstruct.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/ProjectBalancePayments.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/ProjectInstallStatics.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/Reimburse.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipmentBalancePayments.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/ComponetStocks.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/KnotDispatch.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/AttendamceRpt.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/report/ApprovalStatus.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/report/InstallDetails.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/report/ComponetDistribution.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipmentInRentRate.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/PurchaseMateDetail.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/UsePurposeSummary.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/LogisticsCostSummary.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/PurchaseMateSummary.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/EquipUseMateStatistics.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/UseMateDetail.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/UseEquipList.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/SparePartsList.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/ReceivedPayments.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/AttendamceDetailRpt.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/RentalFee.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/AutoCraneCost.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/TeamSettle.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsOutStock.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsInStock.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/ProjectDepotInOut.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsStoreReport.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsGeneralLedger.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/LeasedDepotInOut.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/TemporaryStoreQuery.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/SettleMaterialsQuery.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/SettleMaterialsQueryDetail.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsInRentDistribution.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsHandingChargeReport.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsWorkSiteOccupancy.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/MaterialsLostCompensationReport.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/LostCompensationDetailReport.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/LostCompensationDetailWin.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/CompensationDamageReport.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/LeaseCostAccountingReport.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/SettleProjectQuery.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/report/SettleProjectQueryDetail.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/safety/RiskForm.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/safety/AntiFallDetectionForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/RiskListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/RiskReportForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/RiskReportListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/AccidentForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/AccidentListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/AccidentReportForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/AccidentReportListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/SecureProtocolForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/SecureProtocolListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallSecureProtocolListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleSecureProtocolListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisProtocolForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisProtocolListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallIndisProtocolListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleIndisProtocolListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisSchemaForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisSchemaListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallIndisSchemaListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/EmployIndisSchemaListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleIndisSchemaListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/ContingencyPlanForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/ContingencyPlanListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallContingencyPlanListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleContingencyPlanListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisPrecheckForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisPrecheckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallIndisPrecheckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/SafeCheckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/SafeCheckForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleIndisPrecheckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisBasecheckForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisBasecheckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallIndisBasecheckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleIndisBasecheckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/TechnicalDisclosureForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/TechnicalDisclosureListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallTechnicalDisclosureListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/AntiFallDetectionListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/EmployTechnicalDisclosureListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleTechnicalDisclosureListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisNoticeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/IndisNoticeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/InstallIndisNoticeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/DismantleIndisNoticeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/SideStationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/safety/SideStationForm.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsCommodityListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsCommodityForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsSpecificationsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsSpecificationsForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsInfoListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsDamageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsDamageForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsScrapListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsScrapForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AssembleAndDisassembleFeeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AssembleAndDisassembleFeeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsAmortizationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsAmortizationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AmortizationInitializationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AmortizationInitializationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsInfoListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/BaseDepotListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/BaseDepotForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/BaseLocationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/BaseLocationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/CeaseReportListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/CeaseReportForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsRepairListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsRepairForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ApplyMakeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ApplyMakeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/InstallDismantlePriceListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/InstallDismantlePriceForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/BaseDepotInitListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/BaseDepotInitForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ProjectDepotInitListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ProjectDepotInitForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ReceiveManageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ReceiveManageForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LostCompensationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LostCompensationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/RecycleManageListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/RecycleManageForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AllocationProjectListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AllocationProjectForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AllocationDepotListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/AllocationDepotForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherBusinessListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherBusinessForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherBetsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherBetsForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/TruckCranePriceListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/TruckCranePriceForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OutStockListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseApplicationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseApplicationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseContractListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseContractForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/GoodsRecipientListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/GoodsRecipientForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ReturnGoodsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/ReturnGoodsForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseSettlementListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseSettlementForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeasePaymentListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeasePaymentForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OutStockListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/SettleMaterialsForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/SettleMaterialsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/StoreMaterialsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherMaterialStockListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherMaterialStockForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/HandleMakeListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/HandleMakeForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsInfoForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsRemodelForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/MaterialsRemodelListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseRepairListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseRepairForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/SettleMaterialsFeeDetailForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeasedLostCompensationListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeasedLostCompensationForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseSettlementFormMultiAdd.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/TemporaryReturnListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/TemporaryReturnForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/RecycleChangeDateForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/SettleMaterialsDetailWindow.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseBlockUpForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/LeaseBlockUpListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherLeaseBusinessForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/materials/OtherLeaseBusinessListView.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/pump/PumpTruckListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/pump/PumpTruckForm.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/takestock/TakeStockListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/takestock/TakeStockForm.js"></script>
+
+	<script type="text/javascript" src="<%=basePath%>/js/APP/LocationDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AttendamceForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AttendamceListView.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/APP/FlowApproveGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/FlowForm.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/APP/FlowDefineListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/FlowDefineForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/FlowDefineGrid.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/APP/MyApplyListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/MyApproveListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/CopyToMyListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/TranFinishListView.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppDispatchForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppDispatchComGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppDispatchListView.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppRepairComGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppRepairCostGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppRepairForm.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppRepairListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AttendamceSetForm.js"></script>	
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppDispatchEquipGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppLogisticsListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppLogisticsForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppLogisticsEquipGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/AppLogisticsComGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/PhotoDetailGrid.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/SideSystemListView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/SideSystemForm.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/APP/SideReportingGrid.js"></script>
+	
+	<script type="text/javascript">
+		if(window.name == 0) {
+			var src = "<script type='text/javascript' src='" + "js/App.js'><" + "/script>";
+			document.write(src);
+		}
+		if (window.name == 1) {
+			var src = "<script type='text/javascript' src='" + "js/App.js'><" + "/script>";
+			document.write(src);
+		}
+		if (window.name == 2) {
+			var src = "<script type='text/javascript' src='" + "js/App.js'><" + "/script>";
+			document.write(src);
+		}
+		if (window.name == 3) {
+			var src = "<script type='text/javascript' src='" + "js/App.js'><" + "/script>";
+			document.write(src);
+		}
+		var __companyName="<%=ApplicationContainer.getCompanyName()%>";
+		Ext.onReady(function() {
+		   	  var storeTheme=getCookie('theme');
+		   	  if (storeTheme==null || storeTheme=='') {
+			   	  storeTheme='ext-all';
+		   	  }
+		      Ext.util.CSS.swapStyleSheet("theme", __ctxPath+"/ext3.4/resources/css/"+storeTheme+".css");  
+	    });
+		var __basePath = "<%=request.getScheme()+":/"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()%>";
+		var hkey_key;
+		var hkey_root = "HKEY_CURRENT_USER";
+		var hkey_path = "\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
+		try {
+			var RegWsh = new ActiveXObject("WScript.Shell");
+			hkey_key = "header";
+			RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+			hkey_key = "footer";
+			RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+		} catch (e) {}
+	</script>
+	<script type="text/javascript" src="<%=basePath%>/js/AppHomeView.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/AppHomeShowView.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/js/AppNavigationView.js"></script>
+	<%-- <script type="text/javascript" src="<%=basePath%>/js/App.js"></script> --%>
+	<script type="text/javascript" src="<%=basePath%>/js/IndexPage.js"></script>
+	
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/Spinner.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/ext3.4/ux/SpinnerField.js"></script>
+	<script type="text/javascript" src="<%=basePath%>/js/core/ux/DateTimeField.js"></script>
+</head>
+<body>
+	<OBJECT classid=clsid:C7672410-309E-4318-8B34-016EE77D6B58 id=ePass name=ePass STYLE="LEFT: 0px; TOP: 0px" width=0 height=0></OBJECT>
+	<div id="loading">
+            <div class="loading-indicator">
+                 <img src="<%=basePath %>/img/loading.gif" alt="" width="153" height="16" style="margin-right:8px;" align="absmiddle"/>
+                 <div class="clear"></div>
+        		    正在加载，请稍候......
+            </div>
+	</div>
+	<div id="loading-mask"></div>
+		<div id="app-header" class="header">
+		<div style="float:left;margin-top:15px;margin-left:40px;"><img width="60px" height="40px" src="./images/logo.jpg" /></div>
+		<div class="name">天元集团建筑租赁智慧运营一体化管理平台
+			<!-- <span class="bureau">——天元集团</span> -->
+		</div>
+		<div class="nav">
+            <a class="twig" href="#" onclick="App.MyDesktopClick()">
+                <span class="icon zicon-home"></span>
+                <span class="text">首页</span>
+            </a>
+            <a class="twig" href="<%=basePath%>/help/manual.zip">
+                <span class="icon zicon-help"></span>
+                <span class="text">帮助</span>
+            </a>
+            <a class="twig" href="#" onclick="App.clickTopTab('SysConfigView')">
+                <span class="icon zicon-set"></span>
+                <span class="text">设置</span>
+            </a>
+            <a class="twig" href="http://www.risit.com.cn">
+                <span class="icon zicon-contact"></span>
+                <span class="text">联系我们</span>
+            </a>
+            <a class="twig" href="<%=basePath%>/logout.do">
+                <span class="icon zicon-quit"></span>
+                <span class="text">退出</span>
+            </a>
+        </div>
+        </div>
+	<script Language="javascript">
+	window.onload = function() {
+		document.getElementsByTagName("body")[0].onkeydown = function() {
+			var elem = event.relatedTarget || event.srcElement || event.target || event.currentTarget;
+			if (event.keyCode == 8) {
+				var elem = event.srcElement || event.currentTarget;
+				var name = elem.nodeName;
+				if (name != 'INPUT' && name != 'TEXTAREA') {
+					return $stopIt(event);
+				}
+				var type_e = elem.type.toUpperCase();
+				if (name == 'INPUT' && (type_e != 'TEXT' && type_e != 'TEXTAREA' && type_e != 'PASSWORD' && type_e != 'FILE')) {
+					return $stopIt(event);
+				}
+				if (name == 'INPUT' && (elem.readOnly == true || elem.disabled == true)) {
+					return $stopIt(event);
+				}
+			}
+		}
+	}
+	</script>
+</body>
+</html>

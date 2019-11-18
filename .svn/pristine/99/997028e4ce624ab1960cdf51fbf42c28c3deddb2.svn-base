@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BaseLocationPermission" table="T_BASE_LOCATION_PERMISSION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="permissionId" column="PERMISSION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="locationName" type="java.lang.String" column="LOCATION_NAME" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+	</class>
+</hibernate-mapping>

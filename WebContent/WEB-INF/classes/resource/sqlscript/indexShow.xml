@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="indexShow">
+	<!-- ===========================查询检测要求========================== -->
+
+		
+		<!-- 周期件提醒 -->
+	<select id="perReminList">
+	SELECT
+			t.COMPON_SERIAL AS componSerial,
+			tb1.VALUE AS componName,
+			tb2.VALUE	AS specificName,
+			t.leftcage_serial as leftcageSerial,
+			t.PARACHUTE_CHECK_DATE AS checkDate
+		FROM
+			T_COMPONENT t
+		LEFT JOIN BM_COMPONENT_GENERIC tb1 ON tb1.CODE = t.COMPON_GENERIC
+		LEFT JOIN BM_COMPONENT_SPECIFIC tb2 ON tb2.CODE = t.COMPON_SPECIFIC
+		WHERE
+			t.PARACHUTE_FLAG = 1
+		AND (GETDATE()+60)>=	convert(date,t.PARACHUTE_CHECK_DATE) and convert(date,t.PARACHUTE_CHECK_DATE)>GETDATE()--距离60天
+
+	</select>
+		<!-- 将到期企业资质 -->
+	<select id="enterQulList">
+			SELECT
+				tci.CORP_NAME as corpName,
+				t.CERT_NUM as certNum,
+				t.ORGAN_NAME as organName,
+				t.ORGAN_DATE as organDate,
+				t.END_DATE as endDate
+			FROM
+				T_CORP_CERT t
+			LEFT JOIN T_CORP_INFO tci ON tci.CORP_ID=t.CORP_ID
+			WHERE
+				t.DEL_FLAG = '1'
+			AND t.ISVALID = '1'
+		  AND (GETDATE()+60)>=	convert(date,t.END_DATE) and convert(date,t.END_DATE)>GETDATE()--距离60天
+	</select>
+		<!-- 将到期岗位证 -->
+	<select id="postQulList">
+		SELECT
+		tp.PRACTI_NAME as practiName,
+		t.CERT_NUM as certNum,
+		tbw.value as practiKindwork,
+		t.AWARD_DEPART as awardDepart,
+		t.EFFECT_DATE as effectDate
+		FROM
+			T_PRACTI_CERT t
+		LEFT JOIN T_PRACTITIONER tp ON tp.PRACTI_ID = t.PRACTI_ID
+		LEFT JOIN BM_KIND_WORK tbw ON tbw.CODE=t.PRACTI_KINDWORK
+		WHERE
+			t.DEL_FLAG = '1'
+		AND (GETDATE()+60)>=	convert(date,t.EFFECT_DATE) and convert(date,t.EFFECT_DATE)>GETDATE()--距离60天
+	</select>
+		<!-- 将到期保单 -->
+	<select id="policyQulList">
+		SELECT
+			t.INSURE_ID as insureId,
+			te.EXW_SERIAL as exwSearial,
+			te.RECORD_ID as recordId,
+			t.STOP_INSURE_DATE as stopInsureDate,
+			tp.PRACTI_NAME as practiName
+		FROM
+			T_INSURE_EQUIPMENT t
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID = t.EQUIP_ID
+		LEFT JOIN T_PROJECT tp ON tp.PRACTI_ID = t.PROJECT_ID
+		where t.DEL_FLAG='1' 
+		AND (GETDATE()+60)>=	convert(date,t.STOP_INSURE_DATE) and convert(date,t.STOP_INSURE_DATE)>GETDATE()--距离60天
+	</select>
+		<!-- 待维保-->
+	<select id="maiteQulList">
+					SELECT
+			t.BUILDING_NUM AS buildingNum,
+			te.EXW_SERIAL AS exwSerial,
+			te.RECORD_ID AS recordId,
+			tes.
+		VALUE
+			AS specificName,
+			tp.PROJECT_NAME AS projectName,
+			t.PHENOMENON AS phenomenon,
+			t.DAMAGE_DATE AS damageDate,
+			convert(date,t.DAMAGE_DATE)
+		FROM
+			T_EQUIPMENT_REPAIR t
+		LEFT JOIN T_EQUIPMENT te ON te.EQUIP_ID = t.EQUIP_ID
+		LEFT JOIN T_PROJECT tp ON tp.PROJECT_ID = t.PROJECT_ID
+		LEFT JOIN BM_EQUIP_SPECIFIC tes ON tes.code = te.EQUIP_SPECIFIC
+		WHERE
+			t.STATUS = '0' AND (GETDATE()+60)>=	convert(date,t.DAMAGE_DATE) and convert(date,t.DAMAGE_DATE)>GETDATE()--距离60天
+		
+	</select>
+	
+	<!-- 待审业务-租赁合同 -->
+	<select id="show1">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_CONTRACT_LEASE WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-调度管理 -->
+	<select id="show2">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_DISPATCH WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-物流管理  -->
+	<select id="show3">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_LOGISTICS_TRANSPORT WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-现场安装 -->
+	<select id="show4">
+		
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_EQUIPMENT_INSTALL WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-启用管理 
+	<select id="show5">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_EQUIPMENT_ACTIVATE WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select> -->
+	<!-- 待审业务-使用管理   -->
+	<select id="show6">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_EQUIPMENT_EMPLOY WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-维修管理  -->
+	<select id="show7">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_EQUIPMENT_REPAIR WHERE APPLYFOR_STATE<='3'  GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-现场拆卸  -->
+	<select id="show8">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_EQUIPMENT_DISMANTLE WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-转厂维保    -->
+	<select id="show9">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_EQUIPMENT_WAREHOUSE WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-配件领用  -->
+	<select id="show10">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_PICKUP WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+	<!-- 待审业务-采购管理  -->
+	<select id="show11">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_PURCHASE WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+		<!-- 待审业务-借用管理   -->
+	<select id="show12">
+		<![CDATA[SELECT count(*) as num1,APPLYFOR_STATE as keu   FROM T_BORROW WHERE APPLYFOR_STATE<='3' AND DEL_FLAG='1' GROUP BY APPLYFOR_STATE
+		]]>
+	</select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Announce" table="T_ANNOUNCE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="announceId" column="ANNOUNCE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="announceTitle" type="java.lang.String" column="ANNOUNCE_TITLE" />
+		<property name="announceType" type="java.lang.String" column="ANNOUNCE_TYPE" />
+		<property name="announce" type="java.lang.String" column="ANNOUNCE" />
+		<property name="publish" type="java.lang.String" column="PUBLISH" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="announcePractiSet" cascade="none" inverse="true" lazy="true" where=" CATEGORY = '0'">
+			<key column="ANNOUNCE_ID" />
+			<one-to-many class="com.knight.emms.model.AnnounceCategory" />
+		</set>
+		<set name="announceDepSet" cascade="none" inverse="true" lazy="true" where=" CATEGORY = '1'">
+			<key column="ANNOUNCE_ID" />
+			<one-to-many class="com.knight.emms.model.AnnounceCategory" />
+		</set>
+		<set name="announceScopeDepSet" cascade="none" inverse="true" lazy="true" where=" CATEGORY = '2'">
+			<key column="ANNOUNCE_ID" />
+			<one-to-many class="com.knight.emms.model.AnnounceCategory" />
+		</set>
+	</class>
+</hibernate-mapping>

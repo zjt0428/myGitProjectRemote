@@ -1,0 +1,126 @@
+
+package com.knight.emms.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.knight.core.dao.GenericDao;
+import com.knight.core.exception.BusinessException;
+import com.knight.core.filter.QueryFilter;
+import com.knight.emms.constant.Status;
+import com.knight.emms.core.service.BusinessFlowServiceImpl;
+import com.knight.emms.dao.EquipInsuranceDao;
+import com.knight.emms.dao.EquipInsuranceDetailDao;
+import com.knight.emms.model.EquipInsurance;
+import com.knight.emms.model.EquipInsuranceDetail;
+import com.knight.emms.model.EquipMaintDetail;
+import com.knight.emms.model.Equipment;
+import com.knight.emms.model.FormApprove;
+import com.knight.emms.service.EquipInsuranceDetailService;
+import com.knight.emms.service.EquipInsuranceService;
+import com.knight.emms.service.EquipmentService;
+import com.knight.system.service.impl.BusinessLongPKServiceImpl;
+import com.knight.system.service.impl.CodeServiceImpl;
+
+import lombok.SneakyThrows;
+
+
+/**
+ * @ClassName: EquipInsuranceServiceImpl
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author
+ * @date
+ */
+@Transactional(rollbackFor = { Exception.class, RuntimeException.class })
+public class EquipInsuranceServiceImpl extends BusinessFlowServiceImpl<EquipInsurance> implements EquipInsuranceService {
+
+	
+
+
+	@Resource
+	private EquipInsuranceDao equipInsuranceDao;
+	
+	@Resource
+	private EquipInsuranceDetailDao equipInsuranceDetailDao;
+	
+	@Resource
+	private EquipInsuranceDetailService equipInsuranceDetailService;
+	
+	@Resource
+	private EquipmentService equipmentService;
+
+	public EquipInsuranceServiceImpl(EquipInsuranceDao dao) {
+		super(dao);
+		this.equipInsuranceDao = dao;
+	}
+
+
+	@Override
+	public EquipInsurance getTranslateFull(Long insureId) {
+		// TODO Auto-generated method stub
+		EquipInsurance ei = equipInsuranceDao.get(insureId);
+		CodeServiceImpl.translate(ei, getPersistantStruct());
+		for (EquipInsuranceDetail d : ei.getEquipInsuranceDetailSet()) {
+			CodeServiceImpl.translate(d.getEquipment());
+		}
+		return ei;
+	}
+
+	@Override
+	public void deletedDetail(Long tdetailId) {
+		EquipInsurance p = equipInsuranceDao.get(tdetailId);
+		if (!Status.Applyfor.waitSubmit.equals(p.getApplyforState())) {
+		}
+		p.setApplyforState(Status.Applyfor.waitApprove);
+		equipInsuranceDao.save(p);
+	}
+
+	@Override
+	public void submitDepot(Long depottId) {
+		EquipInsurance p = equipInsuranceDao.get(depottId);
+		if (!Status.Applyfor.waitSubmit.equals(p.getApplyforState())) {
+			throw new BusinessException("状态不合法,无法提交!");
+		}
+		p.setApplyforState(Status.Applyfor.waitApprove);
+		equipInsuranceDao.save(p);
+	}
+
+	@Override
+	public void saveCreate(EquipInsurance equipInsurance) {
+	}
+	@Override
+	public void saveOrMergeForEdit(EquipInsurance t) {
+		// TODO Auto-generated method stub
+		t.setSubInsureClaim();
+		equipInsuranceDao.merge(t);
+	}
+
+
+	@Override
+	public void delDetail(Long tdetailId) {
+		equipInsuranceDetailDao.remove(tdetailId);
+		
+	}
+	
+	@Override
+	@SneakyThrows(RuntimeException.class)
+	public void passApproveApplication(FormApprove formApprove) {
+		EquipInsurance ei = super.passFlowApproveApplication(formApprove);
+		QueryFilter filter = new QueryFilter();
+		filter.addConjunctFilter("Q_insureId_L_EQ", ei.getInsureId().toString());
+		List<EquipInsuranceDetail> list = equipInsuranceDetailService.getTranslateFull(filter);
+		for(EquipInsuranceDetail e : list){
+			Equipment equip = equipmentService.getTranslateFull(e.getEquipId());
+			equip.setInsureStatus("1");
+			equip.setInsureTime(ei.getEndInsureDate());
+			equipmentService.update(equip);
+		}
+	}
+
+	
+}

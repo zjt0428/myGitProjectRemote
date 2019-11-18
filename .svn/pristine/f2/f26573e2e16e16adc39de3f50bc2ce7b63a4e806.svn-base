@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PickupComponent" table="T_PICKUP_COMPONENT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="pickupComponId" column="PICKUP_COMPON_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="pickupId" type="java.lang.Long" column="PICKUP_ID" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID" />
+		<property name="consumeCounts" type="java.lang.Integer" column="CONSUME_COUNTS" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="unitPrice" type="java.math.BigDecimal" column="UNIT_PRICE" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="componSerial" type="java.lang.String" column="COMPON_SERIAL" />
+		<property name="componCategory" type="java.lang.String" column="COMPON_CATEGORY" />
+		<property name="componGeneric" type="java.lang.String" column="COMPON_GENERIC" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="dimensions" type="java.lang.String" column="DIMENSIONS" />
+		<property name="presentValue" type="java.math.BigDecimal" column="PRESENT_VALUE" />
+		<property name="pickupDate" type="java.lang.String" column="PICKUP_DATE" />
+		<property name="returnDate" type="java.lang.String" column="RETURN_DATE" />
+		<property name="returnStoreId" type="java.lang.Long" column="RETURN_STORE_ID" />
+		<property name="returnStoreName" type="java.lang.String" formula="(SELECT SH.STORE_NAME FROM T_STORE_HOUSE SH WHERE SH.STORE_ID = RETURN_STORE_ID)" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+	</class>
+</hibernate-mapping>

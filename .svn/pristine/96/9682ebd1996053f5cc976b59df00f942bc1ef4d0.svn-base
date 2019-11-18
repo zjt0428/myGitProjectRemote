@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="fund">
+	<!-- ===================================合同支出费用总和(采购/采购退款/报销/付款)============================== -->
+	<!-- 关联合同采购/采购退款/报销/付款金额 -->
+	<select id="contract_relate_pay">
+	<![CDATA[
+		DECLARE @CONTRACT_ID BIGINT
+		SET @CONTRACT_ID = ?
+		SELECT SUM(A.PURCHASE_AMOUNT) PURCHASE_AMOUNT
+		  FROM (SELECT PURCHASE_AMOUNT PURCHASE_AMOUNT
+		          FROM T_PURCHASE
+		         WHERE RELATE_ID = @CONTRACT_ID
+		           AND RELATE_MODULE = 'CONTRACT_LEASE'
+		           AND APPLYFOR_STATE = '6'
+		        UNION ALL
+		        SELECT -R.RECEIVEMENT PURCHASE_AMOUNT
+		          FROM T_PURCHASE P, T_RECEIVEMENT R
+		         WHERE P.RELATE_ID = @CONTRACT_ID
+		           AND P.RELATE_MODULE = 'CONTRACT_LEASE'
+		           AND P.APPLYFOR_STATE = '6'
+		           AND R.RELATE_ID = P.PURCHASE_ID
+		           AND R.RELATE_MODULE = 'PURCHASE'
+		        UNION ALL
+		        SELECT REIMBURSE_AMOUNT PURCHASE_AMOUNT
+		          FROM T_REIMBURSE
+		         WHERE RELATE_ID = @CONTRACT_ID
+		           AND RELATE_MODULE = 'CONTRACT_LEASE'
+		           AND APPLYFOR_STATE = '3'
+		        UNION ALL
+		        SELECT PAYMENT_AMOUNT PURCHASE_AMOUNT
+		          FROM T_AMOUNT_PAYMENT
+		         WHERE RELATE_ID = @CONTRACT_ID
+		           AND RELATE_MODULE = 'CONTRACT_LEASE'
+		           AND APPLYFOR_STATE = '3') A
+	]]>
+	</select>
+	<!-- =======================================加载人员未提取奖金====================================== -->
+	<!-- 未领取的提成 -->
+	<select id="deduction_unpickup">
+	<![CDATA[
+		SELECT P.PRACTI_ID PRACTI_ID, SUM(P.REWARD) REWARD
+		  FROM T_DEDUCT D, T_DEDUCT_PRACTI P
+		 WHERE D.APPLYFOR_STATE = '3'
+		   AND D.APPLYFOR_PASS_DATE < ?
+		   AND D.DEDUCT_ID = P.DEDUCT_ID
+		   AND P.PICKUP_STATUS = '0'
+		 GROUP BY P.PRACTI_ID
+	]]>
+	</select>
+	<!-- ==========================================月薪通过验证========================================= -->
+	<!-- 查询生成同月份薪资人员 -->
+	<select id="salary_exist_practi">
+	<![CDATA[
+		SELECT SP.PRACTI_NAME, S.SALARY_SERIAL
+		  FROM T_SALARY S,
+		       T_SALARY_PRACTI SP,
+		       (SELECT T.PRACTI_ID, T.MONTH_ID FROM T_SALARY_PRACTI T WHERE T.SALARY_ID = ?) A
+		 WHERE S.APPLYFOR_STATE = '3'
+		   AND SP.SALARY_ID = S.SALARY_ID
+		   AND S.MONTH_ID = A.MONTH_ID
+		   AND SP.PRACTI_ID = A.PRACTI_ID
+	]]>
+	</select>
+	<!-- 未领取的提成(CONVERT(DATETIME , '2018-07-24 12:12:59' )) -->
+	<select id="update_unpickup_reward">
+	<![CDATA[
+		UPDATE SP
+		   SET SP.REWARD = A.REWARD FROM T_SALARY_PRACTI SP, (SELECT P.PRACTI_ID PRACTI_ID, SUM(P.REWARD) REWARD
+		                                                        FROM T_DEDUCT        D,
+		                                                             T_DEDUCT_PRACTI P
+		                                                       WHERE D.APPLYFOR_STATE = '3'
+		                                                         AND D.APPLYFOR_PASS_DATE < ?
+		                                                         AND D.DEDUCT_ID = P.DEDUCT_ID
+		                                                         AND P.PICKUP_STATUS = '0'
+		                                                       GROUP BY P.PRACTI_ID) A
+		 WHERE SP.SALARY_ID = ?
+		   AND A.PRACTI_ID = SP.PRACTI_ID
+	]]>
+	</select>
+	<!-- 未领取的提成更新为已领取 -->
+	<select id="update_unpickup">
+	<![CDATA[	
+		UPDATE DP
+		   SET DP.PICKUP_STATUS = '1' FROM T_DEDUCT_PRACTI DP, T_DEDUCT D, T_SALARY_PRACTI SP
+		 WHERE SP.SALARY_ID = ?
+		   AND DP.PRACTI_ID = SP.PRACTI_ID
+		   AND DP.PICKUP_STATUS = '0'
+		   AND DP.DEDUCT_ID = D.DEDUCT_ID
+		   AND D.APPLYFOR_PASS_DATE < ?
+		   AND D.APPLYFOR_STATE = '3'
+	]]>
+	</select>
+	<!-- 结算Portlet -->
+	<select id="settle_portlet">
+	<![CDATA[	
+		SELECT A.PROJECT_ID, A.PROJECT_NAME, A.PA_ENT, A.PA_MODULE, A.PA_ENT_NAME, SUM(A.RECEIVABLE_DEBIT) RECEIVABLE_DEBIT
+		  FROM (SELECT SC.SETTLE_ID, SC.PROJECT_ID, SC.PROJECT_NAME, SC.PA_ENT, SC.PA_MODULE, SC.PA_ENT_NAME, SC.SETTLE_AMOUNT - ISNULL((SELECT SUM(AR.RECEIVE_AMOUNT) FROM T_AMOUNT_RECEIVE AR WHERE AR.RELATE_MODULE = 'SETTLE_CONTRACT' AND AR.RELATE_ID = SC.SETTLE_ID AND AR.APPLYFOR_STATE = '3'), 0) RECEIVABLE_DEBIT
+		          FROM T_SETTLE_CONTRACT SC
+		         WHERE SC.FUND_TYPE = '1'
+		           AND SC.FUND_STATUS >= '5'
+		           AND SC.FUND_STATUS < '7') A
+		 WHERE A.RECEIVABLE_DEBIT > 0
+		 GROUP BY A.PROJECT_ID, A.PROJECT_NAME, A.PA_ENT, A.PA_MODULE, A.PA_ENT_NAME
+	]]>
+	</select>
+	<!-- ==============================================收支明细==================================== -->
+	<!-- 收支明细 -->
+	<select id="income_expense_detail">
+	<![CDATA[
+		SELECT A.*
+		  FROM (SELECT AMOUNT_SERIAL,
+		               PROVIDED_DATE,
+		               '1' AMOUNT_TYPE,
+		               '收入' AMOUNT_TYPE_NAME,
+		               RELATE_THEME,
+		               RELATE_SERIAL,
+		               RECEIVE_AMOUNT,
+		               '0' PAYMENT_AMOUNT,
+		               PRACTI_NAME,
+		               RECEIVE_ENT_NAME ENT_NAME,
+		               PROJECT_NAME
+		          FROM T_AMOUNT_RECEIVE
+		         WHERE APPLYFOR_STATE = '3'
+		        UNION ALL
+		        SELECT AMOUNT_SERIAL,
+		               PROVIDED_DATE,
+		               '0' AMOUNT_TYPE,
+		               '支出' AMOUNT_TYPE_NAME,
+		               RELATE_THEME,
+		               RELATE_SERIAL,
+		               '0' RECEIVE_AMOUNT,
+		               PAYMENT_AMOUNT,
+		               PRACTI_NAME,
+		               PAYMENT_ENT_NAME ENT_NAME,
+		               PROJECT_NAME
+		          FROM T_AMOUNT_PAYMENT
+		         WHERE APPLYFOR_STATE = '3') A
+		 WHERE 1 = 1
+	]]>
+	</select>
+	<!-- 获取之前的累计结算金额 -->
+	<select id="get_accumulated_amount">
+	<![CDATA[
+	DECLARE @contractId BIGINT
+		DECLARE @currMonth VARCHAR(10)
+		SET @contractId = ?
+		SET @currMonth = ?
+		SELECT 
+			ISNULL(SUM(SETTLE_AMOUNT),0) AS accumulatedAmount FROM T_SETTLE_CONTRACT T WHERE T.EFFECTIVE=1 AND T.DEL_FLAG=1 AND LEFT(T.START_SETTLE_DATE,7) <= @currMonth
+			AND EXISTS( 
+			SELECT CL.CONTRACT_ID FROM T_CONTRACT_LEASE CL WHERE EXISTS(
+				SELECT * FROM T_CONTRACT_LEASE WHERE CONTRACT_ID=@contractId
+				AND CONSTRACT_NO=CL.CONSTRACT_NO AND PROJECT_NAME=CL.PROJECT_NAME 
+				AND PA_ENT=CL.PA_ENT AND PB_ENT=CL.PB_ENT) AND CL.CONTRACT_ID = T.CONTRACT_ID
+			) 
+	]]>
+	</select>
+	<!-- 获取之前的累计收款金额 （包含【预收款】）-->
+	<select id="get_already_amount">
+	<![CDATA[
+		DECLARE @contractId BIGINT
+		DECLARE @currMonth VARCHAR(10)
+		SET @contractId = ?
+		SET @currMonth = ?
+		SELECT SUM(T.amount) AS receiveAmount 
+		FROM (		--收款管理
+			SELECT 
+				ISNULL(SUM(AR.RECEIVE_AMOUNT),0) AS amount
+			FROM T_AMOUNT_RECEIVE AR, T_CONTRACT_LEASE CL WHERE AR.CONTRACT_ID=CL.CONTRACT_ID 
+			AND CL.DEL_FLAG=1 AND AR.APPLYFOR_STATE='3' AND AR.DEL_FLAG='1' AND LEFT(AR.RECEIVE_DATE,7) <= @currMonth
+			AND EXISTS(
+				SELECT * FROM T_CONTRACT_LEASE WHERE CONTRACT_ID=@contractId 
+				AND CONSTRACT_NO=CL.CONSTRACT_NO AND PROJECT_NAME=CL.PROJECT_NAME 
+				AND PA_ENT = CL.PA_ENT AND PB_ENT=CL.PB_ENT
+			) 
+			UNION ALL		--预收款
+			SELECT ADVANCE_RECEIVE_AMOUNT AS amount 
+			FROM T_ADVANCE_RECEIVE AR, T_CONTRACT_LEASE CL WHERE AR.CONTRACT_ID=CL.CONTRACT_ID 
+			AND CL.DEL_FLAG=1 AND AR.APPLYFOR_STATE='3' AND AR.DEL_FLAG='1' AND LEFT(AR.ADVANCE_DATE,7) <= @currMonth
+			AND EXISTS(
+				SELECT * FROM T_CONTRACT_LEASE WHERE CONTRACT_ID=@contractId 
+				AND CONSTRACT_NO=CL.CONSTRACT_NO AND PROJECT_NAME=CL.PROJECT_NAME 
+				AND PA_ENT = CL.PA_ENT AND PB_ENT=CL.PB_ENT
+			) 
+		) T
+	]]>
+	</select>
+</mapper>

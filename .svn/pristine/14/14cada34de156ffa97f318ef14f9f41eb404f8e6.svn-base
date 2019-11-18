@@ -1,0 +1,279 @@
+var ContractArrangeEquipmentGrid = function(a, b) {
+	Ext.apply(this, a || {});
+	Ext.apply(this, b || {});
+	
+	this.currentDate = new Date();
+	
+	var columns = [ {
+		header : "设备类别",
+		dataIndex : "equipGenericName",
+		editor : new Knight.ux.TreeCombo({
+			valId : Ext.id(),
+			url : __ctxPath + "/system/treeCode.do?codeId=repertoryCategory"
+		}),
+		renderer : function(value, metadata, record) {
+			if (value == undefined) {
+				return;
+			}
+			if (record.data.category == undefined) {
+				record.data.category = value;
+				if (record.data.equipCategory == undefined) {
+					record.data.equipCategory = this.getEditor().id;
+				}
+				return value;
+			}
+			if (record.data.category != value) {
+				record.data.equipCategory = this.getEditor().id;
+				record.data.category = value;
+			}
+			return value;
+		}
+	}, {
+		header : "楼号",
+		dataIndex : "buildingNum",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	},{
+		header : "设备型号",
+		dataIndex : "equipSpecificName",
+		editor : new Ext.ux.form.SimpleCombo({
+			codeData : this.equipSpecificData
+		}),
+		renderer : function(value, metadata, record) {
+			value = Ext.isEmpty(value) ? this.getEditor().value : value;
+			var store = this.getEditor().store;
+			var index = store.find("code", value);
+			if (index != -1) {
+				value = store.getAt(index).data.name;
+			}
+			record.data.equipSpecificName = value;
+			return value;
+		}
+	},{
+		header : "生产厂家",
+		dataIndex : "equipVender",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, /*{
+		header : "塔吊型号",
+		dataIndex : "equipSpecificName",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	},{
+		header : "出厂编号",
+		dataIndex : "exwSerial",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, {
+		header : "数量(台)",
+		dataIndex : "quantity",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			decimalPrecision : 0,
+			maxValue : 99999999
+		})
+	}, *//*{
+		header : "零米以上高度m",
+		dataIndex : "aboveZeroHeight",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 999
+		})
+	},{
+		header : "地下室标高m",
+		dataIndex : "baseHeight",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 999
+		})
+	},{
+		header : "单层面积㎡",
+		dataIndex : "mololayerArea",
+		editor : new Ext.form.NumberField({
+			allowBlank : false
+		})
+	},{
+		header : "塔吊高度m",
+		dataIndex : "overallHeight",
+		allowBlank:false,
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 999
+		})
+	},{
+		header : "臂长m",
+		dataIndex : "brachium",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 999
+		})
+	},{
+		header : "首次高度m",
+		dataIndex : "initialHeight",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 999
+		})
+	},{
+		header : "最终高度m",
+		dataIndex : "finalHeight",
+		allowBlank:false,
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 999
+		})
+	}, */{
+		header : "预计进场时间",
+		dataIndex : "startDate",
+		editor : new Ext.form.DateField({
+			format : "Y-m-d",
+			editable : false,
+			allowBlank : false
+		}),
+		renderer : function(value, metadata, record) {
+			if (typeof (value) == "string") {
+				return value;
+			}
+			value = Ext.util.Format.date(value, "Y-m-d");
+			record.data.startDate = value;
+			return value;
+		}
+	},{
+		header : "预计退场时间",
+		dataIndex : "endDate",
+		editor : new Ext.form.DateField({
+			format : "Y-m-d",
+			editable : false
+		}),
+		renderer : function(value, metadata, record) {
+			if (typeof (value) == "string") {
+				return value;
+			}
+			value = Ext.util.Format.date(value, "Y-m-d");
+			record.data.endDate = value;
+			return value;
+		}
+	}/*,{
+		header : "产权来源",
+		dataIndex : "supplierName",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	},{
+		header : "计划塔吊退场时间",
+		dataIndex : "planEndDate",
+		editor : new Ext.form.DateField({
+			format : "Y-m-d",
+			editable : false,
+			allowBlank : false
+		}),
+		renderer : function(value, metadata, record) {
+			if (typeof (value) == "string") {
+				return value;
+			}
+			value = Ext.util.Format.date(value, "Y-m-d");
+			record.data.planEndDate = value;
+			return value;
+		}
+	}*//*, {
+		header : "进退场费(元/台)",
+		dataIndex : "appearanceCost",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 99999999
+		})
+	}, {
+		header : "基础预埋件(元/套)",
+		dataIndex : "embeddedCost",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxValue : 99999999
+		})
+	}, {
+		header : "结算方式",
+		dataIndex : "settleMethod",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}*/ ];
+	ContractArrangeEquipmentGrid.superclass.constructor.call(this, Ext.apply({
+		saveable : this.saveable,
+		selectable : this.selectable,
+		title : "业务关联设备（不确定主机编号）",
+		option : "业务设备",
+		tbarItems : this.tbarItems,
+		height : this.height,
+		fields : ContractArrangeEquipmentListViewField,
+		columns : columns,
+		delurl : __ctxPath + "/dispatch/multiDelArrangeEquipmentContractArrange.do"
+	}, this.grid_config || {}));
+};
+Ext.extend(ContractArrangeEquipmentGrid, Knight.ux.SubModuleBaseGrid, {
+	createSubModule : function() {
+		return {
+			quantity : 0,
+			startDate : this.currentDate,
+			endDate : this.currentDate,
+		};
+	},	
+	/*addSubModuleDate : function(data) {
+		for ( var i = 0; i < this.getStore().getCount(); i++) {
+			if (this.getStore().getAt(i).data.equipId == data.equipId) {
+				return;
+			}
+		}
+		this.addHeight(recordHeight);
+		var ContractEquip = this.getStore().recordType;
+		var contractEquip = new ContractEquip();
+		Ext.apply(contractEquip.data, {
+			contractId : this.contractId,
+			equipId : data.equipId,
+			equipCategory : data.equipCategory,
+			equipCategoryName : data.equipCategoryName,
+			equipGeneric : data.equipGeneric,
+			equipGenericName : data.equipGenericName,
+			equipSpecific : data.equipSpecific,
+			equipSpecificName : data.equipSpecificName,
+			recordId : data.recordId,
+			exwSerial : data.exwSerial,
+			recordSerial : data.recordSerial,
+			propertyEnt : data.propertyEnt,
+			propertyName : data.propertyName,
+			buildingNum : "0",
+			startDate : this.currentDate,
+			equipVender:data.equipVender,
+			
+			brachium:data.brachium,
+			supplierName:data.supplierName,
+			buildingNum:data.buildingNum,
+			recordId:data.recordId,
+			exwSerial:data.exwSerial
+			
+		});
+		this.stopEditing();
+		this.getStore().add(contractEquip);
+		this.startEditing(0, 0);
+	},*/
+	/*addSubModule : function() {
+		new EquipSelector({
+			callback : function(d) {
+				for(var i=0;i<d.length;i++){
+					var data = d[i].data;
+					this.addSubModuleDate(data);
+				}
+				var data = d[0].data;
+				this.addSubModuleDate(data);
+			}.createDelegate(this)
+		}).show();
+	}*/
+});

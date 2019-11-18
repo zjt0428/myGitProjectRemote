@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DepotTransfers" table="T_DEPOT_TRANSFERS" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="depottId" column="DEPOTT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="transfersNum" type="java.lang.String" column="TRANSFERS_NUM" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="inputDate" type="java.lang.String" column="INPUT_DATE" />
+		<property name="transfersTheme" type="java.lang.String" column="TRANSFERS_THEME" />
+		<property name="transfersDate" type="java.lang.String" column="TRANSFERS_DATE" />
+		<property name="outDepotId" type="java.lang.Long" column="OUT_DEPOT_ID" />
+		<property name="outDepotName" type="java.lang.String" column="OUT_DEPOT_NAME" />
+		<property name="inDepotId" type="java.lang.Long" column="IN_DEPOT_ID" />
+		<property name="inDepotName" type="java.lang.String" column="IN_DEPOT_NAME" />
+		<property name="vehicleNum" type="java.lang.String" column="VEHICLE_NUM" />
+		<property name="vehiclePerson" type="java.lang.String" column="VEHICLE_PERSON" />
+		<property name="outDepotPerson" type="java.lang.String" column="OUT_DEPOT_PERSON" />
+		<property name="outPersonId" type="java.lang.Long" column="OUT_PERSON_ID" />
+		<property name="inDepotPerson" type="java.lang.String" column="IN_DEPOT_PERSON" />
+		<property name="inPersonId" type="java.lang.Long" column="IN_PERSON_ID" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="transfersDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="DEPOTT_ID" />
+			<one-to-many class="com.knight.emms.model.TransfersDetail" />
+		</set>
+		<set name="transfersEquipDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="DEPOTT_ID" />
+			<one-to-many class="com.knight.emms.model.TransfersEquipDetail" />
+		</set>
+	</class>
+</hibernate-mapping>

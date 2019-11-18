@@ -1,0 +1,93 @@
+/**
+ *====================================================
+ * 文件名称: CustomerServiceImpl.java
+ * 修订记录：
+ * No    日期				作者(操作:具体内容)
+ * 1.    2013-7-5			chenxy(创建:创建文件)
+ *====================================================
+ * 类描述：(说明未实现或其它不应生成javadoc的内容)
+ */
+package com.knight.emms.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import com.knight.core.filter.QueryFilter;
+import com.knight.emms.dao.CustomerAccountDao;
+import com.knight.emms.dao.CustomerDao;
+import com.knight.emms.dao.CustomerLinkerDao;
+import com.knight.emms.model.Customer;
+import com.knight.emms.model.CustomerAccount;
+import com.knight.emms.model.CustomerLinker;
+import com.knight.emms.service.CustomerService;
+import com.knight.system.service.CodeService;
+import com.knight.system.service.impl.BusinessLongPKServiceImpl;
+
+/**
+ * @ClassName: CustomerServiceImpl
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author chenxy
+ * @date 2013-7-5 下午4:33:21
+ */
+public class CustomerServiceImpl extends BusinessLongPKServiceImpl<Customer> implements CustomerService {
+
+	private CustomerDao customerDao;
+
+	@Resource
+	private CustomerAccountDao customerAccountDao;
+
+	@Resource
+	private CustomerLinkerDao customerLinkerDao;
+
+	@Resource
+	private CodeService codeService;
+
+	public CustomerServiceImpl(CustomerDao dao) {
+		super(dao);
+		this.customerDao = dao;
+	}
+
+	public void saveOrUpdate(Customer customer) {
+		if (customer.getCustomerId() == null) {
+			customerDao.save(customer);
+		}
+		customer.setSubCustomer();
+		customerDao.merge(customer);
+		customer.setCustomerLinker(null);
+		customer.setCustomerAccount(null);
+		for (CustomerLinker customerLinker : customer.getCustomerLinkerSet()) {
+			if (customerLinker.isDefaultFlag()) {
+				customer.setCustomerLinker(customerLinker);
+			}
+		}
+		for (CustomerAccount customerAccount : customer.getCustomerAccountSet()) {
+			if (customerAccount.isDefaultFlag()) {
+				customer.setCustomerAccount(customerAccount);
+			}
+		}
+		customerDao.merge(customer);
+	}
+
+	public void deletedLinker(Long customerLinkId) {
+		customerLinkerDao.remove(customerLinkId);
+	}
+
+	public void deletedAccount(Long customerAccountId) {
+		customerAccountDao.remove(customerAccountId);
+	}
+
+	public List<CustomerAccount> queryAccountTranslateAll(QueryFilter filter) {
+		List<CustomerAccount> list = customerAccountDao.getAll(filter);
+		return list;
+	}
+
+	public List<CustomerLinker> queryLinkerTranslateAll(QueryFilter filter) {
+		List<CustomerLinker> list = customerLinkerDao.getAll(filter);
+		for (CustomerLinker l : list) {
+			l.setLinkerTypeName(codeService.getValue("linkerType", l.getLinkerType()));
+		}
+		return list;
+	}
+
+}

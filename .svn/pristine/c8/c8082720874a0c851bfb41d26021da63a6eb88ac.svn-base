@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report_Amount_Receive_Detail" language="groovy" pageWidth="1500" pageHeight="1000" whenNoDataType="AllSectionsNoDetail" columnWidth="1460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="fbdb0707-ab6d-4f6c-a60a-6511a6e51a1b">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1"/>
+	<parameter name="contractNo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="userName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="paEntName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="receiveType" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="applyforState" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="amountStartDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="amountEndDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="depId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="practiName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[DECLARE @contractNo VARCHAR(64)
+DECLARE @projectName VARCHAR(64)
+DECLARE @userName VARCHAR(64)
+DECLARE @paEntName VARCHAR(64)
+DECLARE @receiveType VARCHAR(64)
+DECLARE @applyforState VARCHAR(64)
+DECLARE @amountStartDate VARCHAR(64)
+DECLARE @amountEndDate VARCHAR(64)
+DECLARE @depId BIGINT
+DECLARE @practiName VARCHAR(64)
+SET @contractNo = $P{contractNo}
+SET @projectName = $P{projectName}
+SET @userName = $P{userName}
+SET @paEntName = $P{paEntName}
+SET @receiveType = $P{receiveType}
+SET @applyforState = $P{applyforState}
+SET @amountStartDate = $P{amountStartDate}
+SET @amountEndDate = $P{amountEndDate}
+SET @depId = $P{depId}
+SET @practiName = $P{practiName}
+SELECT
+	ar.USER_NAME userName,
+	cl.CONSTRACT_NO contractNo,
+	cl.CONTRACT_SERIAL contractSerial,
+	ar.RELATE_SERIAL relateSerial,
+	ar.PROJECT_NAME projectName,
+	ar.RECEIVE_ENT_NAME receiveEntName,
+	ar.RECEIVE_AMOUNT receiveAmount,
+	ar.RECEIVE_DATE receiveDate,
+	ar.PAYMENT_NAME paymentName,
+	'结算信息' relateModule,
+	'结算' receiveTypeName,
+	d.DEP_NAME depName,
+	ar.PRACTI_NAME practiName,
+	ar.PROVIDED_DATE providedDate,
+	(CASE ar.APPLYFOR_STATE	WHEN 0 THEN '待提交'	WHEN 1 THEN '待审核'	WHEN 2 THEN '待审批'	WHEN 3 THEN '通过'	WHEN 4 THEN '否决'	WHEN 5 THEN '完成' END) applyforStateName
+FROM
+	T_AMOUNT_RECEIVE ar
+	LEFT JOIN T_CONTRACT_LEASE cl ON cl.CONTRACT_ID = ar.CONTRACT_ID
+	LEFT JOIN DEPARTMENT d ON d.DEP_ID = ar.DEP_ID
+    AND (ar.RELATE_MODULE = 'SETTLE_CONTRACT' or ar.RELATE_MODULE = 'CONTRACT_LEASE')
+	WHERE
+            CHARINDEX((CASE WHEN (@contractNo is null or @contractNo ='') THEN cl.CONSTRACT_NO ELSE @contractNo END),cl.CONSTRACT_NO)>0
+			AND CHARINDEX((CASE WHEN @projectName is null or @projectName ='' THEN ar.PROJECT_NAME ELSE @projectName END),ar.PROJECT_NAME)>0
+			AND CHARINDEX((CASE WHEN @userName is null or @userName ='' THEN ar.USER_NAME ELSE @userName END), ar.USER_NAME)>0
+			AND CHARINDEX((CASE WHEN @paEntName is null or @paEntName ='' THEN cl.PA_ENT_NAME ELSE @paEntName END), cl.PA_ENT_NAME)>0
+			AND CHARINDEX((CASE WHEN @practiName is null or @practiName ='' THEN ar.PRACTI_NAME ELSE @practiName END), ar.PRACTI_NAME)>0
+			AND  (@receiveType is null OR @receiveType ='' OR  @receiveType =1)
+			AND  (@applyforState is null OR @applyforState ='' OR ar.APPLYFOR_STATE = @applyforState)
+			AND  (@amountStartDate is null OR @amountStartDate ='' OR ar.RECEIVE_DATE > @amountStartDate)
+			AND  (@amountEndDate is null OR @amountEndDate ='' OR ar.RECEIVE_DATE < @amountEndDate)
+			AND  (@depId is null OR @depId ='' OR ar.DEP_ID = @depId)
+            AND ar.DEL_FLAG = '1'
+UNION ALL
+SELECT
+	adr.USER_NAME userName,
+	cl.CONSTRACT_NO contractNo,
+	cl.CONTRACT_SERIAL contractSerial,
+	'' relateSerial,
+	cl.PROJECT_NAME projectName,
+	adr.RECEIVE_ENT_NAME receiveEntName,
+	adr.ADVANCE_RECEIVE_AMOUNT receiveAmount,
+	adr.ADVANCE_DATE receiveDate,
+	adr.PAYMENT_NAME paymentName,
+	'结算信息' relateModule,
+	'预收' receiveTypeName,
+	d.DEP_NAME depName,
+	adr.PRACTI_NAME practiName,
+	adr.PROVIDED_DATE providedDate,
+	(CASE adr.APPLYFOR_STATE	WHEN 0 THEN '待提交'	WHEN 1 THEN '待审核'	WHEN 2 THEN '待审批'	WHEN 3 THEN '通过'	WHEN 4 THEN '否决'	WHEN 5 THEN '完成' END) applyforStateName
+FROM
+	T_ADVANCE_RECEIVE adr
+LEFT JOIN T_CONTRACT_LEASE cl ON cl.CONTRACT_ID = adr.CONTRACT_ID
+LEFT JOIN DEPARTMENT d ON d.DEP_ID = adr.DEP_ID
+WHERE
+	CHARINDEX((CASE WHEN (@contractNo is NULL or @contractNo ='') THEN cl.CONSTRACT_NO ELSE @contractNo END),cl.CONSTRACT_NO)>0
+	AND CHARINDEX((CASE WHEN @projectName is NULL or @projectName =''THEN cl.PROJECT_NAME ELSE @projectName END),cl.PROJECT_NAME)>0
+	AND CHARINDEX((CASE WHEN @userName IS NULL or @userName ='' THEN adr.USER_NAME ELSE @userName END), adr.USER_NAME)>0
+	AND CHARINDEX((CASE WHEN @practiName is null or @practiName ='' THEN adr.PRACTI_NAME ELSE @practiName END), adr.PRACTI_NAME)>0
+	AND  (@receiveType is null OR @receiveType ='' OR  @receiveType=2)
+	AND  (@applyforState is null OR @applyforState ='' OR adr.APPLYFOR_STATE = @applyforState)
+	AND  (@amountStartDate is null OR @amountStartDate ='' OR adr.ADVANCE_DATE > @amountStartDate)
+	AND  (@amountEndDate is null OR @amountEndDate ='' OR adr.ADVANCE_DATE < @amountEndDate)
+	AND  (@depId is null OR @depId ='' OR adr.DEP_ID = @depId)
+    AND adr.DEL_FLAG = '1']]>
+	</queryString>
+	<field name="userName" class="java.lang.String"/>
+	<field name="contractNo" class="java.lang.String"/>
+	<field name="contractSerial" class="java.lang.String"/>
+	<field name="relateSerial" class="java.lang.String"/>
+	<field name="projectName" class="java.lang.String"/>
+	<field name="receiveEntName" class="java.lang.String"/>
+	<field name="receiveAmount" class="java.math.BigDecimal"/>
+	<field name="receiveDate" class="java.lang.String"/>
+	<field name="paymentName" class="java.lang.String"/>
+	<field name="relateModule" class="java.lang.String"/>
+	<field name="receiveTypeName" class="java.lang.String"/>
+	<field name="depName" class="java.lang.String"/>
+	<field name="practiName" class="java.lang.String"/>
+	<field name="providedDate" class="java.lang.String"/>
+	<field name="applyforStateName" class="java.lang.String"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf(1)]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="1460" height="66" uuid="95e64223-8562-4300-8ce5-8ef542fc7659"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="30"/>
+				</textElement>
+				<text><![CDATA[收款明细表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="53" y="0" width="70" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="d4c0ccd3-072a-43a9-b6e3-85c78f73e815"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[制单人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="123" y="0" width="90" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="4f3d5f20-5307-430d-af72-2257254a5e2e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[合同编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="213" y="0" width="104" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="34d9fca1-ec6e-4c44-9252-09a58676b267"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[合同编号(系统)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="317" y="0" width="90" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="ace76f0c-6b31-4900-85b0-f36ba6ceed92"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[业务编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="407" y="0" width="90" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="28d4e54a-ead4-4e4d-b3f2-f735654cba4d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[项目名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="497" y="0" width="104" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="424fc264-11fa-4cea-8a5d-91a4d8149856"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[收款单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="601" y="0" width="100" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="76f07a28-e0a1-4e19-bd5d-3c30f20af06c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[收款金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="701" y="0" width="104" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="2abea705-4256-4564-aca7-47a4242efd26"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[收款日期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="805" y="0" width="100" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="9675b720-16cc-44a4-817d-eb6e95a4c84f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[收款方]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="905" y="0" width="88" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="9235a3bb-7d7d-48de-9420-ec41df9b8365"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[关联业务]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="993" y="0" width="100" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="0b051f53-dc89-4341-9062-76dfac7817f4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[付款类型]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1093" y="0" width="88" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="d6664ec3-575d-4cd3-ae00-029ddc9f325e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[所属部门]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1269" y="0" width="100" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="2694d82f-0ad9-4301-bb20-824a88f4362b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[填报日期]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1369" y="0" width="91" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="d5e9fbdc-4765-49fe-aa8e-0f2eb3f555a5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[审批情况]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1181" y="0" width="88" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="a67ecc72-f552-44cc-94aa-9433c139570a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[经办人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="53" height="25" forecolor="#000000" backcolor="#66CCFF" uuid="a8587571-5573-4578-ab68-a7f4ed2b9b10"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="123" y="0" width="90" height="20" uuid="e44efa67-3587-4f88-a85d-4a91c43e2b38"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contractNo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="213" y="0" width="104" height="20" uuid="92a89f14-74bc-49fc-9d7d-94d41cafb5ca"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contractSerial}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="317" y="0" width="90" height="20" uuid="dd90e5ff-52b5-4523-b74c-2f43877cfc1a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{relateSerial}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="407" y="0" width="90" height="20" uuid="e7520d78-b337-469e-ad84-623732b30670"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{projectName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="497" y="0" width="104" height="20" uuid="d9aa8847-0f75-4576-a4b5-1802b23567b2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveEntName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="601" y="0" width="100" height="20" uuid="028edcfb-c9cb-4bab-99ac-9f2d16f523a4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveAmount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="701" y="0" width="104" height="20" uuid="3d1cdb76-9b24-495e-8c60-5616f9dbf844"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveDate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="805" y="0" width="100" height="20" uuid="8b010797-3d6e-4e1b-a198-17f0e6893ce0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{paymentName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="905" y="0" width="88" height="20" uuid="df29eac9-5762-4556-907c-03006c4118e1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{relateModule}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="53" y="0" width="70" height="20" uuid="f9aec227-fc63-4604-b628-bb693fdb581f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{userName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1093" y="0" width="88" height="20" uuid="8fdfe9e3-2af5-40ea-ba7d-e7b0474b045b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{depName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="993" y="0" width="100" height="20" uuid="f2eb4006-8d4d-4436-8a2d-c64b00ec5463"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveTypeName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1369" y="0" width="91" height="20" uuid="ed6de81a-4550-4580-92e4-cabcf40ae43d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{applyforStateName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1269" y="0" width="100" height="20" uuid="03c8d9b8-bc2a-40e5-bd83-b906f4968422"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{providedDate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="1181" y="0" width="88" height="20" uuid="b062adce-b360-4e02-9adb-103753c60ac8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{practiName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="53" height="20" uuid="2269e76a-60bc-4d4e-9a4a-0f8003daa2e0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="宋体" isUnderline="false" isStrikeThrough="false" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

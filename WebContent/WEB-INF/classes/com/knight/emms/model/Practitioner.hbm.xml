@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Practitioner" table="T_PRACTITIONER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="practiId" column="PRACTI_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="corpId" type="java.lang.Long" column="CORP_ID" insert="false" update="false" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="userId" type="java.lang.Long" column="USERID" insert="false" update="false" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="sex" type="java.lang.String" column="SEX" />
+		<property name="idCard" type="java.lang.String" column="ID_CARD" />
+		<property name="mobile" type="java.lang.String" column="MOBILE" />
+		<property name="birthDate" type="java.lang.String" column="BIRTH_DATE" />
+		<property name="nation" type="java.lang.String" column="NATION" />
+		<property name="station" type="java.lang.String" column="STATION" />
+		<property name="divisionDate" type="java.lang.String" column="DIVISION_DATE" />
+		<property name="separationDate" type="java.lang.String" column="SEPARATION_DATE" />
+		<property name="incumbent" type="java.lang.String" column="INCUMBENT" />
+		<property name="kindWork" type="java.lang.String" column="KIND_WORK" />
+		<property name="baseSalary" type="java.math.BigDecimal" column="BASE_SALARY" />
+		<property name="degree" type="java.lang.String" column="DEGREE" />
+		<property name="eduLevel" type="java.lang.String" column="EDU_LEVEL" />
+		<property name="university" type="java.lang.String" column="UNIVERSITY" />
+		<property name="major" type="java.lang.String" column="MAJOR" />
+		<property name="bankDeposit" type="java.lang.String" column="BANK_DEPOSIT" />
+		<property name="account" type="java.lang.String" column="ACCOUNT" />
+		<property name="professionTitle" type="java.lang.String" column="PROFESSION_TITLE" />
+		<property name="birthplace" type="java.lang.String" column="BIRTHPLACE" />
+		<property name="homeTel" type="java.lang.String" column="HOME_TEL" />
+		<property name="email" type="java.lang.String" column="EMAIL" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="photo" type="java.lang.Long" column="PHOTO" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="teams" type="java.lang.String" column="TEAMS" />
+		<property name="certFlag" type="java.lang.String" column="CERT_FLAG" />
+		<property name="practiStatus" type="java.lang.String" column="PRACTI_STATUS" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID"  insert="false" update="false" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="insureStatus" type="java.lang.String" column="INSURE_STATUS" />
+		<property name="insureTime" type="java.lang.String" column="INSURE_TIME" />
+		<property name="isAffiliate" type="java.lang.String" column="IS_AFFILIATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="edcationTime" type="java.lang.String" column="EDUCATION_TIME" />
+		<property name="clarificaTime" type="java.lang.String" column="CLARIFICA_TIME" />
+		<property name="blacklist" type="java.lang.String" column="BLACKLIST" />
+		<property name="starsLevel" type="java.lang.String" column="STARS_LEVEL" />
+		<property name="clarificaStatus" type="java.lang.String" column="CLARIFICA_STATUS" />
+		<property name="workState" type="java.lang.String" column="WORK_STATE" />
+		<property name="evaluaCount" type="java.lang.Integer" column="EVALUA_COUNT" />
+		<property name="permissionFlag" type="java.lang.String" column="PERMISSION_FLAG" />
+		<property name="equipGenericName" type="java.lang.String" 
+		formula="(SELECT 
+				ISNULL(BG.VALUE, NULL)
+				FROM T_EQUIPMENT E 
+				LEFT JOIN BM_EQUIP_GENERIC BG ON E.EQUIP_GENERIC = BG.CODE
+				WHERE E.EQUIP_ID IN( SELECT ISNULL(A.EQUIP_ID, 0) FROM T_ATTENDAMCE A WHERE A.SG_DATE = CONVERT(varchar(100), GETDATE(), 23) AND A.USERID IN 
+				(SELECT ISNULL(AE.USERID, 0) FROM APP_USER_EXTEND AE WHERE AE.FOREIGN_ID = PRACTI_ID)))" />
+		<property name="eduConfirmState" type="java.lang.String" column="EDU_CONFIRM_STATE" />
+		<property name="claConfirmState" type="java.lang.String" column="CLA_CONFIRM_STATE" />
+		<many-to-one name="corpInfo" column="CORP_ID" class="com.knight.emms.model.CorpInfo" fetch="join" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="appUser" column="USERID" class="com.knight.system.model.AppUser" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+	</class>
+</hibernate-mapping>

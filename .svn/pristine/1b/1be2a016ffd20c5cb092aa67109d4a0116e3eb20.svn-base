@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.VerifyItem" table="T_VERIFY_ITEM" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="itemId" column="ITEM_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="itemName" type="java.lang.String" column="ITEM_NAME" />
+		<property name="itemParent" type="java.lang.Long" column="ITEM_PARENT" />
+		<property name="itemParentName" type="java.lang.String" formula="(SELECT VI.ITEM_NAME FROM T_VERIFY_ITEM VI WHERE VI.ITEM_ID = ITEM_PARENT)" />
+		<property name="vitemType" type="java.lang.String" column="VITEM_TYPE" />
+		<property name="path" type="java.lang.String" column="PATH" />
+		<property name="level" type="java.lang.Integer" column="LEVEL" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+	</class>
+</hibernate-mapping>

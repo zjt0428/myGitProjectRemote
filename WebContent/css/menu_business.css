@@ -1,0 +1,264 @@
+/*========================================ITEMS===========================================*/
+.menu-items-archives {
+	background-image: url('../img/menus/business/items/archives.png') !important;
+}
+
+.menu-items-contract {
+	background-image: url('../img/menus/business/items/contract.png') !important;
+}
+
+.menu-items-dispatch {
+	background-image: url('../img/menus/business/items/dispatch.png') !important;
+}
+
+.menu-items-capitals {
+	background-image: url('../img/menus/business/items/capitals.png') !important;
+}
+
+.menu-items-install {
+	background-image: url('../img/menus/business/items/install.png') !important;
+}
+
+.menu-items-detector {
+	background-image: url('../img/menus/business/items/detector.png') !important;
+}
+
+.menu-items-verify {
+	background-image: url('../img/menus/business/items/verify.png') !important;
+}
+
+.menu-items-employ {
+	background-image: url('../img/menus/business/items/employ.png') !important;
+}
+
+.menu-items-dismantle {
+	background-image: url('../img/menus/business/items/dismantle.png') !important;
+}
+
+.menu-items-insure {
+	background-image: url('../img/menus/business/items/insure.png') !important;
+}
+
+.menu-items-fund {
+	background-image: url('../img/menus/business/items/fund.png') !important;
+}
+
+.menu-items-statistics {
+	background-image: url('../img/menus/business/items/statistics.png') !important;
+}
+/*========================================MENUS===========================================*/
+.menu-business-corp {
+	background-image: url('../img/menus/business/corp.png') !important;
+}
+
+.menu-business-corpcert {
+	background-image: url('../img/menus/business/corpcert.gif') !important;
+}
+
+.menu-business-practi {
+	background-image: url('../img/menus/business/practitioner.png') !important;
+}
+
+.menu-business-practicert {
+	background-image: url('../img/menus/business/practicert.png') !important;
+}
+
+.menu-business-customer {
+	background-image: url('../img/menus/business/customer.png') !important;
+}
+
+.menu-business-supplier {
+	background-image: url('../img/menus/business/supplier.gif') !important;
+}
+
+.menu-business-project {
+	background-image: url('../img/menus/business/project.png') !important;
+}
+
+.menu-business-equip {
+	background-image: url('../img/menus/business/equip.png') !important;
+}
+
+.menu-business-component {
+	background-image: url('../img/menus/business/component.png') !important;
+}
+
+.menu-business-contract {
+	background-image: url('../img/menus/business/contract.png') !important;
+}
+
+.menu-business-settle {
+	background-image: url('../img/menus/business/settle.png') !important;
+}
+
+.menu-business-dispatch {
+	background-image: url('../img/menus/business/dispatch.png') !important;
+}
+
+.menu-business-compondiary {
+	background-image: url('../img/menus/business/compon_diary.png') !important;
+}
+
+.menu-business-equipdiary {
+	background-image: url('../img/menus/business/equip_diary.png') !important;
+}
+
+.menu-business-practidiary {
+	background-image: url('../img/menus/business/practi_diary.png') !important;
+}
+
+.menu-business-pickup {
+	background-image: url('../img/menus/business/pickup.png') !important;
+}
+
+.menu-business-purchase {
+	background-image: url('../img/menus/business/purchase.png') !important;
+}
+
+.menu-business-borrow {
+	background-image: url('../img/menus/business/borrow.png') !important;
+}
+
+.menu-business-inventory {
+	background-image: url('../img/menus/business/inventory.png') !important;
+}
+
+.menu-business-install {
+	background-image: url('../img/menus/business/install.png') !important;
+}
+
+.menu-business-detector {
+	background-image: url('../img/menus/business/detector.png') !important;
+}
+
+.menu-business-verify {
+	background-image: url('../img/menus/business/verify.png') !important;
+}
+
+.menu-business-activate {
+	background-image: url('../img/menus/business/activate.png') !important;
+}
+
+.menu-business-employ {
+	background-image: url('../img/menus/business/employ.png') !important;
+}
+
+.menu-business-inspect {
+	background-image: url('../img/menus/business/inspect.png') !important;
+}
+
+.menu-business-maint {
+	background-image: url('../img/menus/business/maint.png') !important;
+}
+
+.menu-business-dismantle {
+	background-image: url('../img/menus/business/dismantle.png') !important;
+}
+
+.menu-business-insure {
+	background-image: url('../img/menus/business/insure.png') !important;
+}
+
+.menu-business-issue {
+	background-image: url('../img/menus/business/issue.png') !important;
+}
+
+.menu-business-receive {
+	background-image: url('../img/menus/business/receive.png') !important;
+}
+
+.menu-business-collect {
+	background-image: url('../img/menus/business/collect.png') !important;
+}
+
+.menu-business-payment {
+	background-image: url('../img/menus/business/payment.png') !important;
+}
+
+.menu-business-lend {
+	background-image: url('../img/menus/business/lend.png') !important;
+}
+
+.menu-business-back {
+	background-image: url('../img/menus/business/back.png') !important;
+}
+
+.menu-business-deduct {
+	background-image: url('../img/menus/business/deduct.png') !important;
+}
+
+.menu-business-deductscale {
+	background-image: url('../img/menus/business/deductscale.png') !important;
+}
+
+.menu-business-salary {
+	background-image: url('../img/menus/business/salary.png') !important;
+}
+
+.menu-business-cashflow {
+	background-image: url('../img/menus/business/cashflow.png') !important;
+}
+
+.menu-business-reimburse {
+	background-image: url('../img/menus/business/reimburse.png') !important;
+}
+
+.menu-business-financial {
+	background-image: url('../img/menus/business/financial.png') !important;
+}
+
+.menu-business-cashflow {
+	background-image: url('../img/menus/business/cashflow.png') !important;
+}
+
+.menu-business-incomeexpense {
+	background-image: url('../img/menus/business/incomeexpense.png') !important;
+}
+
+.menu-business-accountdue {
+	background-image: url('../img/menus/business/accountdue.png') !important;
+}
+
+.menu-business-accountpayable {
+	background-image: url('../img/menus/business/accountpayable.png') !important;
+}
+
+.menu-business-customermargin {
+	background-image: url('../img/menus/business/customermargin.png') !important;
+}
+
+.menu-business-equipmargin {
+	background-image: url('../img/menus/business/equipmargin.png') !important;
+}
+
+.menu-business-equipvacancyrate {
+	background-image: url('../img/menus/business/equipvacancyrate.png') !important;
+}
+
+.menu-business-practivacancyrate {
+	background-image: url('../img/menus/business/practivacancyrate.png') !important;
+}
+
+.menu-business-resume {
+	background-image: url('../img/menus/business/resume.png') !important;
+}
+
+.menu-business-credit {
+	background-image: url('../img/menus/business/credit.png') !important;
+}
+
+.menu-business-corpview {
+	background-image: url('../img/menus/business/corpview.png') !important;
+}
+
+.menu-business-equipblockup {
+	background-image: url('../img/menus/business/equipblockup.png') !important;
+}
+
+.menu-business-storehouse {
+	background-image: url('../img/menus/business/storehouse.png') !important;
+}
+
+.menu-business-verifyitem {
+	background-image: url('../img/menus/business/verifyitem.png') !important;
+}

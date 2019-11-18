@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.CustomerLinker" table="T_CUSTOMER_LINKER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="customerLinkerId" column="CUSTOMER_LINKER_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="customerId" type="java.lang.Long" column="CUSTOMER_ID" />
+		<property name="linkerType" type="java.lang.String" column="LINKER_TYPE" />
+		<property name="linker" type="java.lang.String" column="LINKER" />
+		<property name="duties" type="java.lang.String" column="DUTIES" />
+		<property name="tel" type="java.lang.String" column="TEL" />
+		<property name="officePhone" type="java.lang.String" column="OFFICE_PHONE" />
+		<property name="birthDate" type="java.lang.String" column="BIRTH_DATE" />
+		<property name="interests" type="java.lang.String" column="INTERESTS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

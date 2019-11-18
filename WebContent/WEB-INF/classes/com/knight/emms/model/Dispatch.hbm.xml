@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Dispatch" table="T_DISPATCH" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="dispatchId" column="DISPATCH_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dispatchSerial" type="java.lang.String" column="DISPATCH_SERIAL" />
+		<property name="dispatchTheme" type="java.lang.String" column="DISPATCH_THEME" />
+		<property name="deliveryEntId" type="java.lang.Long" column="DELIVERY_ENT_ID" />
+		<property name="deliveryEntName" type="java.lang.String" column="DELIVERY_ENT_NAME" />
+		<property name="deliveryAddress" type="java.lang.String" column="DELIVERY_ADDRESS" />
+		<property name="receiveEntId" type="java.lang.Long" column="RECEIVE_ENT_ID" />
+		<property name="receiveEntName" type="java.lang.String" column="RECEIVE_ENT_NAME" />
+		<property name="receiveAddress" type="java.lang.String" column="RECEIVE_ADDRESS" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="autocraneDepend" type="java.lang.String" column="AUTOCRANE_DEPEND" />
+		<property name="teams" type="java.lang.String" column="TEAMS" />
+		<property name="autocraneAmount" type="java.math.BigDecimal" column="AUTOCRANE_AMOUNT" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="startPlanDate" type="java.lang.String" column="START_PLAN_DATE" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="projectManager" type="java.lang.String" column="PROJECT_MANAGER" />
+		<property name="entManager" type="java.lang.String" column="ENT_MANAGER" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="contractSerial" type="java.lang.String" formula="(SELECT  C.CONTRACT_SERIAL
+                  FROM T_CONTRACT_LEASE C WHERE C.CONTRACT_ID = CONTRACT_ID)" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="competentDepartment" type="java.lang.String" formula="(SELECT CL.COMPETENT_DEPARTMET FROM T_CONTRACT_LEASE CL WHERE CL.CONTRACT_ID = CONTRACT_ID)" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT CL.PERMISSION_FLAG FROM T_CONTRACT_LEASE CL WHERE CL.CONTRACT_ID = CONTRACT_ID)" /> 
+		<property name="isTransport" type="java.lang.String" formula ="(SELECT CASE WHEN D.EFFECTIVE=1 AND D.DEL_FLAG=1 AND D.APPLYFOR_STATE=3 AND (D.DISPATCH_ID IN
+				(SELECT DISTINCT DC.DISPATCH_ID FROM T_DISPATCH_COMPON DC WHERE DC.COUNTS!=DC.INI_COUNTS) OR 
+				D.DISPATCH_ID NOT IN (SELECT DISPATCH_ID FROM T_DISPATCH_COMPON)) THEN '0' 
+				WHEN D.EFFECTIVE=0 AND D.DEL_FLAG=1 THEN '0'
+				WHEN D.APPLYFOR_STATE=0 OR D.APPLYFOR_STATE=1 OR D.APPLYFOR_STATE=2 THEN '0'
+				ELSE '1' END FROM T_DISPATCH D WHERE D.DISPATCH_ID=DISPATCH_ID)" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="dispatchEquipSet" cascade="all" inverse="false" lazy="true">
+			<key column="DISPATCH_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchEquip" />
+		</set>
+		<set name="dispatchComponSet" cascade="all" inverse="false" lazy="true" order-by="DISPATCH_COMPON_ID">
+			<key column="DISPATCH_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchCompon" />
+		</set>
+		<set name="dispatchPractiSet" cascade="all" inverse="false" lazy="true">
+			<key column="DISPATCH_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchPracti" />
+		</set>
+		<set name="dispatchAutocraneSet" cascade="all" inverse="false" lazy="true">
+			<key column="DISPATCH_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchAutocrane" />
+		</set>
+		<set name="towerCraneDispatchAllocateSet" cascade="all" inverse="false" lazy="true" where=" ALLOCATE_TYPE = 'T'" order-by="DISPATCH_ALLOCATE_ID DESC">
+			<key column="DISPATCH_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchAllocate" />
+		</set>
+		<set name="liftDispatchAllocateSet" cascade="all" inverse="false" lazy="true" where=" ALLOCATE_TYPE = 'S'" order-by="DISPATCH_ALLOCATE_ID DESC">
+			<key column="DISPATCH_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchAllocate" />
+		</set>
+	</class>
+</hibernate-mapping>

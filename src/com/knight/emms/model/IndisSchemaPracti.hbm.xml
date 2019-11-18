@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.IndisSchemaPracti" table="T_INDIS_SCHEMA_PRACTI" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="schemaPractiId" column="SCHEMA_PRACTI_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="schemaId" type="java.lang.Long" column="SCHEMA_ID" />
+		<property name="certId" type="java.lang.Long" column="CERT_ID" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="certNum" type="java.lang.String" column="CERT_NUM" />
+		<property name="practiKindwork" type="java.lang.String" column="PRACTI_KINDWORK" />
+	</class>
+</hibernate-mapping>

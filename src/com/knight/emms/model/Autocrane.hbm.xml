@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Autocrane" table="T_AUTOCRANE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="autocraneId" column="AUTOCRANE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="autocraneSerial" type="java.lang.String" column="AUTOCRANE_SERIAL" />
+		<property name="emEntName" type="java.lang.String" column="EM_ENT_NAME" />
+		<property name="inEntName" type="java.lang.String" column="IN_ENT_NAME" />
+		<property name="autocraneDepend" type="java.lang.String" column="AUTOCRANE_DEPEND" />
+		<property name="autocraneAmount" type="java.math.BigDecimal" column="AUTOCRANE_AMOUNT" />
+		<property name="paymentAmount" type="java.math.BigDecimal" column="PAYMENT_AMOUNT" />
+		<property name="balanceAmount" type="java.math.BigDecimal" column="BALANCE_AMOUNT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<set name="autocraneExpenseSet" cascade="all" inverse="false" lazy="true">
+			<key column="AUTOCRANE_ID" />
+			<one-to-many class="com.knight.emms.model.AutocraneExpense" />
+		</set>
+	</class>
+</hibernate-mapping>

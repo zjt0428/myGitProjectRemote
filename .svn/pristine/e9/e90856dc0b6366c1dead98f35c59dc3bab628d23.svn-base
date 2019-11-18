@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="equipFlow">
+	<!--获取合同中是否还有其他设备启用 -->
+	<select id="contract_equip_is_activate">
+	<![CDATA[
+		DECLARE @activateId BIGINT
+		SET @activateId = ?
+		SELECT EA.ACTIVATE_ID FROM T_EQUIPMENT_ACTIVATE EA WHERE EA.ACTIVATE_ID IN (
+			SELECT T.ACTIVATE_ID FROM T_EQUIPMENT_FLOW T 
+				WHERE EXISTS(SELECT * FROM T_EQUIPMENT_FLOW EF WHERE EF.ACTIVATE_ID = @activateId AND T.CONTRACT_ID = EF.CONTRACT_ID) 
+						AND T.ACTIVATE_ID <> @activateId
+		) AND EA.DEL_FLAG = '1' AND EA.EFFECTIVE = '1'
+	]]>
+	</select>
+</mapper>

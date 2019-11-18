@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Supplier" table="T_SUPPLIER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="supplierId" column="SUPPLIER_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="supplierName" type="java.lang.String" column="SUPPLIER_NAME" />
+		<property name="unitType" type="java.lang.String" column="UNIT_TYPE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="tel" type="java.lang.String" column="TEL" />
+		<property name="mainBusiness" type="java.lang.String" column="MAIN_BUSINESS" />
+		<property name="regCapital" type="java.math.BigDecimal" column="REG_CAPITAL" />
+		<property name="birthDate" type="java.lang.String" column="BIRTH_DATE" />
+		<property name="businessArea" type="java.lang.String" column="BUSINESS_AREA" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="linkMan" type="java.lang.String" column="LINK_MAN" />
+		<property name="linkManPhone" type="java.lang.String" column="LINK_MAN_PHONE" />
+		<many-to-one name="supplierLinker" column="SUPPLIER_LINKER_ID" class="com.knight.emms.model.SupplierLinker" fetch="join" />
+		<many-to-one name="supplierAccount" column="SUPPLIER_ACCOUNT_ID" class="com.knight.emms.model.SupplierAccount" fetch="join" />
+		<set name="supplierLinkerSet" lazy="true" cascade="all" inverse="false">
+			<key column="SUPPLIER_ID"></key>
+			<one-to-many class="com.knight.emms.model.SupplierLinker" />
+		</set>
+		<set name="supplierAccountSet" lazy="true" cascade="all" inverse="false">
+			<key column="SUPPLIER_ID"></key>
+			<one-to-many class="com.knight.emms.model.SupplierAccount" />
+		</set>
+	</class>
+</hibernate-mapping>

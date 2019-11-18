@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="COMPONENT_STOCKS_RPT" language="groovy" pageWidth="1008" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="029eea4d-fcb1-49e8-9f7e-b349f57892db">
+	<property name="ireport.zoom" value="1.210000000000001"/>
+	<property name="ireport.x" value="570"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="YEARMTH_BEG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[190001]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPON_CAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPON_GE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPON_SP" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="YEARMTH_END" class="java.lang.String"/>
+	<parameter name="DIMENSIONS" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @ym_beg CHAR(6)
+DECLARE @ym_end CHAR(6)
+DECLARE @ymds DATE
+DECLARE @ymde DATE
+DECLARE @lastm CHAR(6)
+DECLARE @nextm CHAR(6)
+DECLARE @componCat CHAR(6)
+DECLARE @componGe CHAR(6)
+DECLARE @componSp CHAR(6)
+DECLARE @dimensions VARCHAR(64)
+
+SET @ym_beg =  $P{YEARMTH_BEG}
+SET @ym_end =  $P{YEARMTH_END}
+SET @componCat = $P{COMPON_CAT}
+SET @componGe =  $P{COMPON_GE}
+SET @componSp = $P{COMPON_SP}
+SET @dimensions = $P{DIMENSIONS}
+
+SET @ymds = dateadd(month,0,@ym_beg+'01')
+SET @ymde = DATEADD(Day,-1,CONVERT(char(8),DATEADD(Month,1,@ym_end+'01'),120)+'1')
+SET @lastm = CONVERT(varchar(6),DateAdd(m,-1,@ymds),112)
+SET @nextm = CONVERT(varchar(6),@ym_end,112)
+
+select COMPON_SERIAL,
+	   COMPON_CATEGORY,
+	   COMPON_GENERIC,
+	   COMPON_SPECIFIC,
+	   DIMENSIONS,
+	   COMPON_CODE,
+	   CALCULATE,
+	   LQUANTITY LQUANTITY,
+	   LSUMFEE,
+	   SUM(PQUANTITY) PQUANTITY,
+	   SUM(PSUMFEE) PSUMFEE,
+	   EM_COUNTS,
+	   EM_FEE,
+	   (LQUANTITY+SUM(PQUANTITY)-EM_COUNTS) CQUANTITY,
+	   (LSUMFEE+SUM(PSUMFEE)-EM_FEE) CSUMFEE,
+	   UNITPRICE
+			from (
+				select c.COMPON_SERIAL COMPON_SERIAL,
+				(select value from BM_REPERTORY_CATEGORY where code=c.COMPON_CATEGORY) COMPON_CATEGORY,
+				(select value from BM_COMPONENT_GENERIC where code=c.COMPON_GENERIC) COMPON_GENERIC,
+				(select value from BM_COMPONENT_SPECIFIC where code=c.COMPON_SPECIFIC) COMPON_SPECIFIC,
+				ISNULL(c.DIMENSIONS,'') DIMENSIONS,
+				ISNULL(c.COMPON_CODE,'') COMPON_CODE,
+				ISNULL(c.CALCULATE,'') CALCULATE,
+				isnull(lcs.QUANTITY,c.PERIOD_RESERVE) LQUANTITY,
+				Cast(isnull(isnull(lcs.QUANTITY,c.PERIOD_RESERVE)*C.UNITPRICE,0) as   numeric(12,2)) LSUMFEE,
+				isnull(pb.QUANTITY,0) PQUANTITY,
+				Cast(isnull(pb.QUANTITY*C.UNITPRICE,0) as   numeric(12,2)) PSUMFEE,
+				isnull(EM.COUNTS,0) EM_COUNTS,
+				Cast(isnull(EM.COUNTS*C.UNITPRICE,0) as   numeric(12,2)) EM_FEE,
+				Cast(isnull(C.UNITPRICE,0) as   numeric(12,2)) UNITPRICE
+				from T_COMPONENT C
+				LEFT JOIN (SELECT COMPON_ID,YEARMTH,MAX(QUANTITY) QUANTITY,MAX(SUM_FEE) SUM_FEE FROM T_COMPONT_STOCKS CS GROUP BY CS.COMPON_ID,CS.YEARMTH ) lcs ON lcs.COMPON_ID=C.COMPON_ID and lcs.yearmth=@lastm
+				LEFT JOIN (SELECT COMPON_ID,QUANTITY FROM T_PURCHASE_BRIEF PBT,T_PURCHASE P WHERE P.PURCHASE_ID = PBT.PURCHASE_ID and P.PROVIDED_DATE between @ymds and @ymde AND P.APPLYFOR_STATE = 6) pb ON pb.COMPON_ID=C.COMPON_ID
+				LEFT JOIN (select COMPON_ID,SUM(COUNTS) as counts FROM (
+				select COMPON_ID,COUNTS from T_COMPONENT_DIARY where RELATE_MODULE in('EQUIP_INSTALL','EQUIP_EMPLOY')
+				and START_DATE between @ymds and @ymde
+				UNION ALL
+				select rc.COMPON_ID COMPON_ID,rc.COUNTS COUNTS from T_EQUIPMENT_REPAIR_COMPON rc,T_EQUIPMENT_REPAIR r
+				where r.REPAIR_ID=rc.REPAIR_ID and rc.TYPE=1 and r.PROVIDED_DATE between @ymds and @ymde
+				UNION ALL
+				select pc.COMPON_ID COMPON_ID,pc.QUANTITY COUNTS from T_PICKUP p,T_PICKUP_COMPONENT pc
+				where p.PICKUP_DATE between @ymds and @ymde and p.APPLYFOR_STATE = 3 and p.PICKUP_ID = pc.PICKUP_ID
+				UNION ALL
+				select bc.COMPON_ID COMPON_ID,bc.BORROW_COUNTS COUNTS from T_BORROW b,T_BORROW_COMPONENT bc
+				where b.PROVIDED_DATE between @ymds and @ymde and b.APPLYFOR_STATE = 3 and b.BORROW_ID = bc.BORROW_ID
+				) tmp group by tmp.COMPON_ID ) EM
+				ON EM.COMPON_ID=C.COMPON_ID
+				where (C.COMPON_CATEGORY=@componCat OR @componCat IS NULL OR @componCat='')
+				AND (C.COMPON_GENERIC=@componGe OR @componGe IS NULL OR @componGe='')
+				AND (C.COMPON_SPECIFIC=@componSp OR @componSp IS NULL OR @componSp='')
+				AND (C.DIMENSIONS = @dimensions OR @dimensions IS NULL OR @dimensions='')
+				AND (C.DEL_FLAG = 1)
+				) AA
+				GROUP BY COMPON_SERIAL,COMPON_CATEGORY,COMPON_GENERIC,COMPON_SPECIFIC,DIMENSIONS,COMPON_CODE,CALCULATE,LQUANTITY,LSUMFEE,EM_COUNTS,EM_FEE,UNITPRICE]]>
+	</queryString>
+	<field name="COMPON_SERIAL" class="java.lang.String"/>
+	<field name="COMPON_CATEGORY" class="java.lang.String"/>
+	<field name="COMPON_GENERIC" class="java.lang.String"/>
+	<field name="COMPON_SPECIFIC" class="java.lang.String"/>
+	<field name="DIMENSIONS" class="java.lang.String"/>
+	<field name="COMPON_CODE" class="java.lang.String"/>
+	<field name="CALCULATE" class="java.lang.String"/>
+	<field name="LQUANTITY" class="java.lang.Integer"/>
+	<field name="LSUMFEE" class="java.math.BigDecimal"/>
+	<field name="PQUANTITY" class="java.lang.Integer"/>
+	<field name="PSUMFEE" class="java.math.BigDecimal"/>
+	<field name="EM_COUNTS" class="java.lang.Integer"/>
+	<field name="EM_FEE" class="java.math.BigDecimal"/>
+	<field name="CQUANTITY" class="java.lang.Integer"/>
+	<field name="CSUMFEE" class="java.math.BigDecimal"/>
+	<field name="UNITPRICE" class="java.lang.String"/>
+	<title>
+		<band height="73" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="1205" height="73" uuid="ef37aeba-ca9d-464e-b863-d242002dcfcb"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="36" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{YEARMTH_BEG}.substring(0,4)+"年"+$P{YEARMTH_BEG}.substring(4,6)+"月至"+$P{YEARMTH_END}.substring(0,4)+"年"+$P{YEARMTH_END}.substring(4,6) +" 库存统计报表"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="171" height="54" uuid="f7334e3c-4dae-47d6-a159-f96834fd3aaa"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[配件编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="0" width="75" height="54" uuid="da1fb73c-aca4-47b4-b83d-e45791f32587"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[配件类别]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="246" y="0" width="115" height="54" uuid="d09c8fd8-58d5-4dbf-a2b2-7265b1106d30"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[配件名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="0" width="125" height="54" uuid="7c6c8ec6-7a59-4c4c-9966-4d1aacd1d538"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[配件型号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="486" y="0" width="91" height="54" uuid="2fce7660-ff5a-4740-9483-3fee4818ceb5"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[配件规格]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="577" y="0" width="103" height="54" uuid="720b5d7a-2e3e-4303-b82d-fce01aae0e86"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[配件代码]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="0" width="55" height="54" uuid="c3a5551b-d0ae-4787-9562-d3cbfb525c02"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="790" y="0" width="55" height="54" uuid="3c69c059-597a-42f1-8dc9-46175d80cbf0"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[期初结
+存数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="845" y="0" width="55" height="54" uuid="ef910a28-a02c-4185-80ee-1a984acd0568"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[期初结
+存金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="900" y="0" width="55" height="54" uuid="6cafb15d-ac8b-48ef-af0f-8e598eec7c0c"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[进货
+数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="955" y="0" width="50" height="54" uuid="c4ff3427-264f-431c-a172-d704d86d8012"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[进货
+金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1005" y="0" width="50" height="54" uuid="100eb041-1202-4634-a9e0-b66741e555b3"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[出库
+数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1055" y="0" width="50" height="54" uuid="480a1051-e109-44f9-9f21-1bac901ddfff"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[出库
+金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1105" y="0" width="50" height="54" uuid="2bfdc5ba-f4cb-4c1a-8a67-98a020e006ca"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[期末结
+存数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1155" y="0" width="50" height="54" uuid="3ba5e6d5-66ac-4e27-95e9-1f40b2521b04"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[期末结
+存金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="735" y="0" width="55" height="54" uuid="4755c7a5-f69d-429d-a74c-406572376f40"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[单价]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="49" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="171" height="49" uuid="76644d97-a1b0-4e5d-8d90-ca1a44268f2f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_SERIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="171" y="0" width="75" height="49" uuid="c28eb359-bc83-4b6d-a9e9-69d1ee90ff0a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_CATEGORY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="246" y="0" width="115" height="49" uuid="b7653ebc-4dce-4074-a09f-017901dbe70f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_GENERIC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="361" y="0" width="125" height="49" uuid="0e080fbd-5aef-4ca4-9e6c-651fef7bfa9e"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_SPECIFIC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="486" y="0" width="91" height="49" uuid="d925acb7-4f8a-4505-89ee-d54dca82818f"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIMENSIONS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="577" y="0" width="103" height="49" uuid="07b0738a-4620-4809-86a4-4d0ed17a04b4"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMPON_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="680" y="0" width="55" height="49" uuid="cdc14b30-ab84-4183-af8b-e6637e2a5b76"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CALCULATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="790" y="0" width="55" height="49" uuid="afb4d4c5-9379-48be-a542-8f2e5b892e19"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LQUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="845" y="0" width="55" height="49" uuid="aa732eff-acf3-4f8f-a9e6-97915f820e12"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LSUMFEE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="900" y="0" width="55" height="49" uuid="73efa2a2-23e2-4934-a7de-e89b92a4d699"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PQUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="955" y="0" width="50" height="49" uuid="5d735161-82ae-4c2d-b6da-bbd093ad9c48"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PSUMFEE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1005" y="0" width="50" height="49" uuid="826cad35-94a2-446e-a987-8d69fb3b64b0"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EM_COUNTS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1055" y="0" width="50" height="49" uuid="cc540eaf-0957-4c92-ae3e-ebfa102bc51a"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EM_FEE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1105" y="0" width="50" height="49" uuid="22f37f7d-dc6f-46d8-94f9-da550540690d"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CQUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1155" y="0" width="50" height="49" uuid="b622b903-9603-4e60-aaab-7e296ca353ab"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CSUMFEE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="735" y="0" width="55" height="49" uuid="c7777db1-995f-4354-afcc-9fb94565cd38"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UNITPRICE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MaterialsAmortization" table="T_MATERIALS_AMORTIZATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="amortizationId" column="AMORTIZATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="totalAmortizationMonths" type="java.lang.String" column="TOTAL_AMORTIZATION_MONTHS" />
+		<property name="yearAmortizationRate" type="java.lang.String" column="YEAR_AMORTIZATION_RATE" />
+		<many-to-one name="materialsCommodity" column="COMMODITY_ID" class="com.knight.emms.model.MaterialsCommodity" fetch="join" />
+	</class>
+</hibernate-mapping>

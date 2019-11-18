@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipEmploy" table="T_EQUIPMENT_EMPLOY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="employId" column="EMPLOY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="employSerial" type="java.lang.String" column="EMPLOY_SERIAL" />
+		<property name="employTheme" type="java.lang.String" column="EMPLOY_THEME" />
+		<property name="employDate" type="java.util.Date" column="EMPLOY_DATE" />
+		<property name="approachDate" type="java.util.Date" column="APPROACH_DATE" />
+		<property name="principalId" type="java.lang.Long" column="PRINCIPAL_ID" />
+		<property name="principal" type="java.lang.String" column="PRINCIPAL" />
+		<property name="principalTel" type="java.lang.String" column="PRINCIPAL_TEL" />
+		<property name="captainId" type="java.lang.Long" column="CAPTAIN_ID" />
+		<property name="captain" type="java.lang.String" column="CAPTAIN" />
+		<property name="captainTel" type="java.lang.String" column="CAPTAIN_TEL" />
+		<property name="partake" type="java.lang.String" column="PARTAKE" />
+		<property name="endPlanDate" type="java.util.Date" column="END_PLAN_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<set name="practiDiarySet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_EMPLOY'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.PractiDiary" />
+		</set>
+		<set name="componDiarySet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_EMPLOY'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.ComponDiary" />
+		</set>
+	</class>
+</hibernate-mapping>

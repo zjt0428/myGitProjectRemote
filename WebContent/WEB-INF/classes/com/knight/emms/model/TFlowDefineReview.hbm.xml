@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-27 16:26:51 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.TFlowDefineReview" table="T_FLOW_DEFINE_REVIEW" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="defineId" type="java.lang.Long">
+            <column name="DEFINE_ID" />
+            <generator class="native" />
+        </id>
+        <property name="flowId" type="java.lang.Long">
+            <column name="FLOW_ID" not-null="true" />
+        </property>
+        <property name="nid" type="java.lang.Long">
+            <column name="NID" not-null="true" />
+        </property>
+        <property name="seq" type="java.lang.Long">
+            <column name="SEQ" not-null="true"/>
+        </property>
+        <property name="relateId" type="java.lang.Long">
+            <column name="RELATE_ID" not-null="true" />
+        </property>
+        <property name="relateModule" type="java.lang.String">
+            <column name="RELATE_MODULE" length="16" not-null="true" />
+        </property>
+        <property name="state" type="java.lang.String">
+            <column name="STATE" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,313 @@
+html,body{
+    font-family: "Microsoft YaHei";
+    min-width: 1040px;
+    font-size: 14px;
+}
+
+input{
+    font-family: "Microsoft YaHei";
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+
+.container{
+    margin: 0 auto;
+    width: 1040px;
+}
+
+.head{
+    height: 80px;
+    background: #0174e6;
+    color: #fff;
+}
+
+.head .name{
+    line-height: 80px;
+    font-size: 32px;
+    margin-left:-130px;
+}
+
+.head .logo{
+	float:left;
+	margin-top:20px;
+	margin-left:-200px
+}
+
+.head .bureau{
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.focusMap{
+    height: 554px;
+    background: url("../images/loginBg.jpg") center no-repeat;
+}
+
+.loginBox{
+    float: right;
+    border-radius: 5px;
+    margin-top: 70px;
+    width: 460px;
+    height: 400px;
+    background: #ffffff;
+    overflow: hidden;
+    box-shadow: rgba(0,0,0,.2) 0 8px 20px;
+}
+
+.loginBox .line{
+    margin: 20px 0 0 50px;
+    position: relative;
+}
+
+.loginBox .icon-name,.loginBox .icon-pw{
+    background: url("../images/_login.png") no-repeat;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 23px;
+    height: 28px;
+}
+
+.loginBox .icon-pw{
+    background-position: -23px 0;
+}
+
+.loginBox .title{
+    height: 74px;
+    line-height: 74px;
+    background: #f4f4f4;
+    text-align: center;
+    font-size: 24px;
+    color: #000;
+    font-weight: bold;
+}
+
+.loginBox input,.loginBox .submit{
+    border-radius: 1px;
+    padding: 0 15px 0 55px;
+    border: solid 1px #ddd;
+    width: 288px;
+    height: 48px;
+    font-size: 18px;
+    color: #999;
+}
+
+.loginBox input::-webkit-input-placeholder {
+    color: #999;
+}
+.loginBox input:-moz-placeholder {
+    color: #999;
+}
+.loginBox input::-moz-placeholder {
+    color: #999;
+}
+.loginBox input:-ms-input-placeholder {
+    color: #999;
+}
+
+.loginBox input:focus{
+    border-color: #00a3ff;
+}
+
+.loginBox .name{
+    margin-top: 40px;
+}
+
+.loginBox .submit{
+    border: none;
+    padding: 0;
+    margin-top: 0;
+    width: 360px;
+    color: #fff;
+    background: #00a3ff;
+    cursor: pointer;
+}
+
+.loginBox .submit:hover{
+    background: #078aff;
+}
+
+.loginBox .submit:focus{
+    border: none;
+}
+
+.loginBox .warn{
+    line-height: 30px;
+    padding: 0 50px;
+    text-align: right;
+    color: #ff3d43;
+    font-size: 12px;
+}
+
+.loginBox .hint{
+    padding-left: 50px;
+    margin-top: 24px;
+    line-height: 24px;
+    font-size: 16px;
+    color: #666;
+}
+
+.loginBox .download{
+  color: #0085ff;
+}
+
+.loginBox .download:hover{
+    text-decoration: underline;
+}
+
+.notice{
+    margin-top: 38px;
+    box-shadow: #dcdcdc 0 6px 6px;
+    -ms-box-shadow: #dcdcdc 0 6px 6px;
+    -webkit-box-shadow: #dcdcdc 0 6px 6px;
+}
+
+.noticeTitle{
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    background: #00a3ff;
+    position: relative;
+    z-index: 2;
+}
+
+.noticeTitle a{
+    float: left;
+    padding: 0 20px;
+    height: 50px;
+    transition: background .5s;
+    -ms-transition: background .5s;
+    -webkit-transition: background .5s;
+    font-size: 18px;
+    color: #fff;
+}
+
+.noticeTitle a:hover,.noticeTitle a.active{
+    background: #ffd33b;
+}
+
+.noticeList{
+    margin-top: -1px;
+    border: solid #f1f1f1 1px
+}
+
+.noticeList .twig{
+    border-top: solid 1px #efefef;
+    margin: 0 10px;
+    margin-top: -1px;
+    overflow: hidden;
+    height: 62px;
+    line-height: 62px;
+}
+
+.noticeList .square{
+    float: left;
+    margin: 29px 8px;
+    width: 4px;
+    height: 4px;
+    background: #ddd;
+}
+
+.noticeList .text{
+    float: left;
+    width: 780px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    color: #666;
+    transition: color .5s;
+    -ms-transition: color .5s;
+    -webkit-transition: color .5s;
+}
+
+.noticeList .text:hover{
+    color: #00a3ff;
+}
+
+.noticeList .time{
+    float: right;
+    font-size: 12px;
+    color: #999;
+}
+
+.footer{
+   
+    height: 180px;
+    line-height: 160px;
+    background: #0174e6;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+}
+
+.footer a{
+    color: #3e3e3e;
+    transition: color .5s;
+    -ms-transition: color .5s;
+    -webkit-transition: color .5s;
+}
+
+.footer a:hover{
+    color: #00a3ff;
+}
+
+.entry .footer{
+    margin-top: 0px;
+}
+
+.entryMap{
+    background: url("../images/entyrBg.jpg") center no-repeat;
+    height: 591px;
+    overflow: hidden;
+}
+
+.entryList{
+    overflow: hidden;
+    margin-top: 134px;
+    margin-left: -50px;
+    padding-left: 50px;
+    width: 1080px;
+    height: 400px;
+}
+
+.entryList .twig{
+    border-radius: 8px;
+    float: left;
+    margin-right: 35px;
+    height: 311px;
+    width: 233px;
+    background: url("../images/entryList.png") no-repeat;
+    cursor: pointer;
+    box-shadow: rgba(0,0,0,.2) 0 30px 50px;
+    transition: transform .5s;
+}
+
+.entryList .twig:hover{
+    transform: scale(.9,.9);
+}
+
+.entryList .child2{
+    background-position: -233px 0;
+}
+
+.entryList .child3{
+    background-position: -466px 0;
+}
+
+.entryList .child4{
+    background-position: -699px 0;
+}
+
+.entryList p{
+    margin-top: 178px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 18px;
+    color: #fff;
+}
+

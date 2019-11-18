@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="amount">
+	<!-- 收款管理-关联业务已收金额 -->
+	<select id="relate_receive">
+	<![CDATA[
+		SELECT SUM(R.RECEIVE_AMOUNT) PRESENT_RECEIVEMENT
+		  FROM T_AMOUNT_RECEIVE R
+		 WHERE R.RELATE_ID = ?
+		   AND R.RELATE_MODULE = ?
+		   AND R.APPLYFOR_STATE = '3'
+	]]>
+	</select>
+	<!-- 收款管理-关联业务回款计划总金额 -->
+	<select id="relate_receivement_amount">
+	<![CDATA[
+		SELECT SUM(RECEIVEMENT) FROM T_RECEIVEMENT WHERE RELATE_ID = ? AND RELATE_MODULE = ?
+	]]>
+	</select>
+	<!-- 付款管理-关联业务已付金额 -->
+	<select id="relate_pay">
+	<![CDATA[
+		SELECT SUM(P.PAYMENT_AMOUNT) PRESENT_PAYMENT
+		  FROM T_AMOUNT_PAYMENT P
+		 WHERE P.RELATE_ID = ?
+		   AND P.RELATE_MODULE = ?
+		   AND P.APPLYFOR_STATE = '3'
+	]]>
+	</select>
+	<!-- 付款管理-关联业务已付金额 -->
+	<select id="relate_instalment_amount">
+	<![CDATA[
+		SELECT SUM(PAYMENT) FROM T_INSTALMENT WHERE RELATE_ID = ? AND RELATE_MODULE = ?
+	]]>
+	</select>
+</mapper>

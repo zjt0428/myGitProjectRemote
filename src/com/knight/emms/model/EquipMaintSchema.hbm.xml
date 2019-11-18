@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipMaintSchema" table="T_EQUIPMENT_MAINT_SCHEMA" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="maintSchemaId" column="MAINT_SCHEMA_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="flowId" type="java.lang.Long" column="FLOW_ID" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="cycleActivateDate" type="java.util.Date" column="CYCLE_ACTIVATE_DATE" />
+		<property name="cycleDays" type="java.lang.Integer" column="CYCLE_DAYS" />
+		<property name="timesInCycle" type="java.lang.Integer" column="TIMES_IN_CYCLE" />
+		<property name="maintType" type="java.lang.String" column="MAINT_TYPE" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="maintTimes" type="java.lang.Integer" column="MAINT_TIMES" />
+		<property name="cycleTimes" type="java.lang.Integer" column="CYCLE_TIMES" />
+		<property name="cycleDaysTimes" type="java.lang.Integer" column="CYCLE_DAYS_TIMES" />
+		<property name="thisStartCycleDate" type="java.util.Date" column="THIS_START_CYCLE_DATE" />
+		<property name="thisEndCycleDate" type="java.util.Date" column="THIS_END_CYCLE_DATE" />
+		<property name="nextFormTime" type="java.util.Date" column="NEXT_FORM_TIME" />
+		<property name="nextStartCycleDate" type="java.util.Date" column="NEXT_START_CYCLE_DATE" />
+		<property name="active" type="java.lang.String" column="ACTIVE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<!-- <many-to-one name="equipDiary" column="EQUIP_DIARY_ID" class="com.knight.emms.model.EquipDiary" fetch="join" cascade="none" lazy="false" /> -->
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" cascade="none" lazy="false" />
+		<set name="maintSchemaStandardSet" cascade="none" lazy="true" inverse="true" where=" RELATE_MODULE='EQUIP_MAINT_SCHEMA' ">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.VerifyStandard" />
+		</set>
+	</class>
+</hibernate-mapping>

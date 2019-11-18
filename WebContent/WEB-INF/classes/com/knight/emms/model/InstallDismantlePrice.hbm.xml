@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-21 10:05:06 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.InstallDismantlePrice" table="T_INSTALL_DISMANTLE_PRICE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+        <id name="priceId" type="java.lang.Long">
+            <column name="PRICE_ID" />
+            <generator class="native" />
+        </id>
+        <property name="belongToArea" type="java.lang.String">
+            <column name="BELONG_TO_AREA" length="16" />
+        </property>
+        <property name="equipSpecific" type="java.lang.String">
+            <column name="EQUIP_SPECIFIC" length="6" not-null="true" />
+        </property>
+        <property name="installDismantleType" type="java.lang.String">
+            <column name="INSTALL_DISMANTLE_TYPE" length="16" not-null="true" />
+        </property>
+        <property name="measurementUnit" type="java.lang.String">
+            <column name="MEASUREMENT_UNIT" length="32" not-null="true" />
+        </property>
+        <property name="projectPrice" type="java.lang.Long">
+            <column name="PROJECT_PRICE" />
+        </property>
+        <property name="teamPrice" type="java.lang.Long">
+            <column name="TEAM_PRICE" />
+        </property>
+        <property name="delFlag" type="java.lang.String">
+            <column name="DEL_FLAG" length="1" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

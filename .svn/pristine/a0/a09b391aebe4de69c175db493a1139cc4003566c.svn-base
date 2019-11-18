@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.TeamsAccountOther" table="T_TEAMS_ACCOUNT_OTHER" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="accountOthereId" column="ACCOUNT_OTHERE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="teamsAccountId" type="java.lang.Long" column="TEAMS_ACCOUNT_ID" />
+		<property name="otherName" type="java.lang.String" column="OTHER_NAME" />
+		<property name="specificName" type="java.lang.String" column="SPECIFIC_NAME" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="measurement" type="java.lang.String" column="MEASUREMENT" />
+		<property name="accountPrice" type="java.math.BigDecimal" column="ACCOUNT_PRICE" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="materials">
+	<!-- 出库查询-->
+	<select id="out_stock">
+	<![CDATA[
+		UPDATE T_CORP_CERT SET DEFAULT_CERT = '0' WHERE CORP_ID = ? AND CERT_ID <> ?
+	]]>
+	</select>
+	<!-- 合同树-->
+	<select id="paEnt_equip">
+	<![CDATA[
+		SELECT PA_ENT,PA_ENT_NAME FROM T_CONTRACT_LEASE GROUP BY PA_ENT,PA_ENT_NAME
+	]]>
+	</select>
+	<select id="paEnt_materials">
+	<![CDATA[
+		SELECT PA_ENT,PA_ENT_NAME FROM T_CONTRACT_MATERIALS GROUP BY PA_ENT,PA_ENT_NAME
+	]]>
+	</select>
+	<select id="paEnt_truck">
+	<![CDATA[
+		SELECT PA_ENT,PA_ENT_NAME FROM T_CONTRACT_MATERIALS GROUP BY PA_ENT,PA_ENT_NAME
+	]]>
+	</select>
+	<!-- 根据paEnt查合同-->
+	<select id="equip_list">
+	<![CDATA[
+		SELECT CONTRACT_ID,CONTRACT_THEME FROM T_CONTRACT_LEASE WHERE PA_ENT = ? ORDER BY CONTRACT_ID DESC
+	]]>
+	</select>
+	<select id="materials_list">
+	<![CDATA[
+		SELECT CONTRACTMA_ID AS CONTRACT_ID,CONTRACT_THEME FROM T_CONTRACT_MATERIALS WHERE PA_ENT = ? ORDER BY CONTRACTMA_ID DESC
+	]]>
+	</select>
+	<select id="truck_list">
+	<![CDATA[
+		SELECT CONTRACTMA_ID AS CONTRACT_ID,CONTRACT_THEME FROM T_CONTRACT_MATERIALS WHERE PA_ENT = ? ORDER BY CONTRACTMA_ID DESC
+	]]>
+	</select>
+	
+	
+	<!-- 周材仓库人员关联查询-->
+	<select id="basedepot_user_list">
+	<![CDATA[
+		SELECT TU.JOIN_ID joinId,AU.USERID userId, AU.STATUS status,AU.USERNAME
+			username,AU.FULLNAME fullname,AU.MOBILE phone from T_BASEDEPOT_JOIN_USER TU
+			LEFT JOIN T_BASE_DEPOT TH ON TH.DEPOT_ID =TU.DEPOT_ID
+			LEFT JOIN APP_USER AU ON AU.USERID = TU.USER_ID
+			WHERE TU.DEPOT_ID = ?
+	]]>
+	</select>
+	
+	<!--根据userId查关联的基地仓库-->
+	<select id="basedepot_join_user">
+	<![CDATA[
+		SELECT BD.DEPOT_ID AS 'depotId',BD.DEPOT_NAME AS 'depotName',BD.LINKMAN AS 'linkman',BD.ADDRESS AS 'address',BD.DESCRIPTION AS 'description'
+		FROM T_BASEDEPOT_JOIN_USER BJ INNER JOIN T_BASE_DEPOT BD ON BJ.DEPOT_ID = BD.DEPOT_ID WHERE BD.DEL_FLAG=1 AND BJ.USER_ID=? AND BD.DEPOT_NAME LIKE ?
+	]]>
+	</select>
+	
+	<!-- 查询最新的【丢失赔偿】的丢失编号-->
+	<!-- SELECT TOP 1 LOST_ID,LOST_SERIAL,SUBSTRING(LOST_SERIAL, CHARINDEX('-', LOST_SERIAL)+1, 20) AS 'subLostSerial' FROM T_LOST_COMPENSATION 
+			WHERE LOST_SERIAL LIKE '%-'+@SERIAL+'%' ORDER BY 'subLostSerial' DESC-->
+	<select id="latest_lostSerial">
+	<![CDATA[
+		DECLARE @SERIAL VARCHAR(10)
+		SET @SERIAL = ?
+		SELECT TOP 1 LOST_ID,LOST_SERIAL FROM T_LOST_COMPENSATION WHERE LOST_SERIAL LIKE '%'+@SERIAL+'%' ORDER BY LOST_ID DESC
+	]]>
+	</select>
+	<!-- 查询最新的【租借丢失赔偿】的丢失编号-->
+	<select id="leased_latest_lostSerial">
+	<![CDATA[
+		DECLARE @SERIAL VARCHAR(10)
+		SET @SERIAL = ?
+		SELECT TOP 1 LOST_ID,LOST_SERIAL FROM T_LEASED_LOST_COMPENSATION WHERE LOST_SERIAL LIKE '%'+@SERIAL+'%' ORDER BY LOST_ID DESC
+	]]>
+	</select>
+	<!-- 根据租借合同id查询租借丢失清单-->
+	<select id="leasedLostDetail_by_leasedId">
+	<![CDATA[
+		DECLARE @LEASED_ID BIGINT
+		DECLARE @START_DATE VARCHAR(20)
+		DECLARE @END_DATE VARCHAR(20)
+		SET @LEASED_ID = ?
+		SET @START_DATE = ?
+		SET @END_DATE = ?
+		SELECT 
+			LC.COMPENSATION_DATE 'receiptDate',
+			'租借丢失赔偿' 'receiptType',
+			LC.LOST_SERIAL 'relateSerial',
+			LCD.COMMODITY 'commodity',
+			LCD.SPECIFICATIONS 'specifications',
+			LCD.UNIT 'unit',
+			LCD.LOST_QUANTITY 'quantity',
+			LCD.SUPPLEMENT_QUANTITY 'supplementUnit',
+			LCD.SUPPLEMENT_UNIT 'supplementQuantity',
+			LCD.COMPENSATION_COSTS 'compensationUnit',
+			LCD.TOTAL_COSTS 'amount' 
+		FROM T_LEASED_LOST_COMPENSATION LC 
+		INNER JOIN T_LEASED_LOST_COMPENSATION_DETAIL LCD 
+		ON LC.LOST_ID=LCD.LOST_ID WHERE LC.DEL_FLAG=1 
+		AND LC.APPLYFOR_STATE=3 AND LEASE_ID = @LEASED_ID
+		AND LC.COMPENSATION_DATE>=@START_DATE
+		AND LC.COMPENSATION_DATE<=@END_DATE
+	]]>
+	</select>
+		<!--查询用户关联的周材合同-->
+	<select id="user_contract_list">
+	<![CDATA[
+		DECLARE @start INT
+		DECLARE @limit INT
+		DECLARE @userId BIGINT
+		DECLARE @pbEntName VARCHAR(100)
+		DECLARE @paEntName VARCHAR(100)
+		DECLARE @contractSerial VARCHAR(100)
+		DECLARE @contractCategory VARCHAR(10)
+		DECLARE @projectName VARCHAR(160)
+		DECLARE @competentDepartment VARCHAR(100)
+		DECLARE @province VARCHAR(10)
+		DECLARE @city VARCHAR(10)
+		DECLARE @county VARCHAR(10)
+		DECLARE @applyforState VARCHAR(32)
+		SET @start=?
+		SET @limit=?
+		SET @userId=?
+		SET @pbEntName=?
+		SET @paEntName=?
+		SET @contractSerial=?
+		SET @contractCategory=?
+		SET @projectName=?
+		SET @competentDepartment=?
+		SET @province=?
+		SET @city=?
+		SET @county=?
+		SET @applyforState=?
+		;WITH QUERY AS(
+			SELECT 
+			ROW_NUMBER() OVER (ORDER BY CJU.JOIN_ID,CM.CONTRACTMA_ID DESC) AS 'row',
+			CJU.JOIN_ID 'joinId',					--中间表id
+			CM.CONTRACTMA_ID 'contractmaId',		--合同id
+			CM.CONTRACT_NUMBER 'contractNumber',	--合同流水号
+			CM.CONTRACT_SERIAL 'contractSerial',  --合同编号
+			CM.CONTRACT_THEME 'contractTheme',		--合同主题
+			CM.CONTRACT_CATEGORY 'contractCategory', --合同类别
+			CM.APPLYFOR_STATE 'applyforState',			--状态
+			CM.PROJECT_ID 'projectId',
+			CM.PROJECT_NAME 'projectName',
+			CM.ADDRESS 'address',
+			CM.PA_ENT 'paEnt',								--承租
+			CM.PA_ENT_NAME 'paEntName',
+			CM.PB_ENT 'pbEnt',								--出租
+			CM.PB_ENT_NAME 'pbEntName',
+			CM.SIGNING_TIME 'sigingTime',		--签订时间
+			CM.COMPETENT_DEPARTMET 'competentDepartment'		--主管部门
+			FROM T_CONTRACT_MATERIALS CM,T_CONTRACT_JOIN_USER CJU,T_PROJECT P 
+			WHERE CM.CONTRACTMA_ID=CJU.CONTRACT_ID AND CM.PROJECT_ID=P.PROJECT_ID
+			AND CM.DEL_FLAG = '1'
+			AND CJU.USER_ID=@userId
+			AND (CM.PA_ENT_NAME LIKE '%'+@paEntName+'%' OR @paEntName='' OR @paEntName IS NULL)
+			AND (CM.PB_ENT_NAME LIKE '%'+@pbEntName+'%' OR @pbEntName='' OR @pbEntName IS NULL)
+			AND (CM.CONTRACT_SERIAL LIKE '%'+@contractSerial+'%' OR @contractSerial='' OR @contractSerial IS NULL)
+			AND (CM.PROJECT_NAME LIKE '%'+@projectName+'%' OR @projectName='' OR @projectName IS NULL)
+			AND (CM.COMPETENT_DEPARTMET LIKE '%'+@competentDepartment+'%' OR @competentDepartment='' OR @competentDepartment IS NULL)
+			AND (CM.CONTRACT_CATEGORY = @contractCategory OR @contractCategory='' OR @contractCategory IS NULL)
+			AND (P.PROVINCE = @province OR @province='' OR @pbEntName IS NULL)
+			AND (P.CITY = @city OR @city='' OR @pbEntName IS NULL)
+			AND (P.COUNTY = @county OR @county='' OR @pbEntName IS NULL)
+			AND (CM.APPLYFOR_STATE IN (SELECT * FROM dbo.Split(@applyforState,',')) OR @applyforState='' OR @applyforState IS NULL)
+		)
+		SELECT *,(SELECT COUNT(*) FROM QUERY) AS 'totalItems' 
+		FROM QUERY WHERE row>@start AND row <=@start+@limit;
+	]]>
+	</select>
+		<!--查询周材合同-->
+	<select id="contract_list">
+	<![CDATA[
+		DECLARE @start INT
+		DECLARE @limit INT
+		DECLARE @userId BIGINT
+		DECLARE @pbEntName VARCHAR(100)
+		DECLARE @paEntName VARCHAR(100)
+		DECLARE @contractSerial VARCHAR(100)
+		DECLARE @contractCategory VARCHAR(10)
+		DECLARE @projectName VARCHAR(160)
+		DECLARE @competentDepartment VARCHAR(100)
+		DECLARE @province VARCHAR(10)
+		DECLARE @city VARCHAR(10)
+		DECLARE @county VARCHAR(10)
+		DECLARE @applyforState VARCHAR(32)
+		SET @start=?
+		SET @limit=?
+		SET @userId=?
+		SET @pbEntName=?
+		SET @paEntName=?
+		SET @contractSerial=?
+		SET @contractCategory=?
+		SET @projectName=?
+		SET @competentDepartment=?
+		SET @province=?
+		SET @city=?
+		SET @county=?
+		SET @applyforState=?
+		;WITH QUERY AS(
+			SELECT 
+			ROW_NUMBER() OVER (ORDER BY CM.CONTRACTMA_ID DESC) AS 'row',
+			CM.CONTRACTMA_ID 'contractmaId',		--合同id
+			CM.CONTRACT_NUMBER 'contractNumber',	--合同流水号
+			CM.CONTRACT_SERIAL 'contractSerial',  --合同编号
+			CM.CONTRACT_THEME 'contractTheme',		--合同主题
+			CM.CONTRACT_CATEGORY 'contractCategory', --合同类别
+			CM.APPLYFOR_STATE 'applyforState',			--状态
+			CM.PROJECT_ID 'projectId',
+			CM.PROJECT_NAME 'projectName',
+			CM.ADDRESS 'address',
+			CM.PA_ENT 'paEnt',								--承租
+			CM.PA_ENT_NAME 'paEntName',
+			CM.PB_ENT 'pbEnt',								--出租
+			CM.PB_ENT_NAME 'pbEntName',
+			CM.SIGNING_TIME 'sigingTime',		--签订时间
+			CM.COMPETENT_DEPARTMET 'competentDepartment'		--主管部门
+			FROM T_CONTRACT_MATERIALS CM,T_PROJECT P 
+			WHERE  CM.PROJECT_ID=P.PROJECT_ID
+			AND CM.DEL_FLAG = '1'
+			AND (CM.PA_ENT_NAME LIKE '%'+@paEntName+'%' OR @paEntName='' OR @paEntName IS NULL)
+			AND (CM.PB_ENT_NAME LIKE '%'+@pbEntName+'%' OR @pbEntName='' OR @pbEntName IS NULL)
+			AND (CM.CONTRACT_SERIAL LIKE '%'+@contractSerial+'%' OR @contractSerial='' OR @contractSerial IS NULL)
+			AND (CM.PROJECT_NAME LIKE '%'+@projectName+'%' OR @projectName='' OR @projectName IS NULL)
+			AND (CM.COMPETENT_DEPARTMET LIKE '%'+@competentDepartment+'%' OR @competentDepartment='' OR @competentDepartment IS NULL)
+			AND (CM.CONTRACT_CATEGORY = @contractCategory OR @contractCategory='' OR @contractCategory IS NULL)
+			AND (P.PROVINCE = @province OR @province='' OR @pbEntName IS NULL)
+			AND (P.CITY = @city OR @city='' OR @pbEntName IS NULL)
+			AND (P.COUNTY = @county OR @county='' OR @pbEntName IS NULL)
+			AND (CM.APPLYFOR_STATE IN (SELECT * FROM dbo.Split(@applyforState,',')) OR @applyforState='' OR @applyforState IS NULL)
+		)
+		SELECT *,(SELECT COUNT(*) FROM QUERY) AS 'totalItems' 
+		FROM QUERY WHERE row>@start AND row <=@start+@limit;
+	]]>
+	</select>
+	
+		<select id="get_relateId">
+	<![CDATA[
+		DECLARE @leaseIds VARCHAR(2048)
+		SET @leaseIds = ?
+		SELECT RECIPIENT_ID 'relateId' FROM T_GOODS_RECIPIENT WHERE LEASE_ID IN (select * from dbo.Split(@leaseIds,','))
+		UNION ALL
+		SELECT REPAIR_ID 'relateId' FROM T_LEASE_REPAIR WHERE LEASE_ID IN (select * from dbo.Split(@leaseIds,','))
+		UNION ALL
+		SELECT LOST_ID 'relateId' FROM T_LEASED_LOST_COMPENSATION WHERE LEASE_ID IN (select * from dbo.Split(@leaseIds,','))
+		UNION ALL
+		SELECT RETURN_ID 'relateId' FROM T_RETURN_GOODS WHERE LEASE_ID IN (select * from dbo.Split(@leaseIds,','))
+	]]>
+	</select>
+	
+	<select id="leaseContract_materials">
+	<![CDATA[
+		DECLARE @leaseId BIGINT
+		SET @leaseId = ?
+		SELECT 
+		MS.SPECIFICATIONS_ID AS 'specificationsId',
+		MS.SPECIFICATIONS AS 'specifications',
+		MS.COMMODITY_ID AS 'commodityId',
+		MC.COMMODITY AS 'commodity',
+		MS.MNEMONICS AS 'mnemonics',
+		MS.FIRST_UNIT_CONVERSION AS 'firstUnitConversion',
+		MS.SECOND_CONVERTED_QUANTITY AS 'secondConvertedQuantity',
+		MS.SECOND_UNIT_CONVERSION AS 'secondUnitConversion' 
+		FROM T_LEASE_CONTRACT LC,T_LEASE_PRICE_SETTING LPS,T_MATERIALS_SPECIFICATIONS MS,T_MATERIALS_COMMODITY MC 
+		WHERE LC.LEASE_ID=LPS.LEASE_ID AND MS.SPECIFICATIONS_ID=LPS.SPECIFICATIONS_ID
+		AND MS.COMMODITY_ID=MC.COMMODITY_ID
+		AND LC.LEASE_ID = @leaseId 
+	]]>
+	</select>
+	<!--  根据选择时间，查询周材库存-->
+	<select id="get_store_by_compensationDate">
+	<![CDATA[
+			DECLARE	@contractId BIGINT
+			DECLARE	@selectedDate VARCHAR(24)
+			SET @contractId = ?
+			SET @selectedDate = ?
+			
+			SELECT
+			MS.SPECIFICATIONS_ID as 'specificationsId',
+			MC.COMMODITY as 'commodity',
+			MS.SPECIFICATIONS as 'specifications',
+			MS.COMMODITY_ID as 'commodityId',
+			MS.MNEMONICS as 'mnemonics',
+			MS.FIRST_UNIT_CONVERSION as 'firstUnitConversion',
+			MS.SECOND_UNIT_CONVERSION as 'secondUnitConversion',
+			MS.SECOND_CONVERTED_QUANTITY as 'secondConvertedQuantity',
+			MC.COMPENSATION_COSTS as 'compensationCosts',
+			SUM(CASE WHEN OPERATION_WAY IN('初始化','正常出租','项目间调拨入库','租借出租','项目维修入库') THEN CONVERT(INT,QUANTITY)
+			WHEN OPERATION_WAY IN('项目维修出库','租借维修出库','正常回收','丢失赔偿出库','项目间调拨出库','退货管理') THEN -CONVERT(INT,QUANTITY)
+			ELSE 0 END ) as 'quantity'
+			FROM T_PROJECT_DEPOT_IN_OUT T 
+			LEFT JOIN T_MATERIALS_SPECIFICATIONS MS ON T.SPECIFICATIONS_ID = MS.SPECIFICATIONS_ID
+			LEFT JOIN T_MATERIALS_COMMODITY MC ON MS.COMMODITY_ID=MC.COMMODITY_ID 
+			WHERE CONTRACT_ID =@contractId
+			AND OPERATION_DATE<=@selectedDate
+			GROUP BY MS.SPECIFICATIONS_ID,MC.COMMODITY,MS.SPECIFICATIONS,MS.COMMODITY_ID,MS.MNEMONICS,MS.FIRST_UNIT_CONVERSION,
+			MS.SECOND_UNIT_CONVERSION,MS.SECOND_CONVERTED_QUANTITY,MC.COMPENSATION_COSTS
+			ORDER BY MS.COMMODITY_ID DESC,MS.SPECIFICATIONS_ID DESC
+	]]>
+	</select>
+	<!--  根据丢失赔偿时间，查询租借库存-->
+	<select id="get_lease_store_by_compensationDate">
+	<![CDATA[
+			DECLARE	@contractId BIGINT
+			DECLARE	@leaseId BIGINT
+			DECLARE	@compensationDate VARCHAR(24)
+			SET @contractId = ?
+			SET @leaseId = ?
+			SET @compensationDate = ?
+			
+			SELECT
+			MS.SPECIFICATIONS_ID as 'specificationsId',
+			MC.COMMODITY as 'commodity',
+			MS.SPECIFICATIONS as 'specifications',
+			MS.COMMODITY_ID as 'commodityId',
+			MS.MNEMONICS as 'mnemonics',
+			MS.FIRST_UNIT_CONVERSION as 'firstUnitConversion',
+			MS.SECOND_UNIT_CONVERSION as 'secondUnitConversion',
+			MS.SECOND_CONVERTED_QUANTITY as 'secondConvertedQuantity',
+			MC.COMPENSATION_COSTS as 'compensationCosts',
+			SUM(CASE WHEN OPERATION_WAY IN('租借出租','租借维修入库') THEN CONVERT(INT,QUANTITY)
+			WHEN OPERATION_WAY IN('租借维修出库','租借丢失赔偿','退货管理') THEN -CONVERT(INT,QUANTITY)
+			ELSE 0 END ) as 'quantity'
+			FROM T_PROJECT_DEPOT_IN_OUT T 
+			LEFT JOIN T_MATERIALS_SPECIFICATIONS MS ON T.SPECIFICATIONS_ID = MS.SPECIFICATIONS_ID
+			LEFT JOIN T_MATERIALS_COMMODITY MC ON MS.COMMODITY_ID=MC.COMMODITY_ID 
+			WHERE CONTRACT_ID =@contractId
+			AND OPERATION_DATE<=@compensationDate
+			AND RELATE_SERIAL IN (
+				SELECT RECIPIENT_SERIAL FROM T_GOODS_RECIPIENT WHERE LEASE_ID =@leaseId
+				UNION ALL
+				SELECT REPAIR_SERIAL FROM T_LEASE_REPAIR WHERE LEASE_ID =@leaseId
+				UNION ALL
+				SELECT LOST_SERIAL FROM T_LEASED_LOST_COMPENSATION WHERE LEASE_ID =@leaseId
+				UNION ALL
+				SELECT RETURN_SERIAL FROM T_RETURN_GOODS WHERE LEASE_ID =@leaseId
+			)
+			GROUP BY MS.SPECIFICATIONS_ID,MC.COMMODITY,MS.SPECIFICATIONS,MS.COMMODITY_ID,MS.MNEMONICS,MS.FIRST_UNIT_CONVERSION,
+			MS.SECOND_UNIT_CONVERSION,MS.SECOND_CONVERTED_QUANTITY,MC.COMPENSATION_COSTS
+			ORDER BY MS.COMMODITY_ID DESC,MS.SPECIFICATIONS_ID DESC
+	]]>
+	</select>
+	<!--  根据选择的时间，查询基地库存-->
+	<select id="query_materials_store_by_selectedDate">
+	<![CDATA[
+			DECLARE @selectedDate VARCHAR(10)
+			DECLARE @depotId BIGINT
+			DECLARE @locationId BIGINT
+			DECLARE @start INT
+			DECLARE @limit INT
+			DECLARE @commodity VARCHAR(64)
+			DECLARE @specifications VARCHAR(64)
+			
+			SET @selectedDate=?
+			SET @depotId=?
+			SET @locationId=?
+			SET @start=?
+			SET @limit=?
+			SET @commodity=?
+			SET @specifications=?
+
+			;WITH QUERY AS(
+				SELECT 
+				ROW_NUMBER() OVER(ORDER BY MSC.SPECIFICATIONS_ID DESC) AS 'ROW',
+				MSC.SPECIFICATIONS_ID AS 'specificationsId', 
+				MSC.SPECIFICATIONS AS 'specifications',
+				MSC.COMMODITY AS 'commodity',
+				MSC.COMMODITY_ID AS 'commodityId',
+				MSC.CONVERSION_NUM AS 'conversionNum',
+				MSC.MNEMONICS AS 'mnemonics',
+				MSC.UNIT AS 'unit',
+				SUM(T.QUANTITY) AS 'quantity'
+				FROM(
+					SELECT
+					BDI.SPECIFICATIONS,
+					BDI.COMMODITY,
+					CONVERT(INT,DID.QUANTITY) AS 'QUANTITY'
+					FROM 
+					T_BASE_DEPOT_INIT BDI,T_BASE_DEPOT_INIT_DETAIL DID 
+					WHERE BDI.DEPOT_INIT_ID=DID.DEPOT_INIT_ID 
+					AND BDI.DEL_FLAG=1 AND EFFECTIVE=1
+					AND BDI.DEPOT_ID=@depotId
+					AND DID.LOCATION_ID=@locationId
+					UNION ALL
+					SELECT 
+					MIS.SPECIFICATIONS,
+					MIS.COMMODITY,
+					CONVERT(INT,MIS.QUANTITY) AS 'QUANTITY'
+					FROM T_MATERIALS_IN_STOCK MIS 
+					WHERE MIS.DEPOT_ID=@depotId 
+					AND MIS.LOCATION_ID=@locationId
+					AND MIS.IN_DATE<=@selectedDate
+					UNION ALL
+					SELECT 
+					MOS.SPECIFICATIONS,
+					MOS.COMMODITY,
+					-CONVERT(INT,MOS.QUANTITY) AS 'QUANTITY'
+					FROM T_MATERIALS_OUT_STOCK MOS 
+					WHERE MOS.DEPOT_ID=@depotId 
+					AND MOS.LOCATION_ID=@locationId
+					AND MOS.OUT_DATE<=@selectedDate
+					) T,
+					(SELECT 
+					MS.SPECIFICATIONS_ID,
+					MS.SPECIFICATIONS,
+					MS.MNEMONICS,
+					MC.COMMODITY,
+					MC.COMMODITY_ID,
+					MS.FIRST_UNIT_CONVERSION AS 'UNIT',
+					MS.SECOND_CONVERTED_QUANTITY AS 'CONVERSION_NUM' 
+					FROM 
+					T_MATERIALS_SPECIFICATIONS MS,T_MATERIALS_COMMODITY MC
+					WHERE MS.COMMODITY_ID=MC.COMMODITY_ID
+					AND (@commodity IS NULL OR @commodity='' OR MC.COMMODITY LIKE '%'+@commodity+'%')
+					AND (@specifications IS NULL OR @specifications='' OR MS.SPECIFICATIONS LIKE '%'+@specifications+'%')
+					) MSC
+				WHERE T.SPECIFICATIONS=MSC.SPECIFICATIONS 
+				AND T.COMMODITY=MSC.COMMODITY
+				GROUP BY 
+				MSC.SPECIFICATIONS_ID,
+				MSC.SPECIFICATIONS,
+				MSC.COMMODITY,
+				MSC.COMMODITY_ID,
+				MSC.MNEMONICS,
+				MSC.UNIT,
+				MSC.CONVERSION_NUM
+			) SELECT *,(SELECT COUNT(*) FROM QUERY) AS 'totalItems' FROM QUERY WHERE ROW>@start AND ROW<=(@start+@limit);
+	]]>
+	</select>
+</mapper>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.RentContract" table="T_RENT_CONTRACT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="rentId" column="RENT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="rentSerial" type="java.lang.String" column="RENT_SERIAL" />
+		<property name="rentTheme" type="java.lang.String" column="RENT_THEME" />
+		<property name="contractor" type="java.lang.String" column="CONTRACTOR" />
+		<property name="propertyName" type="java.lang.String" column="PROPERTY_NAME" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="contractTheme" type="java.lang.String" column="CONTRACT_THEME" />
+		<property name="paEnt" type="java.lang.Long" column="PA_ENT" />
+		<property name="paModule" type="java.lang.String" column="PA_MODULE" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="pbEnt" type="java.lang.Long" column="PB_ENT" />
+		<property name="pbModule" type="java.lang.String" column="PB_MODULE" />
+		<property name="pbEntName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="startRentDate" type="java.lang.String" column="START_RENT_DATE" />
+		<property name="endRentDate" type="java.lang.String" column="END_RENT_DATE" />
+		<property name="rentAmount" type="java.math.BigDecimal" column="RENT_AMOUNT" />
+		<property name="deductAmount" type="java.math.BigDecimal" column="DEDUCT_AMOUNT" />
+		<property name="paymentAmount" type="java.math.BigDecimal" column="PAYMENT_AMOUNT" />
+		<property name="finishedAmount" type="java.math.BigDecimal" column="FINISHED_AMOUNT" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="instalmentSet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'RENT_CONTRACT'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.Instalment" />
+		</set>
+		<set name="rentEquipBriefSet" cascade="all" inverse="false" lazy="true">
+			<key column="RENT_ID" />
+			<one-to-many class="com.knight.emms.model.RentEquipBrief" />
+		</set>
+		<set name="rentComponBriefSet" cascade="all" inverse="false" lazy="true">
+			<key column="RENT_ID" />
+			<one-to-many class="com.knight.emms.model.RentComponBrief" />
+		</set>
+		<set name="rentItemBriefSet" cascade="all" inverse="false" lazy="true">
+			<key column="RENT_ID" />
+			<one-to-many class="com.knight.emms.model.RentItemBrief" />
+		</set>
+		<set name="rentDeductBriefSet" cascade="all" inverse="false" lazy="true">
+			<key column="RENT_ID" />
+			<one-to-many class="com.knight.emms.model.RentDeductBrief" />
+		</set>
+	</class>
+</hibernate-mapping>

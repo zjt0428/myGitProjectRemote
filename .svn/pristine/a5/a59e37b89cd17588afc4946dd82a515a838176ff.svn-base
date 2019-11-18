@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Risk" table="T_RISK" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="riskId" column="RISK_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="riskSerial" type="java.lang.String" column="RISK_SERIAL" />
+		<property name="riskTheme" type="java.lang.String" column="RISK_THEME" />
+		<property name="checkDepartment" type="java.lang.String" column="CHECK_DEPARTMENT" />
+		<property name="checkCustom" type="java.lang.Long" column="CHECK_CUSTOM" />
+		<property name="checkCustomName" type="java.lang.String" column="CHECK_CUSTOM_NAME" />
+		<property name="inspector" type="java.lang.String" column="INSPECTOR" />
+		<property name="rectifyEnt" type="java.lang.Long" column="RECTIFY_ENT" />
+		<property name="rectifyEntName" type="java.lang.String" column="RECTIFY_ENT_NAME" />
+		<property name="riskDesc" type="java.lang.String" column="RISK_DESC" />
+		<property name="improvePerson" type="java.lang.String" column="IMPROVE_PERSON" />
+		<property name="improveDate" type="java.lang.String" column="IMPROVE_DATE" />
+		<property name="checkPerson" type="java.lang.String" column="CHECK_PERSON" />
+		<property name="checkDate" type="java.lang.String" column="CHECK_DATE" />
+		<property name="reviewOpinion" type="java.lang.String" column="REVIEW_OPINION" />
+		<property name="reviewPerson" type="java.lang.String" column="REVIEW_PERSON" />
+		<property name="reviewDate" type="java.lang.String" column="REVIEW_DATE" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="riskReportId" type="java.lang.Long" column="RISK_REPORT_ID" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+	</class>
+</hibernate-mapping>

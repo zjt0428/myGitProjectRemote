@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.OtherBetsDetail" table="T_OTHER_BETS_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="otherBetsId" type="java.lang.Long" column="OTHER_BETS_ID" />
+		<property name="feesType" type="java.lang.String" column="FEES_TYPE" />
+		<property name="feesTypeName" type="java.lang.String" column="FEES_TYPE_NAME" />
+		<property name="calculationMethod" type="java.lang.String" column="CALCULATION_METHOD" />
+		<property name="calculationMethodName" type="java.lang.String" column="CALCULATION_METHOD_NAME" />
+		<property name="fee" type="java.lang.String" column="FEE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+	</class>
+</hibernate-mapping>

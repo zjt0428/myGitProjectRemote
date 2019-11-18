@@ -1,0 +1,27 @@
+
+package com.knight.emms.service;
+
+
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.service.ExportService;
+import com.knight.emms.core.service.BusinessFlowService;
+import com.knight.emms.model.EquipInsurance;
+
+/**
+ * @ClassName: AllocationDepotService
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author 
+ * @date 
+ */
+public interface EquipInsuranceService extends BusinessFlowService<EquipInsurance> , ExportService{
+
+	public EquipInsurance getTranslateFull(Long insureId);
+
+	public void deletedDetail(Long tdetailId);
+	
+	public void submitDepot(Long depottId);
+	
+	public void saveCreate(EquipInsurance dt);
+	
+
+}

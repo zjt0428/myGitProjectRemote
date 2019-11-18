@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-application xmlns="http://www.bea.com/ns/weblogic/90" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <application-param>
+        <param-name>webapp.encoding.default</param-name>
+        <param-value>UTF-8</param-value>
+    </application-param>
+    <prefer-application-packages>
+        <package-name>com.ctc.wstx.*</package-name>
+		<package-name>javax.xml.*</package-name>
+        <package-name>org.apache.*</package-name>
+    </prefer-application-packages>
+</weblogic-application>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LogisticsDestribution" table="T_LOGISTICS_DESTRIBUTION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="DestributionId" column="DESTRIBUTION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="transportId" type="java.lang.Long" column="TRANSPORT_ID" />
+		<property name="componGeneric" type="java.lang.String" column="COMPON_GENERIC" />
+		<property name="componSpecific" type="java.lang.String" column="COMPON_SPECIFIC" />
+		<property name="quantity" type="java.math.BigDecimal" column="QUANTITY" />
+	</class>
+</hibernate-mapping>

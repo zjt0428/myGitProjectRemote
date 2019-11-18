@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Materials_General_Ledger" language="groovy" pageWidth="1260" pageHeight="595" whenNoDataType="AllSectionsNoDetail" columnWidth="1220" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="bd14664a-dbc6-4c54-92f9-e0e62d3df1a5">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="columnHead" forecolor="#333333" backcolor="#AAD7FE" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontName="宋体" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5"/>
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="detail" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" rotation="None" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false">
+		<pen lineWidth="0.5"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean((($V{PAGE_COUNT} % 2) == 0))]]></conditionExpression>
+			<style forecolor="#000000" backcolor="#CCCCCC" fill="Solid" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+		</conditionalStyle>
+	</style>
+	<style name="title" hAlign="Center" vAlign="Middle" fontName="宋体" fontSize="18" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+	<style name="pageFooterLable" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="12" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<style name="pageFooter" mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="12" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5"/>
+	</style>
+	<parameter name="END_DATE" class="java.lang.String"/>
+	<parameter name="COMMODITY" class="java.lang.String"/>
+	<parameter name="SPECIFICATIONS" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @COMMODITY VARCHAR(64)
+DECLARE @SPECIFICATIONS VARCHAR(64)
+DECLARE @END_DATE VARCHAR(24)
+
+SET @COMMODITY = $P{COMMODITY}
+SET @SPECIFICATIONS = $P{SPECIFICATIONS}
+SET @END_DATE = $P{END_DATE}
+
+SELECT DISTINCT MS.COMMODITY_ID,MS.SPECIFICATIONS_ID,MS.COMMODITY, MS.SPECIFICATIONS, MS.UNIT, ISNULL(MIX.AL_QUANTITY, 0) AS AL_QUANTITY, ISNULL(MIX.AL_QUANTITY, 0) * CONVERT(DECIMAL(18,2), MS.SECOND_CONVERTED_QUANTITY) AS AL_AUXILIARY_QUANTITY,
+	ISNULL(MIX.JJJ_QUANTITY, 0) AS JJJ_QUANTITY, ISNULL(MIX.JJJ_QUANTITY, 0) * CONVERT(DECIMAL(18,2), MS.SECOND_CONVERTED_QUANTITY) AS JJJ_AUXILIARY_QUANTITY, ISNULL(MIX.QD_QUANTITY, 0) AS QD_QUANTITY,
+	ISNULL(MIX.QD_QUANTITY, 0) * CONVERT(DECIMAL(18,2), MS.SECOND_CONVERTED_QUANTITY) AS QD_AUXILIARY_QUANTITY, ISNULL(MIX.JN_QUANTITY, 0) AS JN_QUANTITY, ISNULL(MIX.JN_QUANTITY, 0) *CONVERT(DECIMAL(18,2),
+	MS.SECOND_CONVERTED_QUANTITY) AS JN_AUXILIARY_QUANTITY, ISNULL(MIX.LY_QUANTITY, 0) AS LY_QUANTITY, ISNULL(MIX.LY_QUANTITY, 0) * CONVERT(DECIMAL(18,2), MS.SECOND_CONVERTED_QUANTITY) AS LY_AUXILIARY_QUANTITY,
+	ISNULL(PRJ.QUANTITY, 0) AS PROJECT_QUANTITY, ISNULL(PRJ.QUANTITY, 0) * CONVERT(DECIMAL(18,2), MS.SECOND_CONVERTED_QUANTITY) AS PROJECT_AUXILIARY_QUANTITY, ISNULL(BLC.QUANTITY, 0) AS BALANCE_QUANTITY,
+	ISNULL(BLC.QUANTITY, 0) * CONVERT(DECIMAL(18,2), MS.SECOND_CONVERTED_QUANTITY)  AS BALANCE_AUXILIARY_QUANTITY, ISNULL(MIX.AL_QUANTITY, 0) + ISNULL(PRJ.QUANTITY, 0) - ISNULL(BLC.QUANTITY, 0) AS HAVE_QUANTITY,
+	((ISNULL(MIX.AL_QUANTITY, 0) + ISNULL(PRJ.QUANTITY, 0) - (ISNULL(BLC.QUANTITY, 0))) *  CONVERT(DECIMAL(18,2), MS.SECOND_CONVERTED_QUANTITY)) AS HAVE_AUXILIARY_QUANTITY
+FROM
+	(SELECT DISTINCT  M.COMMODITY_ID,M.SPECIFICATIONS_ID,C.COMMODITY, M.SPECIFICATIONS, M.FIRST_UNIT_CONVERSION AS UNIT, M.SECOND_CONVERTED_QUANTITY
+	FROM T_MATERIALS_SPECIFICATIONS M, T_MATERIALS_COMMODITY C
+	WHERE M.COMMODITY_ID = C.COMMODITY_ID) MS
+LEFT JOIN
+	(SELECT DISTINCT MS.COMMODITY, MS.SPECIFICATIONS, ISNULL(AL.QUANTITY, 0) AS AL_QUANTITY, ISNULL(JJJ.QUANTITY, 0) AS JJJ_QUANTITY, ISNULL(QD.QUANTITY, 0) AS QD_QUANTITY,
+		ISNULL(JN.QUANTITY, 0) AS JN_QUANTITY, ISNULL(LY.QUANTITY, 0) AS LY_QUANTITY
+	FROM
+		(SELECT DISTINCT C.COMMODITY, M.SPECIFICATIONS
+		FROM T_MATERIALS_SPECIFICATIONS M, T_MATERIALS_COMMODITY C
+		WHERE M.COMMODITY_ID = C.COMMODITY_ID) MS
+	LEFT JOIN
+		(SELECT DISTINCT MS.COMMODITY, MS.SPECIFICATIONS, ISNULL(AL_INIT.QUANTITY, 0) + ISNULL(AL_IN.QUANTITY, 0) - ISNULL(AL_OUT.QUANTITY, 0) AS QUANTITY
+		FROM
+			(SELECT DISTINCT C.COMMODITY, M.SPECIFICATIONS
+			FROM T_MATERIALS_SPECIFICATIONS M, T_MATERIALS_COMMODITY C
+			WHERE M.COMMODITY_ID = C.COMMODITY_ID) MS
+		FULL JOIN
+			(SELECT DISTINCT S.COMMODITY, S.SPECIFICATIONS, AL.QUANTITY
+			FROM
+			(SELECT DISTINCT SPECIFICATIONS_ID, ISNULL(SUM(CONVERT(INT, TOTAL)), 0) AS QUANTITY
+			FROM T_BASE_DEPOT_INIT
+			WHERE DEPOT_NAME
+			IN('京津冀仓库', '青岛仓库', '济南仓库', '临沂仓库')
+			AND DEL_FLAG = '1' AND EFFECTIVE ='1'
+			GROUP BY SPECIFICATIONS_ID) AL
+		INNER JOIN
+			(SELECT DISTINCT S.SPECIFICATIONS_ID, C.COMMODITY, S.SPECIFICATIONS
+			FROM T_MATERIALS_SPECIFICATIONS S, T_MATERIALS_COMMODITY C
+			WHERE S.COMMODITY_ID = C.COMMODITY_ID) S
+		ON AL.SPECIFICATIONS_ID = S.SPECIFICATIONS_ID) AL_INIT
+	ON MS.COMMODITY = AL_INIT.COMMODITY
+	AND MS.SPECIFICATIONS = AL_INIT.SPECIFICATIONS
+	FULL JOIN
+		(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+		FROM T_MATERIALS_OUT_STOCK
+		WHERE DEPOT_NAME
+		IN('京津冀仓库', '青岛仓库', '济南仓库', '临沂仓库')
+		AND OUT_DATE <= @END_DATE
+		GROUP BY COMMODITY, SPECIFICATIONS) AL_OUT
+	ON MS.COMMODITY = AL_OUT.COMMODITY
+	AND MS.SPECIFICATIONS = AL_OUT.SPECIFICATIONS
+	FULL JOIN
+		(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+		FROM T_MATERIALS_IN_STOCK
+		WHERE DEPOT_NAME
+		IN('京津冀仓库', '青岛仓库', '济南仓库', '临沂仓库')
+		AND IN_DATE <= @END_DATE
+		GROUP BY COMMODITY, SPECIFICATIONS) AL_IN
+		ON MS.COMMODITY = AL_IN.COMMODITY
+		AND MS.SPECIFICATIONS = AL_IN.SPECIFICATIONS) AL
+	ON MS.COMMODITY = AL.COMMODITY
+	AND MS.SPECIFICATIONS = AL.SPECIFICATIONS
+	FULL JOIN
+		(SELECT DISTINCT MS.COMMODITY, MS.SPECIFICATIONS, ISNULL(JJJ_INIT.QUANTITY, 0) + ISNULL(JJJ_IN.QUANTITY, 0) - ISNULL(JJJ_OUT.QUANTITY, 0) AS QUANTITY
+		FROM
+			(SELECT DISTINCT C.COMMODITY, M.SPECIFICATIONS
+			FROM T_MATERIALS_SPECIFICATIONS M, T_MATERIALS_COMMODITY C
+			WHERE M.COMMODITY_ID = C.COMMODITY_ID) MS
+		FULL JOIN
+			(SELECT DISTINCT S.COMMODITY, S.SPECIFICATIONS, JJJ.QUANTITY
+			FROM
+				(SELECT DISTINCT SPECIFICATIONS_ID, ISNULL(SUM(CONVERT(INT, TOTAL)), 0) AS QUANTITY
+				FROM T_BASE_DEPOT_INIT
+				WHERE DEPOT_NAME = '京津冀仓库'
+				AND DEL_FLAG = '1' AND EFFECTIVE ='1'
+				GROUP BY SPECIFICATIONS_ID) JJJ
+			INNER JOIN
+				(SELECT DISTINCT S.SPECIFICATIONS_ID, C.COMMODITY, S.SPECIFICATIONS
+				FROM T_MATERIALS_SPECIFICATIONS S, T_MATERIALS_COMMODITY C
+				WHERE S.COMMODITY_ID = C.COMMODITY_ID) S
+			ON JJJ.SPECIFICATIONS_ID = S.SPECIFICATIONS_ID) JJJ_INIT
+		ON MS.COMMODITY = JJJ_INIT.COMMODITY
+		AND MS.SPECIFICATIONS = JJJ_INIT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_OUT_STOCK
+			WHERE DEPOT_NAME = '京津冀仓库'
+			AND OUT_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) JJJ_OUT
+		ON MS.COMMODITY = JJJ_OUT.COMMODITY
+		AND MS.SPECIFICATIONS = JJJ_OUT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_IN_STOCK
+			WHERE DEPOT_NAME = '京津冀仓库'
+			AND IN_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) JJJ_IN
+		ON MS.COMMODITY = JJJ_IN.COMMODITY
+		AND MS.SPECIFICATIONS = JJJ_IN.SPECIFICATIONS) JJJ
+	ON MS.COMMODITY = JJJ.COMMODITY
+	AND MS.SPECIFICATIONS = JJJ.SPECIFICATIONS
+	FULL JOIN
+		(SELECT DISTINCT MS.COMMODITY, MS.SPECIFICATIONS, ISNULL(QD_INIT.QUANTITY, 0) + ISNULL(QD_IN.QUANTITY, 0) - ISNULL(QD_OUT.QUANTITY, 0) AS QUANTITY
+		FROM
+			(SELECT DISTINCT C.COMMODITY, M.SPECIFICATIONS
+			FROM T_MATERIALS_SPECIFICATIONS M, T_MATERIALS_COMMODITY C
+			WHERE M.COMMODITY_ID = C.COMMODITY_ID) MS
+		FULL JOIN
+			(SELECT DISTINCT S.COMMODITY, S.SPECIFICATIONS, QD.QUANTITY
+			FROM
+				(SELECT DISTINCT SPECIFICATIONS_ID, ISNULL(SUM(CONVERT(INT, TOTAL)), 0) AS QUANTITY
+				FROM T_BASE_DEPOT_INIT
+				WHERE DEPOT_NAME = '青岛仓库'
+				AND DEL_FLAG = '1' AND EFFECTIVE ='1'
+				GROUP BY SPECIFICATIONS_ID) QD
+			INNER JOIN
+				(SELECT DISTINCT S.SPECIFICATIONS_ID, C.COMMODITY, S.SPECIFICATIONS
+				FROM T_MATERIALS_SPECIFICATIONS S, T_MATERIALS_COMMODITY C
+				WHERE S.COMMODITY_ID = C.COMMODITY_ID) S
+			ON QD.SPECIFICATIONS_ID = S.SPECIFICATIONS_ID) QD_INIT
+		ON MS.COMMODITY = QD_INIT.COMMODITY
+		AND MS.SPECIFICATIONS = QD_INIT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_OUT_STOCK
+			WHERE DEPOT_NAME = '青岛仓库'
+			AND OUT_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) QD_OUT
+		ON MS.COMMODITY = QD_OUT.COMMODITY
+		AND MS.SPECIFICATIONS = QD_OUT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_IN_STOCK
+			WHERE DEPOT_NAME = '青岛仓库'
+			AND IN_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) QD_IN
+		ON MS.COMMODITY = QD_IN.COMMODITY
+		AND MS.SPECIFICATIONS = QD_IN.SPECIFICATIONS) QD
+	ON MS.COMMODITY = QD.COMMODITY
+	AND MS.SPECIFICATIONS = QD.SPECIFICATIONS
+	FULL JOIN
+		(SELECT DISTINCT MS.COMMODITY, MS.SPECIFICATIONS, ISNULL(JN_INIT.QUANTITY, 0) + ISNULL(JN_IN.QUANTITY, 0) - ISNULL(JN_OUT.QUANTITY, 0) AS QUANTITY
+		FROM
+			(SELECT DISTINCT C.COMMODITY, M.SPECIFICATIONS
+			FROM T_MATERIALS_SPECIFICATIONS M, T_MATERIALS_COMMODITY C
+			WHERE M.COMMODITY_ID = C.COMMODITY_ID) MS
+		FULL JOIN
+			(SELECT DISTINCT S.COMMODITY, S.SPECIFICATIONS, JN.QUANTITY
+			FROM
+				(SELECT DISTINCT SPECIFICATIONS_ID, ISNULL(SUM(CONVERT(INT, TOTAL)), 0) AS QUANTITY
+				FROM T_BASE_DEPOT_INIT
+				WHERE DEPOT_NAME = '济南仓库'
+				AND DEL_FLAG = '1' AND EFFECTIVE ='1'
+				GROUP BY SPECIFICATIONS_ID) JN
+			INNER JOIN
+				(SELECT DISTINCT S.SPECIFICATIONS_ID, C.COMMODITY, S.SPECIFICATIONS
+				FROM T_MATERIALS_SPECIFICATIONS S, T_MATERIALS_COMMODITY C
+				WHERE S.COMMODITY_ID = C.COMMODITY_ID) S
+			ON JN.SPECIFICATIONS_ID = S.SPECIFICATIONS_ID) JN_INIT
+		ON MS.COMMODITY = JN_INIT.COMMODITY
+		AND MS.SPECIFICATIONS = JN_INIT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_OUT_STOCK
+			WHERE DEPOT_NAME = '济南仓库'
+			AND OUT_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) JN_OUT
+		ON MS.COMMODITY = JN_OUT.COMMODITY
+		AND MS.SPECIFICATIONS = JN_OUT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_IN_STOCK
+			WHERE DEPOT_NAME = '济南仓库'
+			AND IN_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) JN_IN
+		ON MS.COMMODITY = JN_IN.COMMODITY
+		AND MS.SPECIFICATIONS = JN_IN.SPECIFICATIONS) JN
+	ON MS.COMMODITY = JN.COMMODITY
+	AND MS.SPECIFICATIONS = JN.SPECIFICATIONS
+	FULL JOIN
+		(SELECT DISTINCT MS.COMMODITY, MS.SPECIFICATIONS, ISNULL(LY_INIT.QUANTITY, 0) + ISNULL(LY_IN.QUANTITY, 0) - ISNULL(LY_OUT.QUANTITY, 0) AS QUANTITY
+		FROM
+			(SELECT DISTINCT C.COMMODITY, M.SPECIFICATIONS
+			FROM T_MATERIALS_SPECIFICATIONS M, T_MATERIALS_COMMODITY C
+			WHERE M.COMMODITY_ID = C.COMMODITY_ID) MS
+		FULL JOIN
+			(SELECT DISTINCT S.COMMODITY, S.SPECIFICATIONS, LY.QUANTITY
+			FROM
+				(SELECT SPECIFICATIONS_ID, ISNULL(SUM(CONVERT(INT, TOTAL)), 0) AS QUANTITY
+				FROM T_BASE_DEPOT_INIT
+				WHERE DEPOT_NAME = '临沂仓库'
+				AND DEL_FLAG = '1' AND EFFECTIVE ='1'
+				GROUP BY SPECIFICATIONS_ID) LY
+			INNER JOIN
+				(SELECT DISTINCT S.SPECIFICATIONS_ID, C.COMMODITY, S.SPECIFICATIONS
+				FROM T_MATERIALS_SPECIFICATIONS S, T_MATERIALS_COMMODITY C
+				WHERE S.COMMODITY_ID = C.COMMODITY_ID) S
+			ON LY.SPECIFICATIONS_ID = S.SPECIFICATIONS_ID) LY_INIT
+		ON MS.COMMODITY = LY_INIT.COMMODITY
+		AND MS.SPECIFICATIONS = LY_INIT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_OUT_STOCK
+			WHERE DEPOT_NAME = '临沂仓库'
+			AND OUT_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) LY_OUT
+		ON MS.COMMODITY = LY_OUT.COMMODITY
+		AND MS.SPECIFICATIONS = LY_OUT.SPECIFICATIONS
+		FULL JOIN
+			(SELECT DISTINCT COMMODITY, SPECIFICATIONS, SUM(CONVERT(INT, QUANTITY)) AS QUANTITY
+			FROM T_MATERIALS_IN_STOCK
+			WHERE DEPOT_NAME = '临沂仓库'
+			AND IN_DATE <= @END_DATE
+			GROUP BY COMMODITY, SPECIFICATIONS) LY_IN
+		ON MS.COMMODITY = LY_IN.COMMODITY
+		AND MS.SPECIFICATIONS = LY_IN.SPECIFICATIONS) LY
+	ON MS.COMMODITY = LY.COMMODITY
+	AND MS.SPECIFICATIONS = LY.SPECIFICATIONS) MIX
+ON MS.COMMODITY = MIX.COMMODITY
+AND MS.SPECIFICATIONS = MIX.SPECIFICATIONS
+FULL JOIN
+	(SELECT DISTINCT A.SPECIFICATIONS,A.COMMODITY AS COMMODITY, A.QUANTITY
+	FROM (SELECT DISTINCT DIO.SPECIFICATIONS,DIO.COMMODITY, SUM(
+CASE WHEN DIO.OPERATION_WAY IN('初始化','正常出租','租借出租','项目维修入库','租借维修入库')
+THEN CONVERT(INT, DIO.QUANTITY)
+WHEN DIO.OPERATION_WAY IN('正常回收','丢失赔偿出库','退货管理','项目维修出库','租借维修出库')
+THEN -CONVERT(INT, DIO.QUANTITY) END) AS QUANTITY
+			FROM T_PROJECT_DEPOT_IN_OUT DIO
+			WHERE DIO.OPERATION_DATE <= @END_DATE
+			GROUP BY DIO.SPECIFICATIONS,DIO.COMMODITY) A) PRJ
+ON MS.COMMODITY = PRJ.COMMODITY
+AND MS.SPECIFICATIONS = PRJ.SPECIFICATIONS
+FULL JOIN
+	--租借结存
+	(SELECT MS.SPECIFICATIONS,MC.COMMODITY,ZJ.QUANTITY FROM
+		(SELECT SPECIFICATIONS_ID,SUM(QUANTITY) AS 'QUANTITY' FROM
+			(SELECT SPECIFICATIONS_ID,
+			CASE
+			WHEN OPERATION_WAY = '租借出租' THEN CONVERT(INT,QUANTITY)
+			WHEN OPERATION_WAY = '退货管理' THEN -CONVERT(INT,QUANTITY)
+			WHEN OPERATION_WAY = '租借维修入库' THEN CONVERT(INT,QUANTITY)
+			WHEN OPERATION_WAY = '租借维修出库' THEN -CONVERT(INT,QUANTITY)
+			ELSE 0 END AS 'QUANTITY'
+			FROM T_PROJECT_DEPOT_IN_OUT WHERE OPERATION_DATE<=@END_DATE
+			AND OPERATION_WAY IN('租借出租','退货管理','租借维修入库','租借维修出库')
+			UNION ALL
+			SELECT SPECIFICATIONS_ID,-CONVERT(INT,LCD.LOST_QUANTITY) AS 'QUANTITY'
+			FROM T_LEASED_LOST_COMPENSATION LC,T_LEASED_LOST_COMPENSATION_DETAIL LCD
+			WHERE LC.LOST_ID=LCD.LOST_ID
+			AND LC.APPLYFOR_STATE=3
+			AND LC.DEL_FLAG=1
+			AND LC.COMPENSATION_DATE<=@END_DATE) T
+		GROUP BY SPECIFICATIONS_ID) AS ZJ
+	LEFT JOIN T_MATERIALS_SPECIFICATIONS MS ON MS.SPECIFICATIONS_ID = ZJ.SPECIFICATIONS_ID
+	LEFT JOIN T_MATERIALS_COMMODITY MC ON MC.COMMODITY_ID = MS.COMMODITY_ID
+	) BLC
+ON MS.COMMODITY = BLC.COMMODITY
+AND MS.SPECIFICATIONS = BLC.SPECIFICATIONS
+WHERE (MS.COMMODITY LIKE '%' + @COMMODITY + '%' OR @COMMODITY IS NULL OR @COMMODITY = '')
+AND (MS.SPECIFICATIONS LIKE '%' + @SPECIFICATIONS + '%' OR @SPECIFICATIONS IS NULL OR @SPECIFICATIONS = '')
+ORDER BY MS.COMMODITY_ID DESC,MS.SPECIFICATIONS_ID DESC]]>
+	</queryString>
+	<field name="COMMODITY_ID" class="java.lang.Long"/>
+	<field name="SPECIFICATIONS_ID" class="java.lang.Long"/>
+	<field name="COMMODITY" class="java.lang.String"/>
+	<field name="SPECIFICATIONS" class="java.lang.String"/>
+	<field name="UNIT" class="java.lang.String"/>
+	<field name="AL_QUANTITY" class="java.lang.Integer"/>
+	<field name="AL_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="JJJ_QUANTITY" class="java.lang.Integer"/>
+	<field name="JJJ_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="QD_QUANTITY" class="java.lang.Integer"/>
+	<field name="QD_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="JN_QUANTITY" class="java.lang.Integer"/>
+	<field name="JN_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="LY_QUANTITY" class="java.lang.Integer"/>
+	<field name="LY_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="PROJECT_QUANTITY" class="java.lang.Integer"/>
+	<field name="PROJECT_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="BALANCE_QUANTITY" class="java.lang.Integer"/>
+	<field name="BALANCE_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<field name="HAVE_QUANTITY" class="java.lang.Integer"/>
+	<field name="HAVE_AUXILIARY_QUANTITY" class="java.math.BigDecimal"/>
+	<variable name="INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{INDEX}.valueOf( 1 )]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement style="title" x="0" y="0" width="1220" height="30" uuid="56be08a0-c1e1-4365-82ec-e5d2b7e7925d"/>
+				<textElement>
+					<font fontName="宋体" size="20" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[周材总账查询]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="1220" height="35" uuid="490b574a-d016-47e0-bda7-e7741cca0cae"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+					<font fontName="宋体" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA["查询截止日期：" + $P{END_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="0" y="0" width="45" height="90" uuid="41469295-b095-415c-8fa6-51026b43854a"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[序号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="45" y="0" width="95" height="90" uuid="f22f1e5d-99ae-4afe-a744-05c8d99e4c09"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[品名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="235" y="0" width="90" height="90" uuid="44ce050d-3dd9-4dc3-ae16-e2b9ce424e18"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[单位]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="140" y="0" width="95" height="90" uuid="b9c15a8a-8349-47f8-899b-c4d7a49caaf0"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[规格]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="490" y="30" width="70" height="60" uuid="9ac109cd-6481-4e6f-bf76-46bc5c9d5a6d"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[济南仓库]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="560" y="30" width="75" height="60" uuid="88477266-837c-4a13-87ce-7d68e1b3f426"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[临沂仓库]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="785" y="0" width="145" height="45" uuid="35600c24-59da-4008-befc-9a04076f5e8d"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[项目仓库]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="325" y="30" width="95" height="60" uuid="d5dce1cd-25a9-450b-bb2a-be54089bcf0a"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[京津冀仓库]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="420" y="30" width="70" height="60" uuid="25d16bba-fae5-4e4b-881b-8cb6e79960b4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[青岛仓库]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="325" y="0" width="460" height="30" uuid="fc1c9bad-fd35-4253-a6e8-cb130277432c"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[仓库库存]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="635" y="30" width="150" height="30" uuid="921ea328-6b93-4971-8da8-3a16250d27cb"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[合计]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="635" y="60" width="75" height="30" uuid="0e458055-c3c4-42c0-804b-ede32fc9224e"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[件数]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="710" y="60" width="75" height="30" uuid="6521c803-a07f-4752-ad9b-830f40bcc5d5"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="785" y="45" width="70" height="45" uuid="4694ca2a-4e3d-4f37-b5fc-c8bfbe3e9ed1"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[件数]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="855" y="45" width="75" height="45" uuid="a9bd7347-ec75-428c-8113-bd566593dae4"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="930" y="0" width="145" height="45" uuid="f15252c7-818b-417b-853c-c5f8f2611ed5"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[租借数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1075" y="0" width="145" height="45" uuid="8516f973-aec7-4e7d-98eb-90f7ef5f3aae"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[自有数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="930" y="45" width="70" height="45" uuid="9df58aea-53e1-4be5-b01b-1b444c4921af"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[件数]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1000" y="45" width="75" height="45" uuid="3d47a154-2a84-4f84-91e3-da59416ad95e"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1075" y="45" width="70" height="45" uuid="801cfec4-2170-486d-b4da-0fa21f524125"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[件数]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="columnHead" mode="Opaque" x="1145" y="45" width="75" height="45" uuid="4b60ee0c-4797-4f05-ac7f-fcdabc5a7e4c"/>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="45" height="20" uuid="4be11ff9-6b2c-4f36-abb4-af9089c5489a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{INDEX}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="490" y="0" width="70" height="20" uuid="d5bb8aa9-b59f-47d0-90e6-0afe2795ce76"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JN_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="560" y="0" width="75" height="20" uuid="27540d6f-fb1c-4605-a11c-11e4ecebfa89"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LY_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="45" y="0" width="95" height="20" uuid="2e31d064-025a-4257-a1b0-259dbb637cfe"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMMODITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="235" y="0" width="90" height="20" uuid="bc92153c-716d-4dcf-bcf3-334fff204a9c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{UNIT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="325" y="0" width="95" height="20" uuid="96569219-4f3c-47ea-bee8-b1b4e39f3318"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{JJJ_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="140" y="0" width="95" height="20" uuid="633021bf-69dc-4dea-8c2c-10dd8008b65b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SPECIFICATIONS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="420" y="0" width="70" height="20" uuid="1408ed8f-d728-4eb2-9546-fd5d765b5ff0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{QD_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="635" y="0" width="75" height="20" uuid="5ec93ccf-f93a-4901-9ab4-b270ed809ef4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AL_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="710" y="0" width="75" height="20" uuid="42a0da45-3233-4b8e-9395-d4648740baa8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AL_AUXILIARY_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="855" y="0" width="75" height="20" uuid="7549aa18-c59d-432a-85f7-4434f5cc7b8d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROJECT_AUXILIARY_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="785" y="0" width="70" height="20" uuid="7ea7af69-52b3-4eb1-bdc9-ed96c84f62c4"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROJECT_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="930" y="0" width="70" height="20" uuid="9a1f7c71-9f57-43b9-b0c6-9c8862c39c1d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BALANCE_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1000" y="0" width="75" height="20" uuid="426d4687-9dd5-4a24-8464-a3de1d5c4d82"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BALANCE_AUXILIARY_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1075" y="0" width="70" height="20" uuid="fd72dc6d-344f-42c7-9d34-b6792791c77f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HAVE_QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="detail" stretchType="RelativeToTallestObject" mode="Opaque" x="1145" y="0" width="75" height="20" uuid="115531ed-7cfe-42d9-bf42-17e2822e1351"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="宋体" isStrikeThrough="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HAVE_AUXILIARY_QUANTITY}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

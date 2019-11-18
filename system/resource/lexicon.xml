@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Lexicon>
+	<Alias name="APPUSER_TYPE">
+		<Code id="0" value="系统用户"></Code>
+	<!-- 	<Code id="1" value="企业用户"></Code> -->
+		<Code id="2" value="项目用户"></Code>
+	</Alias>
+	<Alias name="SEX">
+		<Code id="0" value="女"></Code>
+		<Code id="1" value="男"></Code>
+	</Alias>
+		<Alias name="DETECT_STATUS">
+		<Code id="0" value="无效"></Code>
+		<Code id="1" value="有效"></Code>
+	</Alias>
+	<Alias name="REPAIR_RUNNING_STATE">
+		<Code id="0" value="已停待俢"></Code>
+		<Code id="1" value="有问题(可以使用)"></Code>
+		<Code id="2" value="现场处理(暂时可以使用)"></Code>
+	</Alias>
+	<Alias name="PRINT_FLAG">
+		<Code id="0" value="未打印"></Code>
+		<Code id="1" value="已打印"></Code>
+	</Alias>
+	<Alias name="EFFECTIVE_FLAG">
+		<Code id="0" value="未生效"></Code>
+		<Code id="1" value="已生效"></Code>
+	</Alias>
+	<Alias name="MESSAGE_TYPE">
+		<Code id="1" value="个人信息"></Code>
+		<Code id="2" value="日程安排"></Code>
+		<Code id="3" value="计划任务"></Code>
+		<Code id="4" value="代办任务"></Code>
+		<Code id="5" value="系统消息"></Code>
+		<Code id="0" value="其他"></Code>
+	</Alias>
+	<!-- 档案状态 -->
+	<Alias name="ARCHIVES_STATUS">
+		<Code id="0" value="无效"></Code>
+		<Code id="1" value="有效"></Code>
+		<Code id="2" value="注销"></Code>
+		<Code id="3" value="暂扣"></Code>
+		<Code id="4" value="过期"></Code>
+	</Alias>
+	<!-- 在用状态 -->
+	<Alias name="USED_SIMPLE_STATUS">
+		<Code id="0" value="在用"></Code>
+		<Code id="1" value="闲置"></Code>
+	</Alias>
+	<!-- 顶升拆卸状态 -->
+	<Alias name="COMPON_JACKING_STATUS">
+		<Code id="1" value="首次安装"></Code>
+		<Code id="2" value="顶升"></Code>
+		<Code id="3" value="拆卸"></Code>
+		<Code id="4" value="降节"></Code>
+	</Alias>
+	<!-- 设备/零部件 状态 -->
+	<Alias name="EQUIP_COMPON_STATUS">
+		<Code id="0" value="在用"></Code>
+		<Code id="1" value="闲置"></Code>
+		<Code id="2" value="借用"></Code>
+		<Code id="3" value="领用"></Code>
+		<Code id="4" value="停用"></Code>
+		<Code id="6" value="报废"></Code>
+		<Code id="7" value="遗失"></Code>
+	<!-- 	<Code id="8" value="待确认"></Code> -->
+	</Alias>
+	<!-- 项目/零部件 状态 -->
+	<Alias name="PROJECT_COMPON_STATUS">
+		<Code id="1" value="在用"></Code>
+		<Code id="0" value="闲置"></Code>
+	</Alias>
+	
+	<!-- 设备业务状态 -->
+	<Alias name="EQUIP_BUSINESS_STATUS">
+		<Code id="0" value="待用"></Code>
+		<!-- <Code id="1" value="合同"></Code> -->
+		<Code id="1" value="发货未安装"></Code>
+		<Code id="2" value="调度"></Code>
+		<Code id="3" value="安装"></Code>
+		<Code id="4" value="检测"></Code>
+		<Code id="5" value="验收"></Code>
+		<Code id="6" value="启用"></Code>
+		<Code id="7" value="报停"></Code>
+		<Code id="8" value="正在使用"></Code>
+		<Code id="9" value="拆卸"></Code>
+		<Code id="A" value="入库"></Code>
+		<Code id="B" value="注销"></Code>
+	</Alias>
+	<!-- 项目状态 -->
+	<Alias name="PROJECT_STATUS">
+		<Code id="0" value="作废"></Code>
+		<Code id="1" value="跟进"></Code>
+		<Code id="2" value="成交"></Code>
+		<Code id="3" value="执行中"></Code>
+		<Code id="4" value="结案"></Code>
+	</Alias>
+	<!-- 设备/零部件 库存状态 -->
+	<Alias name="EQUIP_COMPON_STORE_STATUS">
+		<Code id="2" value="出库"></Code>
+		<Code id="5" value="入库"></Code>
+		<Code id="9" value="未入库"></Code>
+	</Alias>
+	<!-- 款项状态 -->
+	<Alias name="FUND_PLAN_STATUS">
+		<Code id="0" value="未付款"></Code>
+		<Code id="1" value="付款中"></Code>
+		<Code id="2" value="已付款"></Code>
+		<Code id="5" value="未回款"></Code>
+		<Code id="6" value="回款中"></Code>
+		<Code id="7" value="已回款"></Code>
+	</Alias>
+	<!-- 系统模块 -->
+	<Alias name="RELATE_MODULE">
+		<Code id="CORP" value="企业信息"></Code>
+		<Code id="CUSTOMER" value="客户信息"></Code>
+		<Code id="EQUIPMENT" value="设备信息"></Code>
+		<Code id="CONTRACT_LEASE" value="合同信息"></Code>
+		<Code id="SETTLE_CONTRACT" value="结算信息"></Code>
+		<Code id="DISPATCH" value="调度信息"></Code>
+		<Code id="PICKUP" value="配件领用"></Code>
+		<Code id="PURCHASE" value="采购信息"></Code>
+		<Code id="BORROW" value="借用信息"></Code>
+		<Code id="EQUIP_INSTALL" value="安装管理"></Code>
+		<Code id="EQUIP_EMPLOY" value="使用管理"></Code>
+		<Code id="EQUIP_DISMANTLE" value="拆卸管理"></Code>
+		<Code id="EQUIP_WAREHOUSE" value="入库管理"></Code>
+		<Code id="EQUIP_INSPECT" value="巡检管理"></Code>
+		<Code id="EQUIP_MAINT" value="保养管理"></Code>
+		<Code id="EQUIP_HITCH" value="故障管理"></Code>
+		<Code id="TEAMS_ACCOUNT" value="班组结算"></Code>
+		<Code id="RENT_CONTRACT" value="代租结算"></Code>
+		<Code id="EQUIP_DETECT" value="检测管理"></Code>
+		<Code id="INSURE_EQUIP" value="保险管理"></Code>
+		<Code id="CONSTRUCT_OPERATION" value="施工作业"></Code>
+		<Code id="AUTOCRANE" value="汽吊管理"></Code>
+		<Code id="LOGISTICS_TRANSPORT" value="物流信息"></Code>
+		<Code id="BUSINESS_APPLICATION" value="业务申请"></Code>
+		<Code id="APP_Logistics" value="APP物流"></Code>
+	</Alias>
+	<!-- 款项类别 -->
+	<Alias name="FUND_TYPE">
+		<Code id="0" value="付款"></Code>
+		<Code id="1" value="收款"></Code>
+	</Alias>
+	<!-- 调度核批状态 -->
+	<Alias name="DISPATCH_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="通过"></Code>
+		<Code id="4" value="否决"></Code>
+		<Code id="5" value="完成"></Code>
+	</Alias>
+	<!-- 安拆方案审批状态 -->
+	<Alias name="INDIS_SCHEMA_APPLYFOR_STATE">
+		<Code id="0" value="拟稿"></Code>
+		<Code id="1" value="审核中"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="审批通过"></Code>
+	</Alias>
+	<!-- 事故级别 -->
+	<Alias name="ACCIDENT_LEVEL">
+		<Code id="0" value="一般事故"></Code>
+		<Code id="1" value="较大事故"></Code>
+		<Code id="2" value="重大事故"></Code>
+		<Code id="3" value="特别重大事故"></Code>
+	</Alias>
+	<!-- 收/付款 状态 -->
+	<Alias name="FUND_STATUS">
+		<Code id="1" value="未完成"></Code>
+		<Code id="2" value="完成"></Code>
+	</Alias>
+	<!-- 核批状态 -->
+	<Alias name="REPAIR_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待处理"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="通过"></Code>
+	</Alias>
+	<!-- 核批状态 -->
+	<Alias name="APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="通过"></Code>
+	</Alias>
+	<!--现场装车状态 -->
+	<Alias name="LOGISTI_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="审批通过"></Code>
+	</Alias>
+	<!-- 合同核批状态 -->
+	<Alias name="CONTRACT_APPLYFOR_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="待调度"></Code>
+		<Code id="4" value="待执行"></Code>
+		<Code id="5" value="执行中"></Code>
+		<Code id="6" value="执行完成"></Code>
+		<Code id="7" value="作废待审"></Code>
+		<Code id="8" value="作废待批"></Code>
+		<Code id="9" value="作废"></Code>
+	</Alias>
+	<!-- 领用状态 -->
+	<Alias name="PICKUP_STATUS">
+		<Code id="0" value="待领用"></Code>
+		<Code id="1" value="领用"></Code>
+		<Code id="2" value="归还中"></Code>
+		<Code id="3" value="归还"></Code>
+	</Alias>
+	<!-- 采购核批状态 -->
+	<Alias name="PURCHASE_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="待验收"></Code>
+		<Code id="4" value="换货"></Code>
+		<Code id="5" value="退货退款"></Code>
+		<Code id="6" value="完成"></Code>
+	</Alias>
+	<!-- 采购计划核批状态 -->
+	<Alias name="PURCHASE_PLAN_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待填报"></Code>
+		<Code id="2" value="待审核"></Code>
+		<Code id="3" value="待审批"></Code>
+		<Code id="4" value="通过"></Code>
+	</Alias>
+	<!-- 设备流程审批状态 -->
+	<Alias name="EQUIP_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="通过"></Code>
+		<Code id="4" value="待调度"></Code>
+	</Alias>
+	<!-- 验收结果 -->
+	<Alias name="PURCHASE_ACCEPTANCE_STATE">
+		<Code id="0" value="未验收"></Code>
+		<Code id="1" value="合格"></Code>
+		<Code id="2" value="不合格"></Code>
+		<Code id="4" value="换货"></Code>
+		<Code id="5" value="退货退款"></Code>
+		<Code id="7" value="其他"></Code>
+	</Alias>
+	<!-- 借用类型 -->
+	<Alias name="BORROW_TYPE">
+		<Code id="0" value="借进"></Code>
+		<Code id="1" value="借出"></Code>
+	</Alias>
+	<!-- 借用核批状态 -->
+	<Alias name="BORROW_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="待归还"></Code>
+		<Code id="4" value="续借待审"></Code>
+		<Code id="5" value="续借待批"></Code>
+		<Code id="6" value="完成"></Code>
+	</Alias>
+	<!-- 报废申请核批状态 -->
+	<Alias name="SCRAP_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="完成"></Code>
+	</Alias>
+	<!-- 报废合同核批状态 -->
+	<Alias name="SCRAP_CONTRACT_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="完成"></Code>
+		<!-- <Code id="4" value="待评审"></Code> -->
+	</Alias>
+	<!-- 报废处理核批状态 -->
+	<Alias name="SCRAP_HANDLE_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="完成"></Code>
+	</Alias>
+	<!-- 设备状态 -->
+	<Alias name="FLOW_STATE">
+		<Code id="0" value="等待中"></Code>
+		<Code id="1" value="安装申请"></Code>
+		<Code id="2" value="安装完成"></Code>
+		<Code id="3" value="使用申请"></Code>
+		<Code id="4" value="使用完成"></Code>
+		<Code id="5" value="拆卸申请"></Code>
+		<Code id="6" value="拆卸完成"></Code>
+		<Code id="7" value="入库申请"></Code>
+		<Code id="8" value="入库完成"></Code>
+	</Alias>
+	<!-- 验收结果 -->
+	<Alias name="BORROW_ACCEPTANCE_STATE">
+		<Code id="0" value="未还"></Code>
+		<Code id="1" value="合格"></Code>
+		<Code id="2" value="不合格"></Code>
+		<Code id="3" value="报损/维修"></Code>
+		<Code id="4" value="遗失/重新购买"></Code>
+		<Code id="5" value="归还"></Code>
+	</Alias>
+	<!-- 执行类型 -->
+	<Alias name="ACTIVE">
+		<Code id="0" value="预约"></Code>
+		<Code id="1" value="执行"></Code>
+	</Alias>
+	<!-- 开票类型 -->
+	<Alias name="INVOICE_STATUS">
+		<Code id="0" value="未开票"></Code>
+		<Code id="1" value="未完成"></Code>
+		<Code id="2" value="完成"></Code>
+	</Alias>
+	<!-- 提成基数 -->
+	<Alias name="CARDINAL_TYPE">
+		<Code id="0" value="按照合同实收款"></Code>
+		<Code id="1" value="按照合同毛利"></Code>
+	</Alias>
+	<!-- 提成比例 -->
+	<Alias name="PROPORTION_TYPE">
+		<Code id="0" value="同一比例"></Code>
+		<Code id="1" value="累加比例"></Code>
+	</Alias>
+	<!-- 抽成提取状态 -->
+	<Alias name="DEDUCT_PICKUP_STATUS">
+		<Code id="0" value="未提取"></Code>
+		<Code id="1" value="提取"></Code>
+	</Alias>
+	<!-- 巡检结果 -->
+	<!-- <Alias name="INSPECT_RESULT">
+		<Code id="0" value="不可用" aliasValue="×"></Code>  
+		<Code id="1" value="计划修理" aliasValue="○"></Code>
+		<Code id="2" value="有问题(可以使用)" aliasValue="？"></Code>
+		<Code id="3" value="当场处理(可以使用)" aliasValue="#"></Code>
+		<Code id="4" value="检修工处理(可以使用)" aliasValue="▲"></Code>
+        <Code id="5" value="良好" aliasValue="√"></Code>
+		<Code id="6" value="维修工维修完毕(可以使用)" aliasValue="▲"></Code>
+	</Alias> -->
+	<!-- 巡检结果（顺序调整） -->
+	<Alias name="INSPECT_RESULT">
+		<Code id="0" value="良好" aliasValue="√"></Code>
+		<Code id="1" value="当场处理(可以使用)" aliasValue="#"></Code>
+		<Code id="2" value="维修工维修完毕(可以使用)" aliasValue="▲"></Code>
+		<Code id="3" value="计划修理(限制使用)" aliasValue="○"></Code>
+		<Code id="4" value="有问题(限制使用)" aliasValue="？"></Code>
+		<Code id="5" value="不可用(安全隐患)" aliasValue="×"></Code>
+	</Alias>
+	<!-- 奖惩类型 -->
+	<Alias name="CREDIT_TYPE">
+		<Code id="0" value="处罚"></Code>
+		<Code id="1" value="奖励"></Code>
+	</Alias>
+	<!-- 短信响应类型 -->
+	<Alias name="SMS_REPLY_CODE">
+		<Code id="99" value="发送异常"></Code>
+		<Code id="1" value="操作成功"></Code>
+		<Code id="0" value="帐户格式不正确(正确的格式为:员工编号@企业编号)"></Code>
+		<Code id="-1" value="服务器拒绝(速度过快、限时或绑定IP不对等)如遇速度过快可延时再发"></Code>
+		<Code id="-2" value="密钥不正确"></Code>
+		<Code id="-3" value="密钥已锁定"></Code>
+		<Code id="-4" value="参数不正确(内容和号码不能为空，手机号码数过多，发送时间错误等)"></Code>
+		<Code id="-5" value="无此帐户"></Code>
+		<Code id="-6" value="帐户已锁定或已过期"></Code>
+		<Code id="-7" value="帐户未开启接口发送"></Code>
+		<Code id="-8" value="不可使用该通道组"></Code>
+		<Code id="-9" value="帐户余额不足"></Code>
+		<Code id="-10" value="内部错误"></Code>
+		<Code id="-11" value="扣费失败"></Code>
+	</Alias>
+	<!-- 验收检测项目类别 -->
+	<Alias name="VITEM_TYPE">
+		<Code id="TIS" value="塔吊安装自检"></Code>
+		<Code id="SIS" value="升降机安装自检"></Code>
+		<Code id="TEV" value="塔吊验收管理"></Code>
+		<Code id="SEV" value="升降机验收管理"></Code>
+		<Code id="TEI" value="塔吊巡检管理"></Code>
+		<Code id="SEI" value="升降机巡检管理"></Code>
+		<Code id="DM" value="例行保养"></Code>
+		<Code id="JM" value="初级保养"></Code>
+		<Code id="SM" value="高级保养"></Code>
+		<Code id="SIP" value="升降机安装前检查"></Code>
+		<Code id="TIP" value="塔吊安装前检查"></Code>
+		<Code id="QIP" value="其他设备安装前检查"></Code>
+		<Code id="SDP" value="升降机拆卸前检查"></Code>
+		<Code id="TDP" value="塔吊拆卸前检查"></Code>
+		<Code id="QDP" value="其他设备拆卸前检查"></Code>
+		<Code id="SIB" value="升降机基础验收"></Code>
+		<Code id="TIB" value="塔吊基础验收"></Code>
+		<Code id="QIB" value="其他设备基础验收"></Code>
+	</Alias>
+	<!-- 备忘录状态 -->
+	<Alias name="MEMO_STATUS">
+		<Code id="0" value="未归档"></Code>
+		<Code id="1" value="已归档"></Code>
+	</Alias>
+	<!-- 物流状态 -->
+	<Alias name="LOGISTICS_STATUS">
+		<Code id="0" value="已出货"></Code>
+		<Code id="1" value="已签收"></Code>
+	</Alias>
+
+	<!-- 入库结果 -->
+	<Alias name="WAREHOUSE_COMPON_STATUS">
+		<Code id="0" value="待入库"></Code>
+		<Code id="5" value="入库"></Code>
+		<Code id="6" value="遗失"></Code>
+		<Code id="7" value="报废"></Code>
+	</Alias>
+	<!-- 处理状态 -->
+	<Alias name="SCHEMA_FORM_STATUS">
+		<Code id="0" value="未完成"></Code>
+		<Code id="1" value="已完成"></Code>
+		<Code id="2" value="过期"></Code>
+		<Code id="3" value="已结案"></Code>
+	</Alias>
+	<!-- 保养类型 -->
+	<Alias name="MAINT_TYPE">
+		<Code id="DM" value="例行保养"></Code>
+		<Code id="JM" value="初级保养"></Code>
+		<Code id="SM" value="高级保养"></Code>
+	</Alias>
+	<!-- 处理状态 -->
+	<Alias name="HANDLE_STATUS">
+		<Code id="0" value="待处理"></Code>
+		<Code id="1" value="已处理"></Code>
+	</Alias>
+	
+	<!--ADD BY APP START-->
+	<!-- 处理状态 -->
+	<Alias name="DISPATCH_TYPE">
+		<Code id="0" value="安装/顶升"></Code>
+		<Code id="1" value="故障报修"></Code>
+		<Code id="2" value="借调出库"></Code>
+		<Code id="3" value="拆卸/降节"></Code>
+		<Code id="4" value="采购入库"></Code>
+		<Code id="5" value="故障回收"></Code>
+		<Code id="6" value="借调入库"></Code>
+	</Alias>
+	<Alias name="APPFLOW_STATE">
+		<Code id="0" value="编辑"></Code>
+		<Code id="1" value="审批中"></Code>
+		<Code id="2" value="审批结束"></Code>
+		<Code id="3" value="归档"></Code>
+		<Code id="5" value="退回"></Code>
+	</Alias>
+	<Alias name="APP_REPAIR_STATE">
+		<Code id="0" value="结案"></Code>
+		<Code id="1" value="待处理"></Code>
+		<Code id="2" value="派工中"></Code>
+		<Code id="3" value="处理中"></Code>
+		<Code id="4" value="已完成"></Code>
+		
+	</Alias>
+	<Alias name="DISPATCH_MODE">
+		<Code id="0" value="入库"></Code>
+		<Code id="1" value="出库"></Code>
+	</Alias>
+	<!-- 汽吊型号 -->
+	<Alias name="AUTOCRANE_MODEL">
+		<Code id="0" value="16吨"></Code>
+		<Code id="1" value="25吨"></Code>
+		<Code id="2" value="70吨"></Code>
+	</Alias>
+	<!-- 结算类别 -->
+	<Alias name="FUND_CATEGORY">
+		<Code id="0" value="新款"></Code>
+		<Code id="1" value="老款"></Code>
+	</Alias>
+	<!-- 停用类别 -->
+	<Alias name="BLOCKUP_TYPE">
+		<Code id="0" value="拆卸报停"></Code>
+		<Code id="1" value="中途报停"></Code>
+	</Alias>
+	<!-- END -->
+	<Alias name="RECTIFICATION">
+		<Code id="1" value="待整改"></Code>
+		<Code id="2" value="已整改"></Code>
+	</Alias>
+	<Alias name="APP_DISPATCH_STATUS">
+		<Code id="0" value="待发货"></Code>
+		<Code id="1" value="待签收"></Code>
+		<Code id="2" value="待结案"></Code>
+		<Code id="3" value="已结案"></Code>
+	</Alias>
+	<Alias name="APP_CONSTRUCT_STATUS">
+		<Code id="1" value="未进场"></Code>
+		<Code id="2" value="任务填报"></Code>
+		<Code id="3" value="已完成"></Code>
+		<Code id="4" value="已结案"></Code>
+		<Code id="0" value="超期未进场"></Code>
+	</Alias>
+	<!-- 安全检查 -->
+	<Alias name="SAFE_CHECK_STATUS">
+		<Code id="1" value="良好"></Code>
+		<Code id="2" value="待整改"></Code>
+		<Code id="3" value="已整改"></Code>
+	</Alias>
+	<!-- 收费单位 -->
+	<Alias name="UNIT_TYPE">
+		<Code id="1" value="元/个"></Code>
+		<Code id="3" value="包/个"></Code>
+	</Alias>
+	<Alias name="FEES_TYPE">
+		<Code id="1" value="装车费"></Code>
+		<Code id="2" value="卸车费"></Code>
+		<Code id="3" value="打包费"></Code>
+	</Alias>
+		<!-- 发货调度核批状态 -->
+	<Alias name="MATERIALS_DISPATCH_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="未装车"></Code>
+		<Code id="5" value="已装车"></Code>
+	</Alias>
+		<!-- 现场装车核批状态 -->
+	<Alias name="MATERIALS_PACKAGE_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="完成"></Code>
+	</Alias>
+
+		<!-- 报停管理核批状态 -->
+	<Alias name="CEASE_REPORT_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="完成"></Code>
+	</Alias>
+
+	<!-- 周材计划状态 -->
+	<Alias name="MATERIALS_PLAN_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待核准"></Code>
+		<Code id="2" value="待确认"></Code>
+		<Code id="3" value="已确认"></Code>
+	</Alias>
+	<!-- 泵车计划状态 -->
+	<Alias name="TRUCK_PLAN_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审批"></Code>
+		<Code id="2" value="完成"></Code>
+	</Alias>
+	<!-- 退场计划状态 -->
+	<Alias name="EXEUNT_PLAN_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待核准"></Code>
+		<Code id="2" value="待确认"></Code>
+		<Code id="3" value="已确认"></Code>
+	</Alias>
+	<!-- 周材合同状态 -->
+	<Alias name="CONTRACT_MATERIALS_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="审批通过"></Code>
+		<Code id="4" value="执行中"></Code>
+		<Code id="5" value="暂停"></Code>
+		<Code id="6" value="终止"></Code>
+		<Code id="7" value="作废"></Code>
+	</Alias>
+	<!-- 盘点管理 -->
+	<Alias name="TAKE_STOCK_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="完成"></Code>
+	</Alias>
+	<!-- 安拆类型 -->
+	<Alias name="INSTALL_DISMANTLE_TYPE">
+		<Code id="1" value="整机安装"></Code>
+		<Code id="2" value="顶升加节"></Code>
+		<Code id="3" value="附墙安装"></Code>
+		<Code id="4" value="方梁安装"></Code>
+		<Code id="5" value="降节拆卸"></Code>
+		<Code id="6" value="方梁拆卸"></Code>
+		<Code id="7" value="附墙拆卸"></Code>
+		<Code id="8" value="整机拆卸"></Code>
+		<Code id="9" value="其他安拆"></Code>
+	</Alias>
+	<!-- 其他业务管理状态 -->
+	<Alias name="OTHER_BUSINESS_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="审批通过"></Code>
+	</Alias>
+	<Alias name="CALCULATION_METHOD">
+		<Code id="0" value="相加"></Code>
+		<Code id="1" value="相减"></Code>
+	</Alias>
+	<!-- 计税方式 -->
+	<Alias name="TAX_MODE">
+		<Code id="0" value="简易计税"></Code>
+		<Code id="1" value="一般计税"></Code>
+	</Alias>
+	<!-- 通用审核审批状态 -->
+	<Alias name="AUDIT_APPROVAL_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="审批通过"></Code>
+	</Alias>
+	<!-- 单审批状态 -->
+	<Alias name="SINGLE_APPROVAL_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审批"></Code>
+		<Code id="2" value="审批通过"></Code>
+	</Alias>
+	<!-- 租借合同状态 -->
+	<Alias name="LEASE_CONTRACT_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="审批通过"></Code>
+		<Code id="4" value="执行中"></Code>
+		<Code id="5" value="暂停"></Code>
+		<Code id="6" value="终止"></Code>
+		<Code id="7" value="作废"></Code>
+	</Alias>
+	<!-- 流程关联模块 -->
+	<Alias name="RELATE_MODULE_FLOW">
+		<Code id="0" value="设备管理"></Code>
+		<Code id="1" value="设备合同"></Code>
+		<Code id="2" value="报废合同"></Code>
+	</Alias>
+	<!-- 调拨类型 -->
+	<Alias name="ALLOCATION_TYPE">
+		<Code id="0" value="项目间调拨"></Code>
+		<Code id="1" value="仓库间调拨"></Code>
+	</Alias>
+	<!-- 核算方式 -->
+	<Alias name="TRANPORT_CACULATE_TYPE">
+		<Code id="0" value="算头不算尾"></Code>
+		<Code id="1" value="算尾不算头"></Code>
+		<Code id="2" value="算头又算尾"></Code>
+		<Code id="3" value="头尾都不算"></Code>
+	</Alias>
+	<!-- 计税方式 -->
+	<Alias name="TAX_CACULATE_TYPE">
+		<Code id="0" value="简易征收"></Code>
+		<Code id="1" value="一般计税"></Code>
+	</Alias>
+	<!-- 统计规则-->
+	<Alias name="CACULATE_RULE">
+		<Code id="0" value="按品名日累计法"></Code>
+		<Code id="1" value="按品名上下统计法"></Code>
+		<Code id="2" value="按规格日累计法"></Code>
+		<Code id="3" value="按规格上下统计法"></Code>
+	</Alias>
+	<!-- 其他出入库处理：处理类型 -->
+	<Alias name="HANDLE_TYPE">
+		<Code id="0" value="出库处理"></Code>
+		<Code id="1" value="入库处理"></Code>
+	</Alias>
+	<!-- 出租类型 -->
+	<Alias name="RENT_TYPE">
+		<Code id="0" value="出租出库"></Code>
+		<Code id="1" value="调拨发货"></Code>
+	</Alias>
+	<!-- 项目调拨状态 -->
+	<Alias name="ALLOCATION_PROJECT_STATUS">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待审核"></Code>
+		<Code id="2" value="完成"></Code>
+	</Alias>
+	<!-- 合同类型 -->
+	<Alias name="CONTRACT_TYPE">
+		<Code id="0" value="建筑服务"></Code>
+		<Code id="1" value="设备租赁"></Code>
+	</Alias>
+	<!-- 合作方式 -->
+	<Alias name="COOPERATION_WAY">
+		<Code id="0" value="自营"></Code>
+		<Code id="1" value="联营"></Code>
+	</Alias>
+	<!-- 生成周期 -->
+	<Alias name="GENERATED_CYCLE">
+		<Code id="1" value="单月"></Code>
+		<Code id="2" value="双月"></Code>
+		<Code id="3" value="季度"></Code>
+	</Alias>
+	<!-- 生成时间 -->
+	<Alias name="GENERATED_OPPORTUNITY">
+		<Code id="0" value="立即生成"></Code>
+		<Code id="1" value="次月生成"></Code>
+	</Alias>
+	<!-- 封存状态 -->
+	<Alias name="SEAL_STATUS">
+		<Code id="0" value="未封存"></Code>
+		<Code id="1" value="已封存"></Code>
+	</Alias>
+	<!-- 参保状态 -->
+	<Alias name="INSURE_STATUS">
+		<Code id="0" value="未参保"></Code>
+		<Code id="1" value="已参保"></Code>
+		<Code id="12" value="一个月内到期"></Code>
+		<Code id="3" value="已过期"></Code>
+	</Alias>
+	<Alias name="INSURE_EFFECTIVE">
+		<Code id="0" value="未生效"></Code>
+		<Code id="1" value="已生效"></Code>
+		<Code id="3" value="已过期"></Code>
+		<Code id="12" value="一个月到期"></Code>
+	</Alias>
+	<Alias name="PRACTI_INSURE_TYPE">
+		<Code id="0" value="雇主责任险"></Code>
+		<Code id="9" value="其他"></Code>
+	</Alias>
+	<Alias name="APP_REPAIR_STATUS">
+		<Code id="0" value="待处理"></Code>
+		<Code id="1" value="待确认"></Code>
+		<Code id="2" value="已维修"></Code>
+		<Code id="3" value="驳回"></Code>
+	</Alias>
+	<Alias name="APP_INSTALL_STATE">
+		<Code id="0" value="待验收"></Code>
+		<Code id="1" value="整改待验收"></Code>
+		<Code id="2" value="安装完成"></Code>
+		<Code id="3" value="驳回"></Code>
+		<Code id="4" value="首次安装并加节"></Code>
+	</Alias>
+	<Alias name="APP_DISMANTLE_STATE">
+		<Code id="0" value="待验收"></Code>
+		<Code id="1" value="整改待验收"></Code>
+		<Code id="2" value="拆卸完成"></Code>
+		<Code id="3" value="驳回"></Code>
+	</Alias>
+	<Alias name="EQUIP_INSPECTION_TYPE">
+		<Code id="1" value="塔机签到自检"></Code>
+		<Code id="2" value="升降机签到自检"></Code>
+		<Code id="3" value="塔机签退自检"></Code>
+		<Code id="4" value="升降机签退自检"></Code>
+	</Alias>
+	<Alias name="PRACTI_DISCLOSE_STATE">
+		<Code id="0" value="未交底"></Code>
+		<Code id="1" value="已交底"></Code>
+		<Code id="2" value="已过期"></Code>
+	</Alias>
+	<!-- 报废处理核批状态 -->
+	<Alias name="PRACTI_DISPATCH_APPLYFOR_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="2" value="待审批"></Code>
+		<Code id="3" value="完成"></Code>
+	</Alias>
+	<!-- 支付状态-->
+	<Alias name="PAY_STATE">
+		<Code id="0" value="未完成"></Code>
+		<Code id="1" value="待支付"></Code>
+		<Code id="2" value="部分支付"></Code>
+		<Code id="3" value="已支付"></Code>
+	</Alias>
+		<!-- 人员类型-->
+	<Alias name="PRACTI_TYPE">
+		<Code id="0" value="劳务"></Code>
+		<Code id="1" value="自请"></Code>
+	</Alias>
+		<!-- 部门类型-->
+	<Alias name="DEP_TYPE">
+		<Code id="0" value="默认部门"></Code>
+		<Code id="1" value="劳务部门"></Code>
+	</Alias>
+		<!--教育、交底提交确认状态-->
+	<Alias name="EDU_CLA_CONFIRM_STATE">
+		<Code id="0" value="待提交"></Code>
+		<Code id="1" value="待确认"></Code>
+		<Code id="2" value="已确认"></Code>
+	</Alias>
+	
+</Lexicon>

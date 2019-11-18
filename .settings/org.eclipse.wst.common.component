@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="emms_GXDD">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/app"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/core"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/system"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/terminal"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
+        <property name="context-root" value="emms_GXDD"/>
+        <property name="java-output-path" value="/emms_GXDD/bin"/>
+    </wb-module>
+</project-modules>

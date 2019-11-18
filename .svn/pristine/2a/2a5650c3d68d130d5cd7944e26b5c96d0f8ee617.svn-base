@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.RecycleManageFee" table="T_RECYCLE_MANAGE_FEE"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="feeId" column="FEE_ID" type="java.lang.Long"
+			length="19">
+			<generator class="native" />
+		</id>
+		<property name="recycleId" type="java.lang.Long" column="RECYCLE_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="chargeType" type="java.lang.String" column="CHARGE_TYPE" />
+		<property name="chargePrice" type="java.lang.String" column ="CHARGE_PRICE" />
+		<property name="chargeQuantity" type="java.lang.String" column="CHARGE_QUANTITY" />
+		<property name="chargeAmount" type="java.lang.String" column="CHARGE_AMOUNT" />
+		<property name="chargeWay" type="java.lang.String" column="CHARGE_WAY" />
+		<property name="leaseAmount" type="java.lang.String" column="LEASE_AMOUNT" />
+		<property name="feeCategory" type="java.lang.String" column="FEE_CATEGORY" />
+	</class>
+</hibernate-mapping>

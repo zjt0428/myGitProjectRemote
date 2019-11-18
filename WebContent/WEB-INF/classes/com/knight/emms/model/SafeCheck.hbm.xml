@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SafeCheck" table="T_SAFE_CHECK" 
+		select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+	<id name="safeCheckId" column="SAFE_CHECK_ID" type="java.lang.Long" length="19">
+		<generator class="native"/>
+	</id>	
+	<property name="status" type="java.lang.String" column="STATUS"/>
+	<property name="projectName" type="java.lang.String" column="PROJECT_NAME"/>
+	<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM"/>
+	<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC"/>
+	<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC"/>
+	<property name="checkStaff" type="java.lang.String" column="CHECK_STAFF"/>
+	<property name="checkDate" type="java.lang.String" column="CHECK_DATE"/>
+	<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" fetch="join" />
+	<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" fetch="join"/>
+	<set name="safeCheckContentSet" cascade="all" inverse="false" lazy="true">
+		<key column="SAFE_CHECK_ID"/>
+		<one-to-many class="com.knight.emms.model.SafeCheckContent"/>
+	</set>
+	</class>
+</hibernate-mapping>

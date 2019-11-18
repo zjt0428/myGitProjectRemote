@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.InspectManage" table="T_INSPECT_MANAGE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inspectId" column="INSPECT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="inspectDate" type="java.util.Date" column="INSPECT_DATE" />
+		<property name="inspectPepoles" type="java.lang.String" column="INSPECT_PEPOLES" />
+		<property name="inspectResult" type="java.lang.String" column="INSPECT_RESULT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="exwSerial" type="java.lang.String" column="EXW_SERIAL" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="rectification" type="java.lang.String" column="RECTIFICATION" />
+		<property name="inspectRectifyId" type="java.lang.Long" column="INSPECT_RECTIFY_ID" />
+	
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="equipSpecific" type="java.lang.String" formula="(SELECT BM.VALUE FROM T_EQUIPMENT E,BM_EQUIP_SPECIFIC BM WHERE E.EQUIP_SPECIFIC=BM.CODE AND E.EQUIP_ID=EQUIP_ID)"/>
+	</class>
+</hibernate-mapping>

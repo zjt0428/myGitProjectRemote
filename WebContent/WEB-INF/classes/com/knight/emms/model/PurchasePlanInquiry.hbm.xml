@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PurchasePlanInquiry" table="T_PURCHASE_PLAN_INQUIRY" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="planId" column="PLAN_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="purchasePlanId" type="java.lang.Long" column="PURCHASE_PLAN_ID" />
+		<property name="materialName" type="java.lang.String" column="MATERIAL_NAME" />
+		<property name="specific" type="java.lang.String" column="SPECIFIC" />
+		<property name="unit" type="java.lang.String" column="UNIT" />
+		<property name="quantity" type="java.lang.Long" column="QUANTITY" />
+		<property name="approvalQuantity" type="java.lang.Long" column="APPROVAL_QUANTITY" />
+		<property name="purchaseDate" type="java.lang.String" column="PURCHASE_DATE" />
+		<property name="inquiryPrice" type="java.lang.Long" column="INQUIRY_PRICE" />
+		<property name="summary" type="java.lang.Long" column="SUMMARY" />
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Instalment" table="T_INSTALMENT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="instalmentId" column="INSTALMENT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="periods" type="java.lang.Short" column="PERIODS" />
+		<property name="payment" type="java.math.BigDecimal" column="PAYMENT" />
+		<property name="payDate" type="java.lang.String" column="PAY_DATE" />
+		<property name="alreadyPayment" type="java.math.BigDecimal" column="ALREADY_PAYMENT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+	</class>
+</hibernate-mapping>

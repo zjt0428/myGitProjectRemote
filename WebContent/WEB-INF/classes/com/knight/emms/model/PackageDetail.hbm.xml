@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PackageDetail" table="T_PACKAGE_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="packageId" type="java.lang.Long" column="PACKAGE_ID" />
+		<property name="mnemonics" type="java.lang.String" column="MNEMONICS" />
+		<property name="commodityId" type="java.lang.Long" column="COMMODITY_ID" />
+		<property name="commodity" type="java.lang.String" column="COMMODITY" />
+		<property name="specificationsId" type="java.lang.Long" column="SPECIFICATIONS_ID" />
+		<property name="specifications" type="java.lang.String" column="SPECIFICATIONS" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="dispatchNumber" type="java.lang.String" column="DISPATCH_QUANTITY" />
+		<property name="rentQuantity" type="java.lang.String" column="RENT_QUANTITY" />
+		<property name="loadQuantity" type="java.lang.String" column="LOAD_QUANTITY" />
+		<property name="packageQuantity" type="java.lang.String" column="PACKAGE_QUANTITY" />
+		<property name="secondUnitConversion" type="java.lang.String" column="SECOND_UNIT_CONVERSION" />
+		<property name="convertedQuantity" type="java.lang.String" column="CONVERTED_QUANTITY" />
+		<property name="auxiliaryQuantity" type="java.lang.String" column="AUXILIARY_QUANTITY"></property>
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<!-- <many-to-one name="dispatchMaterials" column="DISPATCH_ID" class="com.knight.emms.model.DispatchMaterials" fetch="join" /> -->
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PractiInsuranceDetail" table="T_PRACTI_INSURANCE_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="insureId" type="java.lang.Long" column="INSURE_ID" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="kindWork" type="java.lang.String" column="KIND_WORK" />
+		<property name="premium" type="java.math.BigDecimal" column="PREMIUM" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="startInsureDate" type="java.lang.String" column="START_INSURE_DATE" />
+		<property name="defaultFlag" type="java.lang.String" column="DEFAULT_FLAG" />
+		<property name="acculmatedpremium" type="java.math.BigDecimal" column="ACCULMATEDPREMIUM" />
+		<property name="acculmatedclaim" type="java.math.BigDecimal" column="ACCULMATEDCLAIM" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.PRACTI_ID = PRACTI_ID)" />
+		<many-to-one name="practitioner" column="PRACTI_ID" class="com.knight.emms.model.Practitioner" fetch="join"  insert="false"  update="false"/>
+		<!-- <many-to-one name="practiInsurance" column="INSURE_ID" class="com.knight.emms.model.PractiInsurance"  lazy="false" fetch="join" insert="false" update="false"/> -->
+	</class>
+</hibernate-mapping>

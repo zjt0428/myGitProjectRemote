@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.OtherLeaseDetail" table="T_OTHER_LEASE_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="otherId" type="java.lang.Long" column="OTHER_ID" />
+		<property name="feesType" type="java.lang.String" column="FEES_TYPE" />
+		<property name="calculationMethod" type="java.lang.String" column="CALCULATION_METHOD" />
+		<property name="fee" type="java.lang.String" column="FEE" />
+	</class>
+</hibernate-mapping>

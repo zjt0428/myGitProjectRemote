@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.IndexDisplay" table="INDEX_DISPLAY" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="indexId" column="INDEXID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="portalId" type="java.lang.String" column="PORTALID" length="64" not-null="true" unique="false" />
+		<property name="colNum" type="java.lang.Integer" column="COLNUM" length="10" not-null="true" unique="false" />
+		<property name="rowsNum" type="java.lang.Integer" column="ROWSNUM" length="10" not-null="true" unique="false" />
+		<!-- imported bi-directional many-to-one association to AppUser -->
+		<many-to-one name="appUser" class="com.knight.system.model.AppUser" not-null="false" fetch="select">
+			<column name="userId" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>

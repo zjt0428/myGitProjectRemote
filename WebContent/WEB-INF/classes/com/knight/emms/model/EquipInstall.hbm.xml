@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInstall" table="T_EQUIPMENT_INSTALL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="installId" column="INSTALL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="installSerial" type="java.lang.String" column="INSTALL_SERIAL" />
+		<property name="installTheme" type="java.lang.String" column="INSTALL_THEME" />
+		<property name="startinDate" type="java.util.Date" column="STARTIN_DATE" />
+		<property name="endinDate" type="java.util.Date" column="ENDIN_DATE" />
+		<property name="spendTime" type="java.lang.Long" column="SPEND_TIME" />
+		<property name="practiCount" type="java.lang.Short" column="PRACTI_COUNT" />
+		<property name="principalId" type="java.lang.Long" column="PRINCIPAL_ID" />
+		<property name="principal" type="java.lang.String" column="PRINCIPAL" />
+		<property name="principalTel" type="java.lang.String" column="PRINCIPAL_TEL" />
+		<property name="partake" type="java.lang.String" column="PARTAKE" />
+		<property name="installHeight" type="java.math.BigDecimal" column="INSTALL_HEIGHT" />
+		<property name="knotCounts" type="java.lang.Integer" column="KNOT_COUNTS" />
+		<property name="firstKnotCount" type="java.lang.Integer" column="FIRST_KNOT_COUNT" />
+		<property name="wallAttacheQty" type="java.lang.Integer" column="WALL_ATTACHE_QTY" />
+		<property name="brachium" type="java.math.BigDecimal" column="BRACHIUM" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="jackFileAttaches" type="java.lang.String" column="JACK_FILE_ATTACHES" />
+		<property name="dropFileAttaches" type="java.lang.String" column="DROP_FILE_ATTACHES" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="installtype" type="java.lang.String" column="INSTALLTYPE" />
+		<property name="competentDepartment" type="java.lang.String" formula="(SELECT CL.COMPETENT_DEPARTMET  FROM T_CONTRACT_LEASE CL  WHERE CL.CONTRACT_ID IN (SELECT EF.CONTRACT_ID FROM T_EQUIPMENT_FLOW EF WHERE EF.FLOW_ID= FLOW_ID))" />
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="belongToArea" type="java.lang.String" column="BELONG_TO_AREA" />
+		<property name="equipmentNo" type="java.lang.String" column="EQUIPMENT_NO" />
+		<property name="exwDate" type="java.lang.String" column="EXW_DATE" />
+		<property name="equipVender" type="java.lang.String" column="EQUIP_VENDER" />
+		<property name="approachNumber" type="java.lang.String" column="APPROACH_NUMBER" />
+		<property name="equipAmount" type="java.lang.Integer" column="EQUIP_AMOUNT" />
+		<property name="currentInstallHeight" type="java.lang.String" column="CURRENT_INSTALL_HEIGHT" />
+		<property name="installLocation" type="java.lang.String" column="INSTALL_LOCATION" />
+		<property name="checkAttach" type="java.lang.String" column="CHECK_ATTACH" />
+		<property name="firstAttach" type="java.lang.Integer" column="FIRST_ATTACH" />
+	    <property name="disclosureId" type="java.lang.Long" column="DISCLOSURE_ID" />
+	    <property name="appInstallState" type="java.lang.String" column="APP_INSTALL_STATE" />
+	    <property name="wallAttachePoleNum" type="java.lang.Integer" column="WALL_ATTACHE_POLE_NUM" />
+	    <property name="wallAttacheFrameNum" type="java.lang.Integer" column="WALL_ATTACHE_FRAME_NUM" />
+	    <property name="wallAttachePoleCount" type="java.lang.Integer" column="WALL_ATTACHE_POLE_COUNT" />
+	    <property name="wallAttacheFrameCount" type="java.lang.Integer" column="WALL_ATTACHE_FRAME_COUNT" />
+	    <property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="permissionFlag" type="java.lang.String" formula="( SELECT CL.PERMISSION_FLAG FROM T_CONTRACT_LEASE CL LEFT JOIN T_EQUIPMENT_FLOW EF ON CL.CONTRACT_ID = EF.CONTRACT_ID WHERE EF.FLOW_ID = FLOW_ID )" /> 
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<set name="practiDiarySet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_INSTALL'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.PractiDiary" />
+		</set>
+		<set name="componDiarySet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_INSTALL'"  >
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.ComponDiary"  />
+		
+		</set>
+		<set name="jjComponSet" cascade="all" inverse="true" lazy="true">
+			<key column="INSTALL_ID" />
+			<one-to-many class="com.knight.emms.model.InstallJjCompon" />
+		</set>
+		<set name="autocraneFeeSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_INSTALL'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.AutocraneFee" />
+		</set>
+		<set name="installDismantelTeamSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_INSTALL'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.InstallDismantelTeam" />
+		</set>
+		<set name="autocraneUnitSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_INSTALL'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.AutocraneUnit" />
+		</set>
+		<set name="installFeeSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_INSTALL'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.InstallFee" />
+		</set>
+	</class>
+</hibernate-mapping>

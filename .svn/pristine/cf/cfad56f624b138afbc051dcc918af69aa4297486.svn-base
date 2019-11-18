@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipRepairLocation" table="T_EQUIPMENT_REPAIR_LOCATION" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="repairLocationId" column="REPAIR_LOCATION_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="repairId" type="java.lang.Long" column="REPAIR_ID" />
+		<property name="faultLocation" type="java.lang.String" column="FAULT_LOCATION" />
+		<property name="spendDate" type="java.util.Date" column="SPEND_DATE" />
+		<property name="phenomenon" type="java.lang.String" column="PHENOMENON" />
+		<property name="unitPrice" type="java.math.BigDecimal" column="UNIT_PRICE" />
+		<property name="labour" type="java.lang.Integer" column="LABOUR" />
+		<property name="labourCharges" type="java.math.BigDecimal" column="LABOUR_CHARGES" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="troubleshootDate" type="java.util.Date" column="TROUBLESHOOT_DATE" />
+		<property name="repairTime" type="java.lang.Integer" column="REPAIR_TIME" />
+		<property name="cumulativeDowntime" type="java.lang.Integer" column="CUMULATIVE_DOWNTIME" />
+		<property name="repairTeam" type="java.lang.String" column="REPAIR_TEAM" />
+	</class>
+</hibernate-mapping>

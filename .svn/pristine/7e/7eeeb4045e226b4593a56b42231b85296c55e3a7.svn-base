@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<bean id="codeService" class="com.knight.system.service.impl.CodeServiceImpl" init-method="init">
+		<constructor-arg index="0" ref="initLoadTableDao" />
+	</bean>
+	<!-- 用户角色信息 -->
+	<bean id="appUserService" class="com.knight.system.service.impl.AppUserServiceImpl">
+		<constructor-arg index="0" ref="appUserDao" />
+		<property name="appUserExtendDomains">
+			<map>
+				<entry key="PRACTITIONER" value-ref="practitionerService"></entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="appUserExtendService" class="com.knight.system.service.impl.AppUserExtendServiceImpl">
+		<constructor-arg index="0" ref="appUserExtendDao" />
+	</bean>
+	<bean id="appUserKeyService" class="com.knight.system.service.impl.AppUserKeyServiceImpl">
+		<constructor-arg index="0" ref="appUserKeyDao" />
+	</bean>
+	<bean id="appUserKeyExtendService" class="com.knight.system.service.impl.AppUserKeyExtendServiceImpl">
+		<constructor-arg index="0" ref="appUserKeyExtendDao" />
+	</bean>
+	<bean id="appRoleService" class="com.knight.system.service.impl.AppRoleServiceImpl">
+		<constructor-arg index="0" ref="appRoleDao" />
+	</bean>
+	<bean id="companyService" class="com.knight.system.service.impl.CompanyServiceImpl">
+		<constructor-arg index="0" ref="companyDao" />
+	</bean>
+	<bean id="departmentService" class="com.knight.system.service.impl.DepartmentServiceImpl">
+		<constructor-arg index="0" ref="departmentDao" />
+	</bean>
+	<bean id="indexDisplayService" class="com.knight.system.service.impl.IndexDisplayServiceImpl">
+		<constructor-arg index="0" ref="indexDisplayDao" />
+	</bean>
+	<bean id="shortMessageService" class="com.knight.system.service.impl.ShortMessageServiceImpl">
+		<constructor-arg index="0" ref="shortMessageDao" />
+	</bean>
+	<bean id="inMessageService" class="com.knight.system.service.impl.InMessageServiceImpl">
+		<constructor-arg index="0" ref="inMessageDao" />
+	</bean>
+	<bean id="appTipsService" class="com.knight.system.service.impl.AppTipsServiceImpl">
+		<constructor-arg index="0" ref="appTipsDao" />
+	</bean>
+
+	<!-- 权限菜单相关 -->
+	<bean id="appFunctionService" class="com.knight.system.service.impl.AppFunctionServiceImpl">
+		<constructor-arg index="0" ref="appFunctionDao" />
+	</bean>
+	<bean id="fileAttachService" class="com.knight.system.service.impl.FileAttachServiceImpl">
+		<constructor-arg index="0" ref="fileAttachDao" />
+	</bean>
+	<bean id="funUrlService" class="com.knight.system.service.impl.FunUrlServiceImpl">
+		<constructor-arg index="0" ref="funUrlDao" />
+	</bean>
+	<bean id="sysConfigService" class="com.knight.system.service.impl.SysConfigServiceImpl">
+		<constructor-arg index="0" ref="sysConfigDao" />
+	</bean>
+
+	<!-- 日志审计 -->
+	<bean id="systemLogService" class="com.knight.system.service.impl.SystemLogServiceImpl">
+		<constructor-arg index="0" ref="systemLogDao" />
+	</bean>
+	<bean id="appUserKeyLogService" class="com.knight.system.service.impl.AppUserKeyLogServiceImpl">
+		<constructor-arg index="0" ref="appUserKeyLogDao" />
+	</bean>
+	<bean id="systemSqlService" class="com.knight.system.service.impl.SystemSqlServiceImpl"></bean>
+</beans>

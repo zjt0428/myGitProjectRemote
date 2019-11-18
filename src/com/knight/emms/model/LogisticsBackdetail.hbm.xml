@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LogisticsBackdetail" table="T_LOGISTICS_BACKDETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="backdetailId" column="BACKDETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="backsportId" type="java.lang.Long" column="BACKSPORT_ID" />
+		<property name="carId" type="java.lang.Long" column="CAR_ID" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="driver" type="java.lang.String" column="DRIVER" />
+		<property name="driverPhone" type="java.lang.String" column="DRIVER_PHONE" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<many-to-one name="componDiary" column="COMPON_DIARY_ID" class="com.knight.emms.model.ComponDiary" fetch="join" />
+	</class>
+</hibernate-mapping>

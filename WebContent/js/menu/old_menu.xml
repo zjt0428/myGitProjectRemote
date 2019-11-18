@@ -1,0 +1,2693 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Menus>
+    <Items id="MyDesktop" text="OA日常办公" iconCls="menu-my-desktop" isPublic="true">
+        <Item id="ProfileForm" iconCls="menu-my-customer" text="修改个人资料"/>
+        <Items id="xnodeMyMessageManage" iconCls="menu-my-message" text="我的消息">
+            <Item id="MessageReceiveListView" iconCls="btn-personal-mail_receive" text="接收信息"/>
+            <Item id="MessageSendListView" iconCls="btn-personal-mail_send" text="已发信息"/>
+        </Items>
+        <Item id="AnnounceUserListView" iconCls="menu-info" text="通知公告"/>
+        <Item id="MemoListView" iconCls="menu-info" text="工作备忘"/>
+        <Items id="xnodeTransactionApproval" iconCls="menu-my-message" text="事务审批">
+            <Item id="FlowDefineListView" iconCls="btn-personal-mail_receive" text="流程定义">
+                <Function id="_FlowDefineQuery" text="查询" iconCls="menu-list">
+                    <url>/app/listFdefine.do</url>
+                </Function>
+                <Function id="_FlowDefineAdd" text="新增" iconCls="menu-list">
+                    <url>/app/saveFdefine.do</url>
+                </Function>
+                <Function id="_FlowDefineEdit" text="修改" iconCls="menu-list">
+                    <url>/app/saveFdefine.do</url>
+                </Function>
+                <Function id="_FlowDefineDel" text="删除" iconCls="menu-list">
+                    <url>/app/delFdefine.do</url>
+                </Function>
+            </Item>
+            <Item id="MyApplyListView" iconCls="btn-personal-mail_receive" text="我的申请">
+                <Function id="_MyApplyExporter" text="删除" iconCls="menu-list">
+                    <url>/app/exportFlow.do</url>
+                </Function>
+            </Item>
+            <Item id="MyApproveListView" iconCls="btn-personal-mail_send" text="我的审批">
+                <Function id="_MyApproveExporter" text="删除" iconCls="menu-list">
+                    <url>/app/exportFlow.do</url>
+                </Function>
+            </Item>
+            <Item id="CopyToMyListView" iconCls="btn-personal-mail_send" text="抄送我的">
+                <Function id="_CopyExporter" text="删除" iconCls="menu-list">
+                    <url>/app/exportFlow.do</url>
+                </Function>
+            </Item>
+            <Item id="TranFinishListView" iconCls="btn-personal-mail_send" text="归档">
+                <Function id="_FinishExporter" text="删除" iconCls="menu-list">
+                    <url>/app/exportFlow.do</url>
+                </Function>
+            </Item>
+            <Item id="ApprovalStatus" iconCls="menu-business-practivacancyrate" text="审批情况表"/>
+        </Items>
+        <Items id="xnodeAttendance" iconCls="menu-my-message" text="塔司签到">
+            <Item id="AttendamceListView" iconCls="menu-business-credit" text="考勤管理">
+                <Function id="_AttendamceQuery" text="查询" iconCls="menu-list">
+                    <url>/app/listAttendamce.do</url>
+                </Function>
+                <Function id="_AttendamceLoad" text="加载" iconCls="btn-loading">
+                    <url>/app/loadAttendamce.do</url>
+                </Function>
+                <Function id="_AttendamceSignIn" text="签到" iconCls="menu-add">
+                    <url>/app/signInAttendamce.do</url>
+                </Function>
+                <Function id="_AttendamceSignOut" text="签退" iconCls="menu-edit">
+                    <url>/app/signOutAttendamce.do</url>
+                </Function>
+                <Function id="_AttendamceMultiDel" text="删除" iconCls="menu-del">
+                    <url>/app/multiDelAttendamce.do</url>
+                </Function>
+                <Function id="_AttendamceExporter" text="导出" iconCls="btn-head-exporter">
+                    <url>/archive/exportAttendamce.do</url>
+                </Function>
+                <Function id="_AttendamceReport" text="考勤表" iconCls="btn-head-exporter">
+                    <url>/archive/reportAttendamce.do</url>
+                </Function>
+            </Item>
+            <Item id="AttendamceRpt" iconCls="menu-business-practivacancyrate" text="考勤统计报表"/>
+            <Item id="AttendamceDetailRpt" iconCls="menu-business-practivacancyrate" text="考勤详情表"/>
+            <Item id="AttendamceSetForm" iconCls="btn-personal-mail_send" text="功能设置"/>
+        </Items>
+        <Item id="InfoFileAttachListView" iconCls="menu-system-log" text="资料文档库">
+            <Function id="_InfoFileAttachListQuery" text="查询" iconCls="menu-list"/>
+            <Function id="_InfoFileAttachAdd" text="上传" iconCls="btn-head-add"/>
+            <Function id="_InfoFileAttachMultiDel" text="删除" iconCls="btn-head-del"/>
+            <Function id="_InfoFileAttachDownload" text="下载" iconCls="btn-grid-read"/>
+        </Item>
+        <Item id="xnodeMassListView" iconCls="menu-arch-rec-type" text="短信群发"/>
+        <Item id="xnodeSystemMessageListView" iconCls="menu-arch-rec-type" text="系统消息"/>
+        <Item id="xnodeWarningRemindListView" iconCls="menu-arch-rec-type" text="预警提醒"/>
+        <Item id="xnodeInstantMessagListView" iconCls="menu-arch-rec-type" text="RSQQ(通即通讯)"/>
+    </Items>
+    <Items id="SystemSetting" text="系统管理" iconCls="menu-set-setting" isPublic="false">
+        <Item id="AppUserListView" iconCls="menu-set-user" text="用户管理">
+            <Function id="_AppUserQuery" text="查看用户" iconCls="menu-list">
+                <url>/system/listAppUser.do</url>
+            </Function>
+            <Function id="_AppUserAdd" text="添加用户" iconCls="menu-add">
+                <url>/system/listAppUser.do</url>
+                <url>/system/chooseRolesAppUser.do</url>
+                <url>/system/selectedRolesAppUser.do</url>
+                <url>/system/listDepartment.do</url>
+            </Function>
+            <Function id="_AppUserEdit" text="编辑用户" iconCls="menu-edit">
+                <url>/system/listAppUser.do</url>
+                <url>/system/chooseRolesAppUser.do</url>
+                <url>/system/selectedRolesAppUser.do</url>
+                <url>/system/listDepartment.do</url>
+            </Function>
+            <Function id="_AppUserIKey" text="IKEY授权" iconCls="btn-business-ikey">
+                <url>/system/listAppUser.do</url>
+                <url>/system/saveAppUserKey.do</url>
+            </Function>
+            <Function id="_AppUserDel" text="删除用户" iconCls="menu-del">
+                <url>/system/listAppUser.do</url>
+                <url>/system/multiDelAppUser.do</url>
+            </Function>
+            <Function id="_AppUserResetPwd" text="重置用户密码" iconCls="menu-set-password">
+                <url>/system/multiResetPwdAppUser.do</url>
+            </Function>
+        </Item>
+        <Item id="AppRoleView" iconCls="menu-set-role" text="角色设置">
+            <Function id="_AppRoleList" text="查看角色" iconCls="menu-list">
+                <url>/system/listAppRole.do</url>
+            </Function>
+            <Function id="_AppRoleAdd" text="添加角色" iconCls="menu-add">
+                <url>/system/listAppRole.do</url>
+                <url>/system/saveAppRole.do</url>
+            </Function>
+            <Function id="_AppRoleEdit" text="编辑角色" iconCls="menu-edit">
+                <url>/system/listAppRole.do</url>
+                <url>/system/saveAppRole.do</url>
+                <url>/system/getAppRole.do</url>
+            </Function>
+            <Function id="_AppRoleDel" text="删除角色" iconCls="menu-del">
+                <url>/system/listAppRole.do</url>
+                <url>/system/mulDelAppRole.do</url>
+            </Function>
+            <Function id="_AppRoleGrant" text="授权角色" iconCls="menu-set-grant">
+                <url>/system/listAppRole.do</url>
+                <url>/system/grantXmlAppRole.do</url>
+                <url>/system/getAppRole.do</url>
+                <url>/system/grantAppRole.do</url>
+            </Function>
+        </Item>
+        <Item id="AppUserKeyListView" iconCls="menu-system-ikey" text="IKEY信息">
+            <Function id="_AppUserKeyQuery" text="查看IKEY列表" iconCls="menu-list">
+                <url>/system/listAppUserKey.do</url>
+            </Function>
+            <Function id="_AppUserKeyEdit" text="修改IKEY" iconCls="btn-head-edit">
+                <url>/system/listAppUserKey.do</url>
+                <url>/system/saveAppUserKey.do</url>
+            </Function>
+            <Function id="_AppUserKeyForbidden" text="禁用IKEY" iconCls="btn-head-forbidden">
+                <url>/system/listAppUserKey.do</url>
+                <url>/system/multiForbiddenAppUserKey.do</url>
+            </Function>
+            <Function id="_AppUserKeyRecover" text="恢复IKEY" iconCls="btn-head-recover">
+                <url>/system/listAppUserKey.do</url>
+                <url>/system/recoverAppUserKey.do</url>
+            </Function>
+            <Function id="_AppUserKeyDel" text="删除IKEY" iconCls="menu-del">
+                <url>/system/listAppUserKey.do</url>
+                <url>/system/multiDelAppUserKey.do</url>
+            </Function>
+        </Item>
+        <Item id="DepartmentView" iconCls="menu-set-department" text="部门单位">
+            <Function id="_DepartmentQuery" text="查看部门单位" iconCls="menu-list">
+                <url>/system/listDepartment.do</url>
+                <url>/system/selectAppUser.do</url>
+            </Function>
+            <Function id="_DepartmentAdd" text="新建部门单位" iconCls="menu-add">
+                <url>/system/listDepartment.do</url>
+                <url>/system/addDepartment.do</url>
+                <url>/system/selectAppUser.do</url>
+                <url>/system/saveAppUser.do</url>
+            </Function>
+            <Function id="_DepartmentEdit" text="修改部门单位" iconCls="menu-edit">
+                <url>/system/listDepartment.do</url>
+                <url>/system/updateDepartment.do</url>
+                <url>/system/addDepartment.do</url>
+                <url>/system/detailDepartment.do</url>
+                <url>/system/selectAppUser.do</url>
+                <url>/system/saveAppUser.do</url>
+            </Function>
+            <Function id="_DepartmentDel" text="删除部门单位" iconCls="menu-del">
+                <url>/system/listDepartment.do</url>
+                <url>/system/removeDepartment.do</url>
+                <url>/system/selectAppUser.do</url>
+                <url>/system/saveAppUser.do</url>
+            </Function>
+        </Item>
+        <Item id="VerifyItemListView" iconCls="menu-business-verifyitem" text="检验项目">
+            <Function id="_VerifyItemQuery" text="查询" iconCls="btn-head-add">
+                <url>/verify/listSelectVerifyItem.do</url>
+                <url>/verify/listVerifyItem.do</url>
+            </Function>
+            <Function id="_VerifyItemAdd" text="新增" iconCls="btn-head-add">
+                <url>/verify/saveVerifyItem.do</url>
+            </Function>
+            <Function id="_VerifyItemEdit" text="修改" iconCls="btn-head-edit">
+                <url>/verify/saveVerifyItem.do</url>
+            </Function>
+            <Function id="_VerifyItemMultiDel" text="删除" iconCls="btn-head-del">
+                <url>/verify/multiDelVerifyItem.do</url>
+            </Function>
+            <Function id="_VerifyItemDemandAdd" text="添加检验要求" iconCls="btn-head-add">
+                <url>/verify/listDemandVerifyItem.do</url>
+                <url>/verify/saveDemandVerifyItem.do</url>
+            </Function>
+            <Function id="_VerifyItemDemandEdit" text="修改检验要求" iconCls="btn-head-edit">
+                <url>/verify/listDemandVerifyItem.do</url>
+                <url>/verify/saveDemandVerifyItem.do</url>
+            </Function>
+            <Function id="_VerifyItemDemandMultiDel" text="删除检验要求" iconCls="btn-head-del">
+                <url>/verify/listDemandVerifyItem.do</url>
+                <url>/verify/multiDelDemandVerifyItem.do</url>
+            </Function>
+        </Item>
+        <Item id="DicCodeListView" iconCls="menu-system-dic" text="代码词典">
+            <Function id="_DicCodeManage" text="词典管理" iconCls="menu-list">
+                <url>/system/listDicCode.do</url>
+                <url>/system/refreshDicCode.do</url>
+                <url>/system/listDicDetailCode.do</url>
+                <url>/system/delDicDetailCode.do</url>
+                <url>/system/saveDicDetailCode.do</url>
+            </Function>
+        </Item>
+        <Item id="SystemLogListView" iconCls="menu-system-log" text="系统日志">
+            <Function id="_SystemLogManage" text="日志管理" iconCls="menu-list">
+                <url>/system/listSystemLog.do</url>
+                <url>/system/multiDelSystemLog.do</url>
+            </Function>
+        </Item>
+        <Item id="BusinessMessageListView" iconCls="menu-archive-draft-manage" text="后台消息">
+            <Function id="_BusinessMessageQuery" text="查询" iconCls="menu-list">
+                <url>/form/listBusinessMessage.do</url>
+            </Function>
+            <Function id="_BusinessMessageQueueResend" text="群发" iconCls="btn-business-resendqueue">
+                <url>/form/resendQueueBusinessMessage.do</url>
+            </Function>
+            <Function id="_BusinessMessageResend" text="发送" iconCls="btn-business-resend">
+                <url>/form/resendBusinessMessage.do</url>
+            </Function>
+        </Item>
+        <Item id="xnodeFactoryWarehouseListView" iconCls="menu-arch-rec-type" text="厂家库"/>
+        <Item id="xnodeProductWarehouseListView" iconCls="menu-arch-rec-type" text="产品库"/>
+        <Item id="xnodePartsWarehouseListView" iconCls="menu-arch-rec-type" text="零部件库"/>
+        <Item id="xnodeConsumptiveWarehouseListView" iconCls="menu-arch-rec-type" text="耗材库"/>
+        <Item id="xnodeKnowledgeWarehouseListView" iconCls="menu-arch-rec-type" text="知识库"/>
+        <Item id="EquipmentDistributionView" iconCls="menu-my-customer" text="设备一览"/>
+        <Item id="DispatchAllocateInitListView" iconCls="menu-system-dic" text="塔吊/升降机配件清单设置"/>
+        <Item id="SideStationListView" iconCls="menu-business-verifyitem" text="旁站明细设置">
+        	<Function id="_SideStationQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listSideStation.do</url>
+            </Function>
+            <Function id="_SideStationAdd" text="新增" iconCls="menu-list">
+                <url>/safety/saveSideStation.do</url>
+            </Function>
+            <Function id="_CorpInfoEdit" text="修改" iconCls="menu-list">
+                <url>/safety/saveSideStation.do</url>
+            </Function>
+            <Function id="_CorpInfoMultiDel" text="删除" iconCls="menu-list">
+                <url>/safety/multiDelSideStation.do</url>
+            </Function>
+        </Item>
+    </Items>
+    <Items id="Administrative" text="行政综合" iconCls="menu-items-archives" isPublic="false">
+        <Item id="CorpListView" iconCls="menu-business-corp" text="企业档案">
+            <Function id="_CorpInfoQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveCorpInfo.do</url>
+                <url>/archive/multiDelAccountCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoMultiCancel" text="注销" iconCls="btn-head-cancel">
+                <url>/archive/multiCancelCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoRecover" text="恢复" iconCls="btn-head-recover">
+                <url>/archive/recoverCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/archive/exportCorpInfo.do</url>
+            </Function>
+            <Function id="_CorpInfoCertAdd" text="新增资质" iconCls="menu-business-corpcert">
+                <url>/archive/saveCorpCert.do</url>
+            </Function>
+            <Function id="_CorpInfoPractiAdd" text="新增人员" iconCls="btn-user-add">
+                <url>/archive/savePractitioner.do</url>
+            </Function>
+        </Item>
+        <Item id="CorpCertListView" iconCls="menu-business-corpcert" text="企业资质">
+            <Function id="_CorpCertQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listCorpCert.do</url>
+            </Function>
+            <Function id="_CorpCertLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadCorpCert.do</url>
+            </Function>
+            <Function id="_CorpCertAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveCorpCert.do</url>
+            </Function>
+            <Function id="_CorpCertEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveCorpCert.do</url>
+            </Function>
+            <Function id="_CorpCertMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelCorpCert.do</url>
+            </Function>
+            <Function id="_CorpCertMultiCancel" text="注销" iconCls="btn-head-cancel">
+                <url>/archive/multiCancelCorpCert.do</url>
+            </Function>
+            <Function id="_CorpCertRecover" text="恢复" iconCls="btn-head-recover">
+                <url>/archive/recoverCorpCert.do</url>
+            </Function>
+        </Item>
+        <Item id="PractitionerListView" iconCls="menu-business-practi" text="员工档案">
+            <Function id="_PractitionerQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listPractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadPractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerAdd" text="新增" iconCls="menu-add">
+                <url>/archive/savePractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/savePractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelPractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerMultiCancel" text="注销" iconCls="btn-head-cancel">
+                <url>/archive/multiCancelPractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerRecover" text="恢复" iconCls="btn-head-recover">
+                <url>/archive/recoverPractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/archive/exportPractitioner.do</url>
+            </Function>
+            <Function id="_PractitionerCertAdd" text="新增资质" iconCls="btn-business-practicert_add">
+                <url>/archive/savePractiCert.do</url>
+            </Function>
+        </Item>
+        <Item id="PractiCertListView" iconCls="menu-business-practicert" text="从业资格证">
+            <Function id="_PractiCertQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listPractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadPractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertAdd" text="新增" iconCls="menu-add">
+                <url>/archive/savePractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/savePractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelPractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertMultiCancel" text="注销" iconCls="btn-head-cancel">
+                <url>/archive/multiCancelPractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertRecover" text="恢复" iconCls="btn-head-recover">
+                <url>/archive/recoverPractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="CarListView" iconCls="menu-business-corp" text="车辆管理">
+            <Function id="_CarQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listCar.do</url>
+            </Function>
+            <Function id="_CarLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadCar.do</url>
+            </Function>
+            <Function id="_CarAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveCar.do</url>
+            </Function>
+            <Function id="_CarEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveCar.do</url>
+                <url>/archive/multiDelExpenseCar.do</url>
+            </Function>
+            <Function id="_CarMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelCar.do</url>
+            </Function>
+        </Item>
+        <Item id="SalaryListView" iconCls="menu-business-salary" text="薪资管理">
+            <Function id="_SalaryQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listSalary.do</url>
+            </Function>
+            <Function id="_SalaryLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadSalary.do</url>
+            </Function>
+            <Function id="_SalaryAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveSalary.do</url>
+                <url>/fund/loadPrePractiSalary.do</url>
+                <url>/fund/listUnpickupDeduct.do</url>
+            </Function>
+            <Function id="_SalaryEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveSalary.do</url>
+                <url>/fund/loadPrePractiSalary.do</url>
+                <url>/fund/multiDelPractiSalary.do</url>
+                <url>/fund/listUnpickupDeduct.do</url>
+            </Function>
+            <Function id="_SalaryMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelSalary.do</url>
+            </Function>
+            <Function id="_SalaryMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitSalary.do</url>
+            </Function>
+            <Function id="_SalaryAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_SalaryApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_SalaryMonthPrint" text="薪资预览" iconCls="btn-head-print">
+                <url>/fund/printPractiMonthSalary.do</url>
+            </Function>
+        </Item>
+        <Item id="AnnounceListView" iconCls="menu-info" text="公告管理">
+            <Function id="_AnnounceQuery" text="查询" iconCls="menu-list">
+                <url>/form/listAnnounce.do</url>
+            </Function>
+            <Function id="_AnnounceLoad" text="加载" iconCls="btn-loading">
+                <url>/form/loadAnnounce.do</url>
+            </Function>
+            <Function id="_AnnounceAdd" text="新增" iconCls="menu-add">
+                <url>/form/saveAnnounce.do</url>
+            </Function>
+            <Function id="_AnnounceEdit" text="修改" iconCls="menu-edit">
+                <url>/form/saveAnnounce.do</url>
+            </Function>
+            <Function id="_AnnounceMultiDel" text="删除" iconCls="menu-del">
+                <url>/form/multiDelAnnounce.do</url>
+            </Function>
+            <Function id="_AnnouncePublish" text="发布" iconCls="btn-head-recover">
+                <url>/form/multiPublishAnnounce.do</url>
+            </Function>
+        </Item>
+        <Item id="xnodeAppraisalListView" iconCls="menu-arch-rec-type" text="绩效考核"/>
+        <Item id="MaterialGatherPrintPanel" iconCls="menu-business-insure" text="资料打印">
+            <Function id="_ProjectPrint" text="打印" iconCls="btn-head-print">
+                <url>/archive/loadMaterialGatherEquipment.do</url>
+                <url>/equip/printMaterialGatherEquipmentDiary.do</url>
+                <url>/equip/listEquipFlow.do</url>
+            </Function>
+        </Item>
+        <Item id="xnodeIndustryDynamicsListView" iconCls="menu-arch-rec-type" text="行业动态"/>
+    </Items>
+    <Items id="BusinessContract" text="商务合同" iconCls="menu-items-contract" isPublic="false">
+        <Item id="CustomerListView" iconCls="menu-business-customer" text="客户档案">
+            <Function id="_CustomerQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listCustomer.do</url>
+            </Function>
+            <Function id="_CustomerLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadCustomer.do</url>
+            </Function>
+            <Function id="_CustomerAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveCustomer.do</url>
+            </Function>
+            <Function id="_CustomerEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveCustomer.do</url>
+                <url>/archive/multiDelLinkerCustomer.do</url>
+                <url>/archive/multiDelAccountCustomer.do</url>
+            </Function>
+            <Function id="_CustomerMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelCustomer.do</url>
+            </Function>
+            <Function id="_CustomerMultiCancel" text="注销" iconCls="btn-head-cancel">
+                <url>/archive/multiCancelCustomer.do</url>
+            </Function>
+            <Function id="_CustomerRecover" text="恢复" iconCls="btn-head-recover">
+                <url>/archive/recoverCustomer.do</url>
+            </Function>
+            <Function id="_CustomerExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/archive/exportCustomer.do</url>
+            </Function>
+        </Item>
+        <Item id="ProjectListView" iconCls="menu-business-project" text="项目商务">
+            <Function id="_ProjectQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listProject.do</url>
+            </Function>
+            <Function id="_ProjectLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadProject.do</url>
+            </Function>
+            <Function id="_ProjectAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveProject.do</url>
+            </Function>
+            <Function id="_ProjectEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveProject.do</url>
+            </Function>
+            <Function id="_ProjectMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelProject.do</url>
+            </Function>
+            <Function id="_ProjectPrint" text="打印" iconCls="btn-head-print">
+                <url>/archive/printProject.do</url>
+            </Function>
+            <Function id="_ProjectExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/archive/exportProject.do</url>
+            </Function>
+        </Item>
+        <Item id="xnodeBusinessManageListView" iconCls="menu-arch-rec-type" text="商务管理"/>
+        <Item id="ContractArrangeDerivedListView" iconCls="menu-business-settle" text="塔吊升降机安排">
+            <Function id="_ContractArrangeDerivedQuery" text="查询" iconCls="menu-list"/>
+            <Function id="_ContractArrangeDerivedLoad" text="加载" iconCls="btn-loading"/>
+            <Function id="_ContractArrangeDerivedAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_ContractArrangeDerivedEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_ContractArrangeDerivedMultiDel" text="删除" iconCls="menu-del"/>
+        </Item>
+        <Item id="ContractArrangeListView" iconCls="menu-business-settle" text="业务申请">
+            <Function id="_ContractArrangeQuery" text="查询" iconCls="menu-list"/>
+            <Function id="_ContractArrangeLoad" text="加载" iconCls="btn-loading"/>
+            <Function id="_ContractArrangeNewAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_ContractArrangeEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_ContractArrangeMultiSubmit" text="生效" iconCls="btn-head-lock"/>
+            <Function id="_ContractArrangeMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_ContractArrangePrinter" text="打印" iconCls="btn-head-print"/>
+            <Function id="_ContractArrangeAccept" text="审核" iconCls="btn-accept"/>
+            <Function id="_ContractArrangeApprove" text="审批" iconCls="btn-approve"/>
+            <Function id="_ContractArrangeSituationQuery" text="塔吊升降机查询" iconCls="menu-list"/>
+            <Function id="_ContractArrangeSituationAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_ContractArrangeSituationEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_ContractArrangeSituationMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_ContractArrangeSituationExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="ContractLeaseListView" iconCls="menu-business-contract" text="租赁合同">
+            <Function id="_ContractLeaseQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadContractLease.do</url>
+                <url>/dispatch/editContentContractLease.do</url>
+            </Function>
+             <Function id="_ContractArrangeAdd" text="合同信息新增" iconCls="menu-add">
+                <url>/dispatch/saveContractLease.do</url>
+                <url>/dispatch/editContentContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/saveContractLease.do</url>
+                <url>/dispatch/editContentContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/saveContractLease.do</url>
+                <url>/dispatch/editContentContractLease.do</url>
+                <url>/dispatch/multiDelEquipContractLease.do</url>
+                <url>/dispatch/multiDelEquipBriefContractLease.do</url>
+                <url>/dispatch/multiDelPractiBriefContractLease.do</url>
+                <url>/dispatch/multiDelCostitemContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/dispatch/multiSubmitContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseMultiNullify" text="作废" iconCls="btn-dustbin">
+                <url>/dispatch/multiDeprecateContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/dispatch/exportContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseEditContent" text="编辑内容" iconCls="menu-add">
+                <url>/dispatch/editContentContractLease.do</url>
+            </Function>
+            <Function id="_ContractLeaseAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_ContractLeaseApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_ContractLeaseNullifyAccept" text="作废审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_ContractLeaseNullifyApprove" text="作废审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+             <Function id="_ContractLeaseApproval" text="一键审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+             <Function id="_ContractLeaseInit" text="初始化合同" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_ContractLeaseAdd" text="新增付款合同" iconCls="menu-add">
+            	<url></url>
+            </Function>
+        </Item>
+        <Item id="ContractSubcontractListView" iconCls="menu-business-contract" text="一体化合同">
+            <Function id="_ContractSubcontractQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadContractLease.do</url>
+                <url>/dispatch/editContentContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/saveContractLease.do</url>
+                <url>/dispatch/editContentContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/saveContractLease.do</url>
+                <url>/dispatch/editContentContractLease.do</url>
+                <url>/dispatch/multiDelEquipContractLease.do</url>
+                <url>/dispatch/multiDelEquipOutlayContractLease.do</url>
+                <url>/dispatch/multiDelEquipCostContractLease.do</url>
+                <url>/dispatch/multiDelPractiBriefContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/dispatch/multiSubmitContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractMultiNullify" text="作废" iconCls="btn-dustbin">
+                <url>/dispatch/multiDeprecateContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/dispatch/exportContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractEditContent" text="编辑内容" iconCls="menu-add">
+                <url>/dispatch/editContentContractLease.do</url>
+            </Function>
+            <Function id="_ContractSubcontractAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_ContractSubcontractApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_ContractSubcontractNullifyAccept" text="作废审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_ContractSubcontractNullifyApprove" text="作废审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="OverduePaymentListView" iconCls="menu-business-settle" text="催款函">
+            <Function id="_OverduePaymentAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_OverduePaymentMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_OverduePaymentPrint" text="打印" iconCls="btn-head-print"/>
+        </Item>
+        <Item id="EquipActivateListView" iconCls="menu-business-activate" text="启用管理">
+            <Function id="_EquipActivateQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipActivate.do</url>
+            </Function>
+            <Function id="_EquipActivateLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipActivate.do</url>
+            </Function>
+            <Function id="_EquipActivateAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipActivate.do</url>
+                <url>/equip/loadEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipActivateEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipActivate.do</url>
+            </Function>
+            <Function id="_EquipActivateMultiEffective" text="生效" iconCls="btn-head-lock">
+                <url>/equip/multiEffectiveEquipActivate.do</url>
+            </Function>
+            <Function id="_EquipActivateMultiLoseEffective" text="失效" iconCls="btn-head-lock"/>
+            <Function id="_EquipActivateMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipActivate.do</url>
+            </Function>
+            <Function id="_EquipActivatePrinter" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipActivate.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipContractLeaseListView" iconCls="menu-business-activate" text="启用管理2">
+        </Item>
+       <!--      <Item id="ProductPlanListView" iconCls="menu-business-activate" text="生产计划">
+            <Function id="_ProductPlanQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listProductPlan.do</url>
+            </Function>
+            <Function id="_ProductPlanLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadProductPlan.do</url>
+            </Function>
+            <Function id="_ProductPlanAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveProductPlan.do</url>
+                <url>/equip/loadProductPlan.do</url>
+            </Function>
+            <Function id="_ProductPlanEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveProductPlan.do</url>
+            </Function>
+            <Function id="_ProductPlanMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelProductPlan.do</url>
+            </Function>
+        </Item> -->
+        <Item id="EquipBlockupListView" iconCls="menu-business-equipblockup" text="停用管理">
+            <Function id="_EquipBlockupQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipBlockup.do</url>
+            </Function>
+            <Function id="_EquipBlockupLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipBlockup.do</url>
+            </Function>
+            <Function id="_EquipmentMultiBlockup" text="停用" iconCls="btn-stop">
+                <url>/equip/saveEquipBlockup.do</url>
+            </Function>
+            <Function id="_EquipmentBlockupEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_EquipBlockupMultiEffective" text="生效" iconCls="btn-head-lock"/>
+            <Function id="_EquipBlockupMultiLoseEffective" text="失效" iconCls="btn-head-lock"/>
+            <Function id="_EquipmentMultiActivate" text="恢复" iconCls="btn-play">
+                <url>/equip/multiActivateEquipBlockup.do</url>
+            </Function>
+            <Function id="_EquipBlockupPrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipBlockup.do</url>
+            </Function>
+        </Item>
+        <Item id="SettleContractListView" iconCls="menu-business-settle" text="结算管理">
+            <Function id="_SettleContractQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listSettleContract.do</url>
+            </Function>
+            <Function id="_SettleContractLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadSettleContract.do</url>
+            </Function>
+            <Function id="_SettleContractAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/loadContractLease.do</url>
+                <url>/dispatch/saveSettleContract.do</url>
+                <url>/equip/listEquipmentDiary.do</url>
+            </Function>
+            <Function id="_SettleContractEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/saveSettleContract.do</url>
+                <url>/dispatch/multiDelEquipBriefSettleContract.do</url>
+                <url>/dispatch/multiDelComponBriefSettleContract.do</url>
+                <url>/dispatch/multiDelItemBriefSettleContract.do</url>
+                <url>/equip/listEquipmentDiary.do</url>
+            </Function>
+             <Function id="_SubTenantAdd" text="转租结算" iconCls="menu-add">
+                <url>/dispatch/loadContractLease.do</url>
+                <url>/dispatch/saveSettleContract.do</url>
+                <url>/equip/listEquipmentDiary.do</url>
+            </Function>
+            <Function id="_SettleContractMultiEffective" text="生效" iconCls="btn-head-lock">
+                <url>/dispatch/multiEffectiveSettleContract.do</url>
+            </Function>
+            <Function id="_SettleContractMultiLoseEffective" text="失效" iconCls="btn-head-lock"/>
+            <Function id="_SettleContractMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelSettleContract.do</url>
+            </Function>
+            <Function id="_SettleContractAuto" text="生成付款单" iconCls="btn-head-add"/>
+            <Function id="_SettleContractPrinter1" text="打印1" iconCls="btn-head-print"/>
+            <Function id="_SettleContractPrinter2" text="打印2" iconCls="btn-head-print"/>
+            <Function id="_SettleContractPrinter3" text="打印3" iconCls="btn-head-print"/>
+            <Function id="_SettleContractExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="RentalFee" iconCls="menu-business-practivacancyrate" text="租赁费申请表"/>
+        <Item id="RentContractListView" iconCls="menu-business-settle" text="代租结算">
+            <Function id="_RentContractQuery" text="查询" iconCls="menu-list"/>
+            <Function id="_RentContractLoad" text="加载" iconCls="btn-loading"/>
+            <Function id="_RentContractAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_RentContractEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_RentContractMultiEffective" text="生效" iconCls="btn-head-lock"/>
+            <Function id="_RentContractMultiLoseEffective" text="失效" iconCls="btn-head-lock"/>
+            <Function id="_RentContractMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_RentContractPrint" text="打印" iconCls="btn-head-print"/>
+            <Function id="_RentContractExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="TeamsAccountListView" iconCls="menu-business-settle" text="班组核算">
+            <Function id="_TeamsAccountQuery" text="查询" iconCls="menu-list"/>
+            <Function id="_TeamsAccountLoad" text="加载" iconCls="btn-loading"/>
+            <Function id="_TeamsAccountAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_TeamsAccountEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_TeamsAccountMultiEffective" text="生效" iconCls="btn-head-lock"/>
+            <Function id="_TeamsAccountMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_TeamsAccountPrint" text="打印" iconCls="btn-head-print"/>
+        </Item>
+        <Item id="SettleAccountReceivable" iconCls="menu-business-accountdue" text="应收款明细"/>
+        <Item id="xnodeCustomerSolicitudeListView" iconCls="menu-arch-rec-type" text="客户关怀"/>
+        <Item id="EnterFactoryNoticeListView" iconCls="menu-business-project" text="进场通知">
+            <Function id="_EnterFactoryNoticeQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_EnterFactoryNoticeLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_EnterFactoryNoticeAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_EnterFactoryNoticeEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_EnterFactoryNoticeMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelEnterFactoryNotice.do</url>
+            </Function>
+        </Item>
+        <Item id="ExitFactoryNoticeListView" iconCls="menu-business-project" text="退场通知">
+            <Function id="_ExitFactoryNoticeQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_ExitFactoryNoticeLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_ExitFactoryNoticeAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_ExitFactoryNoticeEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_ExitFactoryNoticeMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelEnterFactoryNotice.do</url>
+            </Function>
+        </Item>
+        <Item id="BasicPreEmbeddingNoticeListView" iconCls="menu-business-project" text="基础预埋通知">
+            <Function id="_BasicPreEmbeddingNoticeeQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_BasicPreEmbeddingNoticeLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_BasicPreEmbeddingNoticeAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_BasicPreEmbeddingNoticeEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveEnterFactoryNotice.do</url>
+            </Function>
+            <Function id="_BasicPreEmbeddingNoticeMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelEnterFactoryNotice.do</url>
+            </Function>
+        </Item>
+    </Items>
+    <Items id="FinanceAccountingManager" text="财务管理" iconCls="menu-items-fund" isPublic="false">
+        <Item id="InvoiceIssueListView" iconCls="menu-business-issue" text="开票管理">
+            <Function id="_InvoiceIssueQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listInvoiceIssue.do</url>
+            </Function>
+            <Function id="_InvoiceIssueLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadInvoiceIssue.do</url>
+            </Function>
+            <Function id="_InvoiceIssueAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveInvoiceIssue.do</url>
+            </Function>
+            <Function id="_InvoiceIssueEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveInvoiceIssue.do</url>
+            </Function>
+            <Function id="_InvoiceIssueMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelInvoiceIssue.do</url>
+            </Function>
+            <Function id="_InvoiceIssueMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitInvoiceIssue.do</url>
+            </Function>
+            <Function id="_InvoiceIssueMultiNullify" text="作废" iconCls="btn-dustbin">
+                <url>/fund/multiDeprecateInvoiceIssue.do</url>
+            </Function>
+            <Function id="_InvoiceIssueApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_InvoiceIssueNullifyAccept" text="作废审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_InvoiceIssueNullifyApprove" text="作废审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="InvoiceCollectListView" iconCls="menu-business-collect" text="收票管理">
+            <Function id="_InvoiceCollectQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listInvoiceCollect.do</url>
+            </Function>
+            <Function id="_InvoiceCollectLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadInvoiceCollect.do</url>
+            </Function>
+            <Function id="_InvoiceCollectAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveInvoiceCollect.do</url>
+            </Function>
+            <Function id="_InvoiceCollectEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveInvoiceCollect.do</url>
+            </Function>
+            <Function id="_InvoiceCollectMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelInvoiceCollect.do</url>
+            </Function>
+            <Function id="_InvoiceCollectMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitInvoiceCollect.do</url>
+            </Function>
+            <Function id="_InvoiceCollectApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="AmountReceiveListView" iconCls="menu-business-receive" text="收款管理">
+            <Function id="_AmountReceiveQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listAmountReceive.do</url>
+            </Function>
+            <Function id="_AmountReceiveLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadAmountReceive.do</url>
+            </Function>
+            <Function id="_AmountReceiveAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveAmountReceive.do</url>
+            </Function>
+            <Function id="_AmountReceiveEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveAmountReceive.do</url>
+                <url>/fund/multiDelAmountEquipShare.do</url>
+            </Function>
+            <Function id="_AmountReceiveMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelAmountReceive.do</url>
+            </Function>
+            <Function id="_AmountReceiveMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitAmountReceive.do</url>
+            </Function>
+            <Function id="_AmountReceiveApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="AmountPaymentListView" iconCls="menu-business-payment" text="付款管理">
+            <Function id="_AmountPaymentQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listAmountPayment.do</url>
+            </Function>
+            <Function id="_AmountPaymentLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadAmountPayment.do</url>
+            </Function>
+            <Function id="_AmountPaymentAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveAmountPayment.do</url>
+            </Function>
+            <Function id="_AmountPaymentEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveAmountPayment.do</url>
+                <url>/fund/multiDelAmountEquipShare.do</url>
+            </Function>
+            <Function id="_AmountPaymentMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelAmountPayment.do</url>
+            </Function>
+            <Function id="_AmountPaymentMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitAmountPayment.do</url>
+            </Function>
+            <Function id="_AmountPaymentApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_AmountPaymentPrint" text="打印" iconCls="btn-head-print"/>
+            <Function id="_AmountPaymentExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="ReimburseListView" iconCls="menu-business-reimburse" text="报销管理">
+            <Function id="_ReimburseQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listReimburse.do</url>
+            </Function>
+            <Function id="_ReimburseLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadReimburse.do</url>
+            </Function>
+            <Function id="_ReimburseAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveReimburse.do</url>
+            </Function>
+            <Function id="_ReimburseEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveReimburse.do</url>
+                <url>/fund/multiDelTicketReimburse.do</url>
+            </Function>
+            <Function id="_ReimburseMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelReimburse.do</url>
+            </Function>
+            <Function id="_ReimburseMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitReimburse.do</url>
+            </Function>
+            <Function id="_ReimburseAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_ReimburseApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_ReimbursePrint" text="打印" iconCls="btn-head-print"/>
+            <Function id="_ReimburseExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="MoneyLendListView" iconCls="menu-business-lend" text="借款管理">
+            <Function id="_MoneyLendQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listMoneyLend.do</url>
+            </Function>
+            <Function id="_MoneyLendLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadMoneyLend.do</url>
+            </Function>
+            <Function id="_MoneyLendAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveMoneyLend.do</url>
+            </Function>
+            <Function id="_MoneyLendEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveMoneyLend.do</url>
+            </Function>
+            <Function id="_MoneyLendMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelMoneyLend.do</url>
+            </Function>
+            <Function id="_MoneyLendMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitMoneyLend.do</url>
+            </Function>
+            <Function id="_MoneyLendAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_MoneyLendApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="MoneyBackListView" iconCls="menu-business-back" text="还款管理">
+            <Function id="_MoneyBackQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listMoneyBack.do</url>
+            </Function>
+            <Function id="_MoneyBackLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadMoneyBack.do</url>
+            </Function>
+            <Function id="_MoneyBackAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveMoneyBack.do</url>
+            </Function>
+            <Function id="_MoneyBackEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveMoneyBack.do</url>
+            </Function>
+            <Function id="_MoneyBackMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelMoneyBack.do</url>
+            </Function>
+            <Function id="_MoneyBackMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitMoneyBack.do</url>
+            </Function>
+            <Function id="_MoneyBackAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_MoneyBackApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="InsureEquipListView" iconCls="menu-business-insure" text="保险管理">
+            <Function id="_InsureEquipQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listInsureEquip.do</url>
+            </Function>
+            <Function id="_InsureEquipLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadInsureEquip.do</url>
+            </Function>
+            <Function id="_InsureEquipAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveInsureEquip.do</url>
+            </Function>
+            <Function id="_InsureEquipEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveInsureEquip.do</url>
+                <url>/equip/multiDelClaimInsureEquip.do</url>
+            </Function>
+            <Function id="_InsureEquipMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelInsureEquip.do</url>
+            </Function>
+            <Function id="_InsureEquipExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/equip/exportInsureEquip.do</url>
+            </Function>
+            <Function id="_InsureEquipClaimEdit" text="理赔" iconCls="btn-approvalTask">
+                <url>/equip/saveClaimInsureEquip.do</url>
+            </Function>
+        </Item>
+        <Item id="DeductScaleForm" iconCls="menu-business-deductscale" text="提成比例">
+            <Function id="_DeductScaleFormAdd" text="设置" iconCls="menu-edit">
+                <url>/fund/loadDeductScale.do</url>
+                <url>/fund/saveDeductScale.do</url>
+            </Function>
+        </Item>
+        <Item id="DeductListView" iconCls="menu-business-deduct" text="提成管理">
+            <Function id="_DeductQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listDeduct.do</url>
+            </Function>
+            <Function id="_DeductLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadDeduct.do</url>
+            </Function>
+            <Function id="_DeductAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveDeduct.do</url>
+                <url>/fund/listUnpickupDeduct.do</url>
+            </Function>
+            <Function id="_DeductEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveDeduct.do</url>
+                <url>/fund/multiDelPractiDeduct.do</url>
+            </Function>
+            <Function id="_DeductMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelDeduct.do</url>
+            </Function>
+            <Function id="_DeductMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitDeduct.do</url>
+            </Function>
+            <Function id="_DeductAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_DeductApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="FinanceSalaryListView" iconCls="menu-business-salary" text="薪资管理">
+            <Function id="_FinanceSalaryQuery" text="查询" iconCls="menu-list">
+                <url>/fund/listSalary.do</url>
+            </Function>
+            <Function id="_FinanceSalaryLoad" text="加载" iconCls="btn-loading">
+                <url>/fund/loadSalary.do</url>
+            </Function>
+            <Function id="_FinanceSalaryAdd" text="新增" iconCls="menu-add">
+                <url>/fund/saveSalary.do</url>
+                <url>/fund/loadPrePractiSalary.do</url>
+                <url>/fund/listUnpickupDeduct.do</url>
+            </Function>
+            <Function id="_FinanceSalaryEdit" text="修改" iconCls="menu-edit">
+                <url>/fund/saveSalary.do</url>
+                <url>/fund/loadPrePractiSalary.do</url>
+                <url>/fund/multiDelPractiSalary.do</url>
+                <url>/fund/listUnpickupDeduct.do</url>
+            </Function>
+            <Function id="_FinanceSalaryMultiDel" text="删除" iconCls="menu-del">
+                <url>/fund/multiDelSalary.do</url>
+            </Function>
+            <Function id="_FinanceSalaryMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/fund/multiSubmitSalary.do</url>
+            </Function>
+            <Function id="_FinanceSalaryAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_FinanceSalaryApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_FinanceSalaryMonthPrint" text="薪资预览" iconCls="btn-head-print">
+                <url>/fund/printPractiMonthSalary.do</url>
+            </Function>
+        </Item>
+        <Item id="xnodeCostAccumulateListView" iconCls="menu-arch-rec-type" text="成本归集"></Item>
+        <Item id="InventoryListView" iconCls="menu-business-inventory" text="盘点管理">
+            <Function id="_InventoryQuery" text="查询" iconCls="menu-list">
+                <url>/form/listInventory.do</url>
+            </Function>
+            <Function id="_InventoryLoad" text="加载" iconCls="btn-loading">
+                <url>/form/loadInventory.do</url>
+            </Function>
+            <Function id="_InventoryAdd" text="新增" iconCls="menu-add">
+                <url>/form/saveInventory.do</url>
+                <url>/form/calculateCategoryInventory.do</url>
+            </Function>
+            <Function id="_InventoryEdit" text="修改" iconCls="menu-edit">
+                <url>/form/saveInventory.do</url>
+                <url>/form/calculateCategoryInventory.do</url>
+                <url>/form/multiDelCategoryInventory.do</url>
+            </Function>
+            <Function id="_InventoryMultiDel" text="删除" iconCls="menu-del">
+                <url>/form/multiDelInventory.do</url>
+            </Function>
+        </Item>
+    </Items>
+    <Items id="Dispatch" text="资产调度" iconCls="menu-items-dispatch" isPublic="false">
+        <Item id="EquipmentListView" iconCls="menu-business-equip" text="设备档案">
+            <Function id="_EquipmentQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listEquipment.do</url>
+            </Function>
+            <Function id="_EquipmentLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadEquipment.do</url>
+                <url>/equip/listEquipmentDiary.do</url>
+            </Function>
+            <Function id="_EquipmentAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveEquipment.do</url>
+                <url>/archive/multiDelComponentEquipment.do</url>
+                <url>/equip/listEquipmentDiary.do</url>
+            </Function>
+            <Function id="_EquipmentEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveEquipment.do</url>
+                <url>/archive/multiDelComponentEquipment.do</url>
+                <url>/equip/listEquipmentDiary.do</url>
+            </Function>
+            <Function id="_EquipmentMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelEquipment.do</url>
+            </Function>
+            <Function id="_EquipmentMultiCancel" text="注销" iconCls="btn-head-cancel">
+                <url>/archive/multiCancelEquipment.do</url>
+            </Function>
+            <Function id="_EquipmentRelease" text="释放" iconCls="btn-head-recover"/>
+            <Function id="_EquipmentRecover" text="恢复" iconCls="btn-head-recover">
+                <url>/archive/recoverEquipment.do</url>
+            </Function>
+            <Function id="_EquipmentRefresh" text="更新" iconCls="btn-refresh">
+                <url>/archive/refreshEquipment.do</url>
+            </Function>
+            <Function id="_EquipmentPrintDocument" text="一机一档" iconCls="btn-head-print">
+                <url>/archive/printDocumentEquipment.do</url>
+            </Function>
+            <Function id="_EquipmentExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/archive/exportEquipment.do</url>
+            </Function>
+        </Item>
+        <Item id="ComponentListView" iconCls="menu-business-component" text="零部件档案">
+            <Function id="_ComponentQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listComponent.do</url>
+            </Function>
+            <Function id="_ComponentLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadComponent.do</url>
+            </Function>
+            <Function id="_ComponentAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveComponent.do</url>
+            </Function>
+            <Function id="_ComponentEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveComponent.do</url>
+            </Function>
+            <Function id="_ComponentMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelComponent.do</url>
+            </Function>
+            <Function id="_ComponentHoldAdjust" text="补仓" iconCls="menu-edit"></Function>
+            <Function id="_ComponentExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/archive/exportComponent.do</url>
+            </Function>
+        </Item>
+        <Item id="SupplierListView" iconCls="menu-business-supplier" text="供应商档案">
+            <Function id="_SupplierQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listSupplier.do</url>
+            </Function>
+            <Function id="_SupplierLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadSupplier.do</url>
+                <url>/archive/listAccountSupplier.do</url>
+                <url>/archive/listLinkerSupplier.do</url>
+            </Function>
+            <Function id="_SupplierAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveSupplier.do</url>
+            </Function>
+            <Function id="_SupplierEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/saveSupplier.do</url>
+                <url>/archive/multiDelLinkerSupplier.do</url>
+                <url>/archive/multiDelAccountSupplier.do</url>
+            </Function>
+            <Function id="_SupplierMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelSupplier.do</url>
+            </Function>
+            <Function id="_SupplierMultiCancel" text="注销" iconCls="btn-head-cancel">
+                <url>/archive/multiCancelSupplier.do</url>
+            </Function>
+            <Function id="_SupplierRecover" text="恢复" iconCls="btn-head-recover">
+                <url>/archive/recoverSupplier.do</url>
+            </Function>
+            <Function id="_SupplierExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/archive/exportSupplier.do</url>
+            </Function>
+        </Item>
+        <Item id="StoreManageView" iconCls="menu-business-storehouse" text="仓库管理">
+            <Function id="_StoreHouseQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listStoreHouse.do</url>
+                <url>/archive/listStockStoreHouse.do</url>
+                <url>/archive/listEquipment.do</url>
+                <url>/archive/listComponent.do</url>
+            </Function>
+            <Function id="_StoreHouseAdd" text="新增" iconCls="menu-add">
+                <url>/archive/saveStoreHouse.do</url>
+            </Function>
+            <Function id="_StoreHouseEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/loadStoreHouse.do</url>
+                <url>/archive/saveStoreHouse.do</url>
+            </Function>
+            <Function id="_StoreHouseMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelStoreHouse.do</url>
+            </Function>
+            <Function id="_StoreEquipImport" text="添加设备" iconCls="btn-head-add">
+                <url>/archive/listEquipment.do</url>
+                <url>/archive/importEquipmentStoreHouse.do</url>
+            </Function>
+            <Function id="_StoreEquipRemove" text="移除设备" iconCls="btn-head-del">
+                <url>/archive/removeEquipmentStoreHouse.do</url>
+            </Function>
+            <Function id="_StoreComponImport" text="添加零配件" iconCls="btn-head-add">
+                <url>/archive/listComponent.do</url>
+                <url>/archive/importComponentStoreHouse.do</url>
+            </Function>
+            <Function id="_StoreComponRemove" text="移除零配件" iconCls="btn-head-del">
+                <url>/archive/removeComponentStoreHouse.do</url>
+            </Function>
+        </Item>
+        <Item id="ConstructOperationListView" iconCls="menu-business-storehouse" text="施工作业">
+            <Function id="_ConstructOperationAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_ConstructOperationEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_ConstructOperationMultiEffective" text="生效" iconCls="menu-edit"/>
+            <Function id="_ConstructOperationMultiLoseEffective" text="失效" iconCls="menu-edit"/>
+            <Function id="_ConstructOperationMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_ConstructOperationAuto" text="生成付款单" iconCls="menu-add"/>
+            <Function id="_ConstructOperationPrinter" text="打印" iconCls="btn-head-print"/>
+            <Function id="_ConstructOperationExporter" text="导出" iconCls="menu-list"/>
+            <Function id="_ConstructOperationAccept" text="进场确认" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_ConstructOperationFill" text="填报" iconCls="menu-edit"/>
+            <Function id="_ConstructOperationClosed" text="结案" iconCls="menu-edit"/>
+        </Item>
+        <Item id="AutocraneListView" iconCls="menu-business-storehouse" text="汽吊管理">
+            <Function id="_AutocraneAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_AutocraneEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_AutocraneMultiEffective" text="生效" iconCls="menu-edit"/>
+            <Function id="_AutocraneMultiLoseEffective" text="失效" iconCls="menu-edit"/>
+            <Function id="_AutocraneMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_AutocraneAuto" text="生成付款单" iconCls="menu-add"/>
+            <Function id="_AutocraneExporter" text="导出" iconCls="menu-list"/>
+        </Item>
+        <Item id="DispatchListView" iconCls="menu-business-dispatch" text="调度管理">
+            <Function id="_DispatchQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listDispatch.do</url>
+            </Function>
+            <Function id="_DispatchLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadDispatch.do</url>
+                <url>/dispatch/listPractiDispatch.do</url>
+                <url>/dispatch/listComponDispatch.do</url>
+                <url>/dispatch/listEquipDispatch.do</url>
+            </Function>
+            <Function id="_DispatchAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/saveDispatch.do</url>
+                <url>/dispatch/loadContractLease.do</url>
+                <url>/equip/loadEquipInstall.do</url>
+                <url>/equip/loadEquipEmploy.do</url>
+                <url>/equip/loadEquipDismantle.do</url>
+            </Function>
+            <Function id="_DispatchEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/saveDispatch.do</url>
+                <url>/dispatch/multiDelEquipDispatch.do</url>
+                <url>/dispatch/multiDelComponDispatch.do</url>
+                <url>/dispatch/multiDelPractiDispatch.do</url>
+            </Function>
+            <Function id="_DispatchMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelDispatch.do</url>
+            </Function>
+            <Function id="_DispatchMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/dispatch/multiSubmitDispatch.do</url>
+            </Function>
+            <Function id="_DispatchApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_DispatchTowerCranePrinter" text="塔吊配送单" iconCls="btn-head-print"/>
+            <Function id="_DispatchLiftPrinter" text="升降机配送单" iconCls="btn-head-print"/>
+            <Function id="_DispatchPreInstallPrinter" text="安装前审批表" iconCls="btn-head-print"/>
+        </Item>
+        <Item id="LogisticsTransportListView" iconCls="menu-business-dispatch" text="物流管理">
+            <Function id="_LogisticsTransportQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listLogisticsTransport.do</url>
+            </Function>
+            <Function id="_LogisticsTransportLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadLogisticsTransport.do</url>
+            </Function>
+            <Function id="_LogisticsTransportAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/saveLogisticsTransport.do</url>
+                <url>/dispatch/listDispatch.do</url>
+                <url>/archive/listProject.do</url>
+            </Function>
+            <Function id="_LogisticsTransportEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/saveLogisticsTransport.do</url>
+                <url>/dispatch/listDispatch.do</url>
+                <url>/equip/listComponDiary.do</url>
+                <url>/dispatch/multiDelTrandetailLogisticsTransport.do</url>
+            </Function>
+            <Function id="_LogisticsTransportMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelLogisticsTransport.do</url>
+            </Function>
+            <Function id="_LogisticsTransportAuto" text="生成付款单" iconCls="menu-add">
+            </Function>
+            <Function id="_LogisticsTransportReceived" text="签收" iconCls="btn-submit">
+                <url>/dispatch/receivedLogisticsTransport.do</url>
+            </Function>
+            <Function id="_LogisticsTransportApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_LogisticsTransportPrint" text="打印" iconCls="btn-head-print">
+                <url>/dispatch/printLogisticsTransport.do</url>
+            </Function>
+            <Function id="_LogisticsTransportExport" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="EquipDiaryListView" iconCls="menu-business-equipdiary" text="设备调配情况">
+            <Function id="_EquipDiaryQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipDiary.do</url>
+            </Function>
+            <Function id="_EquipDiaryExporter" text="导出" iconCls="menu-list">
+                <url>/equip/exportEquipDiary.do</url>
+            </Function>
+        </Item>
+        <Item id="ComponDiaryListView" iconCls="menu-business-compondiary" text="配件调配情况">
+            <Function id="_ComponDiaryQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listComponDiary.do</url>
+            </Function>
+            <Function id="_ComponDiaryExporter" text="导出" iconCls="menu-list">
+                <url>/equip/exportComponDiary.do</url>
+            </Function>
+        </Item>
+        <Item id="PractiDiaryListView" iconCls="menu-business-practidiary" text="人员调配情况">
+            <Function id="_PractiDiaryQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listPractiDiary.do</url>
+            </Function>
+        </Item>
+        <Item id="PickupListView" iconCls="menu-business-pickup" text="配件领用">
+            <Function id="_PickupQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listPickup.do</url>
+            </Function>
+            <Function id="_PickupLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadPickup.do</url>
+            </Function>
+            <Function id="_PickupAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/savePickup.do</url>
+            </Function>
+            <Function id="_PickupEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/savePickup.do</url>
+                <url>/dispatch/multiDelComponentPickup.do</url>
+            </Function>
+            <Function id="_PickupAuto" text="生成付款单" iconCls="menu-add">
+            </Function>
+            <Function id="_PickupMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelPickup.do</url>
+            </Function>
+            <Function id="_PickupMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/dispatch/multiSubmitPickup.do</url>
+            </Function>
+            <Function id="_PickupReturn" text="归还" iconCls="btn-business-returnback">
+                <url>/dispatch/returnComponentPickup.do</url>
+            </Function>
+            <Function id="_PickupOnekeyApprove" text="一键审批" iconCls="btn-approve">
+                <url>/dispatch/onekeyApprovePickup.do</url>
+            </Function>
+            <Function id="_PickupPrint" text="打印" iconCls="btn-head-print">
+                <url>/dispatch/printFormPickup.do</url>
+            </Function>
+            <Function id="_PickupExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/dispatch/exportPickup.do</url>
+            </Function>
+            <Function id="_PickupAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_PickupApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+    <Item id="PurchasePlanListView" iconCls="menu-business-purchase" text="采购计划">
+		<Function id="_PurchasePlanQuery" text="查询" iconCls="menu-list">
+				<url>/dispatch/listPurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanLoad" text="加载" iconCls="btn-loading">
+				<url>/dispatch/loadPurchasePlan.do</url>
+				<url>/dispatch/listInquirPurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanAdd" text="新增" iconCls="menu-add">
+				<url>/dispatch/savePurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanEdit" text="修改" iconCls="menu-edit">
+				<url>/dispatch/savePurchasePlan.do</url>
+				<url>/dispatch/multiDelInquirPurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanMultiDel" text="删除" iconCls="menu-del">
+				<url>/dispatch/multiDelPurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanMultiSubmit" text="提交" iconCls="btn-submit">
+				<url>/dispatch/multiSubmitPurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanMultiFill" text="填报" iconCls="btn-submit">
+			<url>/dispatch/savePurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanOnekeyApprove" text="一键审批" iconCls="btn-approve">
+				<url>/dispatch/onekeyApprovePurchasePlan.do</url>
+			</Function>
+			<Function id="_PurchasePlanPrint" text="物资采购申请表" iconCls="btn-head-print">
+                <url>/dispatch/printPurchasePlan.do</url>
+            </Function>
+		</Item>
+        <Item id="PurchaseListView" iconCls="menu-business-purchase" text="采购管理">
+            <Function id="_PurchaseQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadPurchase.do</url>
+                <url>/dispatch/listBriefPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/savePurchase.do</url>
+            </Function>
+            <Function id="_PurchaseEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/savePurchase.do</url>
+                <url>/dispatch/multiDelBriefComponentPurchase.do</url>
+                <url>/dispatch/multiDelBriefPurchase.do</url>
+                <url>/archive/multiDelInstalment.do</url>
+            </Function>
+            <Function id="_PurchaseMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseOnekeyApprove" text="一键审批" iconCls="btn-approve">
+                <url>/dispatch/onekeyApprovePurchase.do</url>
+            </Function>
+            <Function id="_PurchaseAuto" text="生成付款单" iconCls="menu-add">
+            </Function>
+            <Function id="_PurchaseMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/dispatch/multiSubmitPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseAcceptance" text="验收" iconCls="btn-task">
+                <url>/dispatch/multiQualifiedPurchase.do</url>
+                <url>/dispatch/multiExchangePurchase.do</url>
+                <url>/dispatch/multiReturnedPurchase.do</url>
+                <url>/dispatch/multiUnqualifiedPurchase.do</url>
+            </Function>
+            <Function id="_PurchasePrint" text="采购单打印" iconCls="btn-head-print">
+                <url>/dispatch/printFormPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseApplyPrint" text="采购申请表打印" iconCls="btn-head-print">
+                <url>/dispatch/printApplyFormPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseReceivePrint" text="验收单打印" iconCls="btn-head-print">
+                <url>/dispatch/printReceiveFormPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/dispatch/exportPurchase.do</url>
+            </Function>
+            <Function id="_PurchaseAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_PurchaseApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="BorrowListView" iconCls="menu-business-borrow" text="借用管理">
+            <Function id="_BorrowQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listBorrow.do</url>
+            </Function>
+            <Function id="_BorrowLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadBorrow.do</url>
+                <url>/dispatch/listComponentBorrow.do</url>
+                <url>/dispatch/listEquipBorrow.do</url>
+            </Function>
+            <Function id="_BorrowAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/saveBorrow.do</url>
+            </Function>
+            <Function id="_BorrowEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/saveBorrow.do</url>
+                <url>/dispatch/multiDelComponentBorrow.do</url>
+                <url>/dispatch/multiDelEquipBorrow.do</url>
+            </Function>
+            <Function id="_BorrowMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelBorrow.do</url>
+            </Function>
+            <Function id="_BorrowMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/dispatch/multiSubmitBorrow.do</url>
+            </Function>
+            <Function id="_BorrowRenewSubmit" text="续借" iconCls="btn-clock">
+                <url>/dispatch/submitRenewBorrow.do</url>
+            </Function>
+            <Function id="_BorrowAcceptance" text="归还" iconCls="btn-business-returnback">
+                <url>/dispatch/returnedBorrow.do</url>
+                <url>/dispatch/damageBorrow.do</url>
+                <url>/dispatch/loseBorrow.do</url>
+            </Function>
+            <Function id="_BorrowPrint" text="打印" iconCls="btn-head-print">
+                <url>/dispatch/printFormBorrow.do</url>
+            </Function>
+            <Function id="_BorrowExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/dispatch/exportBorrow.do</url>
+            </Function>
+            <Function id="_BorrowAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_BorrowApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_BorrowRenewAccept" text="续借审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_BorrowRenewApprove" text="续借审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function  id="_BorrowAddPickup" text="新增配件" iconCls="menu-add">
+            	<url>/dispatch/saveBorrow.do</url>
+            </Function>
+        </Item>
+        <Item id="AppDispatchListView" iconCls="menu-business-borrow" text="APP调度">
+            <Function id="_AppDispatch" text="查询" iconCls="menu-list">
+                <url>/app/listDispatch.do</url>
+            </Function>
+            <Function id="_AppDispatchLoad" text="加载" iconCls="btn-loading">
+                <url>/app/loadDispatch.do</url>
+            </Function>
+            <Function id="_AppDispatchDel" text="删除" iconCls="menu-del">
+                <url>/app/delDispatch.do</url>
+            </Function>
+        </Item>
+        <Item id="AppLogisticsListView" iconCls="menu-business-borrow" text="APP物流">
+            <Function id="_AppLogistics" text="查询" iconCls="menu-list">
+                <url>/app/listLogistics.do</url>
+            </Function>
+            <Function id="_AppLogisticsLoad" text="加载" iconCls="btn-loading">
+                <url>/app/loadDispatch.do</url>
+            </Function>
+            <Function id="_AppLogisticsDel" text="删除" iconCls="menu-del">
+                <url>/app/delLogistics.do</url>
+            </Function>
+            <Function id="_AppLogisticsPrint" text="打印" iconCls="menu-del">
+                <url>/app/printLogistics.do</url>
+            </Function>
+        </Item>
+    </Items>
+    <Items id="EquipmentInstall" text="安装管理" iconCls="menu-items-install" isPublic="false">
+    
+          <Item id="InstallIndisNoticeListView" iconCls="menu-business-install" text="安装告知">
+			<Function id="_InstallIndisNoticeAdd" text="新增" iconCls="menu-add" />
+			<Function id="_InstallIndisNoticeEdit" text="修改" iconCls="menu-edit" />
+			<Function id="_InstallIndisNoticeMultiDel" text="删除" iconCls="menu-del" />
+		</Item>
+        <Item id="InstallTechnicalDisclosureListView" iconCls="menu-business-install" text="技术交底">
+            <Function id="_InstallTechnicalDisclosureQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_InstallTechnicalDisclosureLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_InstallTechnicalDisclosureAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_InstallTechnicalDisclosureEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_InstallTechnicalDisclosureMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_InstallTechnicalDisclosurePrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printTechnicalDisclosure.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipInstallListView" iconCls="menu-business-install" text="现场安装">
+            <Function id="_EquipInstallQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallMultiDispatch" text="调度" iconCls="btn-clock">
+                <url>/equip/multiDispatchEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_EquipInstallRetrieve" text="回收" iconCls="btn-rowaction_del">
+                <url>/equip/fulfilPractiDiary.do</url>
+                <url>/equip/fulfilComponDiary.do</url>
+            </Function>
+            <Function id="_EquipInstallJacking" text="顶升" iconCls="btn-rowaction_del">
+            </Function>
+            <Function id="_EquipInstallEditLH" text="修改楼号" iconCls="btn-rowaction_del">
+            </Function>
+            <Function id="_EquipInstallPrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipInstall.do</url>
+            </Function>
+            <Function id="_EquipInstallExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/equip/exportEquipInstall.do</url>
+            </Function>
+        </Item>
+        <Item id="InstallVerifySelfListView" iconCls="menu-business-detector" text="自检管理">
+            <Function id="_InstallVerifySelfQuery" text="查询" iconCls="menu-list">
+                <url>/verify/listVerifySelf.do</url>
+            </Function>
+            <Function id="_InstallVerifySelfLoad" text="加载" iconCls="btn-loading">
+                <url>/verify/loadVerifySelf.do</url>
+            </Function>
+            <Function id="_InstallVerifySelfAdd" text="新增" iconCls="menu-add">
+                <url>/verify/saveVerifySelf.do</url>
+            </Function>
+            <Function id="_InstallVerifySelfEdit" text="修改" iconCls="menu-edit">
+                <url>/verify/saveVerifySelf.do</url>
+            </Function>
+            <Function id="_InstallVerifySelfMultiDel" text="删除" iconCls="menu-del">
+                <url>/verify/multiDelVerifySelf.do</url>
+            </Function>
+            <Function id="_InstallVerifySelfPrint" text="打印" iconCls="btn-head-print">
+                <url>/verify/printVerifySelf.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipVerifyListView" iconCls="menu-business-verify" text="验收管理">
+            <Function id="_EquipVerifyQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipVerify.do</url>
+            </Function>
+            <Function id="_EquipVerifyLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipVerify.do</url>
+            </Function>
+            <Function id="_EquipVerifyAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipVerify.do</url>
+            </Function>
+            <Function id="_EquipVerifyEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipVerify.do</url>
+                <url>/verify/multiDelVerifyStandard.do</url>
+            </Function>
+            <Function id="_EquipVerifyMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipVerify.do</url>
+            </Function>
+            <Function id="_EquipVerifyPrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipVerify.do</url>
+            </Function>
+        </Item>
+        <Item id="InstallManageListView" iconCls="menu-business-install" text="安装管理">
+            <Function id="_InstallManageQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listInstallManage.do</url>
+            </Function>
+            <Function id="_InstallManageLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadInstallManage.do</url>
+            </Function>
+            <Function id="_InstallManageMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelInstallManage.do</url>
+            </Function>
+        </Item>
+        <Items id="TechnicalInformation" text="技术资料" iconCls="menu-items-dismantle" isPublic="false">	
+        <Item id="InstallSecureProtocolListView" iconCls="menu-business-install" text="安全协议">
+            <Function id="_InstallSecureProtocolQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listSecureProtocol.do</url>
+            </Function>
+            <Function id="_InstallSecureProtocolLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadSecureProtocol.do</url>
+            </Function>
+            <Function id="_InstallSecureProtocolAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveSecureProtocol.do</url>
+                <url>/dispatch/listContractLease.do</url>
+                <url>/archive/loadCorpInfo.do</url>
+            </Function>
+            <Function id="_InstallSecureProtocolEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveSecureProtocol.do</url>
+            </Function>
+            <Function id="_InstallSecureProtocolMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelSecureProtocol.do</url>
+            </Function>
+            <Function id="_InstallSecureProtocolPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printSecureProtocol.do</url>
+            </Function>
+        </Item>
+        <Item id="InstallIndisProtocolListView" iconCls="menu-business-install" text="安装协议">
+            <Function id="_InstallIndisProtocolQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listIndisProtocol.do</url>
+            </Function>
+            <Function id="_InstallIndisProtocolLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadIndisProtocol.do</url>
+            </Function>
+            <Function id="_InstallIndisProtocolAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveIndisProtocol.do</url>
+                <url>/dispatch/listContractLease.do</url>
+                <url>/archive/loadCorpInfo.do</url>
+            </Function>
+            <Function id="_InstallIndisProtocolEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveIndisProtocol.do</url>
+            </Function>
+            <Function id="_InstallIndisProtocolMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelIndisProtocol.do</url>
+            </Function>
+            <Function id="_InstallIndisProtocolPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printIndisProtocol.do</url>
+            </Function>
+        </Item>
+        <Item id="InstallIndisSchemaListView" iconCls="menu-business-install" text="安装方案">
+            <Function id="_InstallIndisSchemaQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listIndisSchema.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadIndisSchema.do</url>
+                <url>/dispatch/listContractLease.do</url>
+                <url>/archive/loadCorpInfo.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveIndisSchema.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaAdd2" text="合同新增" iconCls="menu-add">
+                <url>/safety/saveIndisSchema.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveIndisSchema.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaMultiSubmit" text="提交" iconCls="menu-edit">
+                <url>/safety/multiSubmitIndisSchema.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_InstallContractLeaseApproval" text="一键评审" iconCls="btn-approve">
+            </Function>
+            <Function id="_InstallIndisSchemaMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelIndisSchema.do</url>
+            </Function>
+            <Function id="_InstallIndisSchemaPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printIndisSchema.do</url>
+            </Function>
+        </Item>
+        <Item id="InstallContingencyPlanListView" iconCls="menu-business-install" text="应急预案">
+            <Function id="_InstallContingencyPlanQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listContingencyPlan.do</url>
+            </Function>
+            <Function id="_InstallContingencyPlanLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadContingencyPlan.do</url>
+                <url>/dispatch/listContractLease.do</url>
+                <url>/archive/loadCorpInfo.do</url>
+            </Function>
+            <Function id="_InstallContingencyPlanAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveContingencyPlan.do</url>
+            </Function>
+            <Function id="_InstallContingencyPlanEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveContingencyPlan.do</url>
+            </Function>
+            <Function id="_InstallContingencyPlanMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelContingencyPlan.do</url>
+            </Function>
+            <Function id="_InstallContingencyPlanPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printContingencyPlan.do</url>
+            </Function>
+        </Item>
+        <Item id="InstallIndisPrecheckListView" iconCls="menu-business-install" text="安装前检查">
+            <Function id="_InstallIndisPrecheckQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listIndisPrecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisPrecheckLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadIndisPrecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisPrecheckAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveIndisPrecheck.do</url>
+                <url>/dispatch/listContractLease.do</url>
+                <url>/archive/loadCorpInfo.do</url>
+            </Function>
+            <Function id="_InstallIndisPrecheckEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveIndisPrecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisPrecheckMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelIndisPrecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisPrecheckPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printIndisPrecheck.do</url>
+            </Function>
+        </Item>
+        <Item id="InstallIndisBasecheckListView" iconCls="menu-business-install" text="基础验收">
+            <Function id="_InstallIndisBasecheckQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listIndisBasecheck.do</url>
+                <url>/dispatch/listContractLease.do</url>
+                <url>/archive/loadCorpInfo.do</url>
+            </Function>
+            <Function id="_InstallIndisBasecheckLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadIndisBasecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisBasecheckAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveIndisBasecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisBasecheckEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveIndisBasecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisBasecheckMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelIndisBasecheck.do</url>
+            </Function>
+            <Function id="_InstallIndisBasecheckPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printIndisBasecheck.do</url>
+            </Function>
+        </Item>
+         </Items>
+    </Items>
+    <Items id="EquipmentEmploy" text="使用管理" iconCls="menu-items-employ" isPublic="false">
+        <Item id="EmployIndisSchemaListView" iconCls="menu-business-install" text="附墙方案">
+			<Function id="_EmployIndisSchemaQuery" text="查询" iconCls="menu-list">
+				<url>/safety/listIndisSchema.do</url>
+			</Function>
+			<Function id="_EmployIndisSchemaLoad" text="加载" iconCls="btn-loading">
+				<url>/safety/loadIndisSchema.do</url>
+				<url>/dispatch/listContractLease.do</url>
+				<url>/archive/loadCorpInfo.do</url>
+			</Function>
+			<Function id="_EmployIndisSchemaAdd" text="新增" iconCls="menu-add">
+				<url>/safety/saveIndisSchema.do</url>
+			</Function>
+			<Function id="_EmployIndisSchemaAdd2" text="合同新增" iconCls="menu-add">
+                <url>/safety/saveIndisSchema.do</url>
+            </Function>
+            <Function id="_EmployContractLeaseApproval" text="一键评审" iconCls="btn-approve">
+            </Function>
+			<Function id="_EmployIndisSchemaEdit" text="修改" iconCls="menu-edit">
+				<url>/safety/saveIndisSchema.do</url>
+			</Function>
+            <Function id="_EmployIndisSchemaAccept" text="审核" iconCls="btn-accept">
+                <url>/form/saveFormAccept.do</url>
+            </Function>
+            <Function id="_EmployIndisSchemaApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_EmployIndisSchemaMultiSubmit" text="提交" iconCls="menu-edit">
+                <url>/safety/multiSubmitIndisSchema.do</url>
+            </Function>
+			<Function id="_EmployIndisSchemaMultiDel" text="删除" iconCls="menu-del">
+				<url>/safety/multiDelIndisSchema.do</url>
+			</Function>
+		</Item>
+        <Item id="EquipInstallJjListView" iconCls="menu-business-employ" text="加节顶升">
+            <Function id="_EquipInstallJj" text="调度顶升" iconCls="btn-clock"/>
+        </Item>
+        <Item id="EmployTechnicalDisclosureListView" iconCls="menu-business-install" text="技术交底">
+            <Function id="_EmployTechnicalDisclosureQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_EmployTechnicalDisclosureLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_EmployTechnicalDisclosureAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_EmployTechnicalDisclosureEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_EmployTechnicalDisclosureMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_EmployTechnicalDisclosurePrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printTechnicalDisclosure.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipInspectSchemaEmployListView" iconCls="menu-business-inspect" text="巡检计划">
+            <Function id="_EquipInspectSchemaEmployQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipInspectSchema.do</url>
+            </Function>
+            <Function id="_EquipInspectSchemaEmployLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipInspectSchema.do</url>
+            </Function>
+            <Function id="_EquipInspectSchemaEmployAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipInspectSchema.do</url>
+                <url>/equip/saveBatchEquipInspectSchema.do</url>
+                <url>/equip/loadEquipFlow.do</url>
+            </Function>
+            <Function id="_EquipInspectSchemaEmployEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipInspectSchema.do</url>
+            </Function>
+            <Function id="_EquipInspectSchemaEmployMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipInspectSchema.do</url>
+            </Function>
+            <Function id="_EquipInspectSchemaEmployMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipInspectSchema.do</url>
+            </Function>
+            <Function id="_EquipInspectPrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipInspect.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipInspectEmployListView" iconCls="menu-business-inspect" text="巡检管理">
+            <Function id="_EquipInspectEmployQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectEmployLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectEmployEdit" text="填报" iconCls="menu-edit">
+                <url>/equip/saveEquipInspect.do</url>
+                <url>/equip/multiDelDetailEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectEmployReset" text="重置" iconCls="menu-edit">
+                <url>/equip/multiResetEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectEmployMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectEmployMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectEmployPrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectEmployExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="EquipMaintSchemaEmployListView" iconCls="menu-business-maint" text="保养计划">
+            <Function id="_EquipMaintSchemaEmployQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipMaintSchema.do</url>
+            </Function>
+            <Function id="_EquipMaintSchemaEmployLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipMaintSchema.do</url>
+            </Function>
+            <Function id="_EquipMaintSchemaEmployAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipMaintSchema.do</url>
+                <url>/equip/loadEquipFlow.do</url>
+            </Function>
+            <Function id="_EquipMaintSchemaEmployEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipMaintSchema.do</url>
+            </Function>
+            <Function id="_EquipMaintSchemaEmployMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipMaintSchema.do</url>
+            </Function>
+            <Function id="_EquipMaintSchemaEmployMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipMaintSchema.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipMaintEmployListView" iconCls="menu-business-maint" text="保养管理">
+            <Function id="_EquipMaintEmployQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintEmployLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintEmployEdit" text="填报" iconCls="menu-edit">
+                <url>/equip/saveEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintEmployReset" text="重置" iconCls="menu-edit">
+                <url>/equip/multiResetEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintEmployMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintEmployMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipMaint.do</url>
+            </Function>
+              <Function id="_EquipMaintPrint" text="高级保养打印" iconCls="menu-del">
+                <url>/equip/printEquipMaint.do</url>
+            </Function>
+            <Function id="_ComEquipMaintPrint" text="例行保养打印" iconCls="menu-del">
+                <url>/equip/comPrintEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintEmployExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="EquipRepairListView" iconCls="menu-business-employ" text="维修管理">
+            <Function id="_EquipRepairQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipRepair.do</url>
+            </Function>
+            <Function id="_EquipRepairLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipRepair.do</url>
+            </Function>
+            <Function id="_EquipRepairAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipRepair.do</url>
+            </Function>
+            <Function id="_EquipRepairDealwith" text="填报" iconCls="menu-edit"/>
+            <Function id="_EquipRepairEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipRepair.do</url>
+            </Function>
+            <Function id="_EquipRepairAuto" text="生成付款单" iconCls="menu-add">
+            </Function>
+            <Function id="_EquipRepairMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipRepair.do</url>
+            </Function>
+            <Function id="_EquipRepairMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipRepair.do</url>
+            </Function>
+            <Function id="_EquipRepairApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_EquipRepairPrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipRepair.do</url>
+            </Function>
+            <Function id="_EquipRepairExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/equip/exportEquipRepair.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipHitchListView" iconCls="menu-business-employ" text="故障管理">
+            <Function id="_EquipHitchQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchHandle" text="处理" iconCls="menu-edit">
+                <url>/equip/handleEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_EquipHitchExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/equip/exportEquipHitch.do</url>
+            </Function>
+        </Item>
+        <Item id="InspectManageListView" iconCls="menu-business-inspect" text="安全巡检">
+            <Function id="_InspectManageQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listInspectManage.do</url>
+            </Function>
+            <Function id="_InspectManageLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadInspectManage.do</url>
+            </Function>
+            <Function id="_InspectManageMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelInspectManage.do</url>
+            </Function>
+        </Item>
+        <Item id="AppRepairListView" iconCls="menu-business-inspect" text="APP报修">
+            <Function id="_AppRepair" text="查询" iconCls="menu-list">
+                <url>/app/listRepair.do</url>
+            </Function>
+            <Function id="_AppRepairLoad" text="加载" iconCls="btn-loading">
+                <url>/app/loadRepair.do</url>
+            </Function>
+            <Function id="_AppRepairDispatching" text="派工" iconCls="btn-loading">
+                <url>/app/DispatchingRepair.do</url>
+            </Function>
+                <Function id="_AppRepairMultiDel" text="删除" iconCls="btn-loading">
+                <url>/app/multiDelRepair.do</url>
+            </Function>
+            <Function id="_AppRepairPrint" text="打印" iconCls="btn-loading">
+                <url>/app/printRepair.do</url>
+            </Function>
+             <Function id="_AppRepairExporter" text="导出" iconCls="btn-head-exporter">
+                <url>/app/exportAppRepair.do</url>
+            </Function>
+             <Function id="_AppRepairAuto" text="生成付款单" iconCls="menu-add"/>
+        </Item>
+    </Items>
+    <Items id="EquipentDismantle" text="拆卸管理" iconCls="menu-items-dismantle" isPublic="false">
+    	<Item id="EquipDismantleListView" iconCls="menu-business-dismantle" text="现场拆卸">
+            <Function id="_EquipDismantleQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipDismantle.do</url>
+            </Function>
+            <Function id="_EquipDismantleLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipDismantle.do</url>
+            </Function>
+            <Function id="_EquipDismantleAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipDismantle.do</url>
+            </Function>
+            <Function id="_EquipDismantleEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipDismantle.do</url>
+            </Function>
+            <Function id="_EquipDismantleMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipDismantle.do</url>
+            </Function>
+            <Function id="_EquipDismantleMultiDispatch" text="调度" iconCls="btn-clock">
+                <url>/equip/multiDispatchEquipDismantle.do</url>
+            </Function>
+            <Function id="_EquipDismantleMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipDismantle.do</url>
+            </Function>
+            <Function id="_EquipDismantleApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+            <Function id="_EquipDismantleRetrieve" text="回收" iconCls="btn-rowaction_del">
+                <url>/equip/fulfilPractiDiary.do</url>
+                <url>/equip/fulfilComponDiary.do</url>
+            </Function>
+            <Function id="_EquipDismantleJacking" text="顶升" iconCls="btn-rowaction_del">
+            </Function>
+            <Function id="_EquipDismantlePrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipDismantle.do</url>
+            </Function>
+        </Item>
+        <Item id="LogisticsBacksportListView" iconCls="menu-business-dismantle" text="回场物流">
+            <Function id="_LogisticsBacksportQuery" text="查询" iconCls="menu-list">
+                <url>/dispatch/listLogisticsBacksport.do</url>
+            </Function>
+            <Function id="_LogisticsBacksportLoad" text="加载" iconCls="btn-loading">
+                <url>/dispatch/loadLogisticsBacksport.do</url>
+            </Function>
+            <Function id="_LogisticsBacksportAdd" text="新增" iconCls="menu-add">
+                <url>/dispatch/saveLogisticsBacksport.do</url>
+                <url>/equip/listEquipFlow.do</url>
+                <url>/equip/listComponDiary.do</url>
+            </Function>
+            <Function id="_LogisticsBacksportEdit" text="修改" iconCls="menu-edit">
+                <url>/dispatch/saveLogisticsBacksport.do</url>
+                <url>/equip/listComponDiary.do</url>
+                <url>/dispatch/multiDelBackdetailLogisticsBacksport.do</url>
+            </Function>
+            <Function id="_LogisticsBacksportMultiDel" text="删除" iconCls="menu-del">
+                <url>/dispatch/multiDelLogisticsBacksport.do</url>
+            </Function>
+            <Function id="_LogisticsBacksportReceived" text="签收" iconCls="btn-submit">
+                <url>/dispatch/receivedLogisticsBacksport.do</url>
+            </Function>
+            <Function id="_LogisticsBacksportPrint" text="打印" iconCls="btn-head-print">
+                <url>/dispatch/printLogisticsBacksport.do</url>
+            </Function>
+            <Function id="_LogisticsBacksportExport" text="导出" iconCls="btn-head-exporter"/>
+            <Function id="_LogisticsBacksportRead" text="配件物流" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="DismantleTechnicalDisclosureListView" iconCls="menu-business-install" text="技术交底">
+            <Function id="_DismantleTechnicalDisclosureQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_DismantleTechnicalDisclosureLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_DismantleTechnicalDisclosureAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_DismantleTechnicalDisclosureEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_DismantleTechnicalDisclosureMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_DismantleTechnicalDisclosurePrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printTechnicalDisclosure.do</url>
+            </Function>
+        </Item>
+    	<Items id="TechnicalInformation" text="技术资料" iconCls="menu-items-dismantle" isPublic="false">	
+	        <Item id="DismantleSecureProtocolListView" iconCls="menu-business-install" text="安全协议">
+	            <Function id="_DismantleSecureProtocolQuery" text="查询" iconCls="menu-list">
+	                <url>/safety/listSecureProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleSecureProtocolLoad" text="加载" iconCls="btn-loading">
+	                <url>/safety/loadSecureProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleSecureProtocolAdd" text="新增" iconCls="menu-add">
+	                <url>/safety/saveSecureProtocol.do</url>
+	                <url>/dispatch/listContractLease.do</url>
+	                <url>/archive/loadCorpInfo.do</url>
+	            </Function>
+	            <Function id="_DismantleSecureProtocolEdit" text="修改" iconCls="menu-edit">
+	                <url>/safety/saveSecureProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleSecureProtocolMultiDel" text="删除" iconCls="menu-del">
+	                <url>/safety/multiDelSecureProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleSecureProtocolPrint" text="打印" iconCls="btn-head-print">
+	                <url>/safety/printSecureProtocol.do</url>
+	            </Function>
+	        </Item>
+	        <Item id="DismantleIndisProtocolListView" iconCls="menu-business-install" text="拆卸协议">
+	            <Function id="_DismantleIndisProtocolQuery" text="查询" iconCls="menu-list">
+	                <url>/safety/listIndisProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisProtocolLoad" text="加载" iconCls="btn-loading">
+	                <url>/safety/loadIndisProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisProtocolAdd" text="新增" iconCls="menu-add">
+	                <url>/safety/saveIndisProtocol.do</url>
+	                <url>/dispatch/listContractLease.do</url>
+	                <url>/archive/loadCorpInfo.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisProtocolEdit" text="修改" iconCls="menu-edit">
+	                <url>/safety/saveIndisProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisProtocolMultiDel" text="删除" iconCls="menu-del">
+	                <url>/safety/multiDelIndisProtocol.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisProtocolPrint" text="打印" iconCls="btn-head-print">
+	                <url>/safety/printIndisProtocol.do</url>
+	            </Function>
+	        </Item>
+	        <Item id="DismantleIndisSchemaListView" iconCls="menu-business-install" text="拆卸方案">
+	            <Function id="_DismantleIndisSchemaQuery" text="查询" iconCls="menu-list">
+	                <url>/safety/listIndisSchema.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisSchemaLoad" text="加载" iconCls="btn-loading">
+	                <url>/safety/loadIndisSchema.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisSchemaAdd" text="新增" iconCls="menu-add">
+	                <url>/safety/saveIndisSchema.do</url>
+	                <url>/dispatch/listContractLease.do</url>
+	                <url>/archive/loadCorpInfo.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisSchemaAdd2" text="合同新增" iconCls="menu-add">
+                	<url>/safety/saveIndisSchema.do</url>
+            	</Function>
+            	<Function id="_DismantleContractLeaseApproval" text="一键评审" iconCls="btn-approve">
+            	</Function>
+	            <Function id="_DismantleIndisSchemaEdit" text="修改" iconCls="menu-edit">
+	                <url>/safety/saveIndisSchema.do</url>
+	            </Function>
+                <Function id="_DismantleIndisSchemaMultiSubmit" text="提交" iconCls="menu-edit">
+                    <url>/safety/multiSubmitIndisSchema.do</url>
+                </Function>
+                <Function id="_DismantleIndisSchemaAccept" text="审核" iconCls="btn-accept">
+                    <url>/form/saveFormAccept.do</url>
+                </Function>
+                <Function id="_DismantleIndisSchemaApprove" text="审批" iconCls="btn-approve">
+                    <url>/form/saveFormApprove.do</url>
+                </Function>
+	            <Function id="_DismantleIndisSchemaMultiDel" text="删除" iconCls="menu-del">
+	                <url>/safety/multiDelIndisSchema.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisSchemaPrint" text="打印" iconCls="btn-head-print">
+	                <url>/safety/printIndisSchema.do</url>
+	            </Function>
+	        </Item>
+	        <Item id="DismantleIndisNoticeListView" iconCls="menu-business-install" text="拆卸告知">
+				<Function id="_DismantleIndisNoticeAdd" text="新增" iconCls="menu-add" />
+				<Function id="_DismantleIndisNoticeEdit" text="修改" iconCls="menu-edit" />
+				<Function id="_DismantleIndisNoticeMultiDel" text="删除" iconCls="menu-del" />
+			</Item>
+	        <Item id="DismantleContingencyPlanListView" iconCls="menu-business-install" text="应急预案">
+	            <Function id="_DismantleContingencyPlanQuery" text="查询" iconCls="menu-list">
+	                <url>/safety/listContingencyPlan.do</url>
+	            </Function>
+	            <Function id="_DismantleContingencyPlanLoad" text="加载" iconCls="btn-loading">
+	                <url>/safety/loadContingencyPlan.do</url>
+	            </Function>
+	            <Function id="_DismantleContingencyPlanAdd" text="新增" iconCls="menu-add">
+	                <url>/safety/saveContingencyPlan.do</url>
+	                <url>/dispatch/listContractLease.do</url>
+	                <url>/archive/loadCorpInfo.do</url>
+	            </Function>
+	            <Function id="_DismantleContingencyPlanEdit" text="修改" iconCls="menu-edit">
+	                <url>/safety/saveContingencyPlan.do</url>
+	            </Function>
+	            <Function id="_DismantleContingencyPlanMultiDel" text="删除" iconCls="menu-del">
+	                <url>/safety/multiDelContingencyPlan.do</url>
+	            </Function>
+	            <Function id="_DismantleContingencyPlanPrint" text="打印" iconCls="btn-head-print">
+	                <url>/safety/printContingencyPlan.do</url>
+	            </Function>
+	        </Item>
+	        <Item id="DismantleIndisPrecheckListView" iconCls="menu-business-install" text="拆卸前检查">
+	            <Function id="_DismantleIndisPrecheckQuery" text="查询" iconCls="menu-list">
+	                <url>/safety/listIndisPrecheck.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisPrecheckLoad" text="加载" iconCls="btn-loading">
+	                <url>/safety/loadIndisPrecheck.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisPrecheckAdd" text="新增" iconCls="menu-add">
+	                <url>/safety/saveIndisPrecheck.do</url>
+	                <url>/dispatch/listContractLease.do</url>
+	                <url>/archive/loadCorpInfo.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisPrecheckEdit" text="修改" iconCls="menu-edit">
+	                <url>/safety/saveIndisPrecheck.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisPrecheckMultiDel" text="删除" iconCls="menu-del">
+	                <url>/safety/multiDelIndisPrecheck.do</url>
+	            </Function>
+	            <Function id="_DismantleIndisPrecheckPrint" text="打印" iconCls="btn-head-print">
+	                <url>/safety/printIndisPrecheck.do</url>
+	            </Function>
+	        </Item>
+	        <Item id="DismantleManageListView" iconCls="menu-business-dismantle" text="APP报拆">
+	            <Function id="_DismantleManageQuery" text="查询" iconCls="menu-list">
+	                <url>/equip/listDismantleManage.do</url>
+	            </Function>
+	            <Function id="_DismantleManageLoad" text="加载" iconCls="btn-loading">
+	                <url>/equip/loadDismantleManage.do</url>
+	            </Function>
+	            <Function id="_DismantleManageMultiDel" text="删除" iconCls="menu-del">
+	                <url>/equip/multiDelDismantleManage.do</url>
+	            </Function>
+	        </Item>
+    	</Items>
+    </Items>
+    <Items id="EquipentWarehouse" text="转场维保" iconCls="menu-items-detector" isPublic="false">
+        <Item id="EquipWarehouseListView" iconCls="menu-business-dismantle" text="资产入库">
+            <Function id="_EquipWarehouseQuery" text="查询" iconCls="menu-list"/>
+            <Function id="_EquipWarehouseLoad" text="加载" iconCls="btn-loading"/>
+            <Function id="_EquipWarehouseAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_EquipWarehouseEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_EquipWarehouseMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_EquipWarehouseMultiSubmit" text="提交" iconCls="btn-submit"/>
+            <Function id="_EquipWarehouseApprove" text="审批" iconCls="btn-approve"/>
+        </Item>
+        <Item id="ComponIntoStoreListView" iconCls="menu-business-dismantle" text="配件入库">
+            <Function id="_ComponIntoQuery" text="查询" iconCls="menu-list"/>
+            <Function id="_ComponIntoLoad" text="加载" iconCls="btn-loading"/>
+            <Function id="_ComponIntoAdd" text="新增" iconCls="menu-add"/>
+            <Function id="_ComponIntoEdit" text="修改" iconCls="menu-edit"/>
+            <Function id="_ComponIntoMultiDel" text="删除" iconCls="menu-del"/>
+            <Function id="_ComponIntoMultiSubmit" text="提交" iconCls="btn-submit"/>
+            <Function id="_ComponIntoApprove" text="审批" iconCls="btn-approve"/>
+        </Item>
+    </Items>
+    <Items id="Safety" text="安全检测管理" iconCls="menu-items-detector" isPublic="false">
+        <Item id="xnodeGPRSListView" iconCls="menu-arch-rec-type" text="GPRS定位"></Item>
+        <Item id="xnodeLoadMonitorListView" iconCls="menu-arch-rec-type" text="载重监控"></Item>
+        <Item id="xnodeHeightMonitorListView" iconCls="menu-arch-rec-type" text="高度监控"></Item>
+        <Item id="xnodeVideoMonitorListView" iconCls="menu-arch-rec-type" text="4G视频"></Item>
+        <Item id="xnodeElectronicMapListView" iconCls="menu-arch-rec-type" text="电子地图"></Item>
+         <Item id="AntiFallDetectionListView" iconCls="menu-business-install" text="防坠器检测">
+            <Function id="_InstallTechnicalDisclosureQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_InstallTechnicalDisclosureLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_AntiFallDetectionAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_AntiFallDetectionEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveTechnicalDisclosure.do</url>
+            </Function>
+            <Function id="_AntiFallDetectionMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelTechnicalDisclosure.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipDetectListView" iconCls="menu-business-detector" text="检测管理">
+            <Function id="_EquipDetectQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipDetect.do</url>
+            </Function>
+            <Function id="_EquipDetectLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipDetect.do</url>
+            </Function>
+            <Function id="_EquipDetectAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipDetect.do</url>
+            </Function>
+            <Function id="_EquipDetectEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipDetect.do</url>
+            </Function>
+            <Function id="_EquipDetectMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipDetect.do</url>
+            </Function>
+            <Function id="_EquipDetectPrint" text="打印" iconCls="btn-head-print"/>
+            <Function id="_EquipDetectMiddlePrint" text="打印" iconCls="btn-head-print"/>
+            <Function id="_EquipDetectExporter" text="导出" iconCls="btn-head-exporter"/>
+        </Item>
+        <Item id="RiskListView" iconCls="menu-business-detector" text="隐患上报">
+            <Function id="_RiskQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listRisk.do</url>
+            </Function>
+            <Function id="_RiskLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadRisk.do</url>
+            </Function>
+            <Function id="_RiskAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveRisk.do</url>
+            </Function>
+            <Function id="_RiskEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveRisk.do</url>
+            </Function>
+            <Function id="_RiskMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelRisk.do</url>
+            </Function>
+            <Function id="_RiskPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printRisk.do</url>
+                <url>/safety/printListRisk.do</url>
+            </Function>
+        </Item>
+        <Item id="RiskReportListView" iconCls="menu-business-detector" text="整改反馈">
+            <Function id="_RiskReportQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listRiskReport.do</url>
+            </Function>
+            <Function id="_RiskReportLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadRiskReport.do</url>
+            </Function>
+            <Function id="_RiskReportAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveRiskReport.do</url>
+            </Function>
+            <Function id="_RiskReportEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveRiskReport.do</url>
+            </Function>
+            <Function id="_RiskReportMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelRiskReport.do</url>
+            </Function>
+            <Function id="_RiskReportPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printRiskReport.do</url>
+            </Function>
+        </Item>
+        <Item id="AccidentListView" iconCls="menu-business-detector" text="事故登记">
+            <Function id="_AccidentQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listAccident.do</url>
+            </Function>
+            <Function id="_AccidentLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadAccident.do</url>
+            </Function>
+            <Function id="_AccidentAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveAccident.do</url>
+            </Function>
+            <Function id="_AccidentEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveAccident.do</url>
+            </Function>
+            <Function id="_AccidentMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelAccident.do</url>
+            </Function>
+            <Function id="_AccidentPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printAccident.do</url>
+            </Function>
+        </Item>
+        <Item id="AccidentReportListView" iconCls="menu-business-detector" text="事故报告">
+            <Function id="_AccidentReportQuery" text="查询" iconCls="menu-list">
+                <url>/safety/listAccidentReport.do</url>
+            </Function>
+            <Function id="_AccidentReportLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadAccidentReport.do</url>
+            </Function>
+            <Function id="_AccidentReportAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveAccidentReport.do</url>
+            </Function>
+            <Function id="_AccidentReportEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveAccidentReport.do</url>
+            </Function>
+            <Function id="_AccidentReportMultiDel" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelAccidentReport.do</url>
+            </Function>
+            <Function id="_AccidentReportPrint" text="打印" iconCls="btn-head-print">
+                <url>/safety/printAccidentReport.do</url>
+            </Function>
+        </Item>
+        <Item id="SafeCheckListView" iconCls="menu-business-install" text="安全检查">
+        	<Function id="_SafeCheckQuery" text="查询" iconCls="menu-list">
+        		<url>/safety/listSafeCheck.do</url>
+        	</Function>
+        	<Function id="_SafeCheckLoad" text="加载" iconCls="btn-loading">
+                <url>/safety/loadSafeCheck.do</url>
+            </Function>
+            <Function id="_SafeCheckAdd" text="新增" iconCls="menu-add">
+                <url>/safety/saveSafeCheck.do</url>
+            </Function>
+            <Function id="_SafeCheckEdit" text="修改" iconCls="menu-edit">
+                <url>/safety/saveSafeCheck.do</url>
+                <url>/safety/multiDelContentSafeCheck.do</url>
+            </Function>
+            <Function id="_SafeCheckMultiDelAll" text="删除" iconCls="menu-del">
+                <url>/safety/multiDelAllSafeCheck.do</url>
+            </Function>
+        </Item>
+        <Item id="SideSystemListView" iconCls="menu-business-install" text="旁站记录">
+        	<Function id="_SideSystemQuery" text="查询" iconCls="menu-list">
+        		<url>/app/listSideSystem.do</url>
+        	</Function>
+        	<Function id="_SideSystemLoad" text="加载" iconCls="btn-loading">
+                <url>/app/loadSideSystem.do</url>
+            </Function>
+            <Function id="_SideSystemMultiDel" text="删除" iconCls="menu-del">
+                <url>/app/multiDelSideSystem.do</url>
+            </Function>
+        </Item>
+    </Items>
+    <Items id="BusinessRisk" text="经营风险预警" iconCls="menu-items-insure" isPublic="false">
+        <Item id="PractiResumeListView" iconCls="menu-business-resume" text="从业记录"></Item>
+        <Item id="PractiCreditListView" iconCls="menu-business-credit" text="奖惩管理">
+            <Function id="_PractiCreditQuery" text="查询" iconCls="menu-list">
+                <url>/archive/listPractiCredit.do</url>
+            </Function>
+            <Function id="_PractiCreditLoad" text="加载" iconCls="btn-loading">
+                <url>/archive/loadPractiCredit.do</url>
+            </Function>
+            <Function id="_PractiCreditAdd" text="新增" iconCls="menu-add">
+                <url>/archive/savePractiCredit.do</url>
+            </Function>
+            <Function id="_PractiCreditEdit" text="修改" iconCls="menu-edit">
+                <url>/archive/savePractiCredit.do</url>
+            </Function>
+            <Function id="_PractiCreditMultiDel" text="删除" iconCls="menu-del">
+                <url>/archive/multiDelPractiCredit.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipWarehouseAbnormalListView" iconCls="menu-business-dismantle" text="入库异常">
+            <Function id="_EquipWarehouseAbnormalQuery" text="查询" iconCls="menu-list"/>
+        </Item>
+    </Items>
+    <Items id="Capitals" text="服务质量监督" iconCls="menu-items-capitals" isPublic="false">
+        <Item id="EquipInspectSuperviseListView" iconCls="menu-business-inspect" text="待巡检">
+            <Function id="_EquipInspectSuperviseQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectSuperviseLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectSuperviseEdit" text="填报" iconCls="menu-edit">
+                <url>/equip/saveEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectSuperviseReset" text="重置" iconCls="menu-edit">
+                <url>/equip/multiResetEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectSuperviseMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectSuperviseMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipInspect.do</url>
+            </Function>
+            <Function id="_EquipInspectSupervisePrint" text="打印" iconCls="btn-head-print">
+                <url>/equip/printEquipInspect.do</url>
+            </Function>
+
+        </Item>
+        <Item id="EquipMaintSuperviseListView" iconCls="menu-business-maint" text="待保养">
+            <Function id="_EquipMaintSuperviseQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintSuperviseLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintSuperviseEdit" text="填报" iconCls="menu-edit">
+                <url>/equip/saveEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintSuperviseReset" text="重置" iconCls="menu-edit">
+                <url>/equip/multiResetEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintSuperviseMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipMaint.do</url>
+            </Function>
+            <Function id="_EquipMaintSuperviseMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipMaint.do</url>
+            </Function>
+        </Item>
+        <Item id="EquipHitchSuperviseListView" iconCls="menu-business-employ" text="故障/隐患待处理">
+            <Function id="_EquipHitchSuperviseQuery" text="查询" iconCls="menu-list">
+                <url>/equip/listEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchSuperviseLoad" text="加载" iconCls="btn-loading">
+                <url>/equip/loadEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchSuperviseAdd" text="新增" iconCls="menu-add">
+                <url>/equip/saveEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchSuperviseEdit" text="修改" iconCls="menu-edit">
+                <url>/equip/saveEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchSuperviseHandle" text="处理" iconCls="menu-edit">
+                <url>/equip/handleEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchSuperviseMultiDel" text="删除" iconCls="menu-del">
+                <url>/equip/multiDelEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchSuperviseMultiSubmit" text="提交" iconCls="btn-submit">
+                <url>/equip/multiSubmitEquipHitch.do</url>
+            </Function>
+            <Function id="_EquipHitchSuperviseApprove" text="审批" iconCls="btn-approve">
+                <url>/form/saveFormApprove.do</url>
+            </Function>
+        </Item>
+        <Item id="xnodeOvertimeMonitorListView" iconCls="menu-arch-rec-type" text="超期监控"></Item>
+        <Item id="xnodeProposalListView" iconCls="menu-arch-rec-type" text="投诉建议"></Item>
+        <Item id="xnodeSatisfacteListView" iconCls="menu-arch-rec-type" text="满意度"></Item>
+    </Items>
+    
+    <Items id="Statistics" text="领导决策分析" iconCls="menu-items-statistics" isPublic="false">
+        <Items id="xnodeCorporatPointView" iconCls="menu-my-message" text="费用类报表">		
+            <Item id="FinancialSummary" iconCls="menu-business-financial" text="财务总表"/>
+			<!-- <Item id="CashFlowStatement" iconCls="menu-business-cashflow" text="现金流量表"/> -->
+            <Item id="IncomeExpenseListView" iconCls="menu-business-incomeexpense" text="收支明细表"/>
+            <Item id="EquipmentBalancePayments" iconCls="menu-business-practivacancyrate" text="设备收支明细表"/>
+			<Item id="LogisticsCostSummary" iconCls="menu-business-practivacancyrate" text="物流费用汇总表"/>
+            <Item id="AccountReceivable" iconCls="menu-business-accountdue" text="应收款明细"/>
+            <Item id="AccountPayable" iconCls="menu-business-accountpayable" text="应付款明细表"/>
+            <Item id="ConstructionWork" iconCls="menu-business-accountdue" text="施工作业核算表"/>
+            <Item id="Reimburse" iconCls="menu-business-accountpayable" text="报销费用明细表"/>
+            <Item id="ReceivedPayments" iconCls="menu-business-customermargin" text="项目收款明细表"/>
+            <Item id="AutoCraneCost" iconCls="menu-business-practivacancyrate" text="汽车吊费用明细表"/>
+        </Items>	
+        <Items id="xnodeProjectPointView" iconCls="menu-my-message" text="项目类报表">
+            <Item id="ProjectConstruct" iconCls="menu-business-equipmargin" text="施工项目汇总表"/>
+            <Item id="ProjectBalancePayments" iconCls="menu-business-equipmargin" text="项目收支明细表"/>
+             <Item id="ProjectInstallStatics" iconCls="menu-business-equipmargin" text="项目安装明细表"/>
+        </Items>	
+        <Items id="xnodeEquipmentPointView" iconCls="menu-my-message" text="设备类报表">   	
+        	<Item id="UseEquipList" iconCls="menu-business-equipmargin" text="借用设备明细表"/>
+            <Item id="EquipMargin" iconCls="menu-business-equipmargin" text="设备毛利分析表"/>
+            <Item id="CollarMaterial" iconCls="menu-business-equipmargin" text="领用物资月统计表"/>
+            <Item id="EquipSummary" iconCls="menu-business-equipmargin" text="设备汇总表"/>
+            <Item id="EquipmentRate" iconCls="menu-business-equipmargin" text="设备折旧统计表"/>
+            <Item id="EquipVacancyRate" iconCls="menu-business-equipvacancyrate" text="设备闲置率统计表"/>
+            <Item id="EquipRepair" iconCls="menu-business-equipvacancyrate" text="设备维修统计表"/>
+            <!-- <Item id="RentalFeeApplication" iconCls="menu-business-equipvacancyrate" text="设备在用明细表"/> -->
+            <Item id="EquipmentInRentRate" iconCls="menu-business-equipvacancyrate" text="设备在租率表"/>
+        </Items>	
+        <Items id="xnodePratitionerPointView" iconCls="menu-my-message" text="人员类报表">
+            <Item id="PractiVacancyRate" iconCls="menu-business-practivacancyrate" text="人员闲置率分析表"/>
+        </Items>	
+        <Items id="xnodeComponentPointView" iconCls="menu-my-message" text="配件类报表">	
+            <Item id="KnotDispatch" iconCls="menu-business-practivacancyrate" text="标准节调度情况表"/>
+            <Item id="ComponetStocks" iconCls="menu-business-practivacancyrate" text="库存统计表"/>
+            <Item id="ComponetDistribution" iconCls="menu-business-practivacancyrate" text="零部件分布表"/>
+			<Item id="InstallDetails" iconCls="menu-business-practivacancyrate" text="安装明细表"/>
+			<Item id="UseMateDetail" iconCls="menu-business-practivacancyrate" text="领用物资明细表"/>
+			<Item id="SparePartsList" iconCls="menu-business-equipmargin" text="借用零配件明细表"/>
+			<Item id="EquipUseMateStatistics" iconCls="menu-business-practivacancyrate" text="设备领用物资统计表"/>
+			<Item id="UsePurposeSummary" iconCls="menu-business-practivacancyrate" text="领用用途汇总表"/>
+			<Item id="PurchaseMateDetail" iconCls="menu-business-practivacancyrate" text="采购物资明细表"/>
+			<Item id="PurchaseMateSummary" iconCls="menu-business-practivacancyrate" text="采购清单汇总表"/>
+        </Items>				
+        <Items id="xnodeCustomerPointView" iconCls="menu-my-message" text="客户类报表">
+            <Item id="CustomerMargin" iconCls="menu-business-customermargin" text="客户毛利分析表"/>
+        </Items>       
+    </Items>
+    
+    <Items id="DesktopPlugin" text="首页插件" iconCls="menu-my-desktop" isPublic="false" isPlugin="true">
+        <Item id="PortletModulePlugin" text="功能模块" iconCls="menu-my-customer">
+            <Function id="_SystemDateExport" text="下载数据" iconCls="btn-download">
+                <url>/system/exportSystemDataGlobalType.do</url>
+            </Function>
+            <Function id="_SystemDateInport" text="上传数据" iconCls="btn-upload">
+                <url>/archive/uploadEquipment.do</url>
+                <url>/archive/uploadComponent.do</url>
+                <url>/dispatch/uploadDispatch.do</url>
+                <url>/equip/uploadEquipInspect.do</url>
+            </Function>
+            <Function id="_ContractLeasePanelView" text="合同信息" iconCls="menu-business-contract">
+                <url>/dispatch/displayContractLease.do</url>
+            </Function>
+            <Function id="_SettleContractPanelView" text="结算汇总" iconCls="menu-business-settle">
+                <url>/dispatch/displaySettleContract.do</url>
+            </Function>
+            <Function id="_InsureEquipPanelView" text="设备保险" iconCls="menu-business-insure">
+                <url>/equip/displayInsureEquip.do</url>
+            </Function>
+            <Function id="_CorpCertPanelView" text="企业资质" iconCls="menu-business-corpcert">
+                <url>/archive/displayCorpCert.do</url>
+            </Function>
+            <Function id="_PractiCertPanelView" text="人员资质" iconCls="menu-business-practicert">
+                <url>/archive/displayPractiCert.do</url>
+            </Function>
+            <Function id="_PractiCertContractPanelView" text="合同签约资质" iconCls="menu-business-practicert">
+                <url>/archive/displayContractPractiCert.do</url>
+            </Function>
+        </Item>
+    </Items>
+    <Items id="DataAuthorityPlugin" text="数据范围" iconCls="btn-head-withhold" isPublic="false" isPlugin="true">
+        <Item id="EquipmentDataPlugin" text="设备模块" iconCls="menu-business-equip">
+            <Function id="_EquipmentReadAll" text="全部信息" iconCls="menu-contract"></Function>
+        </Item>
+        <Item id="ReimburseDataPlugin" text="报销模块" iconCls="menu-business-equip">
+            <Function id="_ReimburseQueryAll" text="全部信息" iconCls="menu-contract"></Function>
+        </Item>
+        <Item id="AmountPaymentDataPlugin" text="付款模块" iconCls="menu-business-equip">
+            <Function id="_AmountPaymentQueryAll" text="全部信息" iconCls="menu-contract"></Function>
+        </Item>
+        <Item id="EquipmentAPPPlugin" text="APP模块" iconCls="menu-business-equip">
+            <Function id="EQUIP_TODAY" text="今日设备" iconCls="menu-contract"></Function>
+            <Function id="INSTALL_MANAGE" text="安装管理" iconCls="menu-contract"></Function>
+            <Function id="EMPLOY_MANAGE" text="使用管理" iconCls="menu-contract"></Function>
+            <Function id="INSPECT_MANAGE" text="巡检管理" iconCls="menu-contract"></Function>
+            <Function id="DISMANTLE_MANAGE" text="拆卸管理" iconCls="menu-contract"></Function>
+            <Function id="DISPATCH_INTELLIGENT" text="智能调度" iconCls="menu-contract"></Function>
+            <Function id="APP_REPAIR" text="故障报修" iconCls="menu-contract"></Function>
+            <Function id="APP_DISPATCH" text="我要装车" iconCls="menu-contract"></Function>
+            <Function id="APP_DISPATCH_CLOSED" text="调度结案" iconCls="menu-contract"></Function>
+            <Function id="APP_LOGISTICS" text="装车物流" iconCls="menu-contract"></Function>
+            <Function id="APP_LOGI_RECEIVE" text="物流签收" iconCls="menu-contract"></Function>
+            <Function id="APP_CONSTRUCT_PLAN" text="施工计划" iconCls="menu-contract"></Function>
+        </Item>
+        <Item id="FlowDataPlugin" text="事务审批" iconCls="menu-business-equip">
+            <Function id="_FlowQueryAll" text="全部信息" iconCls="menu-contract"></Function>
+        </Item>
+        <Item id="AttendamceDataPlugin" text="考勤管理" iconCls="menu-business-equip">
+            <Function id="_AttendamceQueryAll" text="全部信息" iconCls="menu-contract"></Function>
+        </Item>
+    </Items>
+</Menus>

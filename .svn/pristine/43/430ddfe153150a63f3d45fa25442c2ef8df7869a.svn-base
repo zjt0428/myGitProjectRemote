@@ -1,0 +1,206 @@
+var PractiInsuranceFrom = function(a, b) {
+	Ext.apply(this, a || {});
+	Ext.apply(this, b || {});
+	this.saveable = this.saveable; // 保存/重置功能按钮
+	this.approveable = this.approveable; // 审批功能按钮
+	var fileAttachContainer = this.initFileAttachContainer({
+		relateId : this.componId,
+		relateModule : RelationModule.component.relateModule,
+		saveable : this.saveable
+	});
+	this.equipInsuranceDetailGrid = new EquipInsuranceDetailGrid(null, {
+		saveable : this.saveable,
+		recordcallback : this.dispatchComponentArchives.createDelegate(this)
+	});
+	var isTongRenNo = new Ext.form.Radio({
+	    name:"rectifyContactInfo.isTongRen",
+	    width:70,
+	    checked	:true,
+	    boxLabel:"雇主责任险",
+	    inputValue:"0"
+	});
+	var isTongRenYes = new Ext.form.Radio({
+	    name:"rectifyContactInfo.isTongRen",
+	    boxLabel:"其他",
+	    width:70,
+	    inputValue:"1"
+	});
+	var bussinessArea = new Ext.form.RadioGroup({
+		id : "bussinessArea",
+	    fieldLabel: '保险项目',
+	    items:[isTongRenNo,isTongRenYes],
+	    allowBlank: true/*,
+	    listeners:{
+	        afterrender:function () {
+	        	bussinessArea.items.get(0).setValue(true);//默认选择第一个
+	        }
+	    }*/
+	});
+	var items = [ {
+		id : this.insureId,
+		xtype : "hidden",
+	}, {
+		xtype : "fieldset",
+		title : "基本信息",
+		anchor : "98%",
+		collapsible : true,
+		items : [ {
+			xtype : "panel",
+			layout : "column",
+			items : [ {
+				layout : "form",
+				columnWidth : 0.33,
+				defaultType : "textfield",
+				items : [ {
+					fieldLabel : "保险单号",
+					name : "equipInsurance.insureSerial"
+				}, {
+					fieldLabel : "联系人",
+					name : "equipInsurance.linkman"
+				}, {
+					fieldLabel : "保费总额",
+					name : "equipInsurance.totalPremium"
+				} ]
+			}, {
+				layout : "form",
+				columnWidth : 0.33,
+				defaultType : "textfield",
+				items : [ {
+					fieldLabel : "保险公司",
+					allowBlank : true,
+					name : "equipInsurance.insuranceCompany"
+				}, {
+					xtype : "datefield",
+					format : "Y-m-d",
+					width : 130,
+					editable : false,
+					fieldLabel : "起保日期",
+					name : "equipInsurance.startInsureDate",
+				}, {
+					fieldLabel : "保障人数",
+					allowBlank : true,
+					name : "equipInsurance.equipNum"
+				} ]
+			}, {
+				layout : "form",
+				columnWidth : 0.33,
+				defaultType : "textfield",
+				items : [ {
+					fieldLabel : "理赔电话",
+					name : "equipInsurance.claimPhone"
+				}, {
+					xtype : "datefield",
+					format : "Y-m-d",
+					width : 130,
+					editable : false,
+					fieldLabel : "停保日期",
+					name : "equipInsurance.endInsureDate",
+				},{
+					xtype : "relationCompositeField",
+					allowBlank : true,
+					disabled : !this.saveable,
+					fieldLabel : "所属公司",
+					single:false,
+					readOnly : true,
+					allowBlank : false,
+					name : "project.materialPractiName",
+					relateModule : RelationModule.practitioner.relateModule,
+					fields : [ "materialPractiName"],
+					cleanhandler : this.cleanMultiField.createDelegate(this),
+					importhandler : this.importMaterialPractiArchives.createDelegate(this)
+				} ]
+			}  ]
+		},{
+			layout : "column",
+			items : [
+			{
+				layout : "form",
+				columnWidth : 0.35,
+				items : [ bussinessArea]
+			} ]
+		}, {
+			layout : "column",
+			items : [
+			{
+				layout : "form",
+				columnWidth : 0.99,
+				items : [ {
+					xtype : "textarea",
+					maxLength : 128,
+					maxLengthText : MoreThanMaxLength,
+					anchor : "95%",
+					height : "60",
+					fieldLabel : "备注",
+					name : "project.remark"
+				} ]
+			} ]
+		}, fileAttachContainer ,new PractiContractDiaryGrid()]
+	} ];
+	PractiInsuranceFrom.superclass.constructor.call(this, {
+		title : "人员保险信息",
+		animateTarget : this.animateTarget,
+		y : 10,
+		width : 860,
+		height : 560,
+		constrain: true,//禁止窗口移出浏览器屏幕
+		layout : "fit",
+		form_config : {
+			labelWidth : 90,
+			object : "equipInsurance",
+			saveable : this.saveable,
+			approve : {
+				action : this.approveable,
+				relateId : this.insureId,
+				relateModule : RelationModule.equipInsurance.relateModule
+			},
+			url : __ctxPath + "/equip/saveEquipInsurance.do",
+			items : items,
+			fieldMapping : EquipInsuranceFieldMapping,
+			hiddenField : EquipInsuranceHiddenField
+		}
+	});
+};
+Ext.extend(PractiInsuranceFrom, Knight.ux.FormPanelWindow, {
+	importMaterialPractiArchives : function(data, fields) {
+		var s = "";
+		for(var i=0;i<data.length;i++){
+			s+= data[i].data.practiName+",";
+//			s+= data[i].data.fullname+",";
+		}
+		this.setMultiFieldValue(fields, [s]);
+	},
+	dispatchComponentArchives : function(record) {
+		if (Ext.isEmpty(record)) {
+			return;
+		}
+	},
+	saveFormData : function() {
+		var gridCount = this.equipInsuranceDetailGrid.getStore().getCount();
+		if(gridCount<1) {
+			$toast("未关联设备，无法保存！");
+			return;
+		}
+		this.setFieldValue("equipInsuranceDetails", $gridstore2json(this.equipInsuranceDetailGrid));
+		$formsubmit(this.getForm(), function(c, e) {
+			$toast("信息操作成功！");
+			var resp = Ext.util.JSON.decode(e.response.responseText);
+			this.submitApplication(__ctxPath + "/equip/multiSubmitEquipInsurance.do", resp.applyforId);
+		}.createDelegate(this));
+	},
+	loadFormData : function() {
+		if (!Ext.isEmpty(this.insureId)) {
+			this.getForm().load({
+				deferredRender : false,
+				url : __ctxPath + "/equip/loadEquipInsurance.do?insureId=" + this.insureId,
+				waitMsg : "正在载入数据...",
+				success : function(g, h) {
+					var data = Ext.util.JSON.decode(h.response.responseText).data[0];
+					this.setFormSubModuleGrid(data.equipInsuranceDetailSet, this.equipInsuranceDetailGrid);
+				}.createDelegate(this),
+				failure : function(c, d) {
+					Ext.Msg.alert("出错", "载入数据失败!");
+				}
+			});
+		}
+	}
+});

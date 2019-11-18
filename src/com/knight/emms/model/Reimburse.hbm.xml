@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.Reimburse" table="T_REIMBURSE" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="reimburseId" column="REIMBURSE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="reimburseSerial" type="java.lang.String" column="REIMBURSE_SERIAL" />
+		<property name="reimburseTheme" type="java.lang.String" column="REIMBURSE_THEME" />
+		<property name="paymentEntId" type="java.lang.Long" column="PAYMENT_ENT_ID" />
+		<property name="paymentModule" type="java.lang.String" column="PAYMENT_MODULE" />
+		<property name="paymentEntName" type="java.lang.String" column="PAYMENT_ENT_NAME" />
+		<property name="paymentEntAccountId" type="java.lang.Long" column="PAYMENT_ENT_ACCOUNT_ID" />
+		<property name="paymentBank" type="java.lang.String" column="PAYMENT_BANK" />
+		<property name="paymentAccount" type="java.lang.String" column="PAYMENT_ACCOUNT" />
+		<property name="receiveBank" type="java.lang.String" column="RECEIVE_BANK" />
+		<property name="receiveAccount" type="java.lang.String" column="RECEIVE_ACCOUNT" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="practiTel" type="java.lang.String" column="PRACTI_TEL" />
+		<property name="reimburseMonth" type="java.lang.String" column="REIMBURSE_MONTH" />
+		<property name="reimburseDate" type="java.lang.String" column="REIMBURSE_DATE" />
+		<property name="ticketCount" type="java.lang.Short" column="TICKET_COUNT" />
+		<property name="reimburseAmount" type="java.math.BigDecimal" column="REIMBURSE_AMOUNT" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="arrearsAmount" type="java.math.BigDecimal" column="ARREARS_AMOUNT" />
+		<property name="askforAmount" type="java.math.BigDecimal" column="ASKFOR_AMOUNT" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateTheme" type="java.lang.String" column="RELATE_THEME" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="recordSerial" type="java.lang.String" column="RECORD_SERIAL" />
+		<property name="equipCategory" type="java.lang.String" column="EQUIP_CATEGORY" />
+		<property name="equipGeneric" type="java.lang.String" column="EQUIP_GENERIC" />
+		<property name="equipSpecific" type="java.lang.String" column="EQUIP_SPECIFIC" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="customerId" type="java.lang.Long" column="CUSTOMER_ID" />
+		<property name="customerName" type="java.lang.String" column="CUSTOMER_NAME" />
+		<property name="customerTel" type="java.lang.String" column="CUSTOMER_TEL" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="depId" type="java.lang.Long" column="DEP_ID" insert="false" update="false" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="reimburseTicketSet" cascade="all" inverse="false" lazy="true">
+			<key column="REIMBURSE_ID" />
+			<one-to-many class="com.knight.emms.model.ReimburseTicket" />
+		</set>
+	</class>
+</hibernate-mapping>

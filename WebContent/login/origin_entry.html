@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统入口</title>
+    <link type="text/css" rel="stylesheet" href="../css/public.css">
+    <script type="text/javascript">
+    	var isClick = function(c) {
+			window.name = c;
+			location.href= "../indexsrc.jsp";
+		}
+    </script>
+</head>
+<body class="entry">
+<div class="head">
+    <div class="container">
+  	  <div class="logo" ><img width="60px" height="40px" src="../images/logo.jpg" /></div>
+        <span class="name">广 西 大 都 租 赁 管 理 服 务 平 台</span>
+      <!--   <span class="bureau">——天元集团</span> -->
+    </div>
+</div>
+<div class="entryMap">
+    <div class="container">
+        <div class="entryList">
+            <a class="twig child1" onclick="isClick(0)">
+                <p>大数据分析</p>
+            </a>
+            <a class="twig child2" onclick="isClick(1)">
+                <p>业务管理</p>
+            </a>
+            <a class="twig child3" onclick="isClick(2)">
+                <p>设备管理</p>
+            </a>
+            <a class="twig child4" onclick="isClick(3)">
+                <p>系统管理</p>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="container">技术支持：<a href="#" style="color:white">日升建机信息科技有限公司</a>　　全国咨询服务热线：400 630 5658</div>
+</div>
+</body>
+</html>

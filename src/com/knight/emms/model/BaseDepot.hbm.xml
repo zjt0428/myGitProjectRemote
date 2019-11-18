@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.BaseDepot" table="T_BASE_DEPOT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="depotId" column="DEPOT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="depotName" type="java.lang.String" column="DEPOT_NAME" />
+		<property name="linkman" type="java.lang.String" column="LINKMAN" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="jurisdiction" type="java.lang.String" column="JURISDICTION" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<set name="baseDepotPermissionSet" lazy="true" cascade="all" inverse="false">
+			<key column="DEPOT_ID"></key>
+			<one-to-many class="com.knight.emms.model.BaseDepotPermission" />
+		</set>
+	</class>
+</hibernate-mapping>

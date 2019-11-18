@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.MaterialsRemodel" table="T_MATERIALS_REMODEL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="remodelId" column="REMODEL_ID" type="java.lang.Long" length="19">
+			<generator class="native"/>
+		</id>
+		
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="remodelSerial" type="java.lang.String" column="REMODEL_SERIAL" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="applyDate" type="java.lang.String" column="APPLY_DATE" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSETS_PROPERTY" />
+		<property name="remodelType" type="java.lang.String" column="REMODEL_TYPE" />
+		<property name="producerId" type="java.lang.Long" column="PRODUCER_ID" />
+		<property name="producer" type="java.lang.String" column="PRODUCER" />
+		<property name="producationTheme" type="java.lang.String" column="PRODUCATION_THEME" />
+		<property name="planFinishDate" type="java.lang.String" column="PLAN_FINISH_DATE" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="baseDepot" column="DEPOT_ID" class="com.knight.emms.model.BaseDepot" fetch="join" />
+		<set name="beforeRemodelSet" lazy="true" cascade="all" inverse="false">
+			<key column="REMODEL_ID"></key>
+			<one-to-many class="com.knight.emms.model.BeforeRemodel"></one-to-many>
+		</set>
+		<set name="afterRemodelSet" lazy="true" cascade="all" inverse="false">
+			<key column="REMODEL_ID"></key>
+			<one-to-many class="com.knight.emms.model.AfterRemodel"></one-to-many>
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipVerify" table="T_EQUIPMENT_VERIFY" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="verifyId" column="VERIFY_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="verifySerial" type="java.lang.String" column="VERIFY_SERIAL" />
+		<property name="relateId" type="java.lang.Long" column="RELATE_ID" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="relateModule" type="java.lang.String" column="RELATE_MODULE" />
+		<property name="inEnt" type="java.lang.Long" column="IN_ENT" />
+		<property name="inEntName" type="java.lang.String" column="IN_ENT_NAME" />
+		<property name="emEnt" type="java.lang.Long" column="EM_ENT" />
+		<property name="emEntName" type="java.lang.String" column="EM_ENT_NAME" />
+		<property name="supEnt" type="java.lang.Long" column="SUP_ENT" />
+		<property name="supEntName" type="java.lang.String" column="SUP_ENT_NAME" />
+		<property name="leaseEnt" type="java.lang.Long" column="LEASE_ENT" />
+		<property name="leaseEntName" type="java.lang.String" column="LEASE_ENT_NAME" />
+		<property name="verifyDate" type="java.lang.String" column="VERIFY_DATE" />
+		<property name="verifyResult" type="java.lang.String" column="VERIFY_RESULT" />
+		<property name="suggest" type="java.lang.String" column="SUGGEST" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="effective" type="java.lang.String" column="EFFECTIVE" />
+		<property name="practiName" type="java.lang.String" column="PRACTINAME" />
+		<many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<set name="verifyStandardSet" cascade="none" lazy="true" inverse="true" where=" RELATE_MODULE='EQUIP_VERIFY' ">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.VerifyStandard" />
+		</set>
+	</class>
+</hibernate-mapping>

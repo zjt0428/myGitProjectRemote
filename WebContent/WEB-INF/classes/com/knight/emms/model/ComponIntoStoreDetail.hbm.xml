@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ComponIntoStoreDetail" table="T_COMPON_INTOSTORE_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="detailId" column="DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="rowId" type="java.lang.Long" column="ROW_ID" />
+		<property name="waitCounts" type="java.lang.Integer" column="WAIT_COUNTS" />
+		<property name="counts" type="java.lang.Integer" column="COUNTS" />
+		<property name="result" type="java.lang.String" column="RESULT" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="maintContent" type="java.lang.String" column="MAINT_CONTENT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="componId" type="java.lang.Long" column="COMPON_ID"></property>		
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

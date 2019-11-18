@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AssembleAndDisassembleFee" table="T_ASSEMBLE_AND_DISASSEMBLE_FEE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="feeId" column="FEE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="feesType" type="java.lang.String" column="FEES_TYPE" />
+		<property name="measurementUnit" type="java.lang.String" column="MEASUREMENT_UNIT" />
+		<property name="whetherUsing" type="java.lang.String" column="WHETHER_USING" />
+		<property name="theoriesValueConversion" type="java.lang.String" column="THEORIES_VALUE_CONVERSION" />
+		<property name="unitConversion" type="java.lang.String" column="UNIT_CONVERSION" />
+		<property name="chargeUnitPrice" type="java.lang.String" column="CHARGE_UNIT_PRICE" />
+		<property name="feeCategory" type="java.lang.String" column="FEE_CATEGORY" />
+		<many-to-one name="materialsCommodity" column="COMMODITY_ID" class="com.knight.emms.model.MaterialsCommodity" fetch="join" />
+	</class>
+</hibernate-mapping>

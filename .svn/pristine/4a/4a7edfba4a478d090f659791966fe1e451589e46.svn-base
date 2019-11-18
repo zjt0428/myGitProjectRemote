@@ -1,0 +1,126 @@
+
+package com.knight.emms.web.action;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.log.ActionLog;
+import com.knight.core.util.GsonUtil;
+import com.knight.core.web.action.ExportBaseAction;
+import com.knight.emms.constant.Constant;
+import com.knight.emms.constant.Status;
+import com.knight.emms.model.EquipInsurance;
+import com.knight.emms.model.EquipInsuranceDetail;
+import com.knight.emms.service.EquipInsuranceDetailService;
+import com.knight.emms.service.EquipInsuranceService;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @ClassName: AllocationDepotAction
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author
+ * @date
+ */
+public class EquipInsuranceAction  extends ExportBaseAction<EquipInsurance> {
+
+	private static final long serialVersionUID = 1L;
+
+	@Getter
+	@Setter
+	private EquipInsurance equipInsurance;
+
+	@Setter
+	@Getter
+	private Long insureId;
+
+	@Resource
+	private EquipInsuranceService equipInsuranceService;
+	
+	@Resource
+	private EquipInsuranceDetailService equipInsuranceDetailService;
+
+	public String list() {
+		QueryFilter filter = new QueryFilter(getRequest());
+		List<EquipInsurance> list = equipInsuranceService.queryTranslateAll(filter);
+		StringBuffer buff = new StringBuffer("{success:true,'totalCounts':").append(filter.getPagingBean().getTotalItems()).append(",result:");
+		buff.append(GsonUtil.toJson(list, false));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+
+	public String load() {
+		equipInsurance = equipInsuranceService.getTranslateFull(insureId);
+		StringBuffer sb = new StringBuffer("{success:true,data:[");
+		sb.append(GsonUtil.toJson(equipInsurance, GsonUtil.SINCE_VERSION_20, false));
+        sb.append("]}");
+		setJsonString(sb.toString());
+		return SUCCESS;
+	}
+
+	@ActionLog(description = "保存或更新项目调拨信息")
+	public String save() {
+		if (equipInsurance.getInsureId() == null) {
+			equipInsurance.setDelFlag(Constant.ENABLED);
+			equipInsurance.setApplyforState(Status.Applyfor.waitSubmit);
+		}else {
+			EquipInsurance ei = equipInsuranceService.get(equipInsurance.getInsureId());
+			equipInsurance.setApplyforState(ei.getApplyforState());
+			equipInsurance.setDelFlag(ei.getDelFlag());
+		}
+		equipInsuranceService.saveOrMergeForEdit(equipInsurance);
+		return SUCCESS;
+	}
+	
+	public String detailList(){
+		QueryFilter filter = new QueryFilter(getRequest());
+		List<EquipInsuranceDetail> list = equipInsuranceDetailService.getTranslateFull(filter);
+		StringBuffer buff = new StringBuffer("{success:true,'totalCounts':").append(filter.getPagingBean().getTotalItems()).append(",result:");
+		buff.append(GsonUtil.toJson(list, false));
+		buff.append("}");
+		this.jsonString = buff.toString();
+		return SUCCESS;
+	}
+//	@ActionLog(description = "删除调拨清单信息")
+//	public String multiDelDetail() {
+//		String[] ids = getRequest().getParameterValues("ids");
+//		for (String id : ids) {
+//			depotTransfersService.deletedDetail(new Long(id));
+//		}
+//		return SUCCESS;
+//	}
+//
+	@ActionLog(description = "提交项目调拨信息")
+	public String multiSubmit() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			equipInsuranceService.submitDepot(new Long(id));
+		}
+		return SUCCESS;
+	}
+	
+	@ActionLog(description = "删除调拨信息")
+	public String multiDel() {
+		String[] ids = getRequest().getParameterValues("ids");
+		for (String id : ids) {
+			EquipInsurance c = equipInsuranceService.get(new Long(id));
+			if (Status.Applyfor.waitSubmit.equals(c.getApplyforState())) {   
+				c.setDelFlag(Constant.DISENABLED);
+				equipInsuranceService.save(c);
+			}
+		}
+		return SUCCESS;
+	}
+//
+//	@ActionLog(description = "打印仓库调拨")
+//	public String printForm() {
+//		DepotTransfers ad = depotTransfersService.getTranslateFull(depottId);
+//		ad.setTransfersDate(DateUtil.changeObj2DateStr(ad.getTransfersDate(), DateUtil.CN_DISPLAY_DATE));
+//		getRequest().setAttribute("depotTransfers", ad);
+//		return "printForm";
+//	}
+}

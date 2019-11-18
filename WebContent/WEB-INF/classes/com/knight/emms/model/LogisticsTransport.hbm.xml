@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LogisticsTransport" table="T_LOGISTICS_TRANSPORT" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="transportId" column="TRANSPORT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<property name="transportSerial" type="java.lang.String" column="TRANSPORT_SERIAL" />
+		<property name="transportTheme" type="java.lang.String" column="TRANSPORT_THEME" />
+		<property name="batchNumber" type="java.lang.String" column="BATCH_NUMBER" />
+		<property name="deliveryDate" type="java.lang.String" column="DELIVERY_DATE" />
+		<property name="deliveryMan" type="java.lang.String" column="DELIVERY_MAN" />
+		<property name="deliveryPhone" type="java.lang.String" column="DELIVERY_PHONE" />
+		<property name="deliveryEntId" type="java.lang.Long" column="DELIVERY_ENT_ID" />
+		<property name="deliveryEntName" type="java.lang.String" column="DELIVERY_ENT_NAME" />
+		<property name="expectedArriveDate" type="java.lang.String" column="EXPECTED_ARRIVE_DATE" />
+		<property name="receiveMan" type="java.lang.String" column="RECEIVE_MAN" />
+		<property name="receivePhone" type="java.lang.String" column="RECEIVE_PHONE" />
+		<property name="receiveEntId" type="java.lang.Long" column="RECEIVE_ENT_ID" />
+		<property name="receiveEntName" type="java.lang.String" column="RECEIVE_ENT_NAME" />
+		<property name="materialPark" type="java.lang.String" column="MATERIAL_PARK" />
+		<property name="knotCounts" type="java.lang.Integer" column="KNOT_COUNTS" />
+		<property name="strengthenCounts" type="java.lang.Integer" column="STRENGTHEN_COUNTS" />
+		<property name="knotBoltCounts" type="java.lang.Integer" column="KNOT_BOLT_COUNTS" />
+		<property name="wallAttacheQty" type="java.lang.Integer" column="WALL_ATTACHE_QTY" />
+		<property name="projectPrincipal" type="java.lang.String" column="PROJECT_PRINCIPAL" />
+		<property name="finishedAmount" type="java.math.BigDecimal" column="FINISHED_AMOUNT" />
+		<property name="remainderAmount" type="java.math.BigDecimal" column="REMAINDER_AMOUNT" />
+		<property name="transportAmount" type="java.math.BigDecimal" column="TRANSPORT_AMOUNT" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="signMan" type="java.lang.String" column="SIGN_MAN" />
+		<property name="signDate" type="java.lang.String" column="SIGN_DATE" />
+		<property name="signResult" type="java.lang.String" column="SIGN_RESULT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="autocraneDepend" type="java.lang.String" column="AUTOCRANE_DEPEND" />
+		<property name="kilometers" type="java.lang.String" column="KILOMETERS" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<!-- ***************新增字段映射**************** -->
+		<property name="shipmentsTheme" type="java.lang.String" column="SHIPMENTS_THEME" />
+		<property name="dispatchDate" type="java.lang.String" column="DISPATCH_DATE" />
+		<property name="relateSerial" type="java.lang.String" column="RELATE_SERIAL" />
+		<property name="originator" type="java.lang.String" column="ORIGINATOR" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="driver" type="java.lang.String" column="DRIVER" />
+		<property name="driverPhone" type="java.lang.String" column="DRIVER_PHONE" />
+		<!-- *****************分割线********************* -->
+		<property name="summary" type="java.math.BigDecimal" column="SUMMARY" />
+		<property name="transportEntName" type="java.lang.String" column="TRANSPORT_ENT_NAME" />
+		<property name="transportContactTel" type="java.lang.String" column="TRANSPORT_CONTACT_TEL" />
+		<property name="transportBankDeposit" type="java.lang.String" column="TRANSPORT_BANK_DEPOSIT" />
+		<property name="transportBankAccount" type="java.lang.String" column="TRANSPORT_BANK_ACCOUNT" />
+		<property name="originalSerial" type="java.lang.String" column="ORIGINAL_SERIAL" />
+		<property name="fundStatus" type="java.lang.String" column="FUND_STATUS" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<!-- <property name="licensePlate" type="java.lang.String" formula="(SELECT TOP 1 T.LICENSE_PLATE FROM T_LOGISTICS_TRANDETAIL T WHERE T.TRANSPORT_ID = TRANSPORT_ID)" /> -->		
+		<property name="acceptTime" type="java.util.Date" formula="(SELECT TOP 1 T.ACCEPT_TIME FROM T_FORM_ACCEPT T WHERE T.RELATE_MODULE = 'LOGISTICS_TRANSPORT' AND T.RELATE_ID =TRANSPORT_ID)" />
+		<property name="approveTime" type="java.util.Date" formula="(SELECT TOP 1 T.APPROVE_TIME FROM T_FORM_APPROVE T WHERE T.RELATE_MODULE = 'LOGISTICS_TRANSPORT' AND T.RELATE_ID =TRANSPORT_ID )" />
+		 <property name="permissionFlag" type="java.lang.String" formula="(SELECT CL.PERMISSION_FLAG FROM T_CONTRACT_LEASE CL LEFT JOIN T_DISPATCH D ON CL.CONTRACT_ID = D.CONTRACT_ID WHERE D.DISPATCH_ID = DISPATCH_ID)" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" />
+		<set name="logisticsTrandetailSet" lazy="true" cascade="all" inverse="false">
+			<key column="TRANSPORT_ID"></key>
+			<one-to-many class="com.knight.emms.model.LogisticsTrandetail" />
+		</set>
+		<set name="logisticsTrancarfeeSet" lazy="true" cascade="all" inverse="false">
+			<key column="TRANSPORT_ID"></key>
+			<one-to-many class="com.knight.emms.model.LogisticsTrancarfee" />
+		</set>
+		<set name="logisticsDestributionSet" lazy="true" cascade="all" inverse="false">
+			<key column="TRANSPORT_ID"></key>
+			<one-to-many class="com.knight.emms.model.LogisticsDestribution" />
+		</set>
+		<set name="logisticsTranDistributionbutionSet" lazy="true" cascade="all" inverse="false">
+			<key column="TRANSPORT_ID"></key>
+			<one-to-many class="com.knight.emms.model.LogisticsTranDestribution" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ComponIntoStore" table="T_COMPON_INTOSTORE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="rowId" column="ROW_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="serial" type="java.lang.String" column="SERIAL" />
+		<property name="intoDate" type="java.lang.String" column="INTO_DATE" />
+		<property name="principal" type="java.lang.String" column="PRINCIPAL" />
+		<property name="principalTel" type="java.lang.String" column="PRINCIPAL_TEL" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="storeName" type="java.lang.String" formula="(SELECT SH.STORE_NAME FROM T_STORE_HOUSE SH WHERE SH.STORE_ID = STORE_ID)" />
+		<property name="overallUnit" type="java.lang.String" column="OVERALL_UNIT" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />		
+		<property name="projectSerial" type="java.lang.String" column="PROJECT_SERIAL" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="receiveMan" type="java.lang.String" column="RECEIVE_MAN" />
+		<property name="receiveManId" type="java.lang.Long" column="RECEIVE_MAN_ID" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO" />
+		<property name="originalSerial" type="java.lang.String" column="ORIGINAL_SERIAL" />
+		<property name="licensePlate" type="java.lang.String" column="LICENSE_PLATE" />
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="driver" type="java.lang.String" column="DRIVER" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="projectId" column="PROJECT_ID" type="java.lang.Long"/>		
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+		<set name="equipWarehouseComponSet" cascade="all" inverse="false" lazy="true">
+			<key column="ROW_ID" />
+			<one-to-many class="com.knight.emms.model.ComponIntoStoreDetail" />
+		</set>
+		<set name="attachmentStorageSet" cascade="all" inverse="false" lazy="true">
+			<key column="ROW_ID" />
+			<one-to-many class="com.knight.emms.model.AttachmentStorage" />
+		</set>
+	</class>
+</hibernate-mapping>

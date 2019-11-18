@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.system.model.AppRole" table="APP_ROLE">
+		<id name="roleId" type="java.lang.Long">
+			<generator class="native" />
+		</id>
+		<property name="roleName" column="roleName" type="java.lang.String" not-null="true" />
+		<property name="roleDesc" column="roleDesc" type="java.lang.String" />
+		<property name="status" column="status" type="java.lang.Short" />
+		<property name="roleType" type="java.lang.String" column="ROLE_TYPE" />
+		<property name="rights" column="rights" type="java.lang.String" length="65535" />
+		<property name="dataPermission" column="DATA_PERMISSION" type="java.lang.String" length="65535" />
+		<property name="equipPermission" column="EQUIP_PERMISSION" type="java.lang.String" length="65535" />
+		<property name="labourPermission" column="LABOUR_PERMISSION" type="java.lang.String" length="65535" />
+		<property name="isDefaultIn" column="isDefaultIn" type="java.lang.Short" not-null="true"></property>
+		<property name="roleDepartmentId" type="java.lang.Long" column="ROLE_DEPARTMET_ID" />
+		<property name="roleDepartment" type="java.lang.String" column="ROLE_DEPARTMET" />
+		<!-- <set name="functions" table="role_fun" cascade="save-update" inverse="false" lazy="false">
+			<key column="roleId" />
+			<many-to-many fetch="join" class="com.knight.system.model.AppFunction" column="functionId" />
+		</set> -->
+		<set name="appUsers" table="USER_ROLE" cascade="save-update" inverse="false" lazy="extra">
+			<key column="roleId" />
+			<many-to-many fetch="join" class="com.knight.system.model.AppUser" column="userId" />
+		</set>
+	</class>
+</hibernate-mapping>

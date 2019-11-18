@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.AnnounceUser" table="T_ANNOUNCE_USER" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="announceUserId" column="ANNOUNCE_USER_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="announceId" type="java.lang.Long" column="ANNOUNCE_ID" insert="false" update="false" />
+		<property name="publishTime" type="java.util.Date" column="PUBLISH_TIME" />
+		<property name="readFlag" type="java.lang.String" column="READ_FLAG" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<many-to-one name="announce" column="ANNOUNCE_ID" class="com.knight.emms.model.Announce" fetch="join" />
+	</class>
+</hibernate-mapping>

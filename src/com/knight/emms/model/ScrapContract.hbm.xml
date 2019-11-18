@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ScrapContract" table="T_SCRAP_CONTRACT" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="contractId" column="CONTRACT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractSerial" type="java.lang.String" column="CONTRACT_SERIAL" />
+		<property name="contractTheme" type="java.lang.String" column="CONTRACT_THEME" />
+		<property name="contractDate" type="java.lang.String" column="CONTRACT_DATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="storeId" type="java.lang.Long" column="STORE_ID" />
+		<property name="locationId" type="java.lang.Long" column="LOCATION_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="storeName" type="java.lang.String" column="STORE_NAME" />
+		<property name="storageLocation" type="java.lang.String" column="STORAGE_LOCATION" />
+		<property name="status" type="java.lang.String" column="STATUS" />
+		<property name="approvId" type="java.lang.Long" column="APPROV_ID" />
+		<property name="approvName" type="java.lang.String" column="APPROV_NAME" />
+		<property name="approvDate" type="java.lang.String" column="APPROV_DATE" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="customerName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="assetsProperty" type="java.lang.String" column="ASSET_ATTRIBUTES" />
+		<property name="reviewInfo" type="java.lang.String" column="REVIEW_INFO" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<set name="scrapDetailSet" cascade="all" inverse="false" lazy="true">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.ScrapDetail" />
+		<filter name="nameEqualFilter" condition="RELATE_MODULE=:relateModule"></filter>
+		</set>
+	</class>
+	 <filter-def name="nameEqualFilter" >
+	  <filter-param name="relateModule" type="java.lang.String"/>
+	 </filter-def>
+</hibernate-mapping>

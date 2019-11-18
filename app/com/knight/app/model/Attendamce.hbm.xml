@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.app.model.Attendamce" table="T_ATTENDAMCE"
+		select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="aid" column="AID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="sgDate" type="java.util.Date" column="SG_DATE" />
+		<property name="sginTime" type="java.lang.String" column="SGIN_TIME" />
+		<property name="sginLocation" type="java.lang.String" column="SGIN_LOCATION" />
+		<property name="sgouTime" type="java.lang.String" column="SGOU_TIME" />
+		<property name="sgouLocation" type="java.lang.String" column="SGOU_LOCATION" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USERID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="formId" type="java.lang.String" column="FORM_ID"/>
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.USERID = userId)" />
+		<property name="userName" type="java.lang.String"
+			formula="(SELECT A.FULLNAME FROM APP_USER A WHERE A.USERID=userId)" />
+		<property name="createDt" type="java.lang.String" column="CREATE_DT" />
+		<property name="sgWeekday" type="java.lang.String" column="SG_WEEKDAY" />
+		<property name="sgSum" type="java.lang.Long" column="SG_SUM" />
+		<property name="depId" type="java.lang.Long"
+			formula="(SELECT A.DEP_ID FROM APP_USER A WHERE A.USERID=userId)" />
+		<property name="depName" type="java.lang.String"
+			formula="(SELECT d.DEP_NAME FROM APP_USER A,DEPARTMENT d WHERE d.DEP_ID=A.DEP_ID and A.USERID=userId)" />
+		<many-to-one name="project" column="PROJECT_ID" class="com.knight.emms.model.Project" insert="false" update="false" fetch="join" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" insert="false" update="false" fetch="join"/>
+		<set name="locationSet" inverse="true" lazy="true">
+			<key column="AID" />
+			<one-to-many class="com.knight.app.model.AttendamceLocation" />
+		</set>
+		<set name="photoSet" inverse="true" lazy="true"
+			where=" DEPEND_NAME = 'APP_ATTENDAMCE' " order-by="FILEID ASC">
+			<key column="DEPEND_ID" />
+			<one-to-many class="com.knight.system.model.FileAttach" />
+		</set>
+	</class>
+</hibernate-mapping>

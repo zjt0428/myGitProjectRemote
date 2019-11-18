@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-7-15 16:48:23 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.knight.emms.model.MaterialsDispatch" table="T_MATERIALS_DISPATCH" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+         <id name="materialsId" type="java.lang.Long">
+            <column name="MATERIALS_ID" />
+            <generator class="native" />
+        </id>
+        <property name="dispatchSerial" type="java.lang.String">
+            <column name="DISPATCH_SERIAL" length="64" />
+        </property>
+        <property name="dispatchTheme" type="java.lang.String">
+            <column name="DISPATCH_THEME" length="128" />
+        </property>
+        <property name="applyDate" type="java.lang.String">
+            <column name="APPLY_DATE" length="64" />
+        </property>
+        <property name="userId" type="java.lang.Long">
+            <column name="USER_ID" not-null="true" />
+        </property>
+        <property name="userName" type="java.lang.String">
+            <column name="USER_NAME" length="32" />
+        </property>
+        <property name="storeId" type="java.lang.Long">
+            <column name="STORE_ID" not-null="false" />
+        </property>
+        <property name="storeName" type="java.lang.String">
+            <column name="STORE_NAME" length="32" />
+        </property>
+        <property name="LocationId" type="java.lang.Long">
+            <column name="LOCATION_ID" not-null="false" />
+        </property>
+        <property name="storageLocation" type="java.lang.String">
+            <column name="STORAGE_LOCATION" length="16" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" length="1" not-null="true" />
+        </property>
+        <property name="contractId" type="java.lang.Long">
+            <column name="CONTRACT_ID" not-null="true" />
+        </property>
+        <property name="contractNumber" type="java.lang.String">
+            <column name="CONTRACT_NUMBER" length="32" />
+        </property>
+        <property name="contractSerial" type="java.lang.String">
+            <column name="CONTRACT_SERIAL" length="32" />
+        </property>
+        <property name="pbEntId" type="java.lang.Long">
+            <column name="PB_ENT_ID" not-null="false" />
+        </property>
+        <property name="pbEntName" type="java.lang.String">
+            <column name="PB_ENT_NAME" length="64" />
+        </property>
+        <property name="projectId" type="java.lang.Long">
+            <column name="PROJECT_ID" not-null="false" />
+        </property>
+        <property name="projectName" type="java.lang.String">
+            <column name="PROJECT_NAME" length="128" />
+        </property>
+        <property name="vehicleNum" type="java.lang.String">
+            <column name="VEHICLE_NUM" length="64" />
+        </property>
+        <property name="vehiclePerson" type="java.lang.String">
+            <column name="VEHICLE_PERSON" length="32" />
+        </property>
+        <property name="applyforState" type="java.lang.String">
+            <column name="APPLYFOR_STATE" length="1" not-null="true" />
+        </property>
+        <property name="effective" type="java.lang.String" column="EFFECTIVE" />
+        <property name="address" type="java.lang.String" column="ADDRESS" />
+        <property name="remark" type="java.lang.String" column="REMARK" />
+        <property name="delFlag" type="java.lang.String">
+            <column name="DEL_FLAG" length="1" not-null="true" />
+        </property>
+        <property name="generatePackageFlag" type="java.lang.String" column="GENERATE_PACKAGE_FLAG" />
+        <set name="dispatchMaterialsSet" cascade="all" inverse="false" lazy="true" order-by="COMMODITY_ID DESC,SPECIFICATIONS_ID ASC">
+			<key column="MATERIALS_ID" />
+			<one-to-many class="com.knight.emms.model.DispatchMaterials" />
+		</set>
+    </class>
+</hibernate-mapping>

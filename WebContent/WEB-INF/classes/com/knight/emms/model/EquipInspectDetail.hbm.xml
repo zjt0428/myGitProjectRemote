@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipInspectDetail" table="T_EQUIPMENT_INSPECT_DETAIL" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="inspectDetailId" column="INSPECT_DETAIL_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="inspectId" type="java.lang.Long" column="INSPECT_ID" />
+		<property name="position" type="java.lang.String" column="POSITION" />
+		<property name="substance" type="java.lang.String" column="SUBSTANCE" />
+		<property name="detailResult" type="java.lang.String" column="DETAIL_RESULT" />
+		<property name="description" type="java.lang.String" column="DESCRIPTION" />
+		<property name="inspectFlag" type="java.lang.String" column="INSPECT_FLAG" />
+		<property name="detailPepoles" type="java.lang.String" column="DETAIL_PEPOLES" />
+		<many-to-one name="component" column="COMPON_ID" class="com.knight.emms.model.Component" fetch="join" />
+	</class>
+</hibernate-mapping>

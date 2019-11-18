@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.ElevatorMonitor" table="T_ELEVATOR_MONITOR" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="_id" column="_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="monitorId" type="java.lang.Long" column="MONITOR_ID" length="19" />
+		<property name="monitorAddress" type="java.lang.String" column="MONITOR_ADDRESS" />
+		<property name="equipmentNumber" type="java.lang.String" column="EQUIPMENT_NUMBER" /> 
+		<property name="equipmentStatus" type="java.lang.String" column="EQUIPMENT_STATUS" />
+		<property name="fault" type="java.lang.String" column="FAULT" />
+		<property name="faultCurrent" type="java.lang.String" column="FAULT_CURRENT" />
+		<property name="breakdownVoltage" type="java.lang.String" column="BREAKDOWN_VOLTAGE" />
+		<property name="failureFrequency" type="java.lang.String" column="FAILURE_FREQUENCY" />
+		<property name="weightOfFailure" type="java.lang.String" column="WEIGHT_OF_FAILURE" />
+		<property name="faultFloor" type="java.lang.String" column="FAULT_FLOOR" />
+		<property name="inputVoltage" type="java.lang.String" column="INPUT_VOLTAGE" />
+		<property name="position" type="java.lang.String" column="POSITION" />
+		<property name="hours" type="java.lang.String" column="HOURS" />
+		<property name="minutes" type="java.lang.String" column="MINUTES" />
+		<property name="createDateTime" type="java.lang.String" column="CREATE_DATE_TIME" />
+		<property name="switchFault1" type="java.lang.String" column="SWITCH_FAULT_1" />
+		<property name="switchFault2" type="java.lang.String" column="SWITCH_FAULT_2" />
+		<property name="switchFault3" type="java.lang.String" column="SWITCH_FAULT_3" />
+		<many-to-one name="equipment" column="EQUIPMENT_NUMBER" property-ref="monitorSerial" class="com.knight.emms.model.Equipment" insert="false" update="false" fetch="join" />
+	</class>
+</hibernate-mapping>

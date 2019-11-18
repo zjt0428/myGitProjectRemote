@@ -1,0 +1,13 @@
+<Context path="/emms" docBase="E:\Risit Workspace\emms\WebContent" debug="0" privileged="true">
+	<Resource
+		name="JDBC/EMMS"
+		type="javax.sql.DataSource"
+		driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+		url="jdbc:sqlserver://127.0.0.1:1433;DatabaseName=emms"
+		username="emms"
+		password="123456"
+		maxIdle="2"
+		maxWait="5000"
+		maxActive="4"
+	/>
+</Context>

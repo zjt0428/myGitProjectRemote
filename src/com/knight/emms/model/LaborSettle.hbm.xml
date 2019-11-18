@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.LaborSettle" table="T_LABOR_SETTLE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="laborSettId" column="LABOR_SETT_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="laborSettSerial" type="java.lang.String" column="LABOR_SETT_SERIAL" />
+		<property name="settleId" type="java.lang.Long" column="SETTLE_ID" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="payState" type="java.lang.String" column="PAY_STATE" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="contractNo" type="java.lang.String" column="CONTRACT_NO" />
+		<property name="paEnt" type="java.lang.Long" column="PA_ENT" />
+		<property name="paModule" type="java.lang.String" column="PA_MODULE" />
+		<property name="paEntName" type="java.lang.String" column="PA_ENT_NAME" />
+		<property name="pbEnt" type="java.lang.Long" column="PB_ENT" />
+		<property name="pbModule" type="java.lang.String" column="PB_MODULE" />
+		<property name="pbEntName" type="java.lang.String" column="PB_ENT_NAME" />
+		<property name="startSettleDate" type="java.lang.String" column="START_SETTLE_DATE" />
+		<property name="endSettleDate" type="java.lang.String" column="END_SETTLE_DATE" />
+		<property name="leaseProjectHead" type="java.lang.String" column="LEASE_PROJECT_HEAD" />
+		<property name="costTotal" type="java.math.BigDecimal" column="COST_TOTAL" />
+		<property name="afterTaxAmount" type="java.math.BigDecimal" column="AFTER_TAX_AMOUNT" />
+		<property name="createDate" type="java.lang.String" column="CREATE_DATE" />
+		<property name="practiType" type="java.lang.String" column="PRACTI_TYPE" />
+		<property name="deductions" type="java.math.BigDecimal" column="DEDUCTIONS" />
+		<property name="laborFree" type="java.math.BigDecimal" column="LABOR_FREE" />
+		<property name="paidAmount" type="java.math.BigDecimal" column="PAID_AMOUNT" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="statementId" type="java.lang.Long" column="STATEMENT_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="taxPoint" type="java.math.BigDecimal" column="TAX_POINT" />
+		<property name="riskFee" type="java.math.BigDecimal" column="RISK_FEE" />
+		<property name="equipFee" type="java.math.BigDecimal" column="EQUIP_FEE" />
+		<property name="managerFee" type="java.math.BigDecimal" column="MANAGER_FEE" />
+		<property name="practiFee" type="java.math.BigDecimal" column="PRACTI_FEE" />
+		<property name="settleLogo" type="java.lang.String" formula="(SELECT CASE WHEN EI.APPLYFOR_STATE = '3' THEN '已结算' ELSE '未结算' END FROM T_LABOR_SETTLE EI WHERE EI.LABOR_SETT_ID =LABOR_SETT_ID AND EI.DEL_FLAG =1)" />
+		<many-to-one name="equipment" column="EQUIP_ID" class="com.knight.emms.model.Equipment" fetch="join" insert="false" update="false"/>
+		<many-to-one name="settleContract" column="SETTLE_ID" class="com.knight.emms.model.SettleContract" fetch="join" insert="false" update="false"/>
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	</class>
+</hibernate-mapping>

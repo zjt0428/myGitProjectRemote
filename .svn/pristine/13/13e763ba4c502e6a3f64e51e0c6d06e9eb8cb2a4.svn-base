@@ -1,0 +1,154 @@
+var TechnicalDisclosureListView = function(a) {
+	Ext.apply(this, a || {});
+	this.params = {};
+	Ext.apply(this.params, (a && a.params) || {});
+	// =====================================================================//
+	var generalItems = null;
+	if (!this.searchDisenable) {
+		generalItems = [ {
+			lable : "备案编号",
+			name : "Q_equipment.recordId_S_LK"
+		}, {
+			lable : "出厂编号",
+			name : "Q_equipment.exwSerial_S_LK"
+		}, {
+			lable : "项目名称",
+			name : "Q_project.projectName_S_LK"
+		} ];
+	}
+	var actionItems = [ {
+		iconCls : "btn-grid-read",
+		qtip : "明细",
+		handler : this.loadTechnicalDisclosure
+	} ];
+	var tbarItems = null;
+	if (!this.tbarDisenable) {
+		tbarItems = this.initTopBarActionItems();
+	}
+	var datagrid_config = {
+		store : {
+			fields : TechnicalDisclosureListViewField
+		},
+		rowAction : {
+			width : 60,
+//			actionItems : actionItems
+		},
+		tbarItems : tbarItems,
+		columns : [  {
+			header : "备案编号",
+			dataIndex : "equipment",
+			renderer : function(n) {
+				return n.recordId;
+			}
+		}, {
+			header : "出厂编号",
+			dataIndex : "equipment",
+			renderer : function(n) {
+				return n.exwSerial;
+			}
+		}, {
+			header : "设备名称",
+			dataIndex : "equipment",
+			renderer : function(n) {
+				return n.equipGenericName;
+			}
+		}, {
+			header : "项目名称",
+			dataIndex : "project",
+			renderer : function(n) {
+				return n.projectName;
+			}
+		}, {
+			header : "交底类型",
+			dataIndex : "relateModule",
+			renderer : function(n) {
+				if(n=="EQUIP_INSTALL"){
+					return '安装交底';
+				}else{
+					return '拆卸交底';
+				}
+			}
+		}, {
+			header : "交底人",
+			dataIndex : "disclosureMan"
+		}, {
+			header : "交底日期",
+			dataIndex : "disclosureDate"
+		} ]
+	};
+	TechnicalDisclosureListView.superclass.constructor.call(this, Ext.apply({
+		id : "TechnicalDisclosureListView",
+		title : TabTitle.TECHNICAL_DISCLOSURE_LIST,
+		iconCls : "menu-business-verify",
+		url : __ctxPath + "/safety/listTechnicalDisclosure.do",
+		base_params : this.params,
+		search_config : {
+			generalItems : generalItems
+		},
+		datagrid_config : datagrid_config
+	}, a));
+};
+Ext.extend(TechnicalDisclosureListView, Knight.ux.SearchGridPanel, {
+	speciallyGridAction : function(g, id, url, op, va) {
+		var msg1 = "请选择要【" + op + "】的验收信息！";
+		var msg2 = "您确认要【" + op + "】所选的验收信息吗？";
+		var msg3 = "成功【" + op + "】所选的验收信息！";
+		$baseGridAction(g, msg1, id, msg2, url, msg3, null, va);
+	},
+	initTopBarActionItems : function() {
+		var tbarItems = [];
+		if (isGranted("_disclosureDel")) {
+			tbarItems.push({
+				iconCls : "btn-head-del",
+				text : "删除",
+				handler : this.delTechnicalDisclosure.createDelegate(this),				
+			});
+		}
+		return tbarItems;
+	},
+	addTechnicalDisclosure : function(relateModule) {
+		new ProjectSelector({
+			single : true,
+			callback : function(d) {
+				var project = d[0].data;
+				new EquipSelector({
+					single : true,
+					callback : function(d) {
+						var equipment = d[0].data;
+						new TechnicalDisclosureForm({
+							relateModule : relateModule,
+							project : project,
+							equipment : equipment
+						}, {
+							saveable : true,
+							callback : function() {
+								this.dataGridPanel.getStore().reload();
+							}.createDelegate(this)
+						}).show();
+					}.createDelegate(this)
+				}).show();
+			}.createDelegate(this)
+		}).show();
+	},
+	loadTechnicalDisclosure : function(a) {
+		new TechnicalDisclosureForm(a).show();
+	},
+	editTechnicalDisclosure : function() {
+		$editGridrowSelecte(this.dataGridPanel, null, function(a) {
+			new TechnicalDisclosureForm(a.data, {
+				saveable : true,
+				callback : function() {
+					this.dataGridPanel.getStore().reload();
+				}.createDelegate(this)
+			}).show();
+		}.createDelegate(this));
+	},
+	delTechnicalDisclosure : function() {
+		this.speciallyGridAction(this.dataGridPanel, "disclosureId", __ctxPath + "/safety/multiDelTechnicalDisclosure.do", "删除");
+	},
+	printTechnicalDisclosure : function(relate) {
+		$print(this.dataGridPanel, function(a) {
+			return __ctxPath + "/safety/printTechnicalDisclosure.do?formpage=TechnicalDisclosure" + relate + "&disclosureId=" + a[0].data["disclosureId"];
+		});
+	}
+});

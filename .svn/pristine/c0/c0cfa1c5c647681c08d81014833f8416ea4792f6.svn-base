@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.DispatchAllocate" table="T_DISPATCH_ALLOCATE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="dispatchAllocateId" column="DISPATCH_ALLOCATE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dispatchId" type="java.lang.Long" column="DISPATCH_ID" />
+		<property name="repairId" type="java.lang.Long" column="REPAIR_ID" />
+		<property name="allocateType" type="java.lang.String" column="ALLOCATE_TYPE" />
+		<property name="componGenericName" type="java.lang.String" column="COMPON_GENERIC_NAME" />
+		<property name="calculate" type="java.lang.String" column="CALCULATE" />
+		<property name="defective" type="java.lang.String" column="DEFECTIVE" />
+		<property name="reissue" type="java.lang.String" column="REISSUE" />
+		<property name="verify" type="java.lang.String" column="VERIFY" />
+		<property name="specification" type="java.lang.String" column="SPECIFICATION" />
+		<property name="quantity" type="java.lang.Integer" column="QUANTITY" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+	</class>
+</hibernate-mapping>

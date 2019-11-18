@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.app.model.SideReporting" table="T_SIDE_REPORTING" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="reportingId" column="REPORTING_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="sideId" type="java.lang.Long" column="SIDE_ID" />
+		<property name="reportingDetail" type="java.lang.String" column="REPORTING_DETAIL" />
+		<property name="examineUpshot" type="java.lang.String" column="EXAMINE_UPSHOT" />
+		<property name="existQuestion" type="java.lang.String" column="EXIST_QUESTION" />
+	</class>
+</hibernate-mapping>

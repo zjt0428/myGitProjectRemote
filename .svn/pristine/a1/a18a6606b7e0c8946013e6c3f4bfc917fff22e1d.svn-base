@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.PractiResume" table="T_PRACTI_RESUME" select-before-update="false" dynamic-update="false" dynamic-insert="false"
+		optimistic-lock="version">
+		<id name="resumeId" column="RESUME_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="practiDiaryId" type="java.lang.Long" column="PRACTI_DIARY_ID" />
+		<property name="practiId" type="java.lang.Long" column="PRACTI_ID" />
+		<property name="projectId" type="java.lang.Long" column="PROJECT_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="projectName" type="java.lang.String" column="PROJECT_NAME" />
+		<property name="practiName" type="java.lang.String" column="PRACTI_NAME" />
+		<property name="recordId" type="java.lang.String" column="RECORD_ID" />
+		<property name="practiKindwork" type="java.lang.String" column="PRACTI_KINDWORK" />
+		<property name="startDate" type="java.util.Date" column="START_DATE" />
+		<property name="endDate" type="java.util.Date" column="END_DATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="permissionFlag" type="java.lang.String" formula="(SELECT P.PERMISSION_FLAG FROM T_PRACTITIONER P WHERE P.PRACTI_ID = PRACTI_ID)" />
+	</class>
+</hibernate-mapping>

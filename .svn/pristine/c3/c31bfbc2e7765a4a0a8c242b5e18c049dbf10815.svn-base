@@ -1,0 +1,88 @@
+package com.knight.emms.domain.impl;
+
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import com.knight.core.dao.BaseJDBCDao;
+import com.knight.core.filter.QueryFilter;
+import com.knight.core.util.DateUtil;
+import com.knight.emms.dao.EquipInsuranceDao;
+import com.knight.emms.domain.EquipInsuranceDomain;
+import com.knight.emms.model.EquipInsurance;
+import com.knight.emms.model.EquipInsuranceDetail;
+import com.knight.emms.model.Equipment;
+import com.knight.emms.service.EquipInsuranceDetailService;
+import com.knight.emms.service.EquipInsuranceService;
+import com.knight.emms.service.EquipmentService;
+
+/**
+ * Created by YaoFly on 2016/10/26.
+ */
+public class EquipInsuranceDomainImpl implements EquipInsuranceDomain {
+    
+	@Resource
+	private BaseJDBCDao baseJdbcDao;
+	
+	@Resource
+	private EquipInsuranceDao equipInsuranceDao;
+	
+	@Resource
+	private EquipInsuranceService equipInsuranceService;
+	
+	@Resource
+	private EquipInsuranceDetailService equipInsuranceDetailService;
+	
+	@Resource
+	private EquipmentService equipmentService;
+
+	@Override
+	public void autoCreateWaitEquipInsurance() {
+		QueryFilter filter = new QueryFilter();
+		filter.addConjunctFilter("Q_delFlag_S_EQ", "1");
+		filter.addConjunctFilter("Q_insureStatus_S_EQ", "12");
+		List<Equipment> list = equipmentService.queryTranslateAll(filter);
+		if(list.size()>0){
+			for(Equipment e : list){
+				String mess = "设备名称："+e.getEquipGenericName()+"设备自编号："+e.getEquipSerial()+"将于"+e.getInsureTime()+"到期停保";
+				
+			}
+		}
+	}
+	@Override
+	public void autoCreateWaitEquipInsuranceDay() {
+		// TODO Auto-generated method stub
+		QueryFilter filter = new QueryFilter();
+		filter.addConjunctFilter("Q_delFlag_S_EQ", "1");
+		filter.addConjunctFilter("Q_insureStatus_S_EQ", "12");
+		List<Equipment> list = equipmentService.queryTranslateAll(filter);
+		for(Equipment ei : list){
+			if(ei.getInsureTime().compareTo(DateUtil.getCurrentLinkDateStr())>=0){
+					ei.setInsureStatus("0");
+					equipmentService.update(ei);
+				
+			}
+		}
+		QueryFilter filter1 = new QueryFilter();
+		filter1.addConjunctFilter("Q_insureStatus_S_EQ", "1");
+		List<Equipment> lis = equipmentService.queryTranslateAll(filter1);
+		SimpleDateFormat s=new SimpleDateFormat("yyyy-MM-dd");
+		Calendar theCa = Calendar.getInstance();
+		theCa.setTime(new Date());
+		theCa.add(theCa.DATE, -30);
+		String sa = s.format(theCa.getTime());
+		System.out.println(sa);
+		for(Equipment ei : lis){
+			if(ei.getInsureTime().compareTo(sa)>=0){
+					ei.setInsureStatus("12");
+					equipmentService.update(ei);
+				
+			}
+		}
+	}
+}

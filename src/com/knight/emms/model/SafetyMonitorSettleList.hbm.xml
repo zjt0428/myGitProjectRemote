@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.SafetyMonitorSettleList" table="T_SAFETY_MONITOR_SETTLE_LIST" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="listId" column="LIST_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="contractId" type="java.lang.Long" column="CONTRACT_ID" />
+		<property name="equipId" type="java.lang.Long" column="EQUIP_ID" />
+		<property name="buildingNum" type="java.lang.String" column="BUILDING_NUM" />
+		<property name="equipCategoryName" type="java.lang.String" column="EQUIP_CATEGORY_NAME" />
+		<property name="equipSpecificName" type="java.lang.String" column="EQUIP_SPECIFIC_NAME" />
+		<property name="equipSerial" type="java.lang.String" column="EQUIP_SERIAL" />
+		<property name="startSettleDate" type="java.lang.String" column="START_SETTLE_DATE" />
+		<property name="endSettleDate" type="java.lang.String" column="END_SETTLE_DATE" />
+		<property name="rentStandard" type="java.lang.String" column="RENT_STANDARD" />
+		<property name="rentUnit" type="java.lang.String" column="RENT_UNIT" />
+		<property name="daysRent" type="java.math.BigDecimal" column="DAYS_RENT" />
+		<property name="equipGenericName" type="java.lang.String" column="EQUIP_GENERIC_NAME" />
+		<property name="dispatchable" type="java.lang.String" formula="(SELECT COUNT(d.DISPATCH_ID) FROM T_DISPATCH d WHERE d.CONTRACT_ID = CONTRACT_ID 
+			AND EXISTS(SELECT de.* FROM T_DISPATCH_EQUIP de LEFT JOIN T_EQUIPMENT e ON de.EQUIP_ID = E.EQUIP_ID 
+			LEFT JOIN BM_EQUIP_GENERIC eg ON eg.CODE = e.EQUIP_GENERIC 
+			LEFT JOIN BM_EQUIP_SPECIFIC es ON es.CODE = e.EQUIP_SPECIFIC
+ 			WHERE de.DISPATCH_ID = d.DISPATCH_ID AND eg.VALUE = EQUIP_SPECIFIC_NAME AND eg.VALUE = EQUIP_GENERIC_NAME) AND d.APPLYFOR_STATE>2)"/>
+		<property name="approveable" type="java.lang.String" column="APPROVEABLE" />
+	</class>
+</hibernate-mapping>

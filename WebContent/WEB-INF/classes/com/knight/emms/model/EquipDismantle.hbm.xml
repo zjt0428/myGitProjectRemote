@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.EquipDismantle" table="T_EQUIPMENT_DISMANTLE" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="dismantleId" column="DISMANTLE_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="dismantleSerial" type="java.lang.String" column="DISMANTLE_SERIAL" />
+		<property name="dismantleTheme" type="java.lang.String" column="DISMANTLE_THEME" />
+		<property name="startdisDate" type="java.util.Date" column="STARTDIS_DATE" />
+		<property name="enddisDate" type="java.util.Date" column="ENDDIS_DATE" />
+		<property name="spendTime" type="java.lang.Long" column="SPEND_TIME" />
+		<property name="principalId" type="java.lang.Long" column="PRINCIPAL_ID" />
+		<property name="installId" type="java.lang.Long" column="INSTALL_ID" />
+		<property name="principal" type="java.lang.String" column="PRINCIPAL" />
+		<property name="partake" type="java.lang.String" column="PARTAKE" />
+		<property name="dismantleHeight" type="java.lang.String" column="DISMANTLE_HEIGHT" />
+		<property name="remark" type="java.lang.String" column="REMARK" />
+		<property name="userId" type="java.lang.Long" column="USER_ID" />
+		<property name="userName" type="java.lang.String" column="USER_NAME" />
+		<property name="providedDate" type="java.lang.String" column="PROVIDED_DATE" />
+		<property name="applyforState" type="java.lang.String" column="APPLYFOR_STATE" />
+		<property name="delFlag" type="java.lang.String" column="DEL_FLAG" />
+		<property name="fileAttaches" type="java.lang.String" column="FILE_ATTACHES" />
+		<property name="dismantleType" type="java.lang.String" column="DISMANTLETYPE" />
+		<property name="longitude" type="java.lang.String" column="LONGITUDE" />
+		<property name="latitude" type="java.lang.String" column="LATITUDE" />
+		<property name="address" type="java.lang.String" column="ADDRESS" />
+		<property name="personNum" type="java.lang.String" column="PERSON_NUM" />
+		<property name="equipAmount" type="java.lang.Integer" column="EQUIP_AMOUNT" />
+		<property name="currentInstallHeight" type="java.lang.String" column="CURRENT_INSTALL_HEIGHT" />
+		<property name="dismantleLocation" type="java.lang.String" column="DISMANTLE_LOCATION" />
+		<property name="checkAttach" type="java.lang.String" column="CHECK_ATTACH" />
+	    <property name="disclosureId" type="java.lang.Long" column="DISCLOSURE_ID" />
+	    <property name="appDismantleState" type="java.lang.String" column="APP_DISMANTLE_STATE" />
+		<many-to-one name="department" column="DEP_ID" class="com.knight.system.model.Department" fetch="join" />
+	    <many-to-one name="equipFlow" column="FLOW_ID" class="com.knight.emms.model.EquipFlow" fetch="join" />
+		<property name="knotCounts" type="java.lang.Integer" formula="(SELECT B.KNOT_COUNTS FROM T_EQUIPMENT_INSTALL B WHERE B.INSTALL_ID=INSTALL_ID)" />
+		<property name="wallAttacheQty" type="java.lang.Integer" formula="(SELECT B.WALL_ATTACHE_QTY FROM T_EQUIPMENT_INSTALL B WHERE B.INSTALL_ID=INSTALL_ID)" />
+        <property name="knotDisQty" type="java.lang.Integer"  column="KNOT_DIS_QTY" />
+	    <property name="wallAttacheDisQty" type="java.lang.Integer" column="WALL_ATTACHE_DIS_QTY" />
+	    <property name="wallAttacheFrameQty" type="java.lang.Integer" column="WALL_ATTACHE_FRAME_QTY"  />
+	    <property name="wallAttachePoleQty" type="java.lang.Integer" column="WALL_ATTACHE_POLE_QTY"  />
+		<set name="practiDiarySet" cascade="none" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_DISMANTLE'">
+			<key column="RELATE_ID" />
+		<one-to-many class="com.knight.emms.model.PractiDiary" />
+		</set>
+		<set name="autocraneFeeSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_DISMANTLE'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.AutocraneFee" />
+		</set>
+		<set name="installDismantelTeamSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_DISMANTLE'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.InstallDismantelTeam" />
+		</set>
+		<set name="autocraneUnitSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_DISMANTLE'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.AutocraneUnit" />
+		</set>
+		<set name="installFeeSet" cascade="all" inverse="true" lazy="true" where=" RELATE_MODULE = 'EQUIP_DISMANTLE'">
+			<key column="RELATE_ID" />
+			<one-to-many class="com.knight.emms.model.InstallFee" />
+		</set>
+	</class>
+</hibernate-mapping>

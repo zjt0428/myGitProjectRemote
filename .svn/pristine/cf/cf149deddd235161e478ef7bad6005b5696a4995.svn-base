@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SyncModules>
+	<!-- 关联模块定义 -->
+	<SyncModule>
+		<ModuleName>BM_RELATE_MODULE</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_RELATE_MODULE
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 设备部件分类 -->
+	<SyncModule>
+		<ModuleName>BM_REPERTORY_CATEGORY</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_REPERTORY_CATEGORY
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 部件名称 -->
+	<SyncModule>
+		<ModuleName>BM_COMPONENT_GENERIC</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_COMPONENT_GENERIC
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 部件设备型号 -->
+	<SyncModule>
+		<ModuleName>BM_COMPONENT_SPECIFIC</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_COMPONENT_SPECIFIC
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 设备名称 -->
+	<SyncModule>
+		<ModuleName>BM_EQUIP_GENERIC</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_EQUIP_GENERIC
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 设备规格 -->
+	<SyncModule>
+		<ModuleName>BM_EQUIP_SPECIFIC</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_EQUIP_SPECIFIC
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 设备来源 -->
+	<SyncModule>
+		<ModuleName>BM_EQUIP_SOURCE</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_EQUIP_SOURCE
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 制造厂家 -->
+	<SyncModule>
+		<ModuleName>BM_EQUIP_VENDER</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_EQUIP_VENDER
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 许可证号 -->
+	<SyncModule>
+		<ModuleName>BM_LICENSE_NUMBER</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_LICENSE_NUMBER
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 巡检结果 -->
+	<SyncModule>
+		<ModuleName>BM_INSPECT_RESULT</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM BM_INSPECT_RESULT
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 系统用户 -->
+	<SyncModule>
+		<ModuleName>APP_USER</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM APP_USER WHERE DELFLAG = 0 AND STATUS = 1 AND USERID > 1
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 仓库信息 -->
+	<SyncModule>
+		<ModuleName>T_STORE_HOUSE</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_STORE_HOUSE WHERE DEL_FLAG = '1'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 企业信息 -->
+	<SyncModule>
+		<ModuleName>T_CORP_INFO</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_CORP_INFO WHERE DEL_FLAG = '1' AND CORP_STATUS = '1'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 项目信息 -->
+	<SyncModule>
+		<ModuleName>T_PROJECT</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_PROJECT WHERE DEL_FLAG = '1'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 部件信息 -->
+	<SyncModule>
+		<ModuleName>T_COMPONENT</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_COMPONENT WHERE DEL_FLAG = '1'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 设备信息 -->
+	<SyncModule>
+		<ModuleName>T_EQUIPMENT</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_EQUIPMENT WHERE DEL_FLAG = '1'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 合同信息 -->
+	<SyncModule>
+		<ModuleName>T_CONTRACT_LEASE</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_CONTRACT_LEASE WHERE DEL_FLAG = '1' AND APPLYFOR_STATE = '3'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 合同设备信息 -->
+	<SyncModule>
+		<ModuleName>T_CONTRACT_EQUIP</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT CE.* FROM T_CONTRACT_EQUIP CE, T_CONTRACT_LEASE CL WHERE CL.DEL_FLAG = '1' AND CL.APPLYFOR_STATE = '3' AND CE.CONTRACT_ID = CL.CONTRACT_ID
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 设备调配信息 -->
+	<SyncModule>
+		<ModuleName>T_EQUIPMENT_DIARY</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_EQUIPMENT_DIARY
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 设备使用流程信息 -->
+	<SyncModule>
+		<ModuleName>T_EQUIPMENT_FLOW</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_EQUIPMENT_FLOW
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 安装信息 -->
+	<SyncModule>
+		<ModuleName>T_EQUIPMENT_INSTALL</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_EQUIPMENT_INSTALL WHERE DEL_FLAG = '1' AND APPLYFOR_STATE = '4'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 使用信息 -->
+	<SyncModule>
+		<ModuleName>T_EQUIPMENT_EMPLOY</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_EQUIPMENT_EMPLOY WHERE DEL_FLAG = '1' AND APPLYFOR_STATE = '4'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 拆卸信息 -->
+	<SyncModule>
+		<ModuleName>T_EQUIPMENT_DISMANTLE</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT * FROM T_EQUIPMENT_DISMANTLE WHERE DEL_FLAG = '1' AND APPLYFOR_STATE = '4'
+		]]>
+		</DataSource>
+	</SyncModule>
+	<!-- 待巡检信息 -->
+	<SyncModule>
+		<ModuleName>T_EQUIPMENT_INSPECT</ModuleName>
+		<DataSource>
+		<![CDATA[
+			SELECT EIS.INSPECT_SCHEMA_ID,
+			       EIS.FLOW_ID,
+			       EIS.EQUIP_DIARY_ID,
+			       EIS.RELATE_ID,
+			       EIS.RELATE_SERIAL,
+			       EIS.RELATE_MODULE,
+			       EIS.CYCLE_DAYS,
+			       EIS.TIMES_IN_CYCLE,
+			       EIS.DESCRIPTION,
+			       EI.INSPECT_ID,
+			       EI.INSPECT_SERIAL,
+			       EI.CYCLE_TIMES,
+			       EI.THIS_END_CYCLE_DATE,
+			       EI.STATUS
+			  FROM T_EQUIPMENT_INSPECT EI, T_EQUIPMENT_INSPECT_SCHEMA EIS
+			 WHERE EI.INSPECT_SCHEMA_ID = EIS.INSPECT_SCHEMA_ID
+			   AND EIS.DEL_FLAG = '1'
+			   AND EIS.ACTIVE = '1'
+			   AND EI.STATUS = '0'
+		]]>
+		</DataSource>
+	</SyncModule>
+</SyncModules>

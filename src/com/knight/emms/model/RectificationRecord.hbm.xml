@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.knight.emms.model.RectificationRecord" table="T_RECTIFICATION_RECORD" select-before-update="false" dynamic-update="false" dynamic-insert="false" optimistic-lock="version">
+		<id name="rectificaId" column="RECTIFICA_ID" type="java.lang.Long" length="19">
+			<generator class="native" />
+		</id>
+		<property name="reviewId" type="java.lang.Long" column="REVIEW_ID" />
+		<property name="rectificaImage" type="java.lang.String" column="RECTIFICA_IMAGE" />
+		<property name="rectificaDate" type="java.lang.String" column="RECTIFICA_DATE" />
+		<property name="rectificaDetail" type="java.lang.String" column="RECTIFICA_DETAIL" />
+	</class>
+</hibernate-mapping>

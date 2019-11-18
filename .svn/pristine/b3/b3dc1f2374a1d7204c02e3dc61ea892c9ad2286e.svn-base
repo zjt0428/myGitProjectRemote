@@ -1,0 +1,459 @@
+var SafetyMonitorSettleStatementGrid = function(a, b) {
+	Ext.apply(this, a || {});
+	Ext.apply(this, b || {});
+	this.currentDate = new Date();
+	var columns = [ {
+		header : "楼号",
+		dataIndex : "buildingNum",
+		editor : new Ext.form.TextField({
+			maxLength : 32
+		})
+	}, {
+		header : "设备类别",
+		dataIndex : "equipCategoryName",
+		editor : new Knight.ux.TreeCombo({
+			id : Ext.id(),
+			valId : Ext.id(),
+			url : __ctxPath + "/system/treeCode.do?codeId=repertoryCategory"
+		})
+	}, {
+		header : "规格型号",
+		dataIndex : "equipSpecificName",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 32
+		})
+	}, {
+		width : 40,
+		header : "设备自编号",
+		dataIndex : "equipSerial",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 6
+		})
+	}, {
+		width : 80,
+		header : "出厂编号",
+		dataIndex : "exwSerial",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 6
+		})
+	}, {
+		header : "备案编号",
+		dataIndex : "recordId",
+		editor : new Ext.form.TextField({
+		})
+	}/*, {
+		width : 40,
+		header : "单位",
+		dataIndex : "unit",
+		editor : new Ext.form.TextField({
+			allowBlank : false,
+			maxLength : 6
+		})
+	}*/,{
+		header : "启用日",
+		dataIndex : "startSettleDate",
+		editor : new Ext.form.DateField({
+			format : "Y-m-d",
+			editable : false,
+			allowBlank : false
+		}),
+		renderer : function(value, metadata, record) {
+			if (typeof (value) == "string") {
+				return value;
+			}
+			value = Ext.util.Format.date(value, "Y-m-d");
+			record.data.startSettleDate = value;
+			return value;
+		}
+	}, {
+		header : "截止日",
+		dataIndex : "endSettleDate",
+		editor : new Ext.form.DateField({
+			format : "Y-m-d",
+			editable : false
+		}),
+		renderer : function(value, metadata, record) {
+			if (typeof (value) == "string") {
+				return value;
+			}
+			var startSettleDate = Date.parseDate(record.data.startSettleDate, "Y-m-d");
+			if (startSettleDate > value) {
+				Ext.MessageBox.alert("操作信息", "截止日期小于开始日期!");
+				value = startSettleDate;
+			}
+			value = Ext.util.Format.date(value, "Y-m-d");
+			record.data.endSettleDate = value;
+			return value;
+		}
+	}, {
+		width : 50,
+		header : "计费天数",
+		dataIndex : "settleDays",
+        css : "color:#7F7F7F;",
+		renderer : function(value, metadata, record) {
+			var startSettleDate = Date.parseDate(record.data.startSettleDate, "Y-m-d");
+			var endSettleDate = Date.parseDate(record.data.endSettleDate, "Y-m-d");
+			if (endSettleDate < startSettleDate) {
+				Ext.MessageBox.alert("操作信息", "截止日期小于开始日期!");
+				record.data.settleDays = 0;
+				return 0;
+			}
+			var s = (endSettleDate.getTime() - startSettleDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
+			var days = Math.round(s);
+			record.data.settleDays = days;
+			return days;
+		}
+	}, {
+		xtype : "checkcolumn",
+		header : "整月",
+		dataIndex : "monthTag",
+		width : 40,
+		renderer : function(v, p, record){
+			p.css += ' x-grid3-check-col-td';
+			if(v == "true" || v == true){
+                record.data.summary = record.data.rentStandard*record.data.quantity;
+				v = '-on';
+			}else{
+				record.data.summary = "";
+				v = '';
+			}
+			return String.format('<div class="x-grid3-check-col{0}">&#160;</div>', v);
+		}
+	},{
+		width : 50,
+		header : "租金标准",
+		dataIndex : "rentStandard",
+		editor : new Ext.form.NumberField({
+		})
+	},{
+		width : 50,
+		header : "租金单位",
+		dataIndex : "rentUnit",
+		editor : new Ext.ux.form.SimpleCombo({
+			codeData : this.measurementData
+		}),
+		renderer : function(value, metadata, record) {
+			value = Ext.isEmpty(value) ? this.getEditor().value : value;
+			var store = this.getEditor().store;
+			var index = store.find("code", value);
+			if (index != -1) {
+				value = store.getAt(index).data.name;
+			}
+			record.data.rentUnit = value;
+			return value;
+		}
+	}, {
+		width : 50,
+		header : "租赁数量",
+		dataIndex : "quantity",
+		editor : new Ext.form.NumberField({
+			allowBlank : false,
+			maxLength : 16
+		})
+	}, {
+		width : 80,
+		header : "日租金",
+		dataIndex : "daysRent",
+		css : "color:#7F7F7F;",
+		editor : new Ext.form.NumberField({
+			decimalPrecision : 3,
+			maxValue : 999999
+		}),
+		renderer : function(value, metadata, record) {
+			if (value != record.data.daysRent1) {
+				record.data.daysRent1 = value;
+				return value;
+			}
+			var daysRent = Ext.util.Format.number(record.data.rentStandard / 30, '0.000');
+			record.data.daysRent1 = daysRent;
+			record.data.daysRent = daysRent;
+			return daysRent;
+		}
+	}, {
+		width : 80,
+		header : "应扣租金",
+		dataIndex : "deductRent",
+		editor : new Ext.form.NumberField({
+			maxValue : 999999
+		}),
+		renderer : function(value, metadata, record) {
+			value = Ext.isEmpty(value) ? 0 : value;
+			record.data.deductRent = value;
+			return Ext.util.Format.number(value, "0.00");
+		}
+	}, {
+		width : 80,
+		header : "租金累计",
+		dataIndex : "summary",
+		renderer : function(value, metadata, record) {
+			if(!record.data.monthTag){
+				var summary = 0;
+				var startSettleDate = Date.parseDate(record.data.startSettleDate, "Y-m-d");
+				var endSettleDate = Date.parseDate(record.data.endSettleDate, "Y-m-d");
+				var rentStandard = Number(record.data.rentStandard);
+				var daysRent = record.data.daysRent;
+				var settleDays = record.data.settleDays;
+				var quantity = record.data.quantity;
+				var deductRent = record.data.deductRent;
+				var monthDifference = (endSettleDate.getYear() - startSettleDate.getYear()) * 12 + (endSettleDate.getMonth() - startSettleDate.getMonth())
+				if (monthDifference == 0) {
+					var settleMonthArray = KnightUtil.date.getMonthStartStop(startSettleDate);
+					if (startSettleDate.getDate() == settleMonthArray[0].getDate() && endSettleDate.getDate() == settleMonthArray[1].getDate()) {
+						summary += KnightUtil.math.forHundredthDight(rentStandard * quantity - deductRent);
+					} else {
+						summary += KnightUtil.math.forHundredthDight(daysRent * settleDays * quantity - deductRent);
+					}
+				} else {
+					summary = KnightUtil.math.forHundredthDight(rentStandard * (monthDifference - 1) * quantity - deductRent);
+	
+					var startSettleMonthArray = KnightUtil.date.getMonthStartStop(startSettleDate);
+					var endSettleMonthArray = KnightUtil.date.getMonthStartStop(endSettleDate);
+					if (startSettleDate.getDate() == startSettleMonthArray[0].getDate()) {
+						summary += rentStandard * quantity;
+					} else {
+						var startSettleDiff = startSettleMonthArray[1].getDate() - startSettleDate.getDate();
+						summary += KnightUtil.math.forHundredthDight(daysRent * (startSettleDiff + 1) * quantity);
+					}
+					if (endSettleDate.getDate() == endSettleMonthArray[1].getDate()) {
+						summary += rentStandard * quantity;
+					} else {
+						var endSettleDiff = endSettleDate.getDate() - endSettleMonthArray[0].getDate();
+						summary += KnightUtil.math.forHundredthDight(daysRent * (endSettleDiff + 1) * quantity);
+					}
+				}
+				record.data.summary = summary;
+				return Ext.util.Format.number(summary, "0.00");
+			}
+			return Ext.util.Format.number(value, "0.00");
+		}.createDelegate(this)
+	}, {
+		header : "备注",
+		dataIndex : "remark",
+		editor : new Ext.form.TextField({
+		})
+	}, {
+		width : 80,
+		header : "税率",
+		dataIndex : "taxRate",
+		editor : new Knight.ux.TreeCombo({
+			id : Ext.id(),
+			url : __ctxPath + "/system/treeCode.do?codeId=taxRate"
+		}),
+		renderer : function(value, metadata, record) {
+			value = Ext.isEmpty(value) ? this.getEditor().value : value;
+			var store = this.getEditor().store;
+			var index = store.find("code", value);
+			if (index != -1) {
+				value = store.getAt(index).data.name;
+			}
+			record.data.taxRate = value;
+			return value;
+		}
+	}, {
+		width : 80,
+		header : "含税金额",
+		dataIndex : "preTaxAmount",
+		renderer : function(value, metadata, record) {
+			if(this.saveable && Ext.isNumber(record.data.summary)) {
+				record.data.preTaxAmount = record.data.summary;
+				return record.data.preTaxAmount;
+			}
+			return value;
+		}.createDelegate(this)
+	}, {
+		width : 80,
+		header : "不含税金额",
+		dataIndex : "afterTaxAmount",
+		renderer : function(value, metadata, record) {
+			if(this.saveable && Ext.isNumber(record.data.preTaxAmount) && record.data.taxRate.indexOf("%")) {
+				var tempTaxRate = Number(record.data.taxRate.replace("%",""))/100;
+				var num = (record.data.preTaxAmount/(1+tempTaxRate)).toFixed(2);
+				record.data.afterTaxAmount = Number(num);
+				return record.data.afterTaxAmount;
+			}
+			return value;
+		}.createDelegate(this)
+	}, {
+		header : "税金",
+		dataIndex : "taxes",
+		renderer : function(value, metadata, record) {
+			if(this.saveable && Ext.isNumber(record.data.preTaxAmount) && Ext.isNumber(record.data.afterTaxAmount)) {
+				var num = (record.data.preTaxAmount - record.data.afterTaxAmount).toFixed(2);
+				record.data.taxes = Number(num);
+				return record.data.taxes;
+			}
+			return value;
+		}.createDelegate(this)
+	}];
+	this.tbarItems = this.tbarItems ? this.tbarItems : [];
+	if (this.saveable && this.contractId) {
+		this.tbarItems = [ {
+			iconCls : "btn-head-add",
+			text : "新增",
+			handler : this.addSubModule.createDelegate(this)
+		},{
+			iconCls : "btn-head-del",
+			text : "删除",
+			handler : this.delSubModule.createDelegate(this)
+		}, {
+			iconCls : "btn-loading",
+			text : "导入合同设备",
+			handler : this.loadContractEquipResource.createDelegate(this)
+		}, {
+			iconCls : "btn-pred",
+			text : "核算",
+			handler : this.calculate.createDelegate(this)
+		}];
+	}
+	SafetyMonitorSettleStatementGrid.superclass.constructor.call(this, Ext.apply({
+		saveable : this.saveable,
+		fields : SafetyMonitorSettleStatementViewField,
+		title : "安全监控系统结算清单",
+		option : "安全监控系统结算清单",
+		addForbidden : true,
+		delForbidden : true,
+		tbarItems : this.tbarItems,
+		height : this.height,
+		columns : columns,
+		delurl : __ctxPath + "/dispatch/multiDelSafetyMonitorSettleContract.do"
+	}, this.grid_config || {}));
+};
+Ext.extend(SafetyMonitorSettleStatementGrid, Knight.ux.SubModuleBaseGrid, {
+	loadResource : function(data) {
+		for (var i = 0; i < this.getStore().getCount(); i++) {
+			if (this.getStore().getAt(i).data.equipId == data.equipId) {
+				return;
+			}
+		}
+		var endSettleDate = null;
+		if (Ext.isEmpty(data.lastBlockupDate)) {
+			endSettleDate = this.parentForm.getForm().findField("settleContract.endSettleDate").getValue();
+		} else {
+			endSettleDate = data.lastBlockupDate;
+		}
+		if(Ext.isEmpty(data.lastSettleDate)) {
+			data.lastSettleDate =  this.parentForm.getFieldValue("startSettleDate");
+		}
+		data.rentStandard = 0;
+		if(this.parentForm.contract!=null && this.parentForm.contract.safetyMonitorSettleListSet!=null) {
+			var safetySet = this.parentForm.contract.safetyMonitorSettleListSet;
+			for(var j=0; j<this.safetyMonitorSettleListSet.length; j++) {
+				if(this.safetyMonitorSettleListSet[j].equipSpecificName == data.equipSpecificName) {
+					data.rentStandard = this.safetyMonitorSettleListSet[j].rentStandard;
+				}
+			}
+		}
+		var parentTaxRate = this.parentForm.getFieldValue("taxRate");
+		this.addHeight(recordHeight);
+		var SubModule = this.getStore().recordType;
+		var subModule = new SubModule();
+		Ext.apply(subModule.data, {
+			equipDiaryId : data.equipDiaryId,
+			equipId : data.equipId,
+			recordSerial : data.recordSerial,
+			recordId : data.recordId,
+			exwSerial : data.exwSerial,
+			equipCategoryName : data.equipCategoryName,
+			equipSpecificName : data.equipSpecificName,
+			buildingNum : data.buildingNum,
+			unit : "台",
+			startSettleDate : data.lastSettleDate,
+			endSettleDate : endSettleDate,
+			settleDays : 0,
+			quantity : 1,
+			deductRent : 0,
+			rentStandard :data.rentStandard,
+			equipSerial : data.equipSerial,
+			taxRate : parentTaxRate
+		});
+		this.stopEditing();
+		this.getStore().add(subModule);
+		this.startEditing(0, 0);
+	},
+	loadContractEquipResource : function() {
+		$request({
+			url : __ctxPath + "/equip/listEquipmentDiary.do",
+			params : {
+				"Q_contractId_L_EQ" : this.contractId,
+				"Q_lastSettleDate_S_NOTNULL" : "0",
+				"limit" : -1
+			},
+			success : function(g, h) {
+				var resp = Ext.util.JSON.decode(g.responseText);
+				var diarys = resp.result;
+				for (var i = 0; i < diarys.length; i++) {
+					this.loadResource(diarys[i]);
+				}
+			}.createDelegate(this)
+		});
+	},
+	loadEquipmentResource : function() {
+		new EquipSelector({
+			collectEnable : true,
+			callback : function(d) {
+				for (var i = 0; i < d.length; i++) {
+					d[i].set("lastSettleDate", new Date().format("Y-m-d"));
+					this.loadResource(d[i].data);
+				}
+			}.createDelegate(this)
+		}).show();
+	},
+	createSubModule : function() {
+		var parentTaxRate = this.parentForm.getFieldValue("taxRate");
+		if(Ext.isEmpty(parentTaxRate)) {
+			$toast("请先选择税率")
+		}
+		var startSettleDate = this.parentForm.getForm().findField("settleContract.startSettleDate").getValue();
+		var endSettleDate = this.parentForm.getForm().findField("settleContract.endSettleDate").getValue();
+		return {
+			settleId : this.settleId,
+			startSettleDate : startSettleDate,
+			endSettleDate : endSettleDate,
+			settleDays : 0,
+			taxRate : parentTaxRate ? parentTaxRate : 0,
+			quantity : 1
+		};
+	},
+	automaticDeduction : function() {
+		if(this.getSelectionModel().hasSelection()){
+		var m = this.getSelectionModel().getSelections();
+		for (var i = 0; i < m.length; i++) {
+			var quantity = m[i].get("quantity");
+			var daysRent = m[i].get("daysRent");
+			m[i].set("deductRent", quantity * daysRent);
+			}
+		}else{
+			Ext.MessageBox.show({
+		        title : "提示",
+		       	msg :"请选择要操作的设备!",
+		       	buttons: Ext.MessageBox.OK
+		    });
+		}
+	},
+	calculate : function() {
+		for(var i=0;i<this.getStore().getCount();i++){
+			if(Ext.isNumber(this.getStore().getAt(i).data.rentStandard) && Ext.isNumber(this.getStore().getAt(i).data.settleDays)) {
+				this.getStore().getAt(i).data.preTaxAmount = this.getStore().getAt(i).data.rentStandard* this.getStore().getAt(i).data.settleDays;
+				if(this.getStore().getAt(i).data.taxRate.indexOf("%")>0) {
+					var tempTaxRate = Number(this.getStore().getAt(i).data.taxRate.replace("%",""))/100;
+					this.getStore().getAt(i).data.afterTaxAmount = (this.getStore().getAt(i).data.preTaxAmount/(1+tempTaxRate)).toFixed(2);
+					//给税后的金额赋值，用于下面税金的计算
+					var tax = this.getStore().getAt(i).data.afterTaxAmount
+					this.getStore().getAt(i).data.taxes =  (this.getStore().getAt(i).data.preTaxAmount-tax).toFixed(2);
+				}
+			}
+		}
+		this.getStore().commitChanges();
+	},	
+	getTotalSummary : function() {
+		var summaryAmount = 0;
+		for (var i = 0; i < this.getStore().getCount(); i++) {
+			var r = this.getStore().getAt(i).data;
+			summaryAmount += Number(r.summary);
+		}
+		return summaryAmount;
+	},
+});

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="purchase">
+	<select id="caculate_component_unit_price">
+	<![CDATA[
+		SELECT ISNULL(SUM(PB.UNIT_PRICE), 0) UNIT_PRICE, COUNT(1) COUNTS FROM T_PURCHASE_BRIEF PB WHERE PB.STATUS = '1' AND PB.COMPON_ID = ?
+	]]>
+	</select>
+</mapper>
